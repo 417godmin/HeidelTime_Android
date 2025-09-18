@@ -1,0 +1,108 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+package org.apache.uima.collection.metadata;
+
+import org.apache.uima.resource.metadata.MetaDataObject;
+
+/**
+ * An object that holds configuration that is part of the CPE descriptor. Provides the means of
+ * configuring CPE CollectionReader.
+ */
+public interface CpeCollectionReader extends MetaDataObject {
+  /**
+   * Sets CasInitializer for the CollectionReader will use. This object initializes the CAS with
+   * SoFas.
+   * 
+   * @param aCasInitializer
+   *          - {@link CpeCollectionReaderCasInitializer}
+   * @throws CpeDescriptorException
+   *           tbd
+   * 
+   * @deprecated As of v2.0 CAS Initializers are deprecated.
+   * @forRemoval 4.0.0
+   */
+  @Deprecated(since = "2.0.0")
+  void setCasInitializer(CpeCollectionReaderCasInitializer aCasInitializer)
+          throws CpeDescriptorException;
+
+  /**
+   * Returns CasInitializer associated with CollectionReader. This object initializes the CAS with
+   * SoFas.
+   * 
+   * @return {@link CpeCollectionReaderCasInitializer}
+   * @throws CpeDescriptorException
+   *           tbd
+   * 
+   * @deprecated As of v2.0 CAS Initializers are deprecated.
+   * @forRemoval 4.0.0
+   */
+  @Deprecated(since = "2.0.0")
+  CpeCollectionReaderCasInitializer getCasInitializer() throws CpeDescriptorException;
+
+  /**
+   * Removes {@link CpeCollectionReaderCasInitializer} from
+   * CollectionReader
+   *
+   * @deprecated CasInitializer is deprecated
+   * @forRemoval 4.0.0
+   */
+  @Deprecated(since = "3.6.0")
+  void removeCasInitializer();
+
+  /**
+   * Sets descriptor path containing configuration for the CollectionReader
+   * 
+   * @param aDescriptor
+   *          - component containing descriptor path
+   */
+  void setDescriptor(CpeComponentDescriptor aDescriptor);
+
+  /**
+   * Returns {@link CpeComponentDescriptor} containing
+   * CollectionReader descriptor path.
+   * 
+   * @return component containing descriptor path
+   */
+  CpeComponentDescriptor getDescriptor();
+
+  /**
+   * Returns {@link CasProcessorConfigurationParameterSettings}
+   * object containing overrides to parameter settings for this CollectionReader.
+   * 
+   * @return - object containing parameter setting overrides
+   */
+  CasProcessorConfigurationParameterSettings getConfigurationParameterSettings();
+
+  /**
+   * Sets the {@link CasProcessorConfigurationParameterSettings}
+   * object containing overrides to parameter settings for this CollectionReader.
+   * 
+   * @param aSettings
+   *          object containing parameter setting overrides
+   * @throws CpeDescriptorException
+   *           tbd
+   */
+  void setConfigurationParameterSettings(CasProcessorConfigurationParameterSettings aSettings)
+          throws CpeDescriptorException;
+
+  void setCollectionIterator(CpeCollectionReaderIterator iterator);
+
+  CpeCollectionReaderIterator getCollectionIterator();
+}
