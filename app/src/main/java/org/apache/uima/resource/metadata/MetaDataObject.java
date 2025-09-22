@@ -35,10 +35,13 @@ import org.apache.uima.util.XMLizable;
  * {@link #getAttributeValue(String)} and {@link #setAttributeValue(String,Object)} methods. The
  * value of an attribute may be any Object, including another <code>MetaDataObject</code>.
  * <p>
- * <code>MetaDataObject</code>s are not required to allow modification of their attributes' values.
- * An application should check the {@link #isModifiable()} method to determine if attribute values
- * can be modified. Calling {@link #setAttributeValue(String,Object)} on an unmodifiable object will
- * result in a {@link UIMA_UnsupportedOperationException}.
+ * <code>MetaDataObject</code>s are not required to allow modification of their attributes'
+ * values. An application should check the {@link #isModifiable()} method to determine if attribute
+ * values can be modified. Calling {@link #setAttributeValue(String,Object)} on an unmodifiable
+ * object will result in a {@link UIMA_UnsupportedOperationException}.
+ * 
+ * 
+ * 
  */
 public interface MetaDataObject extends Cloneable, java.io.Serializable, XMLizable {
 
@@ -47,13 +50,12 @@ public interface MetaDataObject extends Cloneable, java.io.Serializable, XMLizab
    * 
    * @return a List containing {@link NameClassPair} objects, each of which
    *         contains the name of a parameter and the Class of its value. For primitive types, the
-   *         wrapper classes will be returned (e.g. <code>java.lang.Integer</code> instead of int).
-   * @deprecated - use getAttributes() instead, don't override it, use getAdditionalAttributes to
-   *             specify additional ones
-   * @forRemoval 4.0.0
+   *         wrapper classes will be returned (e.g. <code>java.lang.Integer</code> instead of
+   *         int).
+   * @deprecated - use getAttributes() instead, don't override it, use getAdditionalAttributes to specify additional ones
    */
-  @Deprecated(since = "3.3.0")
-  List<NameClassPair> listAttributes();
+  @Deprecated
+  public List<NameClassPair> listAttributes();
 
   /**
    * Retrieves the value of an attribute of this <code>MetaDataObject</code>.
@@ -61,10 +63,10 @@ public interface MetaDataObject extends Cloneable, java.io.Serializable, XMLizab
    * @param aName
    *          the name of the parameter to get
    * 
-   * @return the value of the parameter named <code>aName</code>. Returns <code>null</code> if there
-   *         is no attribute with that name.
+   * @return the value of the parameter named <code>aName</code>. Returns <code>null</code> if
+   *         there is no attribute with that name.
    */
-  Object getAttributeValue(String aName);
+  public Object getAttributeValue(String aName);
 
   /**
    * Returns whether this <code>MetaDataObject</code> allows the values of its attributes to be
@@ -72,12 +74,13 @@ public interface MetaDataObject extends Cloneable, java.io.Serializable, XMLizab
    * 
    * @return true if and only if this object's attributes may be modified.
    */
-  boolean isModifiable();
+  public boolean isModifiable();
 
   /**
-   * Sets the value of an attribute of this <code>MetaDataObject</code>. Applications should first
-   * check the {@link #isModifiable()} method; calling {@link #setAttributeValue(String, Object)} on
-   * an unmodifiable <code>MetaDataObject</code> will result in an exception.
+   * Sets the value of an attribute of this <code>MetaDataObject</code>. Applications should
+   * first check the {@link #isModifiable()} method; calling
+   * {@link #setAttributeValue(String, Object)} on an unmodifiable <code>MetaDataObject</code>
+   * will result in an exception.
    * 
    * @param aName
    *          the name of the parameter to set
@@ -89,15 +92,15 @@ public interface MetaDataObject extends Cloneable, java.io.Serializable, XMLizab
    * @throws UIMA_IllegalArgumentException
    *           if the given value is not appropriate for the given attribute.
    */
-  void setAttributeValue(String aName, Object aValue);
+  public void setAttributeValue(String aName, Object aValue);
 
   /**
-   * Creates a clone of this <code>MetaDataObject</code>. This performs a "deep" copy by cloning all
-   * attribute values that are also MetaDataObjects.
+   * Creates a clone of this <code>MetaDataObject</code>. This performs a "deep" copy by cloning
+   * all attribute values that are also MetaDataObjects.
    * 
    * @return a clone of this <code>MetaDataObject</code>
    */
-  Object clone();
+  public Object clone();
 
   /**
    * Determines if this object is equal to another. Two MetaDataObjects are equal if they share the
@@ -108,8 +111,7 @@ public interface MetaDataObject extends Cloneable, java.io.Serializable, XMLizab
    * 
    * @return true if and only if this object equals <code>aObj</code>
    */
-  @Override
-  boolean equals(Object aObj);
+  public boolean equals(Object aObj);
 
   /**
    * Gets the URL from which this object was parsed. When this object is parsed from an XML file,
@@ -122,7 +124,7 @@ public interface MetaDataObject extends Cloneable, java.io.Serializable, XMLizab
    * 
    * @return the source URL from which this object was parsed
    */
-  URL getSourceUrl();
+  public URL getSourceUrl();
 
   /**
    * If the sourceURL of this object is non-null, returns its string representation. If it is null,
@@ -130,7 +132,7 @@ public interface MetaDataObject extends Cloneable, java.io.Serializable, XMLizab
    * 
    * @return the source URL as a string, or "&lt;unknown&gt;"
    */
-  String getSourceUrlString();
+  public String getSourceUrlString();
 
   /**
    * Sets the URL from which this object was parsed. Typically only the XML parser sets this. This
@@ -139,5 +141,5 @@ public interface MetaDataObject extends Cloneable, java.io.Serializable, XMLizab
    * @param aUrl
    *          the location of the XML file from which this object was parsed
    */
-  void setSourceUrl(URL aUrl);
+  public void setSourceUrl(URL aUrl);
 }

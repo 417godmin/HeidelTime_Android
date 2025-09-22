@@ -26,16 +26,16 @@ import org.apache.uima.cas.text.AnnotationTreeNode;
 /**
  * Implementation of annotation tree.
  */
-public class AnnotationTreeImpl<T extends AnnotationFS> implements AnnotationTree<T> {
+public class AnnotationTreeImpl<T extends AnnotationFS>  implements AnnotationTree<T> {
 
   private AnnotationTreeNodeImpl<T> root = null;
 
   AnnotationTreeImpl() {
+    super();
   }
 
-  @Override
   public AnnotationTreeNode<T> getRoot() {
-    return root;
+    return this.root;
   }
 
   void setRoot(AnnotationTreeNodeImpl<T> root) {

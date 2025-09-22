@@ -25,18 +25,18 @@ import org.apache.uima.resource.metadata.MetaDataObject;
  * An object that holds configuration that is part of the CPE descriptor. Provides the means of
  * setting descriptor path containing CasInitializer configuration
  * 
+ * 
  * @deprecated As of v2.0 CAS Initializers are deprecated.
- * @forRemoval 4.0.0
  */
-@Deprecated(since = "2.0.0")
+@Deprecated
 public interface CpeCollectionReaderCasInitializer extends MetaDataObject {
   /**
    * Sets descriptor path containing configuration for the CasInitializer
    * 
-   * @param aDescriptor
-   *          - descriptor path
+   * @param aDescriptor -
+   *          descriptor path
    */
-  void setDescriptor(CpeComponentDescriptor aDescriptor);
+  public void setDescriptor(CpeComponentDescriptor aDescriptor);
 
   /**
    * Returns {@link CpeComponentDescriptor} containing
@@ -44,7 +44,7 @@ public interface CpeCollectionReaderCasInitializer extends MetaDataObject {
    * 
    * @return {@link CpeComponentDescriptor}
    */
-  CpeComponentDescriptor getDescriptor();
+  public CpeComponentDescriptor getDescriptor();
 
   /**
    * Returns {@link CasProcessorConfigurationParameterSettings}
@@ -52,7 +52,7 @@ public interface CpeCollectionReaderCasInitializer extends MetaDataObject {
    * 
    * @return - object containing parameter setting overrides
    */
-  CasProcessorConfigurationParameterSettings getConfigurationParameterSettings();
+  public CasProcessorConfigurationParameterSettings getConfigurationParameterSettings();
 
   /**
    * Sets the {@link CasProcessorConfigurationParameterSettings}
@@ -60,18 +60,16 @@ public interface CpeCollectionReaderCasInitializer extends MetaDataObject {
    * 
    * @param aSettings
    *          object containing parameter setting overrides
-   * @throws CpeDescriptorException
-   *           tbd
+   * @throws CpeDescriptorException tbd         
    */
-  void setConfigurationParameterSettings(CasProcessorConfigurationParameterSettings aSettings)
+  public void setConfigurationParameterSettings(CasProcessorConfigurationParameterSettings aSettings)
           throws CpeDescriptorException;
 
-  CpeSofaMappings getSofaNameMappings();
+  public CpeSofaMappings getSofaNameMappings();
 
   /**
-   * @param mappings
-   *          the sofa mappings
+   * @param mappings the sofa mappings
    */
-  void setSofaNameMappings(CpeSofaMappings mappings);
+  public void setSofaNameMappings(CpeSofaMappings mappings);
 
 }

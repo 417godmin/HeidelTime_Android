@@ -16,33 +16,35 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.uima.collection.metadata;
 
 /**
  * An object that contains all
  * {@link CasProcessorDeploymentParam} instances. Provides the
  * means to add, get, and delete deployment parameters.
+ * 
+ * 
  */
 public interface CasProcessorDeploymentParams {
   /**
    * Adds new {@link CasProcessorDeploymentParam} param
    * 
-   * @param aParam
-   *          - parameter to add
+   * @param aParam -
+   *          parameter to add
    */
-  void add(CasProcessorDeploymentParam aParam);
+  public void add(CasProcessorDeploymentParam aParam);
 
   /**
    * Returns {@link CasProcessorDeploymentParam} instance
    * identified by aParamName.
    * 
-   * @param aParamName
-   *          - name of the parameter to get
+   * @param aParamName -
+   *          name of the parameter to get
    * @return - instance of {@link CasProcessorDeploymentParam}
-   * @throws CpeDescriptorException
-   *           tbd
+   * @throws CpeDescriptorException tbd
    */
-  CasProcessorDeploymentParam get(String aParamName) throws CpeDescriptorException;
+  public CasProcessorDeploymentParam get(String aParamName) throws CpeDescriptorException;
 
   /**
    * Returns all instances of
@@ -51,16 +53,15 @@ public interface CasProcessorDeploymentParams {
    * @return - array of {@link CasProcessorDeploymentParam}
    *         instances
    */
-  CasProcessorDeploymentParam[] getAll();
+  public CasProcessorDeploymentParam[] getAll();
 
   /**
    * Deletes named instance of
    * {@link CasProcessorDeploymentParam}
    * 
-   * @param aParam
-   *          - parameter to remove
-   * @throws CpeDescriptorException
-   *           tbd
+   * @param aParam -
+   *          parameter to remove
+   * @throws CpeDescriptorException tbd
    */
-  void remove(CasProcessorDeploymentParam aParam) throws CpeDescriptorException;
+  public void remove(CasProcessorDeploymentParam aParam) throws CpeDescriptorException;
 }

@@ -37,8 +37,8 @@ import org.apache.uima.resource.Resource_ImplBase;
  * 
  * 
  */
-public class FileLanguageResource_impl extends Resource_ImplBase
-        implements ParameterizedDataResource {
+public class FileLanguageResource_impl extends Resource_ImplBase implements
+        ParameterizedDataResource {
 
   /** URL prefix */
   private String mFileUrlPrefix;
@@ -53,7 +53,6 @@ public class FileLanguageResource_impl extends Resource_ImplBase
    * @see org.apache.uima.resource.Resource#initialize(ResourceSpecifier,
    *      Map)
    */
-  @Override
   public boolean initialize(ResourceSpecifier aSpecifier, Map<String, Object> aAdditionalParams)
           throws ResourceInitializationException {
     // aSpecifier must be a FileLanguageResourceSpecifier
@@ -68,27 +67,21 @@ public class FileLanguageResource_impl extends Resource_ImplBase
     mFileUrlSuffix = spec.getFileUrlSuffix();
 
     // store initialization parameters to be passed on to DataReources
-    mResourceInitParams = (aAdditionalParams == null) ? new HashMap<>()
-            : new HashMap<>(aAdditionalParams);
+    mResourceInitParams = (aAdditionalParams == null) ? new HashMap<String, Object>() : new HashMap<String, Object>(
+            aAdditionalParams);
 
-    // call super initialize to set uima context from additional params if available
-    // this context is to allow getting access to the Resource Manager.
-    // https://issues.apache.org/jira/browse/UIMA-5153
-    super.initialize(aSpecifier, aAdditionalParams);
     return true;
   }
 
   /**
    * @see org.apache.uima.resource.Resource#destroy()
    */
-  @Override
   public void destroy() {
   }
 
   /**
    * @see ParameterizedDataResource#getDataResource(String[])
    */
-  @Override
   public DataResource getDataResource(String[] aParams) throws ResourceInitializationException {
     // one parameter - the language - is required
     if (aParams.length != 1) {
@@ -137,8 +130,8 @@ public class FileLanguageResource_impl extends Resource_ImplBase
       return resource;
     } else {
       throw new ResourceInitializationException(
-              ResourceInitializationException.NO_RESOURCE_FOR_PARAMETERS,
-              new Object[] { "[" + aParams[0] + "]" }, firstException);
+              ResourceInitializationException.NO_RESOURCE_FOR_PARAMETERS, new Object[] { "["
+                      + aParams[0] + "]" }, firstException);
     }
   }
 }

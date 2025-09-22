@@ -26,14 +26,19 @@ import java.util.logging.StreamHandler;
 
 /**
  * UIMAStreamHandler is used to handle output streams set during runtime.
+ * 
  */
 public class UIMAStreamHandler extends StreamHandler {
 
-  @Override
-  public synchronized void publish(LogRecord aRecord) {
-    if (aRecord != null) {
-      super.publish(aRecord);
-      flush();
+  /*
+   * (non-Javadoc)
+   * 
+   * @see java.util.logging.Handler#publish(java.util.logging.LogRecord)
+   */
+  public synchronized void publish(LogRecord record) {
+    if (record != null) {
+      super.publish(record);
+      this.flush();
     }
   }
 

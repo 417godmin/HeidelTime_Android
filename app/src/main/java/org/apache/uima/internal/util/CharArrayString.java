@@ -50,11 +50,12 @@ public class CharArrayString {
    * @pre string != null
    */
   public CharArrayString(String string) {
-    len = string.length();
-    start = 0;
-    end = len;
-    chars = new char[len];
-    string.getChars(0, len, chars, 0);
+    super();
+    this.len = string.length();
+    this.start = 0;
+    this.end = this.len;
+    this.chars = new char[this.len];
+    string.getChars(0, this.len, this.chars, 0);
   }
 
   /**
@@ -84,10 +85,11 @@ public class CharArrayString {
    * @pre length &le; charArray.length - startPos
    */
   public CharArrayString(char[] charArray, int startPos, int length) {
-    start = startPos;
-    len = length;
-    end = start + len;
-    chars = charArray;
+    super();
+    this.start = startPos;
+    this.len = length;
+    this.end = this.start + this.len;
+    this.chars = charArray;
   }
 
   /**
@@ -96,7 +98,7 @@ public class CharArrayString {
    * @return The length.
    */
   public int length() {
-    return len;
+    return this.len;
   }
 
   /**
@@ -105,7 +107,7 @@ public class CharArrayString {
    * @return The start position.
    */
   public int getStart() {
-    return start;
+    return this.start;
   }
 
   /**
@@ -114,7 +116,7 @@ public class CharArrayString {
    * @return The end position.
    */
   public int getEnd() {
-    return end;
+    return this.end;
   }
 
   /**
@@ -123,7 +125,7 @@ public class CharArrayString {
    * @return The char array.
    */
   public char[] getChars() {
-    return chars;
+    return this.chars;
   }
 
   /**
@@ -132,25 +134,25 @@ public class CharArrayString {
    * @return A trimmed version.
    */
   public CharArrayString trim() {
-    int newStart = start;
-    int newEnd = end - 1;
+    int newStart = this.start;
+    int newEnd = this.end - 1;
     while (newStart <= newEnd) {
-      if (Character.isWhitespace(chars[newStart])) {
+      if (Character.isWhitespace(this.chars[newStart])) {
         ++newStart;
       } else {
         break;
       }
     }
     while (newEnd >= newStart) {
-      if (Character.isWhitespace(chars[newEnd])) {
+      if (Character.isWhitespace(this.chars[newEnd])) {
         --newEnd;
       } else {
         break;
       }
     }
     ++newEnd;
-    if ((start != newStart) || (end != newEnd)) {
-      return new CharArrayString(chars, newStart, newEnd - newStart);
+    if ((this.start != newStart) || (this.end != newEnd)) {
+      return new CharArrayString(this.chars, newStart, newEnd - newStart);
     }
     return this;
   }
@@ -169,10 +171,10 @@ public class CharArrayString {
    *           If the position parameters are not valid string positions.
    */
   public CharArrayString substring(int startPos, int endPos) throws IndexOutOfBoundsException {
-    if (startPos >= len || startPos > endPos || startPos < 0) {
+    if (startPos >= this.len || startPos > endPos || startPos < 0) {
       throw new IndexOutOfBoundsException();
     }
-    return new CharArrayString(chars, start + startPos, endPos - startPos);
+    return new CharArrayString(this.chars, this.start + startPos, endPos - startPos);
   }
 
   /**
@@ -183,7 +185,7 @@ public class CharArrayString {
    * @return A new substring, starting at <code>startPos</code>.
    */
   public CharArrayString substring(int startPos) {
-    return this.substring(startPos, len);
+    return this.substring(startPos, this.len);
   }
 
   /**
@@ -195,10 +197,10 @@ public class CharArrayString {
    *         contained in the string.
    */
   public int lastIndexOf(char c) {
-    final int last = end - 1;
-    for (int pos = last; pos >= start; pos--) {
-      if (chars[pos] == c) {
-        return pos - start;
+    final int last = this.end - 1;
+    for (int pos = last; pos >= this.start; pos--) {
+      if (this.chars[pos] == c) {
+        return pos - this.start;
       }
     }
     return -1;
@@ -209,9 +211,8 @@ public class CharArrayString {
    * 
    * @return The string version of this CharArrayString.
    */
-  @Override
   public String toString() {
-    return new String(chars, start, len);
+    return new String(this.chars, this.start, this.len);
   }
 
   /**
@@ -223,15 +224,15 @@ public class CharArrayString {
    * @pre string != null
    */
   public boolean endsWith(CharArrayString string) {
-    if (string.len > len) {
+    if (string.len > this.len) {
       return false;
     }
-    int thisPos = end;
+    int thisPos = this.end;
     int stringPos = string.end;
     while (stringPos > string.start) {
       --thisPos;
       --stringPos;
-      if (chars[thisPos] != string.chars[stringPos]) {
+      if (this.chars[thisPos] != string.chars[stringPos]) {
         return false;
       }
     }
@@ -246,10 +247,10 @@ public class CharArrayString {
    * @return <code>true</code> iff we end in <code>c</code>.
    */
   public boolean endsWith(char c) {
-    if (len <= 0) {
+    if (this.len <= 0) {
       return false;
     }
-    return (chars[start + len - 1] == c);
+    return (this.chars[this.start + this.len - 1] == c);
   }
 
   /**
@@ -260,10 +261,10 @@ public class CharArrayString {
    * @return The character at the position.
    */
   public char charAt(int pos) {
-    if (pos < start || pos >= len) {
+    if (pos < this.start || pos >= this.len) {
       throw new IndexOutOfBoundsException();
     }
-    return chars[pos + start];
+    return this.chars[pos + this.start];
   }
 
   /**
@@ -281,10 +282,10 @@ public class CharArrayString {
     if (offset < 0) {
       throw new IndexOutOfBoundsException();
     }
-    int pos = start + offset;
-    while (pos < end) {
-      if (chars[pos] == c) {
-        return pos - start;
+    int pos = this.start + offset;
+    while (pos < this.end) {
+      if (this.chars[pos] == c) {
+        return pos - this.start;
       }
       ++pos;
     }
@@ -313,11 +314,11 @@ public class CharArrayString {
    *           If <code>pos</code> is out of bounds.
    */
   public void setChar(int pos, char c) throws IndexOutOfBoundsException {
-    pos = pos + start;
-    if (pos < start || pos >= end) {
+    pos = pos + this.start;
+    if (pos < this.start || pos >= this.end) {
       throw new IndexOutOfBoundsException();
     }
-    chars[pos] = c;
+    this.chars[pos] = c;
   }
 
   /**
@@ -326,9 +327,9 @@ public class CharArrayString {
    * @return A copy.
    */
   public CharArrayString copy() {
-    final char[] newChars = new char[len];
-    System.arraycopy(chars, 0, newChars, 0, len);
-    return new CharArrayString(newChars, 0, len);
+    final char[] newChars = new char[this.len];
+    System.arraycopy(this.chars, 0, newChars, 0, this.len);
+    return new CharArrayString(newChars, 0, this.len);
   }
 
   /**
@@ -336,20 +337,16 @@ public class CharArrayString {
    * 
    * @return The hash code.
    */
-  @Override
   public int hashCode() {
-    return hashCode(chars, start, end);
+    return hashCode(this.chars, this.start, this.end);
   }
 
   /**
    * A static method to compute the hash code for a character range in an array.
    * 
-   * @param charArray
-   *          -
-   * @param startPos
-   *          -
-   * @param endPos
-   *          -
+   * @param charArray -
+   * @param startPos -
+   * @param endPos -
    * @return The hash code.
    * @pre charArray != null
    * @pre startPos &ge; 0
@@ -398,7 +395,6 @@ public class CharArrayString {
    *          The other string.
    * @return <code>true</code> iff the two strings are equal.
    */
-  @Override
   public boolean equals(Object o) {
     if (o == this) {
       return true;
@@ -406,13 +402,14 @@ public class CharArrayString {
     if (o == null) {
       return false;
     }
-    if (o instanceof CharArrayString s) {
-      if (len != s.len) {
+    if (o instanceof CharArrayString) {
+      CharArrayString s = (CharArrayString) o;
+      if (this.len != s.len) {
         return false;
       }
       int j = s.start;
-      for (int i = start; i < end; i++) {
-        if (chars[i] != s.chars[j]) {
+      for (int i = this.start; i < this.end; i++) {
+        if (this.chars[i] != s.chars[j]) {
           return false;
         }
         ++j;

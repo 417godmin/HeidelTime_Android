@@ -25,56 +25,56 @@ import org.apache.uima.resource.metadata.MetaDataObject;
  * An object that holds configuration that is part of the CPE descriptor. It provides the means of
  * configuring CPE checkpoint. The checkpoint contains a name of the file where the recovery
  * information will be stored and a frequency of checkpoints.
+ * 
+ * 
  */
 public interface CpeCheckpoint extends MetaDataObject {
   /**
    * Sets the file where checkpoint information will be stored
    * 
-   * @param aCheckpointFilePath
-   *          - checkpoint file path
-   * @throws CpeDescriptorException
-   *           tbd
+   * @param aCheckpointFilePath -
+   *          checkpoint file path
+   * @throws CpeDescriptorException tbd
    */
-  void setFilePath(String aCheckpointFilePath) throws CpeDescriptorException;
+  public void setFilePath(String aCheckpointFilePath) throws CpeDescriptorException;
 
   /**
    * Returns file where checkpoint information is stored
    * 
    * @return - checkpoint file path
    */
-  String getFilePath();
+  public String getFilePath();
 
   /**
    * Sets frequency of checkpoints. Currently only time-based checkpointing is supported.
    * 
-   * @param aFrequency
-   *          - number of millis between checkpoints
-   * @param aTimeBased
-   *          - true if checkpoint is based on time
+   * @param aFrequency -
+   *          number of millis between checkpoints
+   * @param aTimeBased -
+   *          true if checkpoint is based on time
    */
-  void setFrequency(int aFrequency, boolean aTimeBased);
+  public void setFrequency(int aFrequency, boolean aTimeBased);
 
   /**
    * Returns frequency of checkpoints.
    * 
    * @return - number of millis between checkpoints
    */
-  int getFrequency();
+  public int getFrequency();
 
   /**
    * Returns true if frequency of checkpoints is time-based
    * 
    * @return true;
    */
-  boolean isTimeBased();
+  public boolean isTimeBased();
 
   /**
    * 
-   * @param aBatchSize
-   *          the size of the batch
+   * @param aBatchSize the size of the batch
    */
-  void setBatchSize(int aBatchSize);
+  public void setBatchSize(int aBatchSize);
 
-  int getBatchSize();
+  public int getBatchSize();
 
 }

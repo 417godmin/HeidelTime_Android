@@ -24,6 +24,7 @@ import org.apache.uima.resource.metadata.impl.PropertyXmlInfo;
 import org.apache.uima.resource.metadata.impl.XmlizationInfo;
 import org.apache.uima.search.Mapping;
 
+
 public class Mapping_impl extends MetaDataObject_impl implements Mapping {
 
   private static final long serialVersionUID = -2371976614485187381L;
@@ -37,7 +38,6 @@ public class Mapping_impl extends MetaDataObject_impl implements Mapping {
    * 
    * @see org.apache.uima.search.Mapping#getFeature()
    */
-  @Override
   public String getFeature() {
     return mFeature;
   }
@@ -47,7 +47,6 @@ public class Mapping_impl extends MetaDataObject_impl implements Mapping {
    * 
    * @see org.apache.uima.search.Mapping#setFeature(java.lang.String)
    */
-  @Override
   public void setFeature(String aFeature) {
     mFeature = aFeature;
   }
@@ -57,7 +56,6 @@ public class Mapping_impl extends MetaDataObject_impl implements Mapping {
    * 
    * @see org.apache.uima.search.Mapping#getIndexName()
    */
-  @Override
   public String getIndexName() {
     return mIndexName;
   }
@@ -67,7 +65,6 @@ public class Mapping_impl extends MetaDataObject_impl implements Mapping {
    * 
    * @see org.apache.uima.search.Mapping#setIndexName(java.lang.String)
    */
-  @Override
   public void setIndexName(String aIndexName) {
     mIndexName = aIndexName;
   }
@@ -77,12 +74,11 @@ public class Mapping_impl extends MetaDataObject_impl implements Mapping {
    * 
    * @see org.apache.uima.resource.metadata.impl.MetaDataObject_impl#getXmlizationInfo()
    */
-  @Override
   protected XmlizationInfo getXmlizationInfo() {
     return XMLIZATION_INFO;
   }
 
-  private static final XmlizationInfo XMLIZATION_INFO = new XmlizationInfo("mapping",
-          new PropertyXmlInfo[] { new PropertyXmlInfo("feature"),
-              new PropertyXmlInfo("indexName") });
+  static final private XmlizationInfo XMLIZATION_INFO = new XmlizationInfo(
+          "mapping",
+          new PropertyXmlInfo[] { new PropertyXmlInfo("feature"), new PropertyXmlInfo("indexName") });
 }

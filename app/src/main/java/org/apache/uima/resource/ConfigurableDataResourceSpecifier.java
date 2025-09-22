@@ -32,7 +32,7 @@ public interface ConfigurableDataResourceSpecifier extends ResourceSpecifier {
    * 
    * @return a URL string
    */
-  String getUrl();
+  public String getUrl();
 
   /**
    * Sets the URL of the data.
@@ -40,7 +40,7 @@ public interface ConfigurableDataResourceSpecifier extends ResourceSpecifier {
    * @param aUrl
    *          a URL string
    */
-  void setUrl(String aUrl);
+  public void setUrl(String aUrl);
 
   /**
    * Gets the metadata for this resource, which includes descriptive information as well as
@@ -48,7 +48,7 @@ public interface ConfigurableDataResourceSpecifier extends ResourceSpecifier {
    * 
    * @return the metadata for this resource
    */
-  ResourceMetaData getMetaData();
+  public ResourceMetaData getMetaData();
 
   /**
    * Sets the metadata for this resource.
@@ -56,5 +56,5 @@ public interface ConfigurableDataResourceSpecifier extends ResourceSpecifier {
    * @param aMetaData
    *          metadata to assign
    */
-  void setMetaData(ResourceMetaData aMetaData);
+  public void setMetaData(ResourceMetaData aMetaData);
 }

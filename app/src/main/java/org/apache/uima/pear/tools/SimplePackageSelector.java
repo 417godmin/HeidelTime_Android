@@ -68,19 +68,18 @@ public class SimplePackageSelector implements InstallationController.PackageSele
    * 
    * @param componentId
    *          The given component ID.
-   * @return The installation directory for the given component or <code>null</code>, if the entered
-   *         string is empty.
+   * @return The installation directory for the given component or <code>null</code>, if the
+   *         entered string is empty.
    */
-  @Override
   public File selectPackageDirectory(String componentId) {
     if (_stdOut != null) {
-      _stdOut.println(
-              "> If the " + componentId + " component is already installed in your file system,");
+      _stdOut.println("> If the " + componentId
+              + " component is already installed in your file system,");
       _stdOut.print("> enter the " + componentId + " root directory: ");
       _stdOut.flush();
     } else {
-      System.out.println(
-              "> If the " + componentId + " component is already installed in your file system,");
+      System.out.println("> If the " + componentId
+              + " component is already installed in your file system,");
       System.out.print("> enter the " + componentId + " root directory: ");
       System.out.flush();
     }
@@ -115,7 +114,6 @@ public class SimplePackageSelector implements InstallationController.PackageSele
    * @return The PEAR file for the given component or <code>null</code>, if the entered string is
    *         empty.
    */
-  @Override
   public File selectPackageFile(String componentId) {
     if (_stdOut != null) {
       _stdOut.print("> Enter the " + componentId + " PEAR file path: ");
@@ -156,7 +154,6 @@ public class SimplePackageSelector implements InstallationController.PackageSele
    * @return The PEAR package URL for the given component or <code>null</code>, if the entered
    *         string is empty.
    */
-  @Override
   public URL selectPackageUrl(String componentId) {
     if (_stdOut != null) {
       _stdOut.print("> Enter the " + componentId + " PEAR package URL: ");

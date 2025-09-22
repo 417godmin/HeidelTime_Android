@@ -45,24 +45,20 @@ public class Parameter_impl extends MetaDataObject_impl implements Parameter {
     this.value = value;
   }
 
-  @Override
   public String getName() {
     return name;
   }
 
-  @Override
   public void setName(String aName) {
-    name = aName;
+    this.name = aName;
   }
 
-  @Override
   public String getValue() {
     return value;
   }
 
-  @Override
   public void setValue(String aValue) {
-    value = aValue;
+    this.value = aValue;
   }
 
   /**
@@ -71,7 +67,6 @@ public class Parameter_impl extends MetaDataObject_impl implements Parameter {
    * @see MetaDataObject_impl#buildFromXMLElement(Element,
    *      XMLParser, ParsingOptions)
    */
-  @Override
   public void buildFromXMLElement(Element aElement, XMLParser aParser, ParsingOptions aOptions)
           throws InvalidXMLException {
     super.buildFromXMLElement(aElement, aParser, aOptions);
@@ -84,7 +79,6 @@ public class Parameter_impl extends MetaDataObject_impl implements Parameter {
    * 
    * @see MetaDataObject_impl#getXMLAttributes()
    */
-  @Override
   protected AttributesImpl getXMLAttributes() {
     AttributesImpl attrs = super.getXMLAttributes();
     attrs.addAttribute("", "name", "name", "CDATA", getName());
@@ -92,11 +86,10 @@ public class Parameter_impl extends MetaDataObject_impl implements Parameter {
     return attrs;
   }
 
-  @Override
   protected XmlizationInfo getXmlizationInfo() {
     return XMLIZATION_INFO;
   }
 
-  private static final XmlizationInfo XMLIZATION_INFO = new XmlizationInfo("parameter",
+  static final private XmlizationInfo XMLIZATION_INFO = new XmlizationInfo("parameter",
           new PropertyXmlInfo[0]);
 }

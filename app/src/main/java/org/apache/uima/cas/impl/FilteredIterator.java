@@ -20,25 +20,27 @@
 package org.apache.uima.cas.impl;
 
 import java.util.Comparator;
+import java.util.NoSuchElementException;
 
 import org.apache.uima.cas.FSIterator;
 import org.apache.uima.cas.FSMatchConstraint;
 import org.apache.uima.cas.FeatureStructure;
-import org.apache.uima.jcas.cas.TOP;
+import org.apache.uima.cas.text.AnnotationFS;
 
 /**
  * Implements a filtered iterator.
  */
-class FilteredIterator<T extends FeatureStructure> implements LowLevelIterator<T> {
+class FilteredIterator<T extends FeatureStructure> extends FSIteratorImplBase<T> {
 
   // The base iterator.
-  private LowLevelIterator<T> it;
+  private FSIterator<T> it;
 
   // The filter constraint.
   private FSMatchConstraint cons;
 
   // Private...
   private FilteredIterator() {
+    super();
   }
 
   /**
@@ -46,122 +48,80 @@ class FilteredIterator<T extends FeatureStructure> implements LowLevelIterator<T
    */
   FilteredIterator(FSIterator<T> it, FSMatchConstraint cons) {
     this();
-    this.it = (LowLevelIterator<T>) it;
+    this.it = it;
     this.cons = cons;
     moveToFirst();
   }
 
-  @Override
   public boolean isValid() {
     // We always make sure that the underlying iterator is either pointing
     // at an FS
     // that matches the constraint, or is not valid. Thus, for isValid(), we
     // can simply refer to the underlying iterator.
-    return it.isValid();
+    return this.it.isValid();
   }
-
+  
   private void adjustForConstraintForward() {
     // If the iterator is valid, but doesn't match the constraint, advance.
-    while (it.isValid() && !cons.match(it.get())) {
-      it.moveToNext();
-    }
+    while (this.it.isValid() && !this.cons.match(this.it.get())) {
+      this.it.moveToNext();
+    }    
   }
-
+  
   private void adjustForConstraintBackward() {
     // If the iterator is valid, but doesn't match the constraint, advance.
-    while (it.isValid() && !cons.match(it.get())) {
-      it.moveToPrevious();
-    }
+    while (this.it.isValid() && !this.cons.match(this.it.get())) {
+      this.it.moveToPrevious();
+    }    
   }
+  
 
-  @Override
-  public void moveToFirstNoReinit() {
-    it.moveToFirstNoReinit();
+  public void moveToFirst() {
+    this.it.moveToFirst();
     adjustForConstraintForward();
   }
 
-  @Override
-  public void moveToLastNoReinit() {
-    it.moveToLast();
+  public void moveToLast() {
+    this.it.moveToLast();
     adjustForConstraintBackward();
   }
 
-  @Override
-  public void moveToNextNvc() {
-    it.moveToNextNvc();
+  public void moveToNext() {
+    this.it.moveToNext();
     adjustForConstraintForward();
   }
 
-  @Override
-  public void moveToPreviousNvc() {
-    it.moveToPreviousNvc();
+  public void moveToPrevious() {
+    this.it.moveToPrevious();
     adjustForConstraintBackward();
   }
 
-  @Override
-  public T getNvc() {
-    return it.getNvc();
+  public T get() throws NoSuchElementException {
+    // This may throw an exception.
+    return this.it.get();
   }
 
   /**
    * @see FSIterator#copy()
    */
-  @Override
-  public FilteredIterator<T> copy() {
-    return new FilteredIterator<>(it.copy(), cons);
+  public FSIterator<T> copy() {
+    return new FilteredIterator<T>(this.it.copy(), this.cons);
   }
 
   /**
    * @see FSIterator#moveTo(FeatureStructure)
    */
-  @Override
-  public void moveToNoReinit(FeatureStructure fs) {
-    it.moveToNoReinit(fs);
+  public void moveTo(FeatureStructure fs) {
+    this.it.moveTo(fs);
     adjustForConstraintForward();
   }
 
-  // @Override
-  // public void moveToExactNoReinit(FeatureStructure fs) {
-  // this.it.moveToExactNoReinit(fs);
-  // adjustForConstraintForward();
-  // }
-
+  /* (non-Javadoc)
+   * @see org.apache.uima.cas.impl.FSIteratorImplBase#moveTo(java.util.Comparator)
+   */
   @Override
-  public int ll_indexSizeMaybeNotCurrent() {
-    return it.ll_indexSizeMaybeNotCurrent();
+  <TT extends AnnotationFS> void moveTo(int begin, int end) {
+    ((FSIteratorImplBase<T>)(this.it)).moveTo(begin, end);
+    adjustForConstraintForward();
   }
-
-  @Override
-  public LowLevelIndex<T> ll_getIndex() {
-    return it.ll_getIndex();
-  }
-
-  @Override
-  public int ll_maxAnnotSpan() {
-    return it.ll_maxAnnotSpan();
-  }
-
-  @Override
-  public boolean isIndexesHaveBeenUpdated() {
-    return it.isIndexesHaveBeenUpdated();
-  }
-
-  @Override
-  public boolean maybeReinitIterator() {
-    return it.maybeReinitIterator();
-  }
-
-  @Override
-  public Comparator<TOP> getComparator() {
-    return it.getComparator();
-  }
-
-  // /* (non-Javadoc)
-  // * @see org.apache.uima.cas.impl.FSIteratorImplBase#moveTo(java.util.Comparator)
-  // */
-  // @Override
-  // <TT extends AnnotationFS> void moveTo(int begin, int end) {
-  // ((FSIterator_concurrentmod<T>)(this.it)).moveTo(begin, end);
-  // adjustForConstraintForward();
-  // }
 }

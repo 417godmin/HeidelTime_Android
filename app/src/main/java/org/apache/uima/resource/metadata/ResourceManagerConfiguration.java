@@ -40,15 +40,17 @@ import org.apache.uima.util.InvalidXMLException;
  * is initialized (e.g. during AnalysisEngine initialization).
  * <p>
  * Resource Manager Configurations can optionally be assigned a {@link #getName() name},
- * {@link #getDescription() description}, {@link #getVendor() vendor}, and {@link #getVersion()
- * version}. It is recommended that these properties be set on any Resource Manager Configuration
- * that is meant to be shared by (imported by) multiple components.
+ * {@link #getDescription() description}, {@link #getVendor() vendor}, and
+ * {@link #getVersion() version}. It is recommended that these properties be set on any Resource
+ * Manager Configuration that is meant to be shared by (imported by) multiple components.
  */
 public interface ResourceManagerConfiguration extends MetaDataObject {
   /**
+   * Gets the name of this Resource Manager Configuration.
+   * 
    * @return the name of this Resource Manager Configuration, null if none has been specified.
    */
-  String getName();
+  public String getName();
 
   /**
    * Sets the name of this Resource Manager Configuration.
@@ -59,13 +61,15 @@ public interface ResourceManagerConfiguration extends MetaDataObject {
    * @throws UIMA_UnsupportedOperationException
    *           if this object is not modifiable
    */
-  void setName(String aName);
+  public void setName(String aName);
 
   /**
+   * Gets the version number of this Resource Manager Configuration.
+   * 
    * @return the version number of this Resource Manager Configuration, as a String, null if none
    *         has been specified.
    */
-  String getVersion();
+  public String getVersion();
 
   /**
    * Sets the version number of this Resource Manager Configuration.
@@ -76,13 +80,15 @@ public interface ResourceManagerConfiguration extends MetaDataObject {
    * @throws UIMA_UnsupportedOperationException
    *           if this object is not modifiable
    */
-  void setVersion(String aVersion);
+  public void setVersion(String aVersion);
 
   /**
+   * Gets the description of this Resource Manager Configuration.
+   * 
    * @return the description of this Resource Manager Configuration, null if none has been
    *         specified.
    */
-  String getDescription();
+  public String getDescription();
 
   /**
    * Sets the description of this Resource Manager Configuration.
@@ -93,12 +99,14 @@ public interface ResourceManagerConfiguration extends MetaDataObject {
    * @throws UIMA_UnsupportedOperationException
    *           if this object is not modifiable
    */
-  void setDescription(String aDescription);
+  public void setDescription(String aDescription);
 
   /**
+   * Gets the vendor of this Resource Manager Configuration.
+   * 
    * @return the vendor of this Resource Manager Configuration, as a String
    */
-  String getVendor();
+  public String getVendor();
 
   /**
    * Sets the vendor of this Resource Manager Configuration.
@@ -110,12 +118,14 @@ public interface ResourceManagerConfiguration extends MetaDataObject {
    * @throws UIMA_UnsupportedOperationException
    *           if this object is not modifiable
    */
-  void setVendor(String aVendor);
+  public void setVendor(String aVendor);
 
   /**
+   * Gets the imports declared by this Resource Manager Configuration.
+   * 
    * @return an array of imports declared by this Resource Manager Configuration.
    */
-  Import[] getImports();
+  public Import[] getImports();
 
   /**
    * Sets the imports declared by this Resource Manager Configuration.
@@ -123,7 +133,7 @@ public interface ResourceManagerConfiguration extends MetaDataObject {
    * @param aImports
    *          an array of imports declared by this Resource Manager Configuration.
    */
-  void setImports(Import... aImports);
+  public void setImports(Import[] aImports);
 
   /**
    * Gets the import declared by this Resource Manager Configuration, if any.
@@ -133,8 +143,8 @@ public interface ResourceManagerConfiguration extends MetaDataObject {
    * @deprecated Use {@link #getImports()} instead. There may be many imports; this method only
    *             returns the first.
    */
-  @Deprecated(since = "3.3.0")
-  Import getImport();
+  @Deprecated
+  public Import getImport();
 
   /**
    * Sets the import declared by this Resource Manager Configuration, if any.
@@ -144,8 +154,8 @@ public interface ResourceManagerConfiguration extends MetaDataObject {
    *          manager configuration. Null indicates that there is no import.
    * @deprecated Use {@link #setImports(Import[])} instead.
    */
-  @Deprecated(since = "3.3.0")
-  void setImport(Import aImport);
+  @Deprecated
+  public void setImport(Import aImport);
 
   /**
    * Gets the descriptions of the external resources to be instantiated and managed by the resource
@@ -154,7 +164,7 @@ public interface ResourceManagerConfiguration extends MetaDataObject {
    * @return an array of {@link ExternalResourceDescription} objects that
    *         describe the external resources.
    */
-  ExternalResourceDescription[] getExternalResources();
+  public ExternalResourceDescription[] getExternalResources();
 
   /**
    * Sets the descriptions of the external resources to be instantiated and managed by the resource
@@ -164,7 +174,7 @@ public interface ResourceManagerConfiguration extends MetaDataObject {
    *          an array of {@link ExternalResourceDescription} objects that
    *          describe the external resources.
    */
-  void setExternalResources(ExternalResourceDescription... aDescriptions);
+  public void setExternalResources(ExternalResourceDescription[] aDescriptions);
 
   /**
    * Adds a External Resource to this configuration
@@ -175,7 +185,7 @@ public interface ResourceManagerConfiguration extends MetaDataObject {
    * @throws UIMA_UnsupportedOperationException
    *           if this object is not modifiable
    */
-  void addExternalResource(ExternalResourceDescription aExternalResourceDescription);
+  public void addExternalResource(ExternalResourceDescription aExternalResourceDescription);
 
   /**
    * Removes an ExternalResource from this configuration.
@@ -187,7 +197,7 @@ public interface ResourceManagerConfiguration extends MetaDataObject {
    * @throws UIMA_UnsupportedOperationException
    *           if this object is not modifiable
    */
-  void removeExternalResource(ExternalResourceDescription aExternalResourceDescription);
+  public void removeExternalResource(ExternalResourceDescription aExternalResourceDescription);
 
   /**
    * Gets the bindings between an Analysis Engine's
@@ -198,7 +208,7 @@ public interface ResourceManagerConfiguration extends MetaDataObject {
    * @return an array of {@link ExternalResourceBinding} objects
    *         that bind dependencies to resources.
    */
-  ExternalResourceBinding[] getExternalResourceBindings();
+  public ExternalResourceBinding[] getExternalResourceBindings();
 
   /**
    * Sets the bindings between an Analysis Engine's
@@ -210,7 +220,7 @@ public interface ResourceManagerConfiguration extends MetaDataObject {
    *          an array of {@link ExternalResourceBinding} objects
    *          that bind dependencies to resources.
    */
-  void setExternalResourceBindings(ExternalResourceBinding... aBindings);
+  public void setExternalResourceBindings(ExternalResourceBinding[] aBindings);
 
   /**
    * Adds a External ResourceBinding to this configuration
@@ -221,7 +231,7 @@ public interface ResourceManagerConfiguration extends MetaDataObject {
    * @throws UIMA_UnsupportedOperationException
    *           if this object is not modifiable
    */
-  void addExternalResourceBinding(ExternalResourceBinding aExternalResourceBinding);
+  public void addExternalResourceBinding(ExternalResourceBinding aExternalResourceBinding);
 
   /**
    * Removes an ExternalResourceBinding from this configuration.
@@ -233,7 +243,7 @@ public interface ResourceManagerConfiguration extends MetaDataObject {
    * @throws UIMA_UnsupportedOperationException
    *           if this object is not modifiable
    */
-  void removeExternalResourceBinding(ExternalResourceBinding aExternalResourceBinding);
+  public void removeExternalResourceBinding(ExternalResourceBinding aExternalResourceBinding);
 
   /**
    * Resolves any import declarations in this resource manager configuration, adding the imported
@@ -244,7 +254,7 @@ public interface ResourceManagerConfiguration extends MetaDataObject {
    * @throws InvalidXMLException
    *           if either the import target does not exist or is invalid
    */
-  void resolveImports() throws InvalidXMLException;
+  public void resolveImports() throws InvalidXMLException;
 
   /**
    * Resolves any import declarations in this resource manager configuration, adding the imported
@@ -255,12 +265,12 @@ public interface ResourceManagerConfiguration extends MetaDataObject {
    * @param aResourceManager
    *          the Resource Manager used to locate the XML file imported by name. For example, the
    *          path in which to locate the imported files can be set via the
-   *          {@link ResourceManager#setDataPathElements} method.
+   *          {@link ResourceManager#setDataPath(String)} method.
    * 
    * @throws InvalidXMLException
    *           if either the import target does not exist or is invalid
    */
-  void resolveImports(ResourceManager aResourceManager) throws InvalidXMLException;
+  public void resolveImports(ResourceManager aResourceManager) throws InvalidXMLException;
 
   /**
    * Resolves any import declarations in this resource manager configuration, adding the imported
@@ -273,13 +283,14 @@ public interface ResourceManagerConfiguration extends MetaDataObject {
    * @param aResourceManager
    *          the Resource Manager used to locate the XML file imported by name. For example, the
    *          path in which to locate the imported files can be set via the
-   *          {@link ResourceManager#setDataPathElements} method.
+   *          {@link ResourceManager#setDataPath(String)} method.
    * @param aAlreadyImportedURLs
    *          names of already imported URLs, so we don't import them again.
    * 
    * @throws InvalidXMLException
    *           if either the import target does not exist or is invalid
    */
-  void resolveImports(Collection<String> aAlreadyImportedURLs, ResourceManager aResourceManager)
+  public void resolveImports(Collection<String> aAlreadyImportedURLs, ResourceManager aResourceManager)
           throws InvalidXMLException;
+
 }

@@ -17,6 +17,7 @@
  * under the License.
  */
 
+
 package org.apache.uima.cas.impl;
 
 import java.util.ArrayList;
@@ -27,20 +28,19 @@ import org.apache.uima.cas.Feature;
 import org.apache.uima.cas.FeatureStructure;
 
 /**
- * Implementation of boolean match constraint. See interface for documentation.
+ * Implementation of boolean match constraint.  See interface for documentation.
  */
 public class BooleanConstraint extends PathConstraint implements FSMatchConstraint {
 
   private final FSBooleanConstraint cons;
-
+  
   BooleanConstraint(ArrayList<String> path, FSBooleanConstraint constraint) {
     super(path);
-    cons = constraint;
+    this.cons = constraint;
   }
 
-  @Override
   public boolean match(FeatureStructure fs) {
-    final int max = featNames.size() - 1; // The last position in the
+    final int max = this.featNames.size() - 1; // The last position in the
     // path!
     if (max < 0) {
       // If the path is empty, we can't get a boolean, and therefore the
@@ -49,17 +49,17 @@ public class BooleanConstraint extends PathConstraint implements FSMatchConstrai
     }
     Feature feat;
     for (int i = 0; i < max; i++) {
-      feat = fs.getType().getFeatureByBaseName(featNames.get(i));
+      feat = fs.getType().getFeatureByBaseName(this.featNames.get(i));
       if (feat == null) {
         return false;
       }
       fs = fs.getFeatureValue(feat);
     }
-    feat = fs.getType().getFeatureByBaseName(featNames.get(max));
+    feat = fs.getType().getFeatureByBaseName(this.featNames.get(max));
     if (feat == null) {
       return false;
     }
-    return cons.match(fs.getBooleanValue(feat));
+    return this.cons.match(fs.getBooleanValue(feat));
   }
 
 }

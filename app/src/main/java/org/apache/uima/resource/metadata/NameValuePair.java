@@ -21,13 +21,17 @@ package org.apache.uima.resource.metadata;
 
 /**
  * A type of <code>MetaDataObject</code> that stores a name (String) and value (Object).
+ * 
+ * 
  */
 public interface NameValuePair extends MetaDataObject {
 
   /**
-   * @return the name.
+   * Gets the name.
+   * 
+   * @return the name
    */
-  String getName();
+  public String getName();
 
   /**
    * Sets the name.
@@ -35,12 +39,14 @@ public interface NameValuePair extends MetaDataObject {
    * @param aName
    *          a name
    */
-  void setName(String aName);
+  public void setName(String aName);
 
   /**
+   * Gets the value.
+   * 
    * @return the value
    */
-  Object getValue();
+  public Object getValue();
 
   /**
    * Sets the value.
@@ -48,6 +54,6 @@ public interface NameValuePair extends MetaDataObject {
    * @param aValue
    *          a value
    */
-  void setValue(Object aValue);
+  public void setValue(Object aValue);
 
 }

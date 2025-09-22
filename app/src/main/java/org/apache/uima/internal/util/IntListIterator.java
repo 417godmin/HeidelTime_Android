@@ -22,8 +22,8 @@ package org.apache.uima.internal.util;
 import java.util.NoSuchElementException;
 
 /**
- * Int iterator in the Java style, but returning/using ints. Contrast with IntPointerIterator, which
- * is in the UIMA style allowing forward and backwards movement.
+ * Int iterator in the Java style, but returning/using ints.
+ * Contrast with IntPointerIterator, which is in the UIMA style allowing forward and backwards movement.
  */
 public interface IntListIterator {
 
@@ -35,27 +35,14 @@ public interface IntListIterator {
   boolean hasNext();
 
   /**
-   * Return the next int in the list and increment the iterator.
+   * Return the next feature structure and increment the iterator.
    * 
-   * @return The next int.
+   * @return The next feature structure.
    * @exception NoSuchElementException
    *              If no next element exists, i.e., when the iterator points at the last position in
    *              the index.
    */
-  default int next() throws NoSuchElementException {
-    if (!hasNext()) {
-      throw new NoSuchElementException();
-    }
-    return nextNvc();
-  }
-
-  /**
-   * version of next() which bypasses the validity check. Only use this if you've already done this
-   * check yourself.
-   * 
-   * @return the next int in the list and increment the iterator.
-   */
-  int nextNvc();
+  int next() throws NoSuchElementException;
 
   /**
    * Check if there is a previous element. Does not move the iterator.
@@ -65,27 +52,14 @@ public interface IntListIterator {
   boolean hasPrevious();
 
   /**
-   * Return the previous int and decrement the iterator.
+   * Return the previous feature structure and decrement the iterator.
    * 
-   * @return the previous int (found by first moving the iterator one backwards).
+   * @return The previous feature structure.
    * @exception NoSuchElementException
    *              If no previous element exists, i.e., when the iterator points at the first
    *              position in the index.
    */
-  default int previous() throws NoSuchElementException {
-    if (!hasPrevious()) {
-      throw new NoSuchElementException();
-    }
-    return previousNvc();
-  }
-
-  /**
-   * version of previous that bypasses the validity check. Only use this if you've already done this
-   * check yourself.
-   * 
-   * @return the previous int (found by first moving the iterator one backwards).
-   */
-  int previousNvc();
+  int previous();
 
   /**
    * Move the iterator to the start of the underlying index.

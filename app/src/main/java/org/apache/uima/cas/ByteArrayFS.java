@@ -16,20 +16,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.uima.cas;
 
 /**
  * Byte array interface. To create a byte array object, use
- * {@link CAS#createByteArrayFS CAS.createByteArrayFS(int)} or new
- * ByteArray(aJCas, length)
+ * {@link CAS#createByteArrayFS CAS.createByteArrayFS()}.
+ * 
+ * 
  */
-public interface ByteArrayFS extends CommonArrayFS<Byte> {
+public interface ByteArrayFS extends CommonArrayFS {
 
   /**
    * Get the i-th string from the array.
    * 
-   * @param i
-   *          the index
+   * @param i the index
    * @return The i-th element.
    * @exception ArrayIndexOutOfBoundsException
    *              If the index is out of bounds.
@@ -56,8 +57,8 @@ public interface ByteArrayFS extends CommonArrayFS<Byte> {
   byte[] toArray();
 
   /**
-   * Copy the contents of the array from <code>start</code> to <code>end</code> to the destination
-   * <code>destArray</code> with destination offset <code>destOffset</code>.
+   * Copy the contents of the array from <code>start</code> to <code>end</code> to the
+   * destination <code>destArray</code> with destination offset <code>destOffset</code>.
    * 
    * @param srcOffset
    *          The index of the first element to copy.
@@ -88,4 +89,5 @@ public interface ByteArrayFS extends CommonArrayFS<Byte> {
    */
   void copyFromArray(byte[] src, int srcOffset, int destOffset, int length)
           throws ArrayIndexOutOfBoundsException;
+
 }

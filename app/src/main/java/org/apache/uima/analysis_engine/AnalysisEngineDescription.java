@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.uima.analysis_engine;
 
 import java.io.IOException;
@@ -43,8 +44,9 @@ import org.xml.sax.SAXException;
  * and use an {@link AnalysisEngine}.
  * <p>
  * The {@link UIMAFramework#produceAnalysisEngine(ResourceSpecifier)} factory method
- * is used to create an AnalysisEngine instance from a <code>AnalysisEngineDescription</code>. This
- * insulates applications from knowledge of the particular AnalysisEngine implementation being used.
+ * is used to create an AnalysisEngine instance from a <code>AnalysisEngineDescription</code>.
+ * This insulates applications from knowledge of the particular AnalysisEngine implementation being
+ * used.
  * <p>
  * The AnalysisEngine Description contains the following information:
  * <p>
@@ -69,6 +71,8 @@ import org.xml.sax.SAXException;
  * capabilities of this AnalysisEngine, the TypeSystem used by this AnalysisEngine, and other
  * parameters.</li>
  * </ul>
+ * 
+ * 
  */
 public interface AnalysisEngineDescription extends ResourceCreationSpecifier {
 
@@ -78,8 +82,7 @@ public interface AnalysisEngineDescription extends ResourceCreationSpecifier {
    * 
    * @return the framework implementation name
    */
-  @Override
-  String getFrameworkImplementation();
+  public String getFrameworkImplementation();
 
   /**
    * Sets the name of the framework implementation within which the AnalysisEngine executes. The
@@ -88,8 +91,7 @@ public interface AnalysisEngineDescription extends ResourceCreationSpecifier {
    * @param aFrameworkImplementation
    *          the framework implementation name
    */
-  @Override
-  void setFrameworkImplementation(String aFrameworkImplementation);
+  public void setFrameworkImplementation(String aFrameworkImplementation);
 
   /**
    * Retrieves whether the AnalysisEngine is primitive (consisting of one annotator), as opposed to
@@ -103,7 +105,7 @@ public interface AnalysisEngineDescription extends ResourceCreationSpecifier {
    * 
    * @return true if and only if the AnalysisEngine is primitive
    */
-  boolean isPrimitive();
+  public boolean isPrimitive();
 
   /**
    * Sets whether the AnalysisEngine is primitive (consisting of one annotator), as opposed to
@@ -112,7 +114,7 @@ public interface AnalysisEngineDescription extends ResourceCreationSpecifier {
    * @param aPrimitive
    *          true if and only if the AnalysisEngine is primitive
    */
-  void setPrimitive(boolean aPrimitive);
+  public void setPrimitive(boolean aPrimitive);
 
   /**
    * For a primitive AnalysisEngine only, retrieves the name of the annotator implementation. For
@@ -121,7 +123,7 @@ public interface AnalysisEngineDescription extends ResourceCreationSpecifier {
    * @return the implementation name of the annotator. If the AnalysisEngine is aggregate, always
    *         returns <code>null</code>.
    */
-  String getAnnotatorImplementationName();
+  public String getAnnotatorImplementationName();
 
   /**
    * For a primitive AnalysisEngine only, sets the name of the annotator implementation. For Java
@@ -130,11 +132,11 @@ public interface AnalysisEngineDescription extends ResourceCreationSpecifier {
    * @param aImplementationName
    *          the implementation name of the annotator.
    */
-  void setAnnotatorImplementationName(String aImplementationName);
+  public void setAnnotatorImplementationName(String aImplementationName);
 
   /**
-   * For an aggregate AnalysisEngine only, retrieves a collection of {@link ResourceSpecifier}s that
-   * indicate which delegate AnalysisEngines comprise the aggregate. Each
+   * For an aggregate AnalysisEngine only, retrieves a collection of {@link ResourceSpecifier}s
+   * that indicate which delegate AnalysisEngines comprise the aggregate. Each
    * <code>ResourceSpecifier</code> can either:
    * <ol type="a">
    * <li>completely describe how to build a AnalysisEngine instance</li>
@@ -143,8 +145,8 @@ public interface AnalysisEngineDescription extends ResourceCreationSpecifier {
    * </ol>
    * <p>
    * This method returns an unmodifiable Map whose keys are string identifiers and whose values are
-   * the <code>ResourceSpecifier</code> objects. The string identifiers in this Map are to refer to
-   * the delegate AnalysisEngines from elsewhere in this <code>AnalysisEngineDescription</code>.
+   * the <code>ResourceSpecifier</code> objects. The string identifiers in this Map are to refer
+   * to the delegate AnalysisEngines from elsewhere in this <code>AnalysisEngineDescription</code>.
    * (For example in the {@link org.apache.uima.analysis_engine.metadata.FlowConstraints}
    * description.)
    * <p>
@@ -154,16 +156,17 @@ public interface AnalysisEngineDescription extends ResourceCreationSpecifier {
    * {@link #getDelegateAnalysisEngineSpecifiersWithImports()}. Also use that method if you want to
    * be able to make changes to the Map.
    * 
-   * @return an unmodifiable Map with <code>String</code> keys and {@link ResourceSpecifier} values.
+   * @return an unmodifiable Map with <code>String</code> keys and {@link ResourceSpecifier}
+   *         values.
    * 
    * @throws InvalidXMLException
    *           if import resolution failed
    */
-  Map<String, ResourceSpecifier> getDelegateAnalysisEngineSpecifiers() throws InvalidXMLException;
+  public Map<String, ResourceSpecifier> getDelegateAnalysisEngineSpecifiers() throws InvalidXMLException;
 
   /**
-   * For an aggregate AnalysisEngine only, retrieves a collection of {@link ResourceSpecifier}s that
-   * indicate which delegate AnalysisEngines comprise the aggregate. Each
+   * For an aggregate AnalysisEngine only, retrieves a collection of {@link ResourceSpecifier}s
+   * that indicate which delegate AnalysisEngines comprise the aggregate. Each
    * <code>ResourceSpecifier</code> can either:
    * <ol type="a">
    * <li>completely describe how to build a AnalysisEngine instance</li>
@@ -172,8 +175,8 @@ public interface AnalysisEngineDescription extends ResourceCreationSpecifier {
    * </ol>
    * <p>
    * This method returns an unmodifiable Map whose keys are string identifiers and whose values are
-   * the <code>ResourceSpecifier</code> objects. The string identifiers in this Map are to refer to
-   * the delegate AnalysisEngines from elsewhere in this <code>AnalysisEngineDescription</code>.
+   * the <code>ResourceSpecifier</code> objects. The string identifiers in this Map are to refer
+   * to the delegate AnalysisEngines from elsewhere in this <code>AnalysisEngineDescription</code>.
    * (For example in the {@link org.apache.uima.analysis_engine.metadata.FlowConstraints}
    * description.)
    * <p>
@@ -186,13 +189,14 @@ public interface AnalysisEngineDescription extends ResourceCreationSpecifier {
    * @param aResourceManager
    *          the ResourceManager to use to get the datapath needed to resolve imports
    * 
-   * @return an unmodifiable Map with <code>String</code> keys and {@link ResourceSpecifier} values.
+   * @return an unmodifiable Map with <code>String</code> keys and {@link ResourceSpecifier}
+   *         values.
    * 
    * @throws InvalidXMLException
    *           if import resolution failed
    */
-  Map<String, ResourceSpecifier> getDelegateAnalysisEngineSpecifiers(
-          ResourceManager aResourceManager) throws InvalidXMLException;
+  public Map<String, ResourceSpecifier> getDelegateAnalysisEngineSpecifiers(ResourceManager aResourceManager)
+          throws InvalidXMLException;
 
   /**
    * Retrieves a Map whose keys are string identifiers and whose values are the either
@@ -208,7 +212,7 @@ public interface AnalysisEngineDescription extends ResourceCreationSpecifier {
    *         {@link org.apache.uima.resource.metadata.Import} objects as values. This Map may be
    *         modified to add or remove imports or specifiers.
    */
-  Map<String, MetaDataObject> getDelegateAnalysisEngineSpecifiersWithImports();
+  public Map<String, MetaDataObject> getDelegateAnalysisEngineSpecifiersWithImports();
 
   /**
    * For an aggregate AnalysisEngine only, gets the declaration of which FlowController should be
@@ -217,7 +221,7 @@ public interface AnalysisEngineDescription extends ResourceCreationSpecifier {
    * @return an object containing either an import of a ResourceSpecifier or a ResourceSpecifier
    *         itself. This specifier will be used to create the FlowController.
    */
-  FlowControllerDeclaration getFlowControllerDeclaration();
+  public FlowControllerDeclaration getFlowControllerDeclaration();
 
   /**
    * For an aggregate AnalysisEngine only, sets the declaration of which FlowController should be
@@ -227,35 +231,34 @@ public interface AnalysisEngineDescription extends ResourceCreationSpecifier {
    *          an object containing either an import of a ResourceSpecifier or a ResourceSpecifier
    *          itself. This specifier will be used to create the FlowController.
    */
-  void setFlowControllerDeclaration(FlowControllerDeclaration aFlowControllerDeclaration);
+  public void setFlowControllerDeclaration(FlowControllerDeclaration aFlowControllerDeclaration);
 
   /**
    * For an aggregate AnalysisEngine only, gets the ResourceSpecifiers of all components in this
    * aggregate. This includes the FlowController as well as all of the component AnalysisEngines.
    * <p>
    * This method returns an unmodifiable Map whose keys are string identifiers and whose values are
-   * the <code>ResourceSpecifier</code> objects. The string identifiers in this Map are to refer to
-   * the components from elsewhere in this aggregate descriptor, for example in configuration
+   * the <code>ResourceSpecifier</code> objects. The string identifiers in this Map are to refer
+   * to the components from elsewhere in this aggregate descriptor, for example in configuration
    * parameter overrides and resource bindings.
    * <p>
    * Note that the Map returned by this method will never contain
    * {@link org.apache.uima.resource.metadata.Import} objects -- they will always be resolved first.
    * If you want to get access to the original Import objects, use
-   * {@link #getDelegateAnalysisEngineSpecifiersWithImports()} and
-   * {@link #getFlowControllerDeclaration()}. Also use those methods if you want to make changes to
-   * be able to make changes to the Map.
+   * {@link #getDelegateAnalysisEngineSpecifiersWithImports()} and {@link #getFlowControllerDeclaration()}.
+   * Also use those methods if you want to make changes to be able to make changes to the Map.
    * 
    * @param aResourceManager
    *          the ResourceManager from which to get the datapath needed to resolve imports. Pass
    *          null to use the default ResourceManager.
    * 
-   * @return an unmodifiable Map with <code>String</code> keys and {@link ResourceSpecifier} values.
+   * @return an unmodifiable Map with <code>String</code> keys and {@link ResourceSpecifier}
+   *         values.
    * 
    * @throws InvalidXMLException
    *           if import resolution failed
    */
-  Map<String, ResourceSpecifier> getAllComponentSpecifiers(ResourceManager aResourceManager)
-          throws InvalidXMLException;
+  public Map<String, ResourceSpecifier> getAllComponentSpecifiers(ResourceManager aResourceManager) throws InvalidXMLException;
 
   /**
    * Retrieves the metadata that describes the AnalysisEngine. This includes the AnalysisEngine's
@@ -266,7 +269,7 @@ public interface AnalysisEngineDescription extends ResourceCreationSpecifier {
    * @return the <code>AnalysisEngineMetaData</code> object containing the AnalysisEngine's
    *         metadata. This object can be modified.
    */
-  AnalysisEngineMetaData getAnalysisEngineMetaData();
+  public AnalysisEngineMetaData getAnalysisEngineMetaData();
 
   // /**
   // *
@@ -275,7 +278,7 @@ public interface AnalysisEngineDescription extends ResourceCreationSpecifier {
   /*
    * Reserved for future use.
    */
-  SofaMapping[] getSofaMappings();
+  public SofaMapping[] getSofaMappings();
 
   // /**
   // *
@@ -284,7 +287,7 @@ public interface AnalysisEngineDescription extends ResourceCreationSpecifier {
   /*
    * Reserved for future use.
    */
-  void setSofaMappings(SofaMapping[] aSofaMappings);
+  public void setSofaMappings(SofaMapping[] aSofaMappings);
 
   /**
    * Gets the ResourceSpecifier of one a component of this aggregate, based on its key. This may be
@@ -297,7 +300,7 @@ public interface AnalysisEngineDescription extends ResourceCreationSpecifier {
    * @throws ResourceInitializationException
    *           if there's a problem resolving imports
    */
-  ResourceSpecifier getComponentSpecifier(String key) throws ResourceInitializationException;
+  public ResourceSpecifier getComponentSpecifier(String key) throws ResourceInitializationException;
 
   /**
    * Does full validation of this Analysis Engine Description. This essentially performs all
@@ -309,8 +312,7 @@ public interface AnalysisEngineDescription extends ResourceCreationSpecifier {
    * @throws ResourceInitializationException
    *           if validation failed
    */
-  @Override
-  void doFullValidation() throws ResourceInitializationException;
+  public void doFullValidation() throws ResourceInitializationException;
 
   /**
    * Does full validation of this Analysis Engine Description. This essentially performs all
@@ -325,8 +327,8 @@ public interface AnalysisEngineDescription extends ResourceCreationSpecifier {
    * @throws ResourceInitializationException
    *           if validation failed
    */
-  @Override
-  void doFullValidation(ResourceManager aResourceManager) throws ResourceInitializationException;
+  public void doFullValidation(ResourceManager aResourceManager)
+          throws ResourceInitializationException;
 
   /**
    * Resolves all import declarations in this AnalysisEngineDescription. For an aggregate, this is
@@ -342,7 +344,7 @@ public interface AnalysisEngineDescription extends ResourceCreationSpecifier {
    * @throws InvalidXMLException
    *           if an import target does not exist or is invalid
    */
-  void resolveImports(ResourceManager aResourceManager) throws InvalidXMLException;
+  public void resolveImports(ResourceManager aResourceManager) throws InvalidXMLException;
 
   /**
    * Resolves all import declarations in this AnalysisEngineDescription. For an aggregate, this is
@@ -362,7 +364,7 @@ public interface AnalysisEngineDescription extends ResourceCreationSpecifier {
    * @throws InvalidXMLException
    *           if an import target does not exist or is invalid
    */
-  void resolveImports(Collection<String> aAlreadyImportedDelegateAeUrls,
+  public void resolveImports(Collection<String> aAlreadyImportedDelegateAeUrls,
           ResourceManager aResourceManager) throws InvalidXMLException;
 
   /**
@@ -381,10 +383,9 @@ public interface AnalysisEngineDescription extends ResourceCreationSpecifier {
    * 
    * @throws IOException
    *           if an I/O failure occurs
-   * @throws SAXException
-   *           if a SAX exception occurs
+   * @throws SAXException if a SAX exception occurs
    */
-  void toXML(Writer aWriter, boolean aPreserveDelegateAnalysisEngineImports)
+  public void toXML(Writer aWriter, boolean aPreserveDelegateAnalysisEngineImports)
           throws SAXException, IOException;
 
   /**
@@ -400,10 +401,9 @@ public interface AnalysisEngineDescription extends ResourceCreationSpecifier {
    * 
    * @throws IOException
    *           if an I/O failure occurs
-   * @throws SAXException
-   *           if a SAX exception occurs
+   * @throws SAXException if a SAX exception occurs
    */
-  void toXML(OutputStream aOutputStream, boolean aPreserveDelegateAnalysisEngineImports)
+  public void toXML(OutputStream aOutputStream, boolean aPreserveDelegateAnalysisEngineImports)
           throws SAXException, IOException;
 
   /**
@@ -421,9 +421,9 @@ public interface AnalysisEngineDescription extends ResourceCreationSpecifier {
    *          serialization behavior applies, which is to write &lt;import&gt; elements only in the
    *          case where they have not previously been resolved.
    * 
-   * @throws SAXException
-   *           if a SAX exception occurs
+   * @throws SAXException if a SAX exception occurs
    */
-  void toXML(ContentHandler aContentHandler, boolean aWriteDefaultNamespaceAttribute,
+  public void toXML(ContentHandler aContentHandler, boolean aWriteDefaultNamespaceAttribute,
           boolean aPreserveDelegateAnalysisEngineImports) throws SAXException;
+
 }

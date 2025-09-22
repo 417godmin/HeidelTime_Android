@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.uima.collection;
 
 import java.io.IOException;
@@ -34,16 +35,18 @@ import org.apache.uima.resource.metadata.ProcessingResourceMetaData;
 import org.apache.uima.util.ProcessTrace;
 
 /**
- * Base class for CAS Consumers in UIMA SDK v1.x, which developers should extend with their own CAS
- * Consumer implementation classes.
+ * Base class for CAS Consumers in UIMA SDK v1.x, which developers should extend 
+ * with their own CAS Consumer implementation classes.
  * 
- * As of v2.0, there is no difference in capability between CAS Consumers and ordinary Analysis
- * Engines, except for the default setting of the XML parameters for multipleDeploymentAllowed and
- * modifiesCas. We recommend for future work that users implement and use Analysis Engine components
+ * As of v2.0, there is no difference in capability between CAS Consumers
+ * and ordinary Analysis Engines, except for the default setting of the XML
+ * parameters for multipleDeploymentAllowed and modifiesCas. We recommend
+ * for future work that users implement and use Analysis Engine components
  * instead of CAS Consumers.
+ *  
  */
-public abstract class CasConsumer_ImplBase extends ConfigurableResource_ImplBase
-        implements CasConsumer {
+public abstract class CasConsumer_ImplBase extends ConfigurableResource_ImplBase implements
+        CasConsumer {
   /**
    * Called by the framework to initialize this CAS Consumer. Subclasses should NOT override this
    * method; instead they should override the zero-argument {@link #initialize()} method and access
@@ -53,7 +56,6 @@ public abstract class CasConsumer_ImplBase extends ConfigurableResource_ImplBase
    * @see org.apache.uima.resource.Resource#initialize(ResourceSpecifier,
    *      Map)
    */
-  @Override
   public boolean initialize(ResourceSpecifier aSpecifier, Map<String, Object> aAdditionalParams)
           throws ResourceInitializationException {
     // aSpecifier must be a CasConsumerDescription
@@ -82,7 +84,6 @@ public abstract class CasConsumer_ImplBase extends ConfigurableResource_ImplBase
   /**
    * @see org.apache.uima.resource.Resource#destroy()
    */
-  @Override
   public void destroy() {
     // no default behavior
   }
@@ -90,7 +91,6 @@ public abstract class CasConsumer_ImplBase extends ConfigurableResource_ImplBase
   /**
    * @see org.apache.uima.collection.base_cpm.CasObjectProcessor#typeSystemInit(TypeSystem)
    */
-  @Override
   public void typeSystemInit(TypeSystem arg0) throws ResourceInitializationException {
     // no default behavior
   }
@@ -98,7 +98,6 @@ public abstract class CasConsumer_ImplBase extends ConfigurableResource_ImplBase
   /**
    * @see org.apache.uima.collection.base_cpm.CasObjectProcessor#processCas(CAS[])
    */
-  @Override
   public void processCas(CAS[] aCASes) throws ResourceProcessException {
     for (int i = 0; i < aCASes.length; i++) {
       processCas(aCASes[i]);
@@ -108,7 +107,6 @@ public abstract class CasConsumer_ImplBase extends ConfigurableResource_ImplBase
   /**
    * @see org.apache.uima.collection.base_cpm.CasProcessor#isStateless()
    */
-  @Override
   public boolean isStateless() {
     return false;
   }
@@ -118,7 +116,6 @@ public abstract class CasConsumer_ImplBase extends ConfigurableResource_ImplBase
    * 
    * @see org.apache.uima.collection.base_cpm.CasProcessor#isReadOnly()
    */
-  @Override
   public final boolean isReadOnly() {
     OperationalProperties opProps = getProcessingResourceMetaData().getOperationalProperties();
     return opProps == null ? true : !opProps.getModifiesCas();
@@ -127,7 +124,6 @@ public abstract class CasConsumer_ImplBase extends ConfigurableResource_ImplBase
   /**
    * @see org.apache.uima.collection.base_cpm.CasProcessor#getProcessingResourceMetaData()
    */
-  @Override
   public ProcessingResourceMetaData getProcessingResourceMetaData() {
     return (ProcessingResourceMetaData) getMetaData();
   }
@@ -135,7 +131,6 @@ public abstract class CasConsumer_ImplBase extends ConfigurableResource_ImplBase
   /**
    * @see org.apache.uima.collection.base_cpm.CasProcessor#batchProcessComplete(ProcessTrace)
    */
-  @Override
   public void batchProcessComplete(ProcessTrace arg0) throws ResourceProcessException, IOException {
     // no default behavior
   }
@@ -143,9 +138,8 @@ public abstract class CasConsumer_ImplBase extends ConfigurableResource_ImplBase
   /**
    * @see org.apache.uima.collection.base_cpm.CasProcessor#collectionProcessComplete(ProcessTrace)
    */
-  @Override
-  public void collectionProcessComplete(ProcessTrace arg0)
-          throws ResourceProcessException, IOException {
+  public void collectionProcessComplete(ProcessTrace arg0) throws ResourceProcessException,
+          IOException {
     // no default behavior
   }
 
@@ -158,7 +152,6 @@ public abstract class CasConsumer_ImplBase extends ConfigurableResource_ImplBase
    * 
    * @see ConfigurableResource_ImplBase#reconfigure()
    */
-  @Override
   public void reconfigure() throws ResourceConfigurationException {
     super.reconfigure();
     destroy();

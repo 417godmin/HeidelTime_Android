@@ -19,14 +19,13 @@
 
 package org.apache.uima.cas.impl;
 
-import org.apache.uima.cas.FeatureStructure;
-
 /**
  * Low-level index repository access. Provides access to low-level indexes.
  * 
  * <p>
- * Use {@link LowLevelCAS#ll_getIndexRepository()
- * LowLevelCAS.ll_getIndexRepository()} to gain access to an object of this type.
+ * Use
+ * {@link LowLevelCAS#ll_getIndexRepository() LowLevelCAS.ll_getIndexRepository()}
+ * to gain access to an object of this type.
  * 
  */
 public interface LowLevelIndexRepository {
@@ -35,11 +34,9 @@ public interface LowLevelIndexRepository {
    * 
    * @param indexName
    *          The name of the index.
-   * @param <T>
-   *          type of Feature Structure
    * @return The corresponding index, or <code>null</code> if no such index exists.
    */
-  <T extends FeatureStructure> LowLevelIndex<T> ll_getIndex(String indexName);
+  LowLevelIndex ll_getIndex(String indexName);
 
   /**
    * Get an index by a name and type. The type must be a subtype of the index's type. Note that
@@ -49,13 +46,11 @@ public interface LowLevelIndexRepository {
    *          The name of the index.
    * @param typeCode
    *          The code of the desired subtype.
-   * @param <T>
-   *          type of Feature Structure
    * @return The corresponding index, or <code>null</code> if no such index exists.
    * @exception LowLevelException
    *              If the type code argument is not a valid type code.
    */
-  <T extends FeatureStructure> LowLevelIndex<T> ll_getIndex(String indexName, int typeCode);
+  LowLevelIndex ll_getIndex(String indexName, int typeCode);
 
   /**
    * Add a FS reference to all appropriate indexes in the repository.

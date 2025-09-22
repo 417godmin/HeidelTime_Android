@@ -21,6 +21,7 @@ package org.apache.uima.analysis_engine.impl;
 
 import java.text.DecimalFormat;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -36,20 +37,20 @@ import org.apache.uima.util.ConcurrentHashMapWithProducer;
  * Implements Monitoring/Management interface to an AnalysisEngine.
  * 
  */
-public class AnalysisEngineManagementImpl
-        implements AnalysisEngineManagementImplMBean, AnalysisEngineManagement {
+public class AnalysisEngineManagementImpl 
+    implements AnalysisEngineManagementImplMBean, AnalysisEngineManagement {
 
   private static final long serialVersionUID = 1988620286191379887L;
-
+  
   private static final Pattern RESERVED_CHAR_PATTERN = Pattern.compile("[\",=:*?]");
-
+  
   static final DecimalFormat format = new DecimalFormat("0.##");
 
   /**
    * This static set is needed to keep track of what names we've already used for "root" MBeans
    * (those representing top-level AEs and CPEs).
    */
-  private static final ConcurrentHashMapWithProducer<String, AtomicInteger> usedRootNames = new ConcurrentHashMapWithProducer<>();
+  private final static ConcurrentHashMapWithProducer<String, AtomicInteger> usedRootNames = new ConcurrentHashMapWithProducer<String, AtomicInteger>();
 
   private String name;
 
@@ -71,39 +72,36 @@ public class AnalysisEngineManagementImpl
 
   private final AtomicLong serviceCallTime = new AtomicLong(0);
 
-  private final Map<String, AnalysisEngineManagement> components = Collections
-          .synchronizedMap(new LinkedHashMap<>());
+  private final Map<String, AnalysisEngineManagement> components = Collections.synchronizedMap(new LinkedHashMap<String, AnalysisEngineManagement>());
 
   private String uniqueMBeanName;
 
-  private State status = State.Initializing; // Initial AE state
-
-  private long threadId = Thread.currentThread().getId(); // Thread id which created this instance
+  
+  private State status = State.Initializing;  // Initial AE state
+  
+  private long threadId = Thread.currentThread().getId();  // Thread id which created this instance  
   private long initializationTime;
-
-  @Override
+  
   public long getInitializationTime() {
     return initializationTime;
   }
-
+  
   public void setInitializationTime(long initializationTime) {
     this.initializationTime = initializationTime;
   }
-
-  @Override
   public long getThreadId() {
     return threadId;
   }
-
-  @Override
+ 
   public String getState() {
-    return status.toString();
+    return this.status.toString();
   }
-
+  
   public void setState(State state) {
-    status = state;
+    this.status = state;
   }
 
+  
   public void reportAnalysisTime(long time) {
     analysisTime.addAndGet(time);
   }
@@ -124,22 +122,18 @@ public class AnalysisEngineManagementImpl
     numProcessed.incrementAndGet();
   }
 
-  @Override
   public long getBatchProcessCompleteTime() {
     return batchProcessCompleteTime.get();
   }
 
-  @Override
   public long getCollectionProcessCompleteTime() {
     return collectionProcessCompleteTime.get();
   }
 
-  @Override
   public long getAnalysisTime() {
-    return analysisTime.get() + serviceCallTime.get();
+  	return analysisTime.get() + serviceCallTime.get();
   }
 
-  @Override
   public long getServiceCallTime() {
     return serviceCallTime.get();
   }
@@ -154,13 +148,12 @@ public class AnalysisEngineManagementImpl
     markedServiceCallTime.set(serviceCallTime.get());
     // mark components also
     for (AnalysisEngineManagement component : components.values()) {
-      ((AnalysisEngineManagementImpl) component).mark();
+      ((AnalysisEngineManagementImpl)component).mark();
     }
   }
 
   /**
    * Internal use only. Used to implement backwards compatibility with the ProcessTrace interface.
-   * 
    * @return Batch Process Complete time since mark
    */
   public long getBatchProcessCompleteTimeSinceMark() {
@@ -169,7 +162,6 @@ public class AnalysisEngineManagementImpl
 
   /**
    * Internal use only. Used to implement backwards compatibility with the ProcessTrace interface.
-   * 
    * @return Collection Process Complete time since mark
    */
   public long getCollectionProcessCompleteTimeSinceMark() {
@@ -178,7 +170,6 @@ public class AnalysisEngineManagementImpl
 
   /**
    * Internal use only. Used to implement backwards compatibility with the ProcessTrace interface.
-   * 
    * @return Analysis time since mark
    */
   public long getAnalysisTimeSinceMark() {
@@ -187,19 +178,16 @@ public class AnalysisEngineManagementImpl
 
   /**
    * Internal use only. Used to implement backwards compatibility with the ProcessTrace interface.
-   * 
    * @return service call time since mark
    */
   public long getServiceCallTimeSinceMark() {
     return serviceCallTime.get() - markedServiceCallTime.get();
   }
 
-  @Override
   public long getNumberOfCASesProcessed() {
     return numProcessed.get();
   }
 
-  @Override
   public String getCASesPerSecond() {
     long analysisTime = getAnalysisTime();
     if (analysisTime == 0)
@@ -208,7 +196,6 @@ public class AnalysisEngineManagementImpl
     return format.format(docsPerSecond);
   }
 
-  @Override
   public Map<String, AnalysisEngineManagement> getComponents() {
     return Collections.unmodifiableMap(components);
   }
@@ -217,17 +204,14 @@ public class AnalysisEngineManagementImpl
     components.put(key, component);
   }
 
-  @Override
   public String getName() {
     return name;
   }
 
-  @Override
   public String getUniqueMBeanName() {
     return uniqueMBeanName;
   }
 
-  @Override
   public void resetStats() {
     numProcessed.set(0);
     analysisTime.set(0);
@@ -254,15 +238,15 @@ public class AnalysisEngineManagementImpl
    * @param aContext
    *          the UimaContext for this AnalysisEngine. Needed to compute the unique name, which is
    *          hierarchical
-   * @param aCustomPrefix
-   *          an optional prefix provided by the Application, which will be prepended to the name
-   *          generated by UIMA. If null, the prefix "org.apache.uima:" will be used.
+   * @param aCustomPrefix an optional prefix provided by the Application, which will be
+   *          prepended to the name generated by UIMA.  If null, the prefix
+   *          "org.apache.uima:" will be used.
    */
-  public void setName(String aName, UimaContextAdmin aContext, String aCustomPrefix) {
+  public void setName(String aName, UimaContextAdmin aContext, String aCustomPrefix) {   
     // set the simple name
     name = aName;
-
-    // determine the MBean name prefix we should use
+    
+    //determine the MBean name prefix we should use
     String prefix;
     if (aCustomPrefix == null) {
       prefix = "org.apache.uima:";
@@ -272,7 +256,7 @@ public class AnalysisEngineManagementImpl
         prefix += ",";
       }
     }
-    // compute the unique name
+    // compute the unique name   
     // (first get the rootMBean and assign it a unique name if it doesn't already have one)
     AnalysisEngineManagementImpl rootMBean = (AnalysisEngineManagementImpl) aContext
             .getRootContext().getManagementInterface();
@@ -288,23 +272,24 @@ public class AnalysisEngineManagementImpl
       rootName = rootName.substring(prefix.length() + "name=".length());
       // form the hierarchical MBean name
       prefix += "p0=";
-      // we add "Components" to the end of the rootName, but be aware of quoting issues
+      //we add "Components" to the end of the rootName, but be aware of quoting issues
       if (rootName.endsWith("\"")) {
-        prefix += rootName.substring(0, rootName.length() - 1) + " Components\",";
-      } else {
-        prefix += rootName + " Components,";
+        prefix += rootName.substring(0,rootName.length() - 1) + " Components\",";
       }
+      else {
+        prefix += rootName + " Components,";
+      }      
       uniqueMBeanName = makeMBeanName(prefix, aContext.getQualifiedContextName().substring(1), 1);
     }
   }
-
-  private static final Callable<AtomicInteger> produceAtomicInteger = new Callable<AtomicInteger>() {
+  
+  static private final Callable<AtomicInteger> produceAtomicInteger = new Callable<AtomicInteger>() {  
     @Override
-    public AtomicInteger call() throws Exception {
+    public AtomicInteger call() throws Exception{
       return new AtomicInteger(1);
     }
   };
-
+  
   /**
    * 
    * @param baseRootName
@@ -333,26 +318,25 @@ public class AnalysisEngineManagementImpl
     if (firstSlash == contextName.length() - 1) {
       return prefix + "name=" + escapeValue(contextName.substring(0, contextName.length() - 1));
     } else {
-      String newPrefix = prefix + "p" + depth + "="
-              + escapeValue(contextName.substring(0, firstSlash) + " Components") + ",";
+      String newPrefix = prefix + "p" + depth + "=" + escapeValue(contextName.substring(0, firstSlash)
+              + " Components") + ",";
       return makeMBeanName(newPrefix, contextName.substring(firstSlash + 1), depth + 1);
     }
   }
-
-  /**
-   * Escapes the "value" part of a JMX name if necessary. If the value includes reserved characters
-   * (" , = : * ?) the value will be enclosed in quotes and some characters (" ? * \) will be
-   * escaped with backslashes.
+  
+  /** Escapes the "value" part of a JMX name if necessary.  If the value
+   * includes reserved characters (" , = : * ?) the value will be enclosed
+   * in quotes and some characters (" ? * \) will be escaped with backslashes.
    */
   private static String escapeValue(String value) {
     if (RESERVED_CHAR_PATTERN.matcher(value).find()) {
-      // must quote the value
-      var buf = new StringBuilder();
+      //must quote the value
+      StringBuffer buf = new StringBuffer();
       buf.append('\"');
-      // must escape special characters inside the quoted value
+      //must escape special characters inside the quoted value
       for (int i = 0; i < value.length(); i++) {
         char c = value.charAt(i);
-        if (c == '\"' || c == '\\' || c == '?' || c == '*') {
+        if (c == '\"' || c =='\\' || c == '?' || c =='*') {
           buf.append('\\');
         }
         buf.append(c);
@@ -360,7 +344,7 @@ public class AnalysisEngineManagementImpl
       buf.append('\"');
       return buf.toString();
     } else {
-      return value; // no escaping needed
+      return value; //no escaping needed
     }
   }
 }

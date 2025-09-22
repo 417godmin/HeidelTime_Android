@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.uima.cas.admin;
 
 import org.apache.uima.cas.TypeSystem;
@@ -31,9 +32,11 @@ import org.apache.uima.cas.impl.TypeSystemImpl;
  * 
  * <p>
  * All methods in this class are static. CASFactory objects can not be created.
+ * 
+ * 
  */
 public abstract class CASFactory {
-
+  
   public static final boolean USE_JCAS_CACHE_DEFAULT = true;
 
   /**
@@ -55,23 +58,11 @@ public abstract class CASFactory {
    * @return A new CASMgr object.
    */
   public static CASMgr createCAS(int initialHeapSize) {
-    return new CASImpl(null, initialHeapSize);
+    return createCAS(initialHeapSize, USE_JCAS_CACHE_DEFAULT);
   }
-
-  /**
-   * @param initialHeapSize
-   *          The initial size of the internal CAS heap. If you choose this number too small, it can
-   *          have a major performance impact. As a very rough guideline, this number should not be
-   *          smaller than the number of characters in documents you are processing.
-   * @param useJcasCache
-   *          - ignored in v3
-   * @return A new CASMgr object.
-   * @deprecated use {@link #createCAS(int)}
-   * @forRemoval 4.0.0
-   */
-  @Deprecated(since = "3.0.0")
+  
   public static CASMgr createCAS(int initialHeapSize, boolean useJcasCache) {
-    return createCAS(initialHeapSize);
+    return new CASImpl(initialHeapSize, useJcasCache);
   }
 
   /**
@@ -88,12 +79,12 @@ public abstract class CASFactory {
   public static CASMgr createCAS(int initialHeapSize, TypeSystem ts) {
     return createCAS(initialHeapSize, ts, USE_JCAS_CACHE_DEFAULT);
   }
-
+  
   public static CASMgr createCAS(int initialHeapSize, TypeSystem ts, boolean useJcasCache) {
     if (ts == null) {
       throw new NullPointerException("TypeSystem");
     }
-    return new CASImpl((TypeSystemImpl) ts, initialHeapSize);
+    return new CASImpl((TypeSystemImpl) ts, initialHeapSize, useJcasCache);
   }
 
   /**
@@ -106,12 +97,13 @@ public abstract class CASFactory {
   public static CASMgr createCAS(TypeSystem ts) {
     return createCAS(ts, USE_JCAS_CACHE_DEFAULT);
   }
-
+  
+  
   public static CASMgr createCAS(TypeSystem ts, boolean useJcasCache) {
     if (ts == null) {
       throw new NullPointerException("TypeSystem");
     }
-    return new CASImpl((TypeSystemImpl) ts, CASImpl.DEFAULT_INITIAL_HEAP_SIZE);
+    return new CASImpl((TypeSystemImpl) ts, CASImpl.DEFAULT_INITIAL_HEAP_SIZE, useJcasCache);
   }
 
   /**
@@ -120,6 +112,8 @@ public abstract class CASFactory {
    * @return A type system manager object that can be used to add more types.
    */
   public static TypeSystemMgr createTypeSystem() {
-    return new TypeSystemImpl();
+    TypeSystemImpl ts = new TypeSystemImpl();
+    return ts;
   }
+
 }

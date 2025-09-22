@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.uima.cas.text;
 
 import java.util.ArrayList;
@@ -24,6 +25,8 @@ import org.apache.uima.cas.CASRuntimeException;
 
 /**
  * Represents a node in an annotation tree.
+ * 
+ * 
  */
 public interface AnnotationTreeNode<T extends AnnotationFS> {
 
@@ -79,4 +82,5 @@ public interface AnnotationTreeNode<T extends AnnotationFS> {
    * @return The annotation for this node.
    */
   T get();
+
 }

@@ -16,12 +16,15 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.uima;
 
 /**
  * Thrown to indicate that the requested operation is not supported. This extends
  * <code>RuntimeException</code> and so does not need to be declared in the throws clause of
  * methods.
+ * 
+ * 
  */
 public class UIMA_UnsupportedOperationException extends UIMARuntimeException {
 
@@ -55,6 +58,7 @@ public class UIMA_UnsupportedOperationException extends UIMARuntimeException {
    * Creates a new exception with a null message.
    */
   public UIMA_UnsupportedOperationException() {
+    super();
   }
 
   /**
@@ -75,8 +79,8 @@ public class UIMA_UnsupportedOperationException extends UIMARuntimeException {
    *          located.
    * @param aMessageKey
    *          an identifier that maps to the message for this exception. The message may contain
-   *          placeholders for arguments as defined by the {@link java.text.MessageFormat
-   *          MessageFormat} class.
+   *          placeholders for arguments as defined by the
+   *          {@link java.text.MessageFormat MessageFormat} class.
    * @param aArguments
    *          The arguments to the message. <code>null</code> may be used if the message has no
    *          arguments.
@@ -94,8 +98,8 @@ public class UIMA_UnsupportedOperationException extends UIMARuntimeException {
    *          located.
    * @param aMessageKey
    *          an identifier that maps to the message for this exception. The message may contain
-   *          placeholders for arguments as defined by the {@link java.text.MessageFormat
-   *          MessageFormat} class.
+   *          placeholders for arguments as defined by the
+   *          {@link java.text.MessageFormat MessageFormat} class.
    * @param aArguments
    *          The arguments to the message. <code>null</code> may be used if the message has no
    *          arguments.
@@ -104,7 +108,7 @@ public class UIMA_UnsupportedOperationException extends UIMARuntimeException {
    */
   public UIMA_UnsupportedOperationException(String aResourceBundleName, String aMessageKey,
           Object[] aArguments, Throwable aCause) {
-    super(aCause, aResourceBundleName, aMessageKey, aArguments);
+    super(aResourceBundleName, aMessageKey, aArguments, aCause);
   }
 
   /**
@@ -112,8 +116,8 @@ public class UIMA_UnsupportedOperationException extends UIMARuntimeException {
    * 
    * @param aMessageKey
    *          an identifier that maps to the message for this exception. The message may contain
-   *          placeholders for arguments as defined by the {@link java.text.MessageFormat
-   *          MessageFormat} class.
+   *          placeholders for arguments as defined by the
+   *          {@link java.text.MessageFormat MessageFormat} class.
    * @param aArguments
    *          The arguments to the message. <code>null</code> may be used if the message has no
    *          arguments.
@@ -128,8 +132,8 @@ public class UIMA_UnsupportedOperationException extends UIMARuntimeException {
    * 
    * @param aMessageKey
    *          an identifier that maps to the message for this exception. The message may contain
-   *          placeholders for arguments as defined by the {@link java.text.MessageFormat
-   *          MessageFormat} class.
+   *          placeholders for arguments as defined by the
+   *          {@link java.text.MessageFormat MessageFormat} class.
    * @param aArguments
    *          The arguments to the message. <code>null</code> may be used if the message has no
    *          arguments.

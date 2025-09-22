@@ -16,17 +16,98 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.uima.cas.impl;
 
 import org.apache.uima.cas.DoubleArrayFS;
 
 /**
- * V2 compatibility only The non-JCas cover class for Double Array
+ * Implementation of the {@link DoubleArrayFS DoubleArrayFS} interface.
  * 
- * @deprecated use DoubleArray instead
- * @forRemoval 4.0.0
+ * 
  */
-@Deprecated(since = "3.0.0")
-public interface DoubleArrayFSImpl extends DoubleArrayFS {
+public class DoubleArrayFSImpl extends CommonAuxArrayFSImpl implements DoubleArrayFS {
 
+  private static class DoubleArrayGenerator implements FSGenerator<DoubleArrayFSImpl> {
+    /**
+     * @see FSGenerator#createFS(int, LowLevelCAS)
+     */
+    public DoubleArrayFSImpl createFS(int addr, CASImpl cas) {
+      return new DoubleArrayFSImpl(addr, cas);
+    }
+  }
+
+  public DoubleArrayFSImpl(int addr, CASImpl cas) {
+    super(cas, addr); // note arg reversal
+  }
+
+  static FSGenerator<DoubleArrayFSImpl> generator() {
+    return new DoubleArrayGenerator();
+  }
+
+  /**
+   * @see DoubleArrayFS#get(int)
+   */
+  public double get(int i) {
+    casImpl.checkArrayBounds(addr, i); // don't need to check type code
+    return casImpl.ll_getDoubleArrayValue(addr, i);
+  }
+
+  /**
+   * @see DoubleArrayFS#set(int, double)
+   */
+  public void set(int i, double val) {
+    casImpl.checkArrayBounds(addr, i); // don't need to check type code
+    casImpl.ll_setDoubleArrayValue(addr, i, val);
+  }
+
+  /**
+   * @see DoubleArrayFS#copyFromArray(double[], int, int, int)
+   */
+  public void copyFromArray(double[] src, int srcOffset, int destOffset, int length) {
+    casImpl.checkArrayBounds(addr, destOffset, length);
+    for (int i = 0; i < length; i++) {
+      casImpl.ll_setDoubleArrayValue(addr, destOffset + i, src[srcOffset + i]);
+    }
+  }
+
+  /**
+   * @see DoubleArrayFS#copyToArray(int, double[], int, int)
+   */
+  public void copyToArray(int srcOffset, double[] dest, int destOffset, int length) {
+    casImpl.checkArrayBounds(addr, srcOffset, length);
+    for (int i = 0; i < length; i++) {
+      dest[i + destOffset] = casImpl.ll_getDoubleArrayValue(addr, i + srcOffset);
+    }
+  }
+
+  /**
+   * @see DoubleArrayFS#toArray()
+   */
+  public double[] toArray() {
+    final int size = size();
+    double[] outArray = new double[size];
+    copyToArray(0, outArray, 0, size);
+    return outArray;
+  }
+
+  /**
+   * @see org.apache.uima.cas.CommonArrayFS#copyToArray(int, String[], int, int)
+   */
+  public void copyToArray(int srcOffset, String[] dest, int destOffset, int length) {
+    casImpl.checkArrayBounds(addr, srcOffset, length);
+    for (int i = 0; i < length; i++) {
+      dest[i + destOffset] = Double.toString(casImpl.ll_getDoubleArrayValue(addr, i + srcOffset));
+    }
+  }
+
+  /**
+   * @see org.apache.uima.cas.CommonArrayFS#copyFromArray(String[], int, int, int)
+   */
+  public void copyFromArray(String[] src, int srcOffset, int destOffset, int length) {
+    casImpl.checkArrayBounds(addr, destOffset, length);
+    for (int i = 0; i < length; i++) {
+      casImpl.ll_setDoubleArrayValue(addr, destOffset + i, Double.parseDouble(src[i + srcOffset]));
+    }
+  }
 }

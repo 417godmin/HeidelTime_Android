@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.uima.collection;
 
 import java.util.Map;
@@ -35,10 +36,10 @@ import org.apache.uima.util.Progress;
  * <p>
  * A CPE consists of a {@link CollectionReader}, zero or more
  * {@link org.apache.uima.analysis_engine.AnalysisEngine}s and zero or more
- * {@link CasConsumer}s. The Collection Reader is responsible for reading
- * artifacts from a collection and setting up the CAS. The AnalysisEngines analyze each CAS and the
- * results are passed on to the CAS Consumers. CAS Consumers perform analysis over multiple CASes
- * and generally produce collection-level results in some application-specific data structure.
+ * {@link CasConsumer}s. The Collection Reader is responsible for
+ * reading artifacts from a collection and setting up the CAS. The AnalysisEngines analyze each CAS
+ * and the results are passed on to the CAS Consumers. CAS Consumers perform analysis over multiple
+ * CASes and generally produce collection-level results in some application-specific data structure.
  * <p>
  * Processing is started by calling the {@link #process()} method. Processing can be controlled via
  * the{@link #pause()}, {@link #resume()}, and {@link #stop()} methods.
@@ -58,6 +59,8 @@ import org.apache.uima.util.Progress;
  * <p>
  * A <code>CollectionProcessingEngine</code> instance can be obtained by calling
  * {@link org.apache.uima.UIMAFramework#produceCollectionProcessingEngine(CpeDescription)}.
+ * 
+ * 
  */
 public interface CollectionProcessingEngine {
   /**
@@ -76,7 +79,7 @@ public interface CollectionProcessingEngine {
    * @throws UIMA_IllegalStateException
    *           if this method is called more than once on a single instance.
    */
-  void initialize(CpeDescription aCpeDescription, Map<String, Object> aAdditionalParams)
+  public void initialize(CpeDescription aCpeDescription, Map<String, Object> aAdditionalParams)
           throws ResourceInitializationException;
 
   /**
@@ -85,7 +88,7 @@ public interface CollectionProcessingEngine {
    * @param aListener
    *          the listener to add
    */
-  void addStatusCallbackListener(StatusCallbackListener aListener);
+  public void addStatusCallbackListener(StatusCallbackListener aListener);
 
   /**
    * Unregisters a status callback listener.
@@ -93,7 +96,7 @@ public interface CollectionProcessingEngine {
    * @param aListener
    *          the listener to remove
    */
-  void removeStatusCallbackListener(StatusCallbackListener aListener);
+  public void removeStatusCallbackListener(StatusCallbackListener aListener);
 
   /**
    * Initiates processing of a collection. This method starts the processing in another thread and
@@ -110,7 +113,7 @@ public interface CollectionProcessingEngine {
    * @throws UIMA_IllegalStateException
    *           if this CPE is currently processing
    */
-  void process() throws ResourceInitializationException;
+  public void process() throws ResourceInitializationException;
 
   /**
    * Determines whether this CPE is currently processing. This means that a processing request has
@@ -119,7 +122,7 @@ public interface CollectionProcessingEngine {
    * 
    * @return true if and only if this CPE is currently processing.
    */
-  boolean isProcessing();
+  public boolean isProcessing();
 
   /**
    * Pauses processing. Processing can later be resumed by calling the {@link #resume()} method.
@@ -127,14 +130,14 @@ public interface CollectionProcessingEngine {
    * @throws UIMA_IllegalStateException
    *           if no processing is currently occuring
    */
-  void pause();
+  public void pause();
 
   /**
    * Determines whether this CPE's processing is currently paused.
    * 
    * @return true if and only if this CPE's processing is currently paused.
    */
-  boolean isPaused();
+  public boolean isPaused();
 
   /**
    * Resumes processing that has been paused.
@@ -142,7 +145,7 @@ public interface CollectionProcessingEngine {
    * @throws UIMA_IllegalStateException
    *           if processing is not currently paused
    */
-  void resume();
+  public void resume();
 
   /**
    * Stops processing.
@@ -150,14 +153,14 @@ public interface CollectionProcessingEngine {
    * @throws UIMA_IllegalStateException
    *           if no processing is currently occuring
    */
-  void stop();
+  public void stop();
 
   /**
    * Gets a performance report for the processing that is currently occurring or has just completed.
    * 
    * @return an object containing performance statistics
    */
-  ProcessTrace getPerformanceReport();
+  public ProcessTrace getPerformanceReport();
 
   /**
    * Gets a progress report for the processing that is currently occurring or has just completed.
@@ -165,25 +168,27 @@ public interface CollectionProcessingEngine {
    * @return an array of <code>Progress</code> objects, each of which represents the progress in a
    *         different set of units (for example number of entities or bytes)
    */
-  Progress[] getProgress();
+  public Progress[] getProgress();
 
   /**
    * Gets the Collection Reader for this CPE.
    * 
    * @return the collection reader
    */
-  BaseCollectionReader getCollectionReader();
+  public BaseCollectionReader getCollectionReader();
 
   /**
-   * Gets the <code>CasProcessors</code>s in this CPE, in the order in which they will be executed.
+   * Gets the <code>CasProcessors</code>s in this CPE, in the order in which they will be
+   * executed.
    * 
    * @return an array of <code>CasProcessor</code>s
    */
-  CasProcessor[] getCasProcessors();
+  public CasProcessor[] getCasProcessors();
 
   /**
    * Kill CPM hard.
    * 
    */
-  void kill();
+  public void kill();
+
 }

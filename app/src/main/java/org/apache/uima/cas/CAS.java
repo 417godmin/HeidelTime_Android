@@ -16,37 +16,18 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.uima.cas;
 
 import java.io.InputStream;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.ListIterator;
 
 import org.apache.uima.cas.admin.CASAdminException;
-import org.apache.uima.cas.impl.CASImpl;
 import org.apache.uima.cas.impl.LowLevelCAS;
-import org.apache.uima.cas.impl.SelectFSs_impl;
-import org.apache.uima.cas.impl.TypeImpl;
 import org.apache.uima.cas.text.AnnotationFS;
 import org.apache.uima.cas.text.AnnotationIndex;
 import org.apache.uima.jcas.JCas;
-import org.apache.uima.jcas.cas.BooleanArray;
-import org.apache.uima.jcas.cas.ByteArray;
-import org.apache.uima.jcas.cas.DoubleArray;
-import org.apache.uima.jcas.cas.EmptyFSList;
-import org.apache.uima.jcas.cas.EmptyFloatList;
-import org.apache.uima.jcas.cas.EmptyIntegerList;
-import org.apache.uima.jcas.cas.EmptyList;
-import org.apache.uima.jcas.cas.EmptyStringList;
-import org.apache.uima.jcas.cas.FSArray;
-import org.apache.uima.jcas.cas.FloatArray;
-import org.apache.uima.jcas.cas.IntegerArray;
-import org.apache.uima.jcas.cas.LongArray;
-import org.apache.uima.jcas.cas.ShortArray;
-import org.apache.uima.jcas.cas.StringArray;
-import org.apache.uima.jcas.cas.TOP;
-import org.apache.uima.jcas.impl.JCasImpl;
 
 /**
  * Object-oriented CAS (Common Analysis System) API.
@@ -54,8 +35,8 @@ import org.apache.uima.jcas.impl.JCasImpl;
  * <p>
  * A <code>CAS</code> object provides the starting point for working with the CAS. It provides
  * access to the type system, to indexes, iterators and filters (constraints). It also lets you
- * create new annotations and other data structures. You can create a <code>CAS</code> object using
- * static methods on the class {@link org.apache.uima.util.CasCreationUtils}.
+ * create new annotations and other data structures. You can create a <code>CAS</code> object
+ * using static methods on the class {@link org.apache.uima.util.CasCreationUtils}.
  * <p>
  * The <code>CAS</code> object is also the container that manages multiple Subjects of Analysis or
  * Sofas. A Sofa represents some form of an unstructured artifact that is processed in a UIMA
@@ -75,10 +56,13 @@ import org.apache.uima.jcas.impl.JCasImpl;
  * index repository, which contains metadata (annotations and other feature structures) about that
  * Sofa.
  * <p>
- * Use {@link #getTypeSystem getTypeSystem()} to access the type system. With a {@link TypeSystem
- * TypeSystem} object, you can access the {@link Type Type} and {@link Feature Feature} objects for
- * the CAS built-in types. Note that this interface also provides constants for the names of the
- * built-in types and features.
+ * Use {@link #getTypeSystem getTypeSystem()} to access the type system. With a
+ * {@link TypeSystem TypeSystem} object, you can access the {@link Type Type} and
+ * {@link Feature Feature} objects for the CAS built-in types. Note that this interface also
+ * provides constants for the names of the built-in types and features.
+ * 
+ * 
+ * 
  */
 public interface CAS extends AbstractCas {
 
@@ -88,122 +72,118 @@ public interface CAS extends AbstractCas {
   /**
    * UIMA CAS name space.
    */
-  String NAME_SPACE_UIMA_CAS = "org.apache.uima" + TypeSystem.NAMESPACE_SEPARATOR + "cas";
+  static final String NAME_SPACE_UIMA_CAS = "uima" + TypeSystem.NAMESPACE_SEPARATOR + "cas";
 
   /**
    * UIMA CAS name space prefix to prepend to type names (adds an extra period to the name space
    * proper.
    */
-  String UIMA_CAS_PREFIX = NAME_SPACE_UIMA_CAS + TypeSystem.NAMESPACE_SEPARATOR;
+  static final String UIMA_CAS_PREFIX = NAME_SPACE_UIMA_CAS + TypeSystem.NAMESPACE_SEPARATOR;
 
   /**
    * Top type.
    */
-  String TYPE_NAME_TOP = UIMA_CAS_PREFIX + "TOP";
+  static final String TYPE_NAME_TOP = UIMA_CAS_PREFIX + "TOP";
 
   /**
    * Integer type.
    */
-  String TYPE_NAME_INTEGER = UIMA_CAS_PREFIX + "Integer";
+  static final String TYPE_NAME_INTEGER = UIMA_CAS_PREFIX + "Integer";
 
   /**
    * Float type.
    */
-  String TYPE_NAME_FLOAT = UIMA_CAS_PREFIX + "Float";
+  static final String TYPE_NAME_FLOAT = UIMA_CAS_PREFIX + "Float";
 
   /**
    * String type.
    */
-  String TYPE_NAME_STRING = UIMA_CAS_PREFIX + "String";
+  static final String TYPE_NAME_STRING = UIMA_CAS_PREFIX + "String";
 
   /**
    * Boolean type.
    */
-  String TYPE_NAME_BOOLEAN = UIMA_CAS_PREFIX + "Boolean";
+  static final String TYPE_NAME_BOOLEAN = UIMA_CAS_PREFIX + "Boolean";
 
   /**
    * Byte type.
    */
-  String TYPE_NAME_BYTE = UIMA_CAS_PREFIX + "Byte";
+  static final String TYPE_NAME_BYTE = UIMA_CAS_PREFIX + "Byte";
 
   /**
    * Short type.
    */
-  String TYPE_NAME_SHORT = UIMA_CAS_PREFIX + "Short";
+  static final String TYPE_NAME_SHORT = UIMA_CAS_PREFIX + "Short";
 
   /**
    * Long type.
    */
-  String TYPE_NAME_LONG = UIMA_CAS_PREFIX + "Long";
+  static final String TYPE_NAME_LONG = UIMA_CAS_PREFIX + "Long";
 
   /**
    * Double type.
    */
-  String TYPE_NAME_DOUBLE = UIMA_CAS_PREFIX + "Double";
+  static final String TYPE_NAME_DOUBLE = UIMA_CAS_PREFIX + "Double";
 
   /**
    * ArrayBase type.
    */
-  String TYPE_NAME_ARRAY_BASE = UIMA_CAS_PREFIX + "ArrayBase";
+  static final String TYPE_NAME_ARRAY_BASE = UIMA_CAS_PREFIX + "ArrayBase";
 
   /**
    * Feature structure array type.
    */
-  String TYPE_NAME_FS_ARRAY = UIMA_CAS_PREFIX + "FSArray";
+  static final String TYPE_NAME_FS_ARRAY = UIMA_CAS_PREFIX + "FSArray";
 
   /**
    * Integer array type.
    */
-  String TYPE_NAME_INTEGER_ARRAY = UIMA_CAS_PREFIX + "IntegerArray";
+  static final String TYPE_NAME_INTEGER_ARRAY = UIMA_CAS_PREFIX + "IntegerArray";
 
   /**
    * Float array type.
    */
-  String TYPE_NAME_FLOAT_ARRAY = UIMA_CAS_PREFIX + "FloatArray";
+  static final String TYPE_NAME_FLOAT_ARRAY = UIMA_CAS_PREFIX + "FloatArray";
 
   /**
    * String array type.
    */
-  String TYPE_NAME_STRING_ARRAY = UIMA_CAS_PREFIX + "StringArray";
+  static final String TYPE_NAME_STRING_ARRAY = UIMA_CAS_PREFIX + "StringArray";
 
   /**
    * Boolean array type.
    */
-  String TYPE_NAME_BOOLEAN_ARRAY = UIMA_CAS_PREFIX + "BooleanArray";
+  static final String TYPE_NAME_BOOLEAN_ARRAY = UIMA_CAS_PREFIX + "BooleanArray";
 
   /**
    * Byte array type.
    */
-  String TYPE_NAME_BYTE_ARRAY = UIMA_CAS_PREFIX + "ByteArray";
+  static final String TYPE_NAME_BYTE_ARRAY = UIMA_CAS_PREFIX + "ByteArray";
 
   /**
    * Short array type.
    */
-  String TYPE_NAME_SHORT_ARRAY = UIMA_CAS_PREFIX + "ShortArray";
+  static final String TYPE_NAME_SHORT_ARRAY = UIMA_CAS_PREFIX + "ShortArray";
 
   /**
    * Long array type.
    */
-  String TYPE_NAME_LONG_ARRAY = UIMA_CAS_PREFIX + "LongArray";
+  static final String TYPE_NAME_LONG_ARRAY = UIMA_CAS_PREFIX + "LongArray";
 
   /**
    * Double array type.
    */
-  String TYPE_NAME_DOUBLE_ARRAY = UIMA_CAS_PREFIX + "DoubleArray";
+  static final String TYPE_NAME_DOUBLE_ARRAY = UIMA_CAS_PREFIX + "DoubleArray";
 
-  // /**
-  // * FSHashSet type
-  // */
-  // static final String TYPE_NAME_FS_HASH_SET = UIMA_CAS_PREFIX + "FSHashSet";
   /**
    * Sofa type.
    */
-  String TYPE_NAME_SOFA = UIMA_CAS_PREFIX + "Sofa";
+  static final String TYPE_NAME_SOFA = UIMA_CAS_PREFIX + "Sofa";
 
   /**
    * Name of annotation base type.
    */
-  String TYPE_NAME_ANNOTATION_BASE = UIMA_CAS_PREFIX + "AnnotationBase";
+  static final String TYPE_NAME_ANNOTATION_BASE = UIMA_CAS_PREFIX + "AnnotationBase";
 
   // /////////////////////////////////////////////////////////////////////////
   // Sofa features.
@@ -211,77 +191,67 @@ public interface CAS extends AbstractCas {
   /**
    * Base name of Sofa Number feature.
    */
-  String FEATURE_BASE_NAME_SOFANUM = "sofaNum";
+  static final String FEATURE_BASE_NAME_SOFANUM = "sofaNum";
 
   /**
    * Base name of Sofa ID feature.
    */
-  String FEATURE_BASE_NAME_SOFAID = "sofaID";
+  static final String FEATURE_BASE_NAME_SOFAID = "sofaID";
 
   /**
    * Base name of Sofa mime type feature.
    */
-  String FEATURE_BASE_NAME_SOFAMIME = "mimeType";
+  static final String FEATURE_BASE_NAME_SOFAMIME = "mimeType";
 
   /**
    * Base name of Sofa URI feature.
    */
-  String FEATURE_BASE_NAME_SOFAURI = "sofaURI";
+  static final String FEATURE_BASE_NAME_SOFAURI = "sofaURI";
 
   /**
    * Base name of Sofa string data feature.
    */
-  String FEATURE_BASE_NAME_SOFASTRING = "sofaString";
+  static final String FEATURE_BASE_NAME_SOFASTRING = "sofaString";
 
   /**
    * Base name of Sofa array fs data feature.
    */
-  String FEATURE_BASE_NAME_SOFAARRAY = "sofaArray";
-
-  /**
-   * Base name of FSArrayList fsArray feature. Base name of FSHashSet fsArray feature.
-   */
-  String FEATURE_BASE_NAME_FS_ARRAY = "fsArray";
-
-  /**
-   * Base name of FSArrayList fsArray feature.
-   */
-  String FEATURE_BASE_NAME_INT_ARRAY = "intArray";
+  static final String FEATURE_BASE_NAME_SOFAARRAY = "sofaArray";
 
   /**
    * Qualified name of Sofa number feature.
    */
-  String FEATURE_FULL_NAME_SOFANUM = TYPE_NAME_SOFA + TypeSystem.FEATURE_SEPARATOR
+  static final String FEATURE_FULL_NAME_SOFANUM = TYPE_NAME_SOFA + TypeSystem.FEATURE_SEPARATOR
           + FEATURE_BASE_NAME_SOFANUM;
 
   /**
    * Qualified name of Sofa id feature.
    */
-  String FEATURE_FULL_NAME_SOFAID = TYPE_NAME_SOFA + TypeSystem.FEATURE_SEPARATOR
+  static final String FEATURE_FULL_NAME_SOFAID = TYPE_NAME_SOFA + TypeSystem.FEATURE_SEPARATOR
           + FEATURE_BASE_NAME_SOFAID;
 
   /**
    * Qualified name of Sofa mime type feature.
    */
-  String FEATURE_FULL_NAME_SOFAMIME = TYPE_NAME_SOFA + TypeSystem.FEATURE_SEPARATOR
+  static final String FEATURE_FULL_NAME_SOFAMIME = TYPE_NAME_SOFA + TypeSystem.FEATURE_SEPARATOR
           + FEATURE_BASE_NAME_SOFAMIME;
 
   /**
    * Qualified name of Sofa URI feature.
    */
-  String FEATURE_FULL_NAME_SOFAURI = TYPE_NAME_SOFA + TypeSystem.FEATURE_SEPARATOR
+  static final String FEATURE_FULL_NAME_SOFAURI = TYPE_NAME_SOFA + TypeSystem.FEATURE_SEPARATOR
           + FEATURE_BASE_NAME_SOFAURI;
 
   /**
    * Qualified name of Sofa string data feature.
    */
-  String FEATURE_FULL_NAME_SOFASTRING = TYPE_NAME_SOFA + TypeSystem.FEATURE_SEPARATOR
+  static final String FEATURE_FULL_NAME_SOFASTRING = TYPE_NAME_SOFA + TypeSystem.FEATURE_SEPARATOR
           + FEATURE_BASE_NAME_SOFASTRING;
 
   /**
    * Qualified name of Sofa array fs data feature.
    */
-  String FEATURE_FULL_NAME_SOFAARRAY = TYPE_NAME_SOFA + TypeSystem.FEATURE_SEPARATOR
+  static final String FEATURE_FULL_NAME_SOFAARRAY = TYPE_NAME_SOFA + TypeSystem.FEATURE_SEPARATOR
           + FEATURE_BASE_NAME_SOFAARRAY;
 
   // ////////////////////////////////////////////////////////////////////////
@@ -290,232 +260,222 @@ public interface CAS extends AbstractCas {
   /**
    * Sofa Index name.
    */
-  String SOFA_INDEX_NAME = "SofaIndex";
+  static final String SOFA_INDEX_NAME = "SofaIndex";
 
   /**
    * Sofa name for the default text sofa.
    * 
    * @deprecated As of v2.0, this is replaced by {@link #NAME_DEFAULT_SOFA}, and the value has
    *             changed. In general, user code should not need to refer to this name.
-   * @forRemoval 4.0.0
    */
-  @Deprecated(since = "2.0.0")
-  String NAME_DEFAULT_TEXT_SOFA = "_InitialView";
+  @Deprecated
+  static final String NAME_DEFAULT_TEXT_SOFA = "_InitialView";
 
   /**
    * Sofa name for the initial view's sofa.
    */
-  String NAME_DEFAULT_SOFA = "_InitialView";
+  static final String NAME_DEFAULT_SOFA = "_InitialView";
 
   /**
    * Abstract list base type.
    */
-  String TYPE_NAME_LIST_BASE = UIMA_CAS_PREFIX + "ListBase";
+  static final String TYPE_NAME_LIST_BASE = UIMA_CAS_PREFIX + "ListBase";
 
   /**
    * Feature structure list type.
    */
-  String TYPE_NAME_FS_LIST = UIMA_CAS_PREFIX + "FSList";
+  static final String TYPE_NAME_FS_LIST = UIMA_CAS_PREFIX + "FSList";
 
   /**
    * Non-empty feature structure list type.
    */
-  String TYPE_NAME_NON_EMPTY_FS_LIST = UIMA_CAS_PREFIX + "NonEmptyFSList";
+  static final String TYPE_NAME_NON_EMPTY_FS_LIST = UIMA_CAS_PREFIX + "NonEmptyFSList";
 
   /**
    * Empty feature structure list type.
    */
-  String TYPE_NAME_EMPTY_FS_LIST = UIMA_CAS_PREFIX + "EmptyFSList";
+  static final String TYPE_NAME_EMPTY_FS_LIST = UIMA_CAS_PREFIX + "EmptyFSList";
 
   /**
    * Integer list type.
    */
-  String TYPE_NAME_INTEGER_LIST = UIMA_CAS_PREFIX + "IntegerList";
+  static final String TYPE_NAME_INTEGER_LIST = UIMA_CAS_PREFIX + "IntegerList";
 
   /**
    * Non-empty integer list type.
    */
-  String TYPE_NAME_NON_EMPTY_INTEGER_LIST = UIMA_CAS_PREFIX + "NonEmptyIntegerList";
+  static final String TYPE_NAME_NON_EMPTY_INTEGER_LIST = UIMA_CAS_PREFIX + "NonEmptyIntegerList";
 
   /**
    * Empty integer list type.
    */
-  String TYPE_NAME_EMPTY_INTEGER_LIST = UIMA_CAS_PREFIX + "EmptyIntegerList";
+  static final String TYPE_NAME_EMPTY_INTEGER_LIST = UIMA_CAS_PREFIX + "EmptyIntegerList";
 
   /**
    * Float list type.
    */
-  String TYPE_NAME_FLOAT_LIST = UIMA_CAS_PREFIX + "FloatList";
+  static final String TYPE_NAME_FLOAT_LIST = UIMA_CAS_PREFIX + "FloatList";
 
   /**
    * Non-empty float list type.
    */
-  String TYPE_NAME_NON_EMPTY_FLOAT_LIST = UIMA_CAS_PREFIX + "NonEmptyFloatList";
+  static final String TYPE_NAME_NON_EMPTY_FLOAT_LIST = UIMA_CAS_PREFIX + "NonEmptyFloatList";
 
   /**
    * Empty float type.
    */
-  String TYPE_NAME_EMPTY_FLOAT_LIST = UIMA_CAS_PREFIX + "EmptyFloatList";
+  static final String TYPE_NAME_EMPTY_FLOAT_LIST = UIMA_CAS_PREFIX + "EmptyFloatList";
 
   /**
    * String list type.
    */
-  String TYPE_NAME_STRING_LIST = UIMA_CAS_PREFIX + "StringList";
+  static final String TYPE_NAME_STRING_LIST = UIMA_CAS_PREFIX + "StringList";
 
   /**
    * Non-empty string list type.
    */
-  String TYPE_NAME_NON_EMPTY_STRING_LIST = UIMA_CAS_PREFIX + "NonEmptyStringList";
+  static final String TYPE_NAME_NON_EMPTY_STRING_LIST = UIMA_CAS_PREFIX + "NonEmptyStringList";
 
   /**
    * Empty string list type.
    */
-  String TYPE_NAME_EMPTY_STRING_LIST = UIMA_CAS_PREFIX + "EmptyStringList";
+  static final String TYPE_NAME_EMPTY_STRING_LIST = UIMA_CAS_PREFIX + "EmptyStringList";
 
   /**
    * Base name of list head feature.
    */
-  String FEATURE_BASE_NAME_HEAD = "head";
+  static final String FEATURE_BASE_NAME_HEAD = "head";
 
   /**
    * Base name of list tail feature.
    */
-  String FEATURE_BASE_NAME_TAIL = "tail";
+  static final String FEATURE_BASE_NAME_TAIL = "tail";
 
   /**
    * Qualified name of fs list head feature.
    */
-  String FEATURE_FULL_NAME_FS_LIST_HEAD = TYPE_NAME_NON_EMPTY_FS_LIST + TypeSystem.FEATURE_SEPARATOR
-          + FEATURE_BASE_NAME_HEAD;
+  static final String FEATURE_FULL_NAME_FS_LIST_HEAD = TYPE_NAME_NON_EMPTY_FS_LIST
+          + TypeSystem.FEATURE_SEPARATOR + FEATURE_BASE_NAME_HEAD;
 
   /**
    * Qualified name of integer list head feature.
    */
-  String FEATURE_FULL_NAME_INTEGER_LIST_HEAD = TYPE_NAME_NON_EMPTY_INTEGER_LIST
+  static final String FEATURE_FULL_NAME_INTEGER_LIST_HEAD = TYPE_NAME_NON_EMPTY_INTEGER_LIST
           + TypeSystem.FEATURE_SEPARATOR + FEATURE_BASE_NAME_HEAD;
 
   /**
    * Qualified name of float list head feature.
    */
-  String FEATURE_FULL_NAME_FLOAT_LIST_HEAD = TYPE_NAME_NON_EMPTY_FLOAT_LIST
+  static final String FEATURE_FULL_NAME_FLOAT_LIST_HEAD = TYPE_NAME_NON_EMPTY_FLOAT_LIST
           + TypeSystem.FEATURE_SEPARATOR + FEATURE_BASE_NAME_HEAD;
 
   /**
    * Qualified name of string list head feature.
    */
-  String FEATURE_FULL_NAME_STRING_LIST_HEAD = TYPE_NAME_NON_EMPTY_STRING_LIST
+  static final String FEATURE_FULL_NAME_STRING_LIST_HEAD = TYPE_NAME_NON_EMPTY_STRING_LIST
           + TypeSystem.FEATURE_SEPARATOR + FEATURE_BASE_NAME_HEAD;
 
   /**
    * Qualified name of fs list tail feature.
    */
-  String FEATURE_FULL_NAME_FS_LIST_TAIL = TYPE_NAME_NON_EMPTY_FS_LIST + TypeSystem.FEATURE_SEPARATOR
-          + FEATURE_BASE_NAME_TAIL;
+  static final String FEATURE_FULL_NAME_FS_LIST_TAIL = TYPE_NAME_NON_EMPTY_FS_LIST
+          + TypeSystem.FEATURE_SEPARATOR + FEATURE_BASE_NAME_TAIL;
 
   /**
    * Qualified name of integer list tail feature.
    */
-  String FEATURE_FULL_NAME_INTEGER_LIST_TAIL = TYPE_NAME_NON_EMPTY_INTEGER_LIST
+  static final String FEATURE_FULL_NAME_INTEGER_LIST_TAIL = TYPE_NAME_NON_EMPTY_INTEGER_LIST
           + TypeSystem.FEATURE_SEPARATOR + FEATURE_BASE_NAME_TAIL;
 
   /**
    * Qualified name of float list tail feature.
    */
-  String FEATURE_FULL_NAME_FLOAT_LIST_TAIL = TYPE_NAME_NON_EMPTY_FLOAT_LIST
+  static final String FEATURE_FULL_NAME_FLOAT_LIST_TAIL = TYPE_NAME_NON_EMPTY_FLOAT_LIST
           + TypeSystem.FEATURE_SEPARATOR + FEATURE_BASE_NAME_TAIL;
 
   /**
    * Qualified name of string list tail feature.
    */
-  String FEATURE_FULL_NAME_STRING_LIST_TAIL = TYPE_NAME_NON_EMPTY_STRING_LIST
+  static final String FEATURE_FULL_NAME_STRING_LIST_TAIL = TYPE_NAME_NON_EMPTY_STRING_LIST
           + TypeSystem.FEATURE_SEPARATOR + FEATURE_BASE_NAME_TAIL;
 
   /**
    * Name of Text CAS name space.
    */
-  String NAME_SPACE_UIMA_TCAS = "org.apache.uima" + TypeSystem.NAMESPACE_SEPARATOR + "tcas";
-
-  /**
-   * UIMA TCAS name space prefix to prepend to type names (adds an extra period to the name space
-   * proper.
-   */
-  String UIMA_TCAS_PREFIX = NAME_SPACE_UIMA_TCAS + TypeSystem.NAMESPACE_SEPARATOR;
+  static final String NAME_SPACE_UIMA_TCAS = "uima" + TypeSystem.NAMESPACE_SEPARATOR + "tcas";
 
   /**
    * Name of annotation type.
    */
-  String TYPE_NAME_ANNOTATION = UIMA_TCAS_PREFIX + "Annotation";
+  static final String TYPE_NAME_ANNOTATION = NAME_SPACE_UIMA_TCAS + TypeSystem.NAMESPACE_SEPARATOR
+          + "Annotation";
 
   /**
    * Name of document annotation type.
    */
-  String TYPE_NAME_DOCUMENT_ANNOTATION = UIMA_TCAS_PREFIX + "DocumentAnnotation";
+  static final String TYPE_NAME_DOCUMENT_ANNOTATION = NAME_SPACE_UIMA_TCAS
+          + TypeSystem.NAMESPACE_SEPARATOR + "DocumentAnnotation";
 
   /**
    * Sofa ID feature that is the handle to a text Sofa.
    */
-  String FEATURE_BASE_NAME_SOFA = "sofa";
+  static final String FEATURE_BASE_NAME_SOFA = "sofa";
 
   /**
    * Base name of annotation begin feature.
    */
-  String FEATURE_BASE_NAME_BEGIN = "begin";
+  static final String FEATURE_BASE_NAME_BEGIN = "begin";
 
   /**
    * Base name of annotation end feature.
    */
-  String FEATURE_BASE_NAME_END = "end";
+  static final String FEATURE_BASE_NAME_END = "end";
 
   /**
    * Base name of document language feature.
    */
-  String FEATURE_BASE_NAME_LANGUAGE = "language";
+  static final String FEATURE_BASE_NAME_LANGUAGE = "language";
 
   /**
    * Fully qualified name of annotation begin feature.
    */
-  String FEATURE_FULL_NAME_BEGIN = TYPE_NAME_ANNOTATION + TypeSystem.FEATURE_SEPARATOR
+  static final String FEATURE_FULL_NAME_BEGIN = TYPE_NAME_ANNOTATION + TypeSystem.FEATURE_SEPARATOR
           + FEATURE_BASE_NAME_BEGIN;
 
   /**
    * Fully qualified name of annotation sofa feature.
    */
-  String FEATURE_FULL_NAME_SOFA = TYPE_NAME_ANNOTATION_BASE + TypeSystem.FEATURE_SEPARATOR
+  static final String FEATURE_FULL_NAME_SOFA = TYPE_NAME_ANNOTATION + TypeSystem.FEATURE_SEPARATOR
           + FEATURE_BASE_NAME_SOFA;
 
   /**
    * Fully qualified name of annotation end feature.
    */
-  String FEATURE_FULL_NAME_END = TYPE_NAME_ANNOTATION + TypeSystem.FEATURE_SEPARATOR
+  static final String FEATURE_FULL_NAME_END = TYPE_NAME_ANNOTATION + TypeSystem.FEATURE_SEPARATOR
           + FEATURE_BASE_NAME_END;
 
   /**
    * Fully qualified name of document language feature.
    */
-  String FEATURE_FULL_NAME_LANGUAGE = TYPE_NAME_DOCUMENT_ANNOTATION + TypeSystem.FEATURE_SEPARATOR
-          + FEATURE_BASE_NAME_LANGUAGE;
+  static final String FEATURE_FULL_NAME_LANGUAGE = TYPE_NAME_DOCUMENT_ANNOTATION
+          + TypeSystem.FEATURE_SEPARATOR + FEATURE_BASE_NAME_LANGUAGE;
 
   /**
    * Name of the built-in index on annotations.
    */
-  String STD_ANNOTATION_INDEX = "AnnotationIndex";
+  static final String STD_ANNOTATION_INDEX = "AnnotationIndex";
 
-  String DEFAULT_LANGUAGE_NAME = "x-unspecified";
+  static final String DEFAULT_LANGUAGE_NAME = "x-unspecified";
 
   /**
    * Create a new FeatureStructure.
    * 
    * @param type
    *          The type of the FS.
-   * @param <T>
-   *          the Java cover class for the FS being created
+   * @param <T> the Java cover class for the FS being created
    * @return The new FS.
    */
   <T extends FeatureStructure> T createFS(Type type) throws CASRuntimeException;
-
-  // =============== These next methods might be deprecated in favor of
-  // =============== new FSArray(jcas, length) etc.
-  // =============== except that these run with the CAS, not JCas
 
   /**
    * Create a new feature structure array.
@@ -599,29 +559,18 @@ public interface CAS extends AbstractCas {
   DoubleArrayFS createDoubleArrayFS(int length) throws CASRuntimeException;
 
   /**
-   * Get the JCas view for this CAS view
+   * Get the JCas for this CAS.
    * 
-   * @return The JCas view for this CAS view
-   * @throws CASException
-   *           not thrown in v3, but kept for backwards compatibility
+   * @return The JCas for this CAS.
+   * @throws CASException -
    */
   JCas getJCas() throws CASException;
 
   /**
-   * Get the JCasImpl view for this CAS view
+   * Get the Cas view that the current component should use.  This
+   * should only be used by single-view components.
    * 
-   * @return the JCasImpl view for this CAS view
-   */
-  default JCasImpl getJCasImpl() {
-    return ((CASImpl) getLowLevelCAS()).getJCasImpl();
-  }
-
-  /**
-   * Get the Cas view that the current component should use. This should only be used by single-view
-   * components.
-   * 
-   * @return the Cas view specified for the current component by Sofa mapping. Defaults to
-   *         _InitialView if there is no Sofa mapping.
+   * @return the Cas view specified for the current component by Sofa mapping. Defaults to _InitialView if there is no Sofa mapping.
    * 
    */
   CAS getCurrentView();
@@ -629,15 +578,13 @@ public interface CAS extends AbstractCas {
   /**
    * Get sofaFS for given Subject of Analysis ID.
    * 
-   * @param sofaID
-   *          -
+   * @param sofaID -
    * @return The sofaFS.
    * 
    * @deprecated As of v2.0, use {#getView(String)}. From the view you can access the Sofa data, or
    *             call {@link #getSofa()} if you truly need to access the SofaFS object.
-   * @forRemoval 4.0.0
    */
-  @Deprecated(since = "2.0.0")
+  @Deprecated
   SofaFS getSofa(SofaID sofaID);
 
   /**
@@ -653,9 +600,9 @@ public interface CAS extends AbstractCas {
    * structures) pertaining to that Sofa.
    * <p>
    * This method creates the underlying Sofa feature structure, but does not set the Sofa data.
-   * Setting ths Sofa data must be done by calling
-   * {@link #setSofaDataArray(FeatureStructure, String)}, {@link #setSofaDataString(String, String)}
-   * or {@link #setSofaDataURI(String, String)} on the CAS view returned by this method.
+   * Setting ths Sofa data must be done by calling {@link #setSofaDataArray(FeatureStructure, String)},
+   * {@link #setSofaDataString(String, String)} or {@link #setSofaDataURI(String, String)} on the
+   * CAS view returned by this method.
    * 
    * @param localViewName
    *          the local name, before any sofa name mapping is done, for this view (note: this is the
@@ -675,8 +622,7 @@ public interface CAS extends AbstractCas {
    *          a Sofa feature structure in this CAS.
    * 
    * @return The JCas view for the given Sofa.
-   * @throws CASException
-   *           -
+   * @throws CASException -
    */
   JCas getJCas(SofaFS aSofa) throws CASException;
 
@@ -692,9 +638,8 @@ public interface CAS extends AbstractCas {
    *           if no Sofa with the given ID exists in this CAS
    * 
    * @deprecated As of v2.0, use {@link #getView(String)} followed by {@link #getJCas()}.
-   * @forRemoval 4.0.0
    */
-  @Deprecated(since = "2.0.0")
+  @Deprecated
   JCas getJCas(SofaID aSofaID) throws CASException;
 
   /**
@@ -760,8 +705,7 @@ public interface CAS extends AbstractCas {
   /**
    * Get the standard annotation index.
    * 
-   * @param <T>
-   *          either Annotation (if JCas is in use) or AnnotationImpl
+   * @param <T> either Annotation (if JCas is in use) or AnnotationImpl 
    * 
    * @return The standard annotation index.
    */
@@ -772,31 +716,12 @@ public interface CAS extends AbstractCas {
    * 
    * @param type
    *          The annotation type the index is restricted to.
-   * @param <T>
-   *          the topmost Java class corresponding to the type
+   * @param <T> the topmost Java class corresponding to the type
    * @return The standard annotation index, restricted to <code>type</code>.
-   * @exception CASRuntimeException
-   *              When <code>type</code> is not an annotation type.
+   * @exception CASRuntimeException When <code>type</code> is not an annotation type.
    */
-  <T extends AnnotationFS> AnnotationIndex<T> getAnnotationIndex(Type type)
-          throws CASRuntimeException;
-
-  /**
-   * Get the standard annotation index restricted to a specific annotation type.
-   * 
-   * @param clazz
-   *          The annotation type the index is restricted to, specified as a JCas class
-   * @param <T>
-   *          the topmost Java class corresponding to the type
-   * @return The standard annotation index, restricted to <code>type</code>.
-   * @exception CASRuntimeException
-   *              When <code>type</code> is not an annotation type.
-   */
-  default <T extends AnnotationFS> AnnotationIndex<T> getAnnotationIndex(Class<T> clazz)
-          throws CASRuntimeException {
-    return getAnnotationIndex(getCasType((Class) clazz));
-  }
-
+  <T extends AnnotationFS> AnnotationIndex<T> getAnnotationIndex(Type type) throws CASRuntimeException;
+  
   /**
    * Create a new annotation. Note that you still need to insert the annotation into the index
    * repository yourself.
@@ -807,22 +732,18 @@ public interface CAS extends AbstractCas {
    *          The start of the annotation.
    * @param end
    *          The end of the annotation.
-   * @param <T>
-   *          the Java class corresponding to the type
+   * @param <T> the Java class corresponding to the type
    * @return A new annotation object.
    */
   <T extends AnnotationFS> AnnotationFS createAnnotation(Type type, int begin, int end);
 
   /**
-   * Get the Document Annotation. The Document Annotation has a string-valued feature called
-   * "language" where the document language is specified.
+   * Get the document annotation. The document has a string-valued feature called "language" where
+   * the document language is specified.
    * 
-   * @param <T>
-   *          the Java class for the document annotation. Could be the JCas cover class or
-   *          FeatureStructure
-   * @return The document annotation. If it doesn't exist, one is created. The return value is the
-   *         JCas cover class or the plain Java cover class for FeatureStructures if there is no
-   *         JCas cover class for this type.
+   * @param <T> the Java class for the document annotation.  Could be the JCas cover class or FeatureStructure
+   * @return The document annotation, or <code>null</code> if there is none.  The return value is the
+   *         JCas cover class or the plain Java cover class for FeatureStructures if JCas is not in use.
    */
   <T extends AnnotationFS> T getDocumentAnnotation();
 
@@ -857,26 +778,21 @@ public interface CAS extends AbstractCas {
   /**
    * Create a Subject of Analysis. The new sofaFS is automatically added to the SofaIndex.
    * 
-   * @param sofaID
-   *          -
-   * @param mimeType
-   *          -
+   * @param sofaID -
+   * @param mimeType -
    * @return The sofaFS.
    * 
    * @deprecated As of v2.0, use {@link #createView(String)} instead.
-   * @forRemoval 4.0.0
    */
-  @Deprecated(since = "2.0.0")
+  @Deprecated
   SofaFS createSofa(SofaID sofaID, String mimeType);
 
   /**
    * Get iterator for all SofaFS in the CAS.
    * 
-   * @param <T>
-   *          generic type of sofa iterator
    * @return an iterator over SofaFS.
    */
-  <T extends SofaFS> FSIterator<T> getSofaIterator();
+  FSIterator<SofaFS> getSofaIterator();
 
   /**
    * Create an iterator over structures satisfying a given constraint. Constraints are described in
@@ -886,12 +802,10 @@ public interface CAS extends AbstractCas {
    *          The input iterator.
    * @param cons
    *          The constraint specifying what structures should be returned.
-   * @param <T>
-   *          - the type of the Feature Structure
+   * @param <T> - the type of the Feature Structure
    * @return An iterator over FSs.
    */
-  <T extends FeatureStructure> FSIterator<T> createFilteredIterator(FSIterator<T> it,
-          FSMatchConstraint cons);
+  <T extends FeatureStructure> FSIterator<T> createFilteredIterator(FSIterator<T> it, FSMatchConstraint cons);
 
   /**
    * Get a constraint factory. A constraint factory is a simple way of creating
@@ -922,8 +836,7 @@ public interface CAS extends AbstractCas {
    * 
    * @param it
    *          The <code>FSListIterator</code> to be wrapped.
-   * @param <T>
-   *          The type of FeatureStructure
+   * @param <T> The type of FeatureStructure
    * @return An equivalent <code>ListIterator</code>.
    */
   <T extends FeatureStructure> ListIterator<T> fs2listIterator(FSIterator<T> it);
@@ -962,10 +875,7 @@ public interface CAS extends AbstractCas {
    * @return Feature-value path object.
    * @throws CASRuntimeException
    *           If the input string is not well-formed.
-   * @deprecated Use {@link #createFeaturePath()} instead.
-   * @forRemoval 4.0.0
    */
-  @Deprecated(since = "3.6.0")
   FeatureValuePath createFeatureValuePath(String featureValuePath) throws CASRuntimeException;
 
   /**
@@ -1010,10 +920,8 @@ public interface CAS extends AbstractCas {
    * Sets the language for this document. This value sets the language feature of the special
    * instance of DocumentAnnotation associated with this CAS.
    * 
-   * @param languageCode
-   *          -
-   * @throws CASRuntimeException
-   *           passthru
+   * @param languageCode -
+   * @throws CASRuntimeException passthru
    */
   void setDocumentLanguage(String languageCode) throws CASRuntimeException;
 
@@ -1078,16 +986,16 @@ public interface CAS extends AbstractCas {
    * @return the mime type of the Sofa
    */
   String getSofaMimeType();
-
+  
   /**
    * Add a feature structure to all appropriate indexes in the repository associated with this CAS
    * View. If no indexes exist for the type of FS that you are adding, then a bag (unsorted) index
    * will be automatically created.
    * 
    * <p>
-   * <b>Important</b>: after you have called <code>addFsToIndexes(...)</code> on a FS, do not change
-   * the values of any features used for indexing. If you do, the index will become corrupted and
-   * may be unusable. If you need to change an index feature value, first call
+   * <b>Important</b>: after you have called <code>addFsToIndexes(...)</code> on a FS, do not
+   * change the values of any features used for indexing. If you do, the index will become corrupted
+   * and may be unusable. If you need to change an index feature value, first call
    * {@link #removeFsFromIndexes(FeatureStructure) removeFsFromIndexes(...)} on the FS, change the
    * feature values, then call <code>addFsToIndexes(...)</code> again.
    * 
@@ -1100,10 +1008,10 @@ public interface CAS extends AbstractCas {
 
   /**
    * Remove a feature structure from all indexes in the repository associated with this CAS View.
-   * The remove operation removes the exact fs from the indexes, unlike operations such as moveTo
-   * which use the fs argument as a template.
+   * The remove operation removes the exact fs from the indexes, unlike operations such as 
+   * moveTo which use the fs argument as a template.  
    * 
-   * It is not an error if the FS is not present in the indexes.
+   * It is not an error if the FS is not present in the indexes. 
    *
    * @param fs
    *          The Feature Structure to be removed.
@@ -1111,355 +1019,69 @@ public interface CAS extends AbstractCas {
    *              If the <code>fs</code> parameter is <code>null</code>.
    */
   void removeFsFromIndexes(FeatureStructure fs);
-
+  
   /**
-   * Get iterator over all views in this CAS. Each view provides access to Sofa data and the index
-   * repository that contains metadata (annotations and other feature structures) pertaining to that
-   * Sofa.
+   * Get iterator over all views in this CAS.  Each view provides access to Sofa data
+   * and the index repository that contains metadata (annotations and other feature
+   * structures) pertaining to that Sofa.
    * 
-   * @param <T>
-   *          generic type of returned view
-   * @return an iterator which returns all views. Each object returned by the iterator is of type
-   *         CAS or a subtype.
+   * @return an iterator which returns all views.  Each object returned by
+   *   the iterator is of type CAS.
    */
-  <T extends CAS> Iterator<T> getViewIterator();
-
+  Iterator<CAS> getViewIterator();
+  
   /**
-   * Get iterator over all views with the given name prefix. Each view provides access to Sofa data
-   * and the index repository that contains metadata (annotations and other feature structures)
-   * pertaining to that Sofa.
+   * Get iterator over all views with the given name prefix.  Each view provides access to Sofa data
+   * and the index repository that contains metadata (annotations and other feature
+   * structures) pertaining to that Sofa.
    * <p>
-   * When passed the prefix <i>namePrefix</i>, the iterator will return all views who name is either
-   * exactly equal to <i>namePrefix</i> or is of the form
+   * When passed the prefix <i>namePrefix</i>, the iterator will return all views who
+   * name is either exactly equal to <i>namePrefix</i> or is of the form
    * <i>namePrefix</i><code>.</code><i>suffix</i>, where <i>suffix</i> can be any String.
    * 
-   * @param localViewNamePrefix
-   *          the local name prefix, before any sofa name mapping is done, for this view (note: this
-   *          is the same as the associated Sofa name prefix).
+   * @param localViewNamePrefix  the local name prefix, before any sofa name mapping
+   *   is done, for this view (note: this is the same as the associated Sofa name prefix).
    * 
-   * @return an iterator which returns all views with the given name prefix. Each object returned by
-   *         the iterator is of type CAS.
+   * @return an iterator which returns all views with the given name prefix.
+   *   Each object returned by the iterator is of type CAS.
    */
   Iterator<CAS> getViewIterator(String localViewNamePrefix);
-
+  
   /**
-   * Sets a mark and returns the marker object set with the current mark which can be used to query
-   * when certain FSs were created. This can then be used to identify FSs as added before or after
-   * the mark was set and to identify FSs modified after the mark is set.
+   * Sets a mark and returns the marker object set with the current mark which can be used to query when certain FSs
+   * were created.  This can then be used to identify FSs as added before or after the mark was set and
+   * to identify FSs modified after the mark is set.
    * 
-   * Note: this method may only be called from an application. Calling it from an annotator will
-   * trigger a runtime exception.
+   * Note: this method may only be called from an application. Calling it from an annotator
+   * will trigger a runtime exception.
    * 
    * 
    * @return a marker object.
    */
-  Marker createMarker();
-
+  Marker createMarker();  
   /**
-   * Call this method to set up a region, ended by a {@link AutoCloseable#close()} call on
-   * the returned object, You can use this or the {@link #protectIndexes(Runnable)} method to
-   * protected the indexes.
+   * Call this method to set up a region, 
+   * ended by a {@link AutoCloseable#close()} call on the returned object,
+   * You can use this or the {@link #protectIndexes(Runnable)} method to protected
+   * the indexes.
    * <p>
-   * This approach allows arbitrary code between the protectIndexes and the associated close method.
+   * This approach allows arbitrary code between  the protectIndexes and the associated close method.
    * <p>
-   * The close method is best done in a finally block, or using the try-with-resources statement in
+   * The close method is best done in a finally block, or using the try-with-resources statement in 
    * Java 8.
    * 
    * @return an object used to record things that need adding back
    */
   AutoCloseable protectIndexes();
-
+  
   /**
    * Runs the code in the runnable inside a protection block, where any modifications to features
-   * done while in this block will be done in a way to protect any indexes which otherwise might
-   * become corrupted by the update action; the protection is achieved by temporarily removing the
-   * FS (if it is in the indexes), before the update happens. At the end of the block, affected
-   * indexes have any removed-under-the-covers FSs added back.
-   * 
-   * @param runnable
-   *          code to execute while protecting the indexes.
+   * done while in this block will be done in a way to protect any indexes which otherwise 
+   * might become corrupted by the update action; the protection is achieved by temporarily
+   * removing the FS (if it is in the indexes), before the update happens.
+   * At the end of the block, affected indexes have any removed-under-the-covers FSs added back.
+   * @param runnable code to execute while protecting the indexes. 
    */
   void protectIndexes(Runnable runnable);
 
-  /**
-   * @param <T>
-   *          the Type of the elements being accessed
-   * @return a newly created selection object for accessing feature structures
-   */
-  default <T extends TOP> SelectFSs<T> select() {
-    return new SelectFSs_impl<>(this);
-  }
-
-  /**
-   * @param type
-   *          specifies the type (and subtypes of that type) to access
-   * @param <T>
-   *          the Type of the elements being accessed
-   * @return a newly created selection object for accessing feature structures of that type and its
-   *         subtypes
-   * @throws IllegalArgumentException
-   *           if no type is specified.
-   */
-  default <T extends TOP> SelectFSs<T> select(Type type) {
-    return new SelectFSs_impl<>(this).type(type);
-  }
-
-  /**
-   * @param clazz
-   *          a JCas class corresponding to the type (and subtypes of that type) to access
-   * @param <T>
-   *          the Type of the elements being accessed
-   * @return a newly created selection object for accessing feature structures of that type and its
-   *         subtypes
-   * @throws IllegalArgumentException
-   *           if no type is specified.
-   */
-  default <T extends TOP> SelectFSs<T> select(Class<T> clazz) {
-    return new SelectFSs_impl<>(this).type(clazz);
-  }
-
-  /**
-   * @param jcasType
-   *          the "type" field from the JCas class corresponding to the type (and subtypes of that
-   *          type) to access
-   * @param <T>
-   *          the Type of the elements being accessed
-   * @return a newly created selection object for accessing feature structures of that type and its
-   *         subtypes
-   * @throws IllegalArgumentException
-   *           if no type is specified.
-   */
-  default <T extends TOP> SelectFSs<T> select(int jcasType) {
-    return new SelectFSs_impl<>(this).type(jcasType);
-  }
-
-  /**
-   * @param fullyQualifiedTypeName
-   *          the string name of the type to access
-   * @param <T>
-   *          the Type of the elements being accessed
-   * @return a newly created selection object for accessing feature structures of that type and its
-   *         subtypes
-   * @throws IllegalArgumentException
-   *           if no type is specified.
-   */
-  default <T extends TOP> SelectFSs<T> select(String fullyQualifiedTypeName) {
-    return new SelectFSs_impl<>(this).type(fullyQualifiedTypeName);
-  }
-
-  /**
-   * @param <T>
-   *          the type of the element of the list
-   * @param clazz
-   *          a JCas class corresponding to the type (and subtypes of that type) to access
-   * @return a lazily created shared (for this CAS) empty list
-   */
-  default <T extends TOP> EmptyList emptyList(Class<T> clazz) {
-    return ((CASImpl) getLowLevelCAS())
-            .emptyListFromTypeCode(((TypeImpl) getCasType(clazz)).getCode());
-  }
-
-  /**
-   * @return a lazily created shared (for this CAS) empty list
-   */
-  default EmptyFloatList emptyFloatList() {
-    return ((CASImpl) getLowLevelCAS()).emptyFloatList();
-  }
-
-  /**
-   * @param <T>
-   *          the type of the elements of the FSList
-   * @return a lazily created shared (for this CAS) empty list
-   */
-  default <T extends TOP> EmptyFSList<T> emptyFSList() {
-    return ((CASImpl) getLowLevelCAS()).emptyFSList();
-  }
-
-  /**
-   * @return a lazily created shared (for this CAS) empty list
-   */
-  default EmptyIntegerList emptyIntegerList() {
-    return ((CASImpl) getLowLevelCAS()).emptyIntegerList();
-  }
-
-  /**
-   * @return a lazily created shared (for this CAS) empty list
-   */
-  default EmptyStringList emptyStringList() {
-    return ((CASImpl) getLowLevelCAS()).emptyStringList();
-  }
-
-  /**
-   * @param <T>
-   *          the type of the elements of the array
-   * @param clazz
-   *          the class of the elements of the array
-   * @return a lazily created shared (for this CAS) 0-length array
-   */
-  default <T extends TOP> CommonArrayFS<T> emptyArray(Class<T> clazz) {
-    return ((CASImpl) getLowLevelCAS()).emptyArray(getCasType(clazz));
-  }
-
-  /**
-   * @return a lazily created shared (for this CAS) 0-length array
-   */
-  default FloatArray emptyFloatArray() {
-    return ((CASImpl) getLowLevelCAS()).emptyFloatArray();
-  }
-
-  /**
-   * @param <T>
-   *          the type of the elements of the FSArray
-   * @return a lazily created shared (for this CAS) 0-length FSarray
-   */
-  default <T extends FeatureStructure> FSArray<T> emptyFSArray() {
-    return ((CASImpl) getLowLevelCAS()).emptyFSArray();
-  }
-
-  /**
-   * @param type
-   *          the type of the elements of the FSArray
-   * @param <T>
-   *          the type of the elements of the FSArray
-   * @return a lazily created shared (for this CAS) 0-length subtype of FSarray holding elements of
-   *         type element-type
-   */
-  default <T extends FeatureStructure> FSArray<T> emptyFSArray(Type type) {
-    return ((CASImpl) getLowLevelCAS()).emptyFSArray(type);
-  }
-
-  /**
-   * @return a lazily created shared (for this CAS) 0-length array
-   */
-  default IntegerArray emptyIntegerArray() {
-    return ((CASImpl) getLowLevelCAS()).emptyIntegerArray();
-  }
-
-  /**
-   * @return a lazily created shared (for this CAS) 0-length array
-   */
-  default StringArray emptyStringArray() {
-    return ((CASImpl) getLowLevelCAS()).emptyStringArray();
-  }
-
-  /**
-   * @return a lazily created shared (for this CAS) 0-length array
-   */
-  default DoubleArray emptyDoubleArray() {
-    return ((CASImpl) getLowLevelCAS()).emptyDoubleArray();
-  }
-
-  /**
-   * @return a lazily created shared (for this CAS) 0-length array
-   */
-  default LongArray emptyLongArray() {
-    return ((CASImpl) getLowLevelCAS()).emptyLongArray();
-  }
-
-  /**
-   * @return a lazily created shared (for this CAS) 0-length array
-   */
-  default ShortArray emptyShortArray() {
-    return ((CASImpl) getLowLevelCAS()).emptyShortArray();
-  }
-
-  /**
-   * @return a lazily created shared (for this CAS) 0-length array
-   */
-  default ByteArray emptyByteArray() {
-    return ((CASImpl) getLowLevelCAS()).emptyByteArray();
-  }
-
-  /**
-   * @return a lazily created shared (for this CAS) 0-length array
-   */
-  default BooleanArray emptyBooleanArray() {
-    return ((CASImpl) getLowLevelCAS()).emptyBooleanArray();
-  }
-
-  /**
-   * @param clazz
-   *          - a JCas class
-   * @param <T>
-   *          the type of the JCas class
-   * @return the corresponding Type, for this CAS
-   */
-  default <T extends TOP> Type getCasType(Class<T> clazz) {
-    return getJCasImpl().getCasType(clazz);
-  }
-
-  /**
-   * Gets an iterator over all indexed (in this CAS view) FeatureStructures of the specified Type
-   * (and any of its subtypes). The elements are returned in arbitrary order, and duplicates (if
-   * they exist) are not removed.
-   *
-   * @param clazz
-   *          - the JCas Java class specifing which type and subtypes are included
-   * @param <T>
-   *          the Java clazz
-   * 
-   * @return An iterator that returns all indexed FeatureStructures of the Type and its subtypes,
-   *         corresponding to the JCas clazz, in no particular order.
-   */
-  default <T extends TOP> FSIterator<T> getAllIndexedFS(Class<T> clazz) {
-    return getAllIndexedFS(getCasType(clazz));
-  }
-
-  /**
-   * Gets an iterator over all indexed (in this CAS view) FeatureStructures of the specified Type
-   * (and any of its subtypes). The elements are returned in arbitrary order, and duplicates (if
-   * they exist) are not removed.
-   *
-   * @param type
-   *          the type of Feature Structures to include (including subtypes)
-   * @param <T>
-   *          the JCas class the iterator uses
-   * 
-   * @return An iterator that returns all indexed FeatureStructures of the Type and its subtypes,
-   *         corresponding to the JCas clazz, in no particular order.
-   */
-  default <T extends TOP> FSIterator<T> getAllIndexedFS(Type type) {
-    return getIndexRepository().getAllIndexedFS(type);
-  }
-
-  /**
-   * Returns an unmodifiable collection of all the FSs that are indexed in this view, in an
-   * arbitrary order. Subsequent modifications to the indexes do not affect this collection.
-   * 
-   * @param type
-   *          the type of Feature Structures to include (including subtypes)
-   * @param <T>
-   *          The Java class associated with type
-   * @return an unmodifiable, unordered collection of all indexed (in this view) Feature Structures
-   *         of the specified type (including subtypes)
-   */
-  default <T extends TOP> Collection<T> getIndexedFSs(Type type) {
-    return getIndexRepository().getIndexedFSs(type);
-  }
-
-  /**
-   * Returns an unmodifiable collection of all of the FSs that are indexed in this view, in an
-   * arbitrary order. Subsequent modifications to the indexes do not affect this collection.
-   * 
-   * @return an unmodifiable, unordered collection of all indexed (in this view) Feature Structures
-   *         of the specified type (including subtypes)
-   */
-  default Collection<TOP> getIndexedFSs() {
-    return getIndexRepository().getIndexedFSs();
-  }
-
-  /**
-   * Returns a collection of all the FSs that are indexed in this view, in an arbitrary order.
-   * Subsequent modifications to the indexes do not affect this collection.
-   * 
-   * @param clazz
-   *          The JCas class corresponding to the type
-   * @param <T>
-   *          The Java class associated with type
-   * @return an unmodifiable, unordered collection of all indexed (in this view) Feature Structures
-   *         of the specified type (including subtypes)
-   */
-  default <T extends TOP> Collection<T> getIndexedFSs(Class<T> clazz) {
-    return getIndexRepository().getIndexedFSs(clazz);
-  }
 }

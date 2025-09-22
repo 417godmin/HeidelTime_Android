@@ -23,54 +23,17 @@ import java.io.IOException;
 import java.io.Writer;
 import java.lang.reflect.Constructor;
 
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParserFactory;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.sax.SAXTransformerFactory;
-
-import org.apache.uima.UIMAFramework;
-import org.apache.uima.util.Level;
-import org.apache.uima.util.Misc;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXNotRecognizedException;
-import org.xml.sax.SAXNotSupportedException;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 /**
  * Some utilities for working with XML.
  * 
- * abstract only to prevent instantiation - all methods are static
+ * 
  */
 public abstract class XMLUtils {
-
-  /**
-   * see
-   * https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.md
-   */
-
-  /**
-   * -Duima.xml.enable.doctype_decl
-   * 
-   */
-  private static final String XML_ENABLE_DOCTYPE_DECL = "uima.xml.enable.doctype_decl";
-  private static final boolean IS_XML_ENABLE_DOCTYPE_DECL = Misc
-          .getNoValueSystemProperty(XML_ENABLE_DOCTYPE_DECL);
-
-  // constants - not all Java versions define these
-
-  private static final String ACCESS_EXTERNAL_STYLESHEET = "http://javax.xml.XMLConstants/property/accessExternalStylesheet";
-  private static final String ACCESS_EXTERNAL_DTD = "http://javax.xml.XMLConstants/property/accessExternalDTD";
-
-  private static final String DISALLOW_DOCTYPE_DECL = "http://apache.org/xml/features/disallow-doctype-decl";
-  private static final String LOAD_EXTERNAL_DTD = "http://apache.org/xml/features/nonvalidating/load-external-dtd";
-  private static final String EXTERNAL_GENERAL_ENTITIES = "http://xml.org/sax/features/external-general-entities";
-  private static final String EXTERNAL_PARAMETER_ENTITIES = "http://xml.org/sax/features/external-parameter-entities";
 
   /**
    * Normalizes the given string for output to XML. This converts all special characters, e.g. &lt;,
@@ -108,26 +71,26 @@ public abstract class XMLUtils {
           aResultBuf.append("&#").append((int) c).append(';');
         } else {
           switch (c) {
-            case '<':
-              aResultBuf.append("&lt;");
-              break;
-            case '>':
-              aResultBuf.append("&gt;");
-              break;
-            case '&':
-              aResultBuf.append("&amp;");
-              break;
-            case '"':
-              aResultBuf.append("&quot;");
-              break;
-            case '\n':
-              aResultBuf.append(aNewlinesToSpaces ? " " : "\n");
-              break;
-            case '\r':
-              aResultBuf.append(aNewlinesToSpaces ? " " : "\r");
-              break;
-            default:
-              aResultBuf.append(c);
+          case '<':
+            aResultBuf.append("&lt;");
+            break;
+          case '>':
+            aResultBuf.append("&gt;");
+            break;
+          case '&':
+            aResultBuf.append("&amp;");
+            break;
+          case '"':
+            aResultBuf.append("&quot;");
+            break;
+          case '\n':
+            aResultBuf.append(aNewlinesToSpaces ? " " : "\n");
+            break;
+          case '\r':
+            aResultBuf.append(aNewlinesToSpaces ? " " : "\r");
+            break;
+          default:
+            aResultBuf.append(c);
           }
         }
       }
@@ -151,7 +114,7 @@ public abstract class XMLUtils {
    *           if an I/O failure occurs when writing to <code>aWriter</code>
    */
   public static void writeNormalizedString(String aStr, Writer aWriter, boolean aNewlinesToSpaces)
-          throws IOException {
+      throws IOException {
     if (aStr == null)
       return;
 
@@ -159,26 +122,26 @@ public abstract class XMLUtils {
     for (int i = 0; i < len; i++) {
       char c = aStr.charAt(i);
       switch (c) {
-        case '<':
-          aWriter.write("&lt;");
-          break;
-        case '>':
-          aWriter.write("&gt;");
-          break;
-        case '&':
-          aWriter.write("&amp;");
-          break;
-        case '"':
-          aWriter.write("&quot;");
-          break;
-        case '\n':
-          aWriter.write(aNewlinesToSpaces ? " " : "\n");
-          break;
-        case '\r':
-          aWriter.write(aNewlinesToSpaces ? " " : "\r");
-          break;
-        default:
-          aWriter.write(c);
+      case '<':
+        aWriter.write("&lt;");
+        break;
+      case '>':
+        aWriter.write("&gt;");
+        break;
+      case '&':
+        aWriter.write("&amp;");
+        break;
+      case '"':
+        aWriter.write("&quot;");
+        break;
+      case '\n':
+        aWriter.write(aNewlinesToSpaces ? " " : "\n");
+        break;
+      case '\r':
+        aWriter.write(aNewlinesToSpaces ? " " : "\r");
+        break;
+      default:
+        aWriter.write(c);
       }
     }
   }
@@ -219,41 +182,41 @@ public abstract class XMLUtils {
     aWriter.write(">");
   }
 
-  // This method moved to MetaDataObject_impl, made private non-static, and integrated with the
-  // comment/whitespace preserving change. 6/2012 schor
-  // /**
-  // * Writes a standard XML representation of the specified Object, in the form:<br>
-  // * <code>&lt;className&gt;string value%lt;/className%gt;</code>
-  // * <p>
-  // * where <code>className</code> is the object's java class name without the package and made
-  // * lowercase, e.g. "string","integer", "boolean" and <code>string value</code> is the result of
-  // * <code>Object.toString()</code>.
-  // * <p>
-  // * This is intended to be used for Java Strings and wrappers for primitive value classes (e.g.
-  // * Integer, Boolean).
-  // *
-  // * @param aObj
-  // * the object to write
-  // * @param aContentHandler
-  // * the SAX ContentHandler to which events will be sent
-  // *
-  // * @throws SAXException
-  // * if the ContentHandler throws an exception
-  // */
-  // public static void writePrimitiveValue(Object aObj, ContentHandler aContentHandler)
-  // throws SAXException {
-  // final Attributes EMPTY_ATTRIBUTES = new AttributesImpl();
-  //
-  // String className = aObj.getClass().getName();
-  // int lastDotIndex = className.lastIndexOf(".");
-  // if (lastDotIndex > -1)
-  // className = className.substring(lastDotIndex + 1).toLowerCase();
-  //
-  // aContentHandler.startElement(null, className, className, EMPTY_ATTRIBUTES);
-  // String valStr = aObj.toString();
-  // aContentHandler.characters(valStr.toCharArray(), 0, valStr.length());
-  // aContentHandler.endElement(null, className, className);
-  // }
+  
+  // This method moved to MetaDataObject_impl, made private non-static, and integrated with the comment/whitespace preserving change. 6/2012 schor
+//  /**
+//   * Writes a standard XML representation of the specified Object, in the form:<br>
+//   * <code>&lt;className&gt;string value%lt;/className%gt;</code>
+//   * <p>
+//   * where <code>className</code> is the object's java class name without the package and made
+//   * lowercase, e.g. "string","integer", "boolean" and <code>string value</code> is the result of
+//   * <code>Object.toString()</code>.
+//   * <p>
+//   * This is intended to be used for Java Strings and wrappers for primitive value classes (e.g.
+//   * Integer, Boolean).
+//   * 
+//   * @param aObj
+//   *          the object to write
+//   * @param aContentHandler
+//   *          the SAX ContentHandler to which events will be sent
+//   * 
+//   * @throws SAXException
+//   *           if the ContentHandler throws an exception
+//   */
+//  public static void writePrimitiveValue(Object aObj, ContentHandler aContentHandler)
+//      throws SAXException {
+//    final Attributes EMPTY_ATTRIBUTES = new AttributesImpl();
+//
+//    String className = aObj.getClass().getName();
+//    int lastDotIndex = className.lastIndexOf(".");
+//    if (lastDotIndex > -1)
+//      className = className.substring(lastDotIndex + 1).toLowerCase();
+//
+//    aContentHandler.startElement(null, className, className, EMPTY_ATTRIBUTES);
+//    String valStr = aObj.toString();
+//    aContentHandler.characters(valStr.toCharArray(), 0, valStr.length());
+//    aContentHandler.endElement(null, className, className);
+//  }
 
   /**
    * Gets the first child of the given Element with the given tag name.
@@ -354,17 +317,17 @@ public abstract class XMLUtils {
    * @return the text of <code>aElem</code>
    */
   public static String getText(Element aElem) {
-    var buf = new StringBuilder();
+    StringBuffer buf = new StringBuffer();
     NodeList children = aElem.getChildNodes();
     int len = children.getLength();
     for (int i = 0; i < len; i++) {
       Node curNode = children.item(i);
-      if (curNode instanceof Text text) {
-        buf.append(text.getData());
-      } else if (curNode instanceof Element element) {
-        buf.append('<').append(element.getTagName()).append('>');
-        buf.append(getText(element));
-        buf.append("</").append(element.getTagName()).append('>');
+      if (curNode instanceof Text) {
+        buf.append(((Text) curNode).getData());
+      } else if (curNode instanceof Element) {
+        buf.append('<').append(((Element) curNode).getTagName()).append('>');
+        buf.append(getText((Element) curNode));
+        buf.append("</").append(((Element) curNode).getTagName()).append('>');
       }
     }
 
@@ -383,14 +346,15 @@ public abstract class XMLUtils {
    * @return the text of <code>aElem</code>
    */
   public static String getText(Element aElem, boolean aExpandEnvVarRefs) {
-    var buf = new StringBuilder();
+    StringBuffer buf = new StringBuffer();
     NodeList children = aElem.getChildNodes();
     int len = children.getLength();
     for (int i = 0; i < len; i++) {
       Node curNode = children.item(i);
-      if (curNode instanceof Text text) {
-        buf.append(text.getData());
-      } else if (curNode instanceof Element subElem) {
+      if (curNode instanceof Text) {
+        buf.append(((Text) curNode).getData());
+      } else if (curNode instanceof Element) {
+        Element subElem = (Element) curNode;
         if (aExpandEnvVarRefs && "envVarRef".equals(subElem.getTagName())) {
           String varName = getText(subElem, false);
           String value = System.getProperty(varName);
@@ -398,9 +362,9 @@ public abstract class XMLUtils {
             buf.append(value);
           }
         } else {
-          buf.append('<').append(subElem.getTagName()).append('>');
-          buf.append(getText(subElem, aExpandEnvVarRefs));
-          buf.append("</").append(subElem.getTagName()).append('>');
+          buf.append('<').append(((Element) curNode).getTagName()).append('>');
+          buf.append(getText((Element) curNode, aExpandEnvVarRefs));
+          buf.append("</").append(((Element) curNode).getTagName()).append('>');
         }
       }
     }
@@ -417,7 +381,7 @@ public abstract class XMLUtils {
    * 
    * <pre>
    *   Char ::= #x9 | #xA | #xD | [#x20-#xD7FF] | [#xE000-#xFFFD] | [#x10000-#x10FFFF] // any Unicode
-   *    character, excluding the surrogate blocks, FFFE, and FFFF.
+   *    character, excluding the surrogate blocks, FFFE, and FFFF.  
    * </pre>
    * 
    * <p>
@@ -437,25 +401,25 @@ public abstract class XMLUtils {
   public static final int checkForNonXmlCharacters(String s) {
     return checkForNonXmlCharacters(s, false);
   }
-
+  
   /**
    * Check the input string for non-XML characters. If non-XML characters are found, return the
    * position of first offending character. Else, return <code>-1</code>.
    * <p>
-   * The definition of an XML character is different for XML 1.0 and 1.1. This method will check
-   * either version, depending on the value of the <code>xml11</code> argument.
+   * The definition of an XML character is different for
+   * XML 1.0 and 1.1.  This method will check either version, depending on the value of the
+   * <code>xml11</code> argument.  
    * 
    * <p>
    * From the XML 1.0 spec:
    * 
    * <pre>
    *   Char ::= #x9 | #xA | #xD | [#x20-#xD7FF] | [#xE000-#xFFFD] | [#x10000-#x10FFFF] // any Unicode
-   *    character, excluding the surrogate blocks, FFFE, and FFFF.
+   *    character, excluding the surrogate blocks, FFFE, and FFFF.  
    * </pre>
    * 
    * <p>
    * From the XML 1.1 spec:
-   * 
    * <pre>
    *  Char     ::=    [#x1-#xD7FF] | [#xE000-#xFFFD] | [#x10000-#x10FFFF]
    * </pre>
@@ -470,12 +434,11 @@ public abstract class XMLUtils {
    * 
    * @param s
    *          Input string
-   * @param xml11
-   *          true to check for invalid XML 1.1 characters, false to check for invalid XML 1.0
-   *          characters. The default is false.
+   * @param xml11 true to check for invalid XML 1.1 characters, false to check for invalid XML 1.0 characters.
+   *   The default is false.
    * @return The position of the first invalid XML character encountered. <code>-1</code> if no
    *         invalid XML characters found.
-   */
+   */  
   public static final int checkForNonXmlCharacters(String s, boolean xml11) {
     if (s == null) {
       return -1;
@@ -505,24 +468,19 @@ public abstract class XMLUtils {
   }
 
   /**
-   * Check the input character array for non-XML characters. If non-XML characters are found, return
-   * the position of first offending character. Else, return <code>-1</code>.
+   * Check the input character array for non-XML characters. If non-XML characters are found, return the
+   * position of first offending character. Else, return <code>-1</code>.
    * 
-   * @param ch
-   *          Input character array
-   * @param start
-   *          offset of first char to check
-   * @param length
-   *          number of chars to check
-   * @param xml11
-   *          true to check for invalid XML 1.1 characters, false to check for invalid XML 1.0
-   *          characters. The default is false.
+   * @param ch Input character array
+   * @param start offset of first char to check
+   * @param length number of chars to check
+   * @param xml11 true to check for invalid XML 1.1 characters, false to check for invalid XML 1.0 characters.
+   *   The default is false.
    * @return The position of the first invalid XML character encountered. <code>-1</code> if no
    *         invalid XML characters found.
-   * @see #checkForNonXmlCharacters(String, boolean)
-   */
-  public static final int checkForNonXmlCharacters(char[] ch, int start, int length,
-          boolean xml11) {
+   * @see #checkForNonXmlCharacters(String, boolean) 
+   */  
+  public static final int checkForNonXmlCharacters(char[] ch, int start, int length, boolean xml11) {
     if (ch == null) {
       return -1;
     }
@@ -548,150 +506,15 @@ public abstract class XMLUtils {
       return i;
     }
     return -1;
-  }
-
+  }  
+  
   // Check if the utf 16 code unit we're looking at is a valid XML character in its own right.
   private static final boolean isValidXmlUtf16int(char c, boolean xml11) {
     if (xml11)
       return (c >= 0x1 && c <= 0xD7FF) || (c >= 0xE000) && (c <= 0xFFFD);
     else
-      return ((c == 0x9) || (c == 0xA) || (c == 0xD) || ((c >= 0x20) && (c <= 0xD7FF))
-              || (c >= 0xE000 && c <= 0xFFFD));
+      return ((c == 0x9) || (c == 0xA) || (c == 0xD) || ((c >= 0x20) && (c <= 0xD7FF)) || 
+        (c >= 0xE000 && c <= 0xFFFD));
   }
 
-  public static SAXParserFactory createSAXParserFactory() {
-    SAXParserFactory factory = SAXParserFactory.newInstance();
-    System.out.println("[HTDebug] createSAXParserFactory called, XIncludeAware=false");
-
-    try {
-      if (!IS_XML_ENABLE_DOCTYPE_DECL) {
-        factory.setFeature(DISALLOW_DOCTYPE_DECL, true);
-      }
-    } catch (SAXNotRecognizedException e) {
-      UIMAFramework.getLogger().log(Level.WARNING,
-              "SAXParserFactory didn't recognize feature " + DISALLOW_DOCTYPE_DECL);
-    } catch (SAXNotSupportedException | ParserConfigurationException e) {
-      UIMAFramework.getLogger().log(Level.WARNING,
-              "SAXParserFactory doesn't support feature " + DISALLOW_DOCTYPE_DECL);
-    }
-
-    try {
-      factory.setFeature(LOAD_EXTERNAL_DTD, false);
-    } catch (SAXNotRecognizedException e) {
-      UIMAFramework.getLogger().log(Level.WARNING,
-              "SAXParserFactory didn't recognize feature " + LOAD_EXTERNAL_DTD);
-    } catch (SAXNotSupportedException | ParserConfigurationException e) {
-      UIMAFramework.getLogger().log(Level.WARNING,
-              "SAXParserFactory doesn't support feature " + LOAD_EXTERNAL_DTD);
-    }
-
-    // Android 有些实现直接抛 UnsupportedOperationException
-    try {
-      factory.setXIncludeAware(false);
-    } catch (UnsupportedOperationException e) {
-      UIMAFramework.getLogger().log(Level.WARNING,
-              "SAXParserFactory.setXIncludeAware(false) not supported on this platform, ignoring...");
-    }
-
-    return factory;
-  }
-
-  public static XMLReader createXMLReader() throws SAXException {
-    XMLReader xmlReader = XMLReaderFactory.createXMLReader();
-
-    try {
-      xmlReader.setFeature(EXTERNAL_GENERAL_ENTITIES, false);
-    } catch (SAXNotRecognizedException | SAXNotSupportedException e) {
-      UIMAFramework.getLogger().log(Level.WARNING,
-              "XMLReader doesn't support feature " + EXTERNAL_GENERAL_ENTITIES);
-    }
-
-    try {
-      xmlReader.setFeature(EXTERNAL_PARAMETER_ENTITIES, false);
-    } catch (SAXNotRecognizedException | SAXNotSupportedException e) {
-      UIMAFramework.getLogger().log(Level.WARNING,
-              "XMLReader doesn't support feature " + EXTERNAL_PARAMETER_ENTITIES);
-    }
-
-    try {
-      xmlReader.setFeature(LOAD_EXTERNAL_DTD, false);
-    } catch (SAXNotRecognizedException | SAXNotSupportedException e) {
-      UIMAFramework.getLogger().log(Level.WARNING,
-              "XMLReader doesn't support feature " + LOAD_EXTERNAL_DTD);
-    }
-
-    // 关键修复：禁用 namespace-prefixes 避免 Android ExpatReader 冲突
-    try {
-      xmlReader.setFeature("http://xml.org/sax/features/namespace-prefixes", false);
-    } catch (SAXNotRecognizedException | SAXNotSupportedException e) {
-      UIMAFramework.getLogger().log(Level.WARNING,
-              "XMLReader doesn't support namespace-prefixes feature");
-    }
-
-    return xmlReader;
-  }
-
-  public static SAXTransformerFactory createSaxTransformerFactory() {
-    var saxTransformerFactory = (SAXTransformerFactory) TransformerFactory.newInstance();
-    try {
-      saxTransformerFactory.setAttribute(ACCESS_EXTERNAL_DTD, "");
-    } catch (IllegalArgumentException e) {
-      UIMAFramework.getLogger().log(Level.WARNING,
-              "SAXTransformerFactory didn't recognize setting attribute " + ACCESS_EXTERNAL_DTD);
-    }
-
-    try {
-      saxTransformerFactory.setAttribute(ACCESS_EXTERNAL_STYLESHEET, "");
-    } catch (IllegalArgumentException e) {
-      UIMAFramework.getLogger().log(Level.WARNING,
-              "SAXTransformerFactory didn't recognize setting attribute "
-                      + ACCESS_EXTERNAL_STYLESHEET);
-    }
-
-    return saxTransformerFactory;
-  }
-
-  public static TransformerFactory createTransformerFactory() {
-    TransformerFactory transformerFactory = TransformerFactory.newInstance();
-    try {
-      transformerFactory.setAttribute(ACCESS_EXTERNAL_DTD, "");
-    } catch (IllegalArgumentException e) {
-      UIMAFramework.getLogger().log(Level.WARNING,
-              "TransformerFactory didn't recognize setting attribute " + ACCESS_EXTERNAL_DTD);
-    }
-
-    try {
-      transformerFactory.setAttribute(ACCESS_EXTERNAL_STYLESHEET, "");
-    } catch (IllegalArgumentException e) {
-      UIMAFramework.getLogger().log(Level.WARNING,
-              "TransformerFactory didn't recognize setting attribute "
-                      + ACCESS_EXTERNAL_STYLESHEET);
-    }
-
-    return transformerFactory;
-  }
-
-  public static DocumentBuilderFactory createDocumentBuilderFactory() {
-    DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-    try {
-      if (!IS_XML_ENABLE_DOCTYPE_DECL) { // https://issues.apache.org/jira/browse/UIMA-6064
-        documentBuilderFactory.setFeature(DISALLOW_DOCTYPE_DECL, true);
-      }
-    } catch (ParserConfigurationException e1) {
-      UIMAFramework.getLogger().log(Level.WARNING,
-              "DocumentBuilderFactory didn't recognize setting feature " + DISALLOW_DOCTYPE_DECL);
-    }
-
-    try {
-      documentBuilderFactory.setFeature(LOAD_EXTERNAL_DTD, false);
-    } catch (ParserConfigurationException e) {
-      UIMAFramework.getLogger().log(Level.WARNING,
-              "DocumentBuilderFactory doesn't support feature " + LOAD_EXTERNAL_DTD);
-    }
-
-    documentBuilderFactory.setXIncludeAware(false);
-    documentBuilderFactory.setExpandEntityReferences(false);
-
-    return documentBuilderFactory;
-  }
 }

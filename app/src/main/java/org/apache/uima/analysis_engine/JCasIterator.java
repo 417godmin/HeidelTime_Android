@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.uima.analysis_engine;
 
 import org.apache.uima.jcas.JCas;
@@ -33,8 +34,8 @@ public interface JCasIterator {
    * 
    * @throws AnalysisEngineProcessException
    *           if a failure has occurred during processing. If an exception is thrown, this
-   *           indicates that processing has aborted, so no further calls to the JCasIterator should
-   *           be made.
+   *           indicates that processing has aborted, so no further calls to the JCasIterator
+   *           should be made.
    */
   boolean hasNext() throws AnalysisEngineProcessException;
 
@@ -45,8 +46,8 @@ public interface JCasIterator {
    * 
    * @throws AnalysisEngineProcessException
    *           if a failure has occurred during processing. If an exception is thrown, this
-   *           indicates that processing has aborted, so no further calls to the JCasIterator should
-   *           be made.
+   *           indicates that processing has aborted, so no further calls to the JCasIterator
+   *           should be made.
    */
   JCas next() throws AnalysisEngineProcessException;
 
@@ -54,5 +55,5 @@ public interface JCasIterator {
    * Releases any CASes owned by this JCasIterator. You only need to Call this method if you stop
    * using a CasIterator before you have iterated all the way through.
    */
-  void release();
+  public void release();
 }

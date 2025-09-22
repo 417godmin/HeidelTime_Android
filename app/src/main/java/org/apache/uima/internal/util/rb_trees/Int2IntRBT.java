@@ -24,7 +24,6 @@ import java.util.NoSuchElementException;
 import org.apache.uima.internal.util.IntKeyValueIterator;
 import org.apache.uima.internal.util.IntListIterator;
 
-// @formatter:off
 /**
  * A map&lt;int, int&gt;
  * 
@@ -40,7 +39,6 @@ import org.apache.uima.internal.util.IntListIterator;
  *   no values()
  *   
  */
-//@formatter:on
 public class Int2IntRBT extends IntArrayRBTcommon {
 
   private class KeyValueIterator implements IntKeyValueIterator {
@@ -54,78 +52,69 @@ public class Int2IntRBT extends IntArrayRBTcommon {
     /**
      * @see org.apache.uima.internal.util.IntPointerIterator#dec()
      */
-    @Override
     public void dec() {
-      currentNode = previousNode(currentNode);
+      this.currentNode = previousNode(this.currentNode);
     }
 
     /**
      * @see org.apache.uima.internal.util.IntPointerIterator#get()
      */
-    @Override
     public int get() {
       if (!isValid()) {
         throw new NoSuchElementException();
       }
-      return getKeyForNode(currentNode);
+      return Int2IntRBT.this.getKeyForNode(this.currentNode);
     }
-
-    @Override
+    
     public int getValue() {
       if (!isValid()) {
         throw new NoSuchElementException();
       }
-      return Int2IntRBT.this.getValue(currentNode);
+      return Int2IntRBT.this.getValue(this.currentNode);      
     }
 
     /**
      * @see org.apache.uima.internal.util.IntPointerIterator#inc()
      */
-    @Override
     public void inc() {
-      currentNode = nextNode(currentNode);
+      this.currentNode = nextNode(this.currentNode);
     }
 
     /**
      * @see org.apache.uima.internal.util.IntPointerIterator#isValid()
      */
-    @Override
     public boolean isValid() {
-      return (currentNode != NIL);
+      return (this.currentNode != NIL);
     }
 
     /**
      * @see org.apache.uima.internal.util.IntPointerIterator#moveToFirst()
      */
-    @Override
     public void moveToFirst() {
-      currentNode = getFirstNode();
+      this.currentNode = getFirstNode();
     }
 
     /**
      * @see org.apache.uima.internal.util.IntPointerIterator#moveToLast()
      */
-    @Override
     public void moveToLast() {
-      currentNode = Int2IntRBT.this.greatestNode;
+      this.currentNode = Int2IntRBT.this.greatestNode;
     }
 
     /**
      * @see org.apache.uima.internal.util.IntPointerIterator#copy()
      */
-    @Override
     public Object copy() {
       KeyValueIterator it = new KeyValueIterator();
-      it.currentNode = currentNode;
+      it.currentNode = this.currentNode;
       return it;
     }
 
     /**
      * @see org.apache.uima.internal.util.IntPointerIterator#moveTo(int)
      */
-    @Override
     public void moveTo(int i) {
-      currentNode = findInsertionPointNoDups(i);
+      this.currentNode = findInsertionPointNoDups(i);
     }
 
   }
@@ -135,62 +124,70 @@ public class Int2IntRBT extends IntArrayRBTcommon {
     private int currentNode;
 
     private KeyIterator() {
-      currentNode = getFirstNode();
+      super();
+      this.currentNode = NIL;
     }
 
-    @Override
     public final boolean hasNext() {
-      return currentNode != NIL;
+      return (this.currentNode != Int2IntRBT.this.greatestNode);
     }
 
-    @Override
-    public final int nextNvc() {
-      int v = getKeyForNode(currentNode);
-      currentNode = nextNode(currentNode);
-      return v;
+    public final int next() {
+      if (!hasNext()) {
+        throw new NoSuchElementException();
+      }
+      this.currentNode = (this.currentNode == NIL) ? getFirstNode() : nextNode(this.currentNode);
+      return Int2IntRBT.this.getKeyForNode(this.currentNode);
     }
 
     /**
      * @see IntListIterator#hasPrevious()
      */
-    @Override
     public boolean hasPrevious() {
-      return currentNode != NIL && currentNode != getFirstNode();
+      return (this.currentNode != NIL);
     }
 
-    @Override
-    public int previousNvc() {
-      currentNode = previousNode(currentNode);
-      return getKeyForNode(currentNode);
+    /**
+     * @see IntListIterator#previous()
+     */
+    public int previous() {
+      if (!hasPrevious()) {
+        throw new NoSuchElementException();
+      }
+      final int currentKey = Int2IntRBT.this.getKeyForNode(this.currentNode);
+      if (this.currentNode == getFirstNode()) {
+        this.currentNode = NIL;
+      } else {
+        this.currentNode = previousNode(this.currentNode);
+      }
+      return currentKey;
     }
 
     /**
      * @see IntListIterator#moveToEnd()
      */
-    @Override
     public void moveToEnd() {
-      currentNode = Int2IntRBT.this.greatestNode;
+      this.currentNode = Int2IntRBT.this.greatestNode;
     }
 
     /**
      * @see IntListIterator#moveToStart()
      */
-    @Override
     public void moveToStart() {
-      currentNode = NIL;
+      this.currentNode = NIL;
     }
 
   }
-
+  
   protected int[] values;
-
+  
   private int getValue(int node) {
     return values[node];
   }
 
   private int prevValue;
-
-  private int lastNodeGotten; // a speed up, maybe
+    
+  private int lastNodeGotten;  // a speed up, maybe
 
   /**
    * Constructor for IntArrayRBT.
@@ -202,13 +199,12 @@ public class Int2IntRBT extends IntArrayRBTcommon {
   public Int2IntRBT(int initialSize) {
     super(initialSize);
   }
-
-  @Override
+    
   protected void setupArrays() {
     super.setupArrays();
-    values = new int[initialSize];
+    this.values = new int[initialSize];
   }
-
+  
   public Int2IntRBT copy() {
     Int2IntRBT c = new Int2IntRBT();
     c.klrp = klrp.clone();
@@ -228,45 +224,42 @@ public class Int2IntRBT extends IntArrayRBTcommon {
     flush();
   }
 
-  @Override
   public void flush() {
     super.flush();
     lastNodeGotten = NIL;
   }
-
+  
   @Override
   protected void ensureCapacityKlrp(int requiredSize) {
     super.ensureCapacityKlrp(requiredSize);
-    values = ensureArrayCapacity(values, requiredSize);
+    this.values = ensureArrayCapacity(this.values, requiredSize);
   }
-
+  
   /**
    * 
-   * @param k
-   *          the key to insert
-   * @param v
-   *          the value to insert (or replace, if key already present)
+   * @param k the key to insert
+   * @param v the value to insert (or replace, if key already present)
    * @return negative index if key is found
    */
   private int treeInsert(final int k, final int v) {
-    if ((greatestNode != NIL) && (getKeyForNode(greatestNode) < k)) {
-      final int y = greatestNode;
+    if ((this.greatestNode != NIL) && (getKeyForNode(this.greatestNode) < k)) {
+      final int y = this.greatestNode;
       final int z = newNode(k);
-      values[z] = v; // addition
-      greatestNode = z;
+      values[z] = v;   // addition
+      this.greatestNode = z;
       setRight(y, z);
       setParent(z, y);
       return z;
     }
-    int x = root;
+    int x = this.root;
     int y = NIL;
     while (x != NIL) {
       y = x;
       final int xKey = getKeyForNode(x);
       if (k == xKey) {
         // key found
-        prevValue = values[x]; // addition
-        values[x] = v; // addition
+        prevValue = values[x];  // addition
+        values[x] = v;          // addition
         return -x;
       }
       x = (k < xKey) ? getLeft(x) : getRight(x);
@@ -277,7 +270,7 @@ public class Int2IntRBT extends IntArrayRBTcommon {
     values[z] = v;
     if (y == NIL) {
       setAsRoot(z);
-      greatestNode = z;
+      this.greatestNode = z;
       setParent(z, NIL);
     } else {
       setParent(z, y);
@@ -290,11 +283,10 @@ public class Int2IntRBT extends IntArrayRBTcommon {
     return z;
   }
 
+
   /**
    * Get the value for a given key
-   * 
-   * @param k
-   *          -
+   * @param k  -
    * @return the value
    */
   public int get(final int k) {
@@ -304,7 +296,7 @@ public class Int2IntRBT extends IntArrayRBTcommon {
     }
     return values[node];
   }
-
+  
   public int getMostlyClose(final int k) {
     final int node = findKeyFast(k);
     if (node == NIL) {
@@ -312,24 +304,22 @@ public class Int2IntRBT extends IntArrayRBTcommon {
     }
     return values[node];
   }
-
+      
   /**
-   * adds a k, v pair. if k already present, replaces v. returns previous value, or 0 if no prev
-   * value
-   * 
-   * @param k
-   *          -
-   * @param v
-   *          -
+   * adds a k, v pair.  
+   *   if k already present, replaces v.
+   *   returns previous value, or 0 if no prev value
+   * @param k -
+   * @param v -
    * @return previous value or 0 if key not previously present
    */
   public int put(final int k, final int v) {
-    if (root == NIL) {
+    if (this.root == NIL) {
       final int x = newNode(k);
       values[x] = v;
       setAsRoot(x);
-      color[root] = black;
-      greatestNode = x;
+      this.color[this.root] = black;
+      this.greatestNode = x;
       return 0;
     }
     int x = treeInsert(k, v);
@@ -338,16 +328,16 @@ public class Int2IntRBT extends IntArrayRBTcommon {
     }
 
     // inserted a new key, no previous value
-    color[x] = red;
-    while ((x != root) && (color[getParent(x)] == red)) {
+    this.color[x] = red;
+    while ((x != this.root) && (this.color[getParent(x)] == red)) {
       final int parent_x = getParent(x);
       final int parent_parent_x = getParent(parent_x);
       if (parent_x == getLeft(parent_parent_x)) {
         final int y = getRight(parent_parent_x);
-        if (color[y] == red) {
-          color[parent_x] = black;
-          color[y] = black;
-          color[parent_parent_x] = red;
+        if (this.color[y] == red) {
+          this.color[parent_x] = black;
+          this.color[y] = black;
+          this.color[parent_parent_x] = red;
           x = parent_parent_x;
         } else {
           if (x == getRight(parent_x)) {
@@ -355,17 +345,17 @@ public class Int2IntRBT extends IntArrayRBTcommon {
             leftRotate(x);
           }
           final int parent2_x = getParent(x);
-          color[parent2_x] = black;
+          this.color[parent2_x] = black;
           final int parent2_parent2_x = getParent(parent2_x);
-          color[parent2_parent2_x] = red;
+          this.color[parent2_parent2_x] = red;
           rightRotate(parent2_parent2_x);
         }
       } else {
         final int y = getLeft(parent_parent_x);
-        if (color[y] == red) {
-          color[parent_x] = black;
-          color[y] = black;
-          color[parent_parent_x] = red;
+        if (this.color[y] == red) {
+          this.color[parent_x] = black;
+          this.color[y] = black;
+          this.color[parent_parent_x] = red;
           x = parent_parent_x;
         } else {
           if (x == getLeft(parent_x)) {
@@ -373,14 +363,14 @@ public class Int2IntRBT extends IntArrayRBTcommon {
             rightRotate(x);
           }
           final int parent2_x = getParent(x);
-          color[parent2_x] = black;
+          this.color[parent2_x] = black;
           final int parent2_parent2_x = getParent(parent2_x);
-          color[parent2_parent2_x] = red;
+          this.color[parent2_parent2_x] = red;
           leftRotate(parent2_parent2_x);
         }
       }
     }
-    color[root] = black;
+    this.color[this.root] = black;
     return 0;
   }
 
@@ -389,23 +379,21 @@ public class Int2IntRBT extends IntArrayRBTcommon {
   // }
 
   /**
-   * Fast version of findKey Keeps the last node referenced
-   * 
-   * *** NOT THREAD SAFE ***
-   * 
-   * Tries to shorten the search path, conditionally
-   * 
-   * @param k
-   *          -
-   * @return -
+   * Fast version of findKey
+   *   Keeps the last node referenced
+   *   *** NOT THREAD SAFE ***
+   *   
+   *   Tries to shorten the search path, conditionally
+   *   @param k -
+   *   @return -
    */
   protected int findKeyFast(final int k) {
     final int node;
     if (lastNodeGotten == NIL) {
       node = findKey(k);
     } else {
-      final int distanceToTop = Math.abs(k - getKeyForNode(root));
-      final int distanceToLast = Math.abs(k - getKeyForNode(lastNodeGotten));
+      final int distanceToTop = Math.abs(k - getKeyForNode(this.root));
+      final int distanceToLast = Math.abs(k - getKeyForNode(this.lastNodeGotten));
       node = (distanceToTop < distanceToLast) ? findKey(k) : findKeyFromLast(k);
     }
     if (node != NIL) {
@@ -413,7 +401,8 @@ public class Int2IntRBT extends IntArrayRBTcommon {
     }
     return node;
   }
-
+  
+  
   private int findKeyFromLast(final int k) {
     int node = lastNodeGotten;
     int keyNode = getKeyForNode(node);
@@ -426,7 +415,7 @@ public class Int2IntRBT extends IntArrayRBTcommon {
           break;
         }
         keyNode = getKeyForNode(node);
-      } while (k < keyNode);
+      } while  (k < keyNode);
       if (keyNode == k) {
         return node;
       }
@@ -444,49 +433,49 @@ public class Int2IntRBT extends IntArrayRBTcommon {
       if (keyNode == k) {
         return node;
       }
-      return findKeyDown(k, prevNode);
+      return findKeyDown(k, prevNode);        
     }
     return node;
   }
-
-  // /**
-  // * Find the node such that key[node] >= k and key[previous(node)] < k.
-  // */
-  // private int findInsertionPoint(final int k) {
-  // int node = this.root;
-  // int found = node;
-  // while (node != NIL) {
-  // found = node;
-  // final int keyNode = getKeyForNode(node);
-  // if (k < keyNode) {
-  // node = getLeft(node);
-  // } else if (k == keyNode) {
-  // // In the presence of duplicates, we have to check if there are
-  // // identical
-  // // keys to the left of us.
-  // while (true) {
-  // final int left_node = getLeft(node);
-  // if ((left_node == NIL) ||
-  // (getKeyForNode(left_node) != keyNode)) {
-  // break;
-  // }
-  // node = left_node;
-  // }
-  //// while ((getLeft(node) != NIL) && (getKeyForNode(getLeft(node)) == keyNode)) {
-  //// node = getLeft(node);
-  //// }
-  // return node;
-  // } else {
-  // node = getRight(node);
-  // }
-  // }
-  // // node == NIL
-  // return found;
-  // }
-
-  // private final boolean isLeftDtr(int node) {
-  // return ((node != this.root) && (node == getLeft(getParent(node))));
-  // }
+    
+//  /**
+//   * Find the node such that key[node] >= k and key[previous(node)] < k.
+//   */
+//  private int findInsertionPoint(final int k) {
+//    int node = this.root;
+//    int found = node;
+//    while (node != NIL) {
+//      found = node;
+//      final int keyNode = getKeyForNode(node);
+//      if (k < keyNode) {
+//        node = getLeft(node);
+//      } else if (k == keyNode) {
+//        // In the presence of duplicates, we have to check if there are
+//        // identical
+//        // keys to the left of us.
+//        while (true) {
+//          final int left_node = getLeft(node);
+//          if ((left_node == NIL) ||
+//              (getKeyForNode(left_node) != keyNode)) {
+//            break;
+//          }
+//          node = left_node;
+//        }
+////        while ((getLeft(node) != NIL) && (getKeyForNode(getLeft(node)) == keyNode)) {
+////          node = getLeft(node);
+////        }
+//        return node;
+//      } else {
+//        node = getRight(node);
+//      }
+//    }
+//    // node == NIL
+//    return found;
+//  }
+  
+//  private final boolean isLeftDtr(int node) {
+//    return ((node != this.root) && (node == getLeft(getParent(node))));
+//  }
 
   // private final boolean isRightDtr(int node) {
   // return ((node != root) && (node == right[parent[node]]));
@@ -495,10 +484,10 @@ public class Int2IntRBT extends IntArrayRBTcommon {
   public IntListIterator keyIterator() {
     return new KeyIterator();
   }
-
+  
   public IntListIterator keyIterator(int aKey) {
     KeyIterator it = new KeyIterator();
-    it.currentNode = findKey(aKey);
+    it.currentNode = this.findKey(aKey);
     return it;
   }
 
@@ -508,7 +497,7 @@ public class Int2IntRBT extends IntArrayRBTcommon {
 
   public IntKeyValueIterator keyValueIterator(int aKey) {
     KeyValueIterator it = new KeyValueIterator();
-    it.currentNode = findKey(aKey);
+    it.currentNode = this.findKey(aKey);
     return it;
   }
 

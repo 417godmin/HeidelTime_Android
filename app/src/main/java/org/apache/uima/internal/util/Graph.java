@@ -32,7 +32,7 @@ public class Graph {
 
   /** @return The root of the graph. */
   public GraphNode getRoot() {
-    return root;
+    return this.root;
   }
 
   /**

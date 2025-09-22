@@ -25,7 +25,7 @@ import java.io.Serializable;
  * JMX MBean interface for monitoring AnalysisEngine performance stats.
  */
 public interface AnalysisEngineManagementImplMBean extends Serializable {
-  String getName();
+  public String getName();
 
   long getBatchProcessCompleteTime();
 
@@ -40,10 +40,10 @@ public interface AnalysisEngineManagementImplMBean extends Serializable {
   String getCASesPerSecond();
 
   void resetStats();
-
+  
   String getState();
-
-  long getThreadId();
-
-  long getInitializationTime();
+  
+  public long getThreadId();
+  
+  public long getInitializationTime();
 }

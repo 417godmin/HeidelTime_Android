@@ -32,11 +32,12 @@ import org.apache.uima.UIMARuntimeException;
  * An input source used by the {@link XMLParser} to read XML documents for parsing.
  * <p>
  * The application uses the {@link #XMLInputSource(File)} constructor to create an
- * <code>XMLInputSource</code> from a descriptor <code>File</code>. Alternatively, if the source of
- * the XML is not a file, the {@link #XMLInputSource(InputStream,File)} constructor may be used to
- * read the XML from an input stream. The second argument to this constructor is the relative path
- * base, to be used if the descriptor contains imports with relative paths. It is acceptable to set
- * this to null if it is known that the descriptor does not contain any such imports.
+ * <code>XMLInputSource</code> from a descriptor <code>File</code>. Alternatively, if the
+ * source of the XML is not a file, the {@link #XMLInputSource(InputStream,File)} constructor may be
+ * used to read the XML from an input stream. The second argument to this constructor is the
+ * relative path base, to be used if the descriptor contains imports with relative paths. It is
+ * acceptable to set this to null if it is known that the descriptor does not contain any such
+ * imports.
  */
 public class XMLInputSource {
 
@@ -73,10 +74,11 @@ public class XMLInputSource {
    *           if an I/O error occurs
    */
   public XMLInputSource(String aUrlOrFileName) throws IOException {
-    // try as URL first, then as file name
+    //try as URL first, then as file name
     try {
       mURL = new URL(aUrlOrFileName);
-    } catch (MalformedURLException e) {
+    }
+    catch (MalformedURLException e) {
       mURL = new File(aUrlOrFileName).toURL();
     }
     mInputStream = mURL.openStream();
@@ -87,18 +89,8 @@ public class XMLInputSource {
    * 
    * @param aInputStream
    *          input stream from which to read
-   */
-  public XMLInputSource(InputStream aInputStream) {
-    this(aInputStream, null);
-  }
-
-  /**
-   * Creates an XMLInputSource from an existing InputStream.
-   * 
-   * @param aInputStream
-   *          input stream from which to read
    * @param aRelativePathBase
-   *          (optional) base for resolving relative paths. This must be a directory.
+   *          base for resolving relative paths. This must be a directory.
    */
   public XMLInputSource(InputStream aInputStream, File aRelativePathBase) {
     mInputStream = aInputStream;
@@ -123,10 +115,10 @@ public class XMLInputSource {
     // replace openStream which is openConnection().getInputStream() with
     // version that allows setting caching(false)
     // See https://issues.apache.org/jira/browse/UIMA-1746
-    URLConnection urlConnection = aURL.openConnection();
+    URLConnection urlConnection= aURL.openConnection();
     urlConnection.setUseCaches(false);
     mInputStream = urlConnection.getInputStream();
-    // mInputStream = aURL.openStream();
+//    mInputStream = aURL.openStream();
   }
 
   /**
@@ -144,9 +136,8 @@ public class XMLInputSource {
    * @return the base for resolving relative paths, <code>null</code> if none has been specified.
    * 
    * @deprecated Use {@link #getURL()} instead.
-   * @forRemoval 4.0.0
    */
-  @Deprecated(since = "2.3.1")
+  @Deprecated
   public File getRelativePathBase() {
     // use the parent directory as the base for relative path resolution
     String path = mURL.getPath();
@@ -165,14 +156,16 @@ public class XMLInputSource {
   /**
    * Closes the underlying <code>InputStream</code>.
    *
-   * @throws IOException
-   *           if an I/O error occurs.
+   * @throws IOException if an I/O error occurs.
    */
-  public void close() throws IOException {
-    if (mInputStream != null) {
-      mInputStream.close();
-    }
+  public void close()
+      throws IOException
+  {
+      if (mInputStream != null)
+      {
+          mInputStream.close();
+      }
 
-    mURL = null;
+      mURL = null;
   }
 }

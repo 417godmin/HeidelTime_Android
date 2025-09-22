@@ -22,7 +22,6 @@ package org.apache.uima.cas.impl;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -45,7 +44,7 @@ import org.xml.sax.SAXException;
  */
 public class TypeSystem2Xml {
   /**
-   * Converts a TypeSystem object to XML. Built-in types and array types are not included.
+   * Converts a TypeSystem object to XML
    * 
    * @param aTypeSystem
    *          the TypeSystem to convert
@@ -79,10 +78,10 @@ public class TypeSystem2Xml {
     ResourceSpecifierFactory factory = UIMAFramework.getResourceSpecifierFactory();
     TypeSystemDescription tsDesc = factory.createTypeSystemDescription();
 
-    List<TypeDescription> typeDescs = new ArrayList<>();
+    List<TypeDescription> typeDescs = new ArrayList<TypeDescription>();
     Iterator<Type> typeIterator = aTypeSystem.getTypeIterator();
     while (typeIterator.hasNext()) {
-      TypeImpl type = (TypeImpl) typeIterator.next();
+      Type type = typeIterator.next();
 
       Type superType = aTypeSystem.getParent(type);
       if ((type.getName().startsWith("uima.cas") && type.isFeatureFinal()) || type.isArray()) {
@@ -93,8 +92,8 @@ public class TypeSystem2Xml {
       typeDesc.setName(type.getName());
       typeDesc.setSupertypeName(superType.getName());
       LowLevelTypeSystem llts = aTypeSystem.getLowLevelTypeSystem();
-      List<FeatureDescription> featDescs = new ArrayList<>();
-      Iterator<FeatureImpl> featIterator = Arrays.asList(type.getFeatureImpls()).iterator();
+      List<FeatureDescription> featDescs = new ArrayList<FeatureDescription>();
+      Iterator<Feature> featIterator = type.getFeatures().iterator();
       while (featIterator.hasNext()) {
         Feature feat = featIterator.next();
         if (!feat.getDomain().equals(type)) {
@@ -108,42 +107,42 @@ public class TypeSystem2Xml {
           final int typeClass = llts.ll_getTypeClass(llts.ll_getCodeForType(rangeType));
           String typeName = null;
           switch (typeClass) {
-            case LowLevelCAS.TYPE_CLASS_BOOLEANARRAY: {
-              typeName = CAS.TYPE_NAME_BOOLEAN_ARRAY;
-              break;
-            }
-            case LowLevelCAS.TYPE_CLASS_SHORTARRAY: {
-              typeName = CAS.TYPE_NAME_SHORT_ARRAY;
-              break;
-            }
-            case LowLevelCAS.TYPE_CLASS_BYTEARRAY: {
-              typeName = CAS.TYPE_NAME_BYTE_ARRAY;
-              break;
-            }
-            case LowLevelCAS.TYPE_CLASS_DOUBLEARRAY: {
-              typeName = CAS.TYPE_NAME_DOUBLE_ARRAY;
-              break;
-            }
-            case LowLevelCAS.TYPE_CLASS_FLOATARRAY: {
-              typeName = CAS.TYPE_NAME_FLOAT_ARRAY;
-              break;
-            }
-            case LowLevelCAS.TYPE_CLASS_FSARRAY: {
-              typeName = CAS.TYPE_NAME_FS_ARRAY;
-              break;
-            }
-            case LowLevelCAS.TYPE_CLASS_INTARRAY: {
-              typeName = CAS.TYPE_NAME_INTEGER_ARRAY;
-              break;
-            }
-            case LowLevelCAS.TYPE_CLASS_LONGARRAY: {
-              typeName = CAS.TYPE_NAME_LONG_ARRAY;
-              break;
-            }
-            case LowLevelCAS.TYPE_CLASS_STRINGARRAY: {
-              typeName = CAS.TYPE_NAME_STRING_ARRAY;
-              break;
-            }
+          case LowLevelCAS.TYPE_CLASS_BOOLEANARRAY: {
+            typeName = CAS.TYPE_NAME_BOOLEAN_ARRAY;
+            break;
+          }
+          case LowLevelCAS.TYPE_CLASS_SHORTARRAY: {
+            typeName = CAS.TYPE_NAME_SHORT_ARRAY;
+            break;
+          }
+          case LowLevelCAS.TYPE_CLASS_BYTEARRAY: {
+            typeName = CAS.TYPE_NAME_BYTE_ARRAY;
+            break;
+          }
+          case LowLevelCAS.TYPE_CLASS_DOUBLEARRAY: {
+            typeName = CAS.TYPE_NAME_DOUBLE_ARRAY;
+            break;
+          }
+          case LowLevelCAS.TYPE_CLASS_FLOATARRAY: {
+            typeName = CAS.TYPE_NAME_FLOAT_ARRAY;
+            break;
+          }
+          case LowLevelCAS.TYPE_CLASS_FSARRAY: {
+            typeName = CAS.TYPE_NAME_FS_ARRAY;
+            break;
+          }
+          case LowLevelCAS.TYPE_CLASS_INTARRAY: {
+            typeName = CAS.TYPE_NAME_INTEGER_ARRAY;
+            break;
+          }
+          case LowLevelCAS.TYPE_CLASS_LONGARRAY: {
+            typeName = CAS.TYPE_NAME_LONG_ARRAY;
+            break;
+          }
+          case LowLevelCAS.TYPE_CLASS_STRINGARRAY: {
+            typeName = CAS.TYPE_NAME_STRING_ARRAY;
+            break;
+          }
           }
           featDesc.setRangeTypeName(typeName);
           // TODO: make sure this works for arrays of arrays
@@ -158,9 +157,9 @@ public class TypeSystem2Xml {
       typeDesc.setFeatures(featDescArr);
 
       // check for string subtypes
-      if (type instanceof TypeImpl_string) {
-        LowLevelTypeSystem lts = aTypeSystem.getLowLevelTypeSystem();
-        final int typeCode = lts.ll_getCodeForType(type);
+      if (type instanceof StringTypeImpl) {
+	LowLevelTypeSystem lts = aTypeSystem.getLowLevelTypeSystem();
+	final int typeCode = lts.ll_getCodeForType(type);
         String[] strings = lts.ll_getStringSet(typeCode);
         AllowedValue[] allowedVals = new AllowedValue[strings.length];
         for (int i = 0; i < strings.length; i++) {

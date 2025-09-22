@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.uima.cas;
 
 /**
@@ -24,11 +25,11 @@ package org.apache.uima.cas;
 public abstract class AbstractCas_ImplBase implements AbstractCas {
   private CasOwner mOwner;
 
+
   /**
    * Default implementation that returns this CAS to its CasManager by calling
    * {@link CasOwner#releaseCas(AbstractCas)}.
    */
-  @Override
   public void release() {
     if (mOwner != null) {
       mOwner.releaseCas(this);
@@ -40,8 +41,7 @@ public abstract class AbstractCas_ImplBase implements AbstractCas {
    * when a CAS instance is created. This handle is used to implement the release() method by
    * returning the CAS to its CasOwner.
    * 
-   * @param aCasOwner
-   *          -
+   * @param aCasOwner -
    */
   public void setOwner(CasOwner aCasOwner) {
     mOwner = aCasOwner;

@@ -66,46 +66,51 @@ public class DataResource_impl extends Resource_ImplBase implements DataResource
    * 
    * @see org.apache.uima.resource.Resource#initialize(ResourceSpecifier, Map)
    */
-  @Override
   public boolean initialize(ResourceSpecifier aSpecifier, Map<String, Object> aAdditionalParams)
           throws ResourceInitializationException {
     // aSpecifier must be a FileResourceSpecifier
-    if (!(aSpecifier instanceof FileResourceSpecifier)) {
+    if (!(aSpecifier instanceof FileResourceSpecifier))
       return false;
-    }
 
     // If we get here, aSpecifier is supported by this implementation.
     FileResourceSpecifier spec = (FileResourceSpecifier) aSpecifier;
 
     // Get Relative Path Resolver
-    RelativePathResolver relPathResolver = getRelativePathResolver(aAdditionalParams);
-
+    RelativePathResolver relPathResolver = null;
+    if (aAdditionalParams != null) {
+      relPathResolver = (RelativePathResolver) aAdditionalParams.get(PARAM_RELATIVE_PATH_RESOLVER);
+    }
+    if (relPathResolver == null) {
+      relPathResolver = new RelativePathResolver_impl();
+    }
+      
     // Get the file URL, resolving relative path as necessary
     IOException ioEx = null;
     try {
-      // Get the file URL from the specifier. If the user has passed a file path
+      // Get the file URL from the specifier.  If the user has passed a file path
       // (e.g. c:\Program Files\...) instead of a URL, be lenient and convert it to
       // a URL
-      String relativeUrl;
+      URL relativeUrl;
       try {
-        relativeUrl = new URL(spec.getFileUrl()).toString();
-      } catch (MalformedURLException e) {
-        // try to treat the URL as a file name.
-        var file = new File(spec.getFileUrl());
+        relativeUrl = new URL(spec.getFileUrl());
+      }
+      catch (MalformedURLException e) {
+        //try to treat the URL as a file name.  
+        File file = new File(spec.getFileUrl());
         if (file.isAbsolute()) {
-          // for absolute paths, use File.toURL(), which handles
-          // windows absolute paths correctly
-          relativeUrl = file.toURL().toString();
+          //for absolute paths, use File.toURL(), which handles
+          //windows absolute paths correctly
+          relativeUrl = file.toURL();
         } else {
-          // for relative paths, we can' use File.toURL() because it always
-          // produces an absolute URL. Instead we do the following, which
-          // won't work for windows absolute paths (but that's OK, since we
-          // know we're working with a relative path)
-          relativeUrl = spec.getFileUrl();
+          //for relative paths, we can' use File.toURL() because it always
+          //produces an absolute URL.  Instead we do the following, which
+          //won't work for windows absolute paths (but that's OK, since we
+          //know we're working with a relative path)
+          relativeUrl = new URL("file", "", spec.getFileUrl());
         }
       }
-
-      // resolve relative paths
+      
+      //resolve relative paths
       mFileUrl = relPathResolver.resolveRelativePath(relativeUrl);
 
       // Store local cache info, even though it is not used
@@ -120,22 +125,22 @@ public class DataResource_impl extends Resource_ImplBase implements DataResource
     }
     if (mFileUrl == null) {
       throw new ResourceInitializationException(
-              ResourceInitializationException.COULD_NOT_ACCESS_DATA,
-              new Object[] { spec.getFileUrl() }, ioEx);
+              ResourceInitializationException.COULD_NOT_ACCESS_DATA, new Object[] { spec
+                      .getFileUrl() }, ioEx);
     }
-
-    // call super initialize to set uima context from additional params if available
-    // this context is to allow getting access to the Resource Manager.
-    // https://issues.apache.org/jira/browse/UIMA-5153
-    super.initialize(aSpecifier, aAdditionalParams);
 
     return true;
   }
 
   /**
+   * @see org.apache.uima.resource.Resource#destroy()
+   */
+  public void destroy() {
+  }
+
+  /**
    * @see DataResource#getInputStream()
    */
-  @Override
   public InputStream getInputStream() throws IOException {
     return mFileUrl.openStream();
   }
@@ -143,7 +148,6 @@ public class DataResource_impl extends Resource_ImplBase implements DataResource
   /**
    * @see DataResource#getUrl()
    */
-  @Override
   public URL getUrl() {
     return mFileUrl;
   }
@@ -153,7 +157,6 @@ public class DataResource_impl extends Resource_ImplBase implements DataResource
    * 
    * @see org.apache.uima.resource.DataResource#getUri()
    */
-  @Override
   public URI getUri() {
     try {
       return UriUtils.quote(mFileUrl);
@@ -174,25 +177,23 @@ public class DataResource_impl extends Resource_ImplBase implements DataResource
   /**
    * @see DataResource#equals(Object)
    */
-  @Override
   public boolean equals(Object obj) {
     // obj must be a DataResource_impl
-    if (!(obj instanceof DataResource_impl)) {
+    if (!(obj instanceof DataResource_impl))
       return false;
-    }
 
     // URLs must be the same (but don't use URL.equals(), which does DNS resolution!)
     URL url = ((DataResource_impl) obj).getUrl();
-    if (url == null || !url.toString().equals(getUrl().toString())) {
+    if (url == null || !url.toString().equals(this.getUrl().toString()))
       return false;
-    }
 
     // Local Cache Files must be the same
     File localCache = ((DataResource_impl) obj).getLocalCache();
-    if ((localCache == null && getLocalCache() != null)
-            || (localCache != null && !localCache.equals(getLocalCache()))) {
+    if (localCache == null && this.getLocalCache() != null)
       return false;
-    }
+
+    if (localCache != null && !localCache.equals(this.getLocalCache()))
+      return false;
 
     return true;
   }
@@ -200,17 +201,13 @@ public class DataResource_impl extends Resource_ImplBase implements DataResource
   /**
    * @see DataResource#hashCode()
    */
-  @Override
   public int hashCode() {
     // add hash codes of member variables
     int hashCode = 0;
-    if (mFileUrl != null) {
-      hashCode += mFileUrl.toString().hashCode(); // don't use URL.hashCode(), which does DNS
-    }
-    // resolution
-    if (mLocalCache != null) {
+    if (mFileUrl != null)
+      hashCode += mFileUrl.toString().hashCode(); //don't use URL.hashCode(), which does DNS resolution
+    if (mLocalCache != null)
       hashCode += mLocalCache.hashCode();
-    }
 
     return hashCode;
   }

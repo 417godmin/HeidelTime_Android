@@ -23,13 +23,17 @@ package org.apache.uima.resource.metadata;
  * A description of a CAS feature. This implements <code>MetaDataObject</code>, which implements
  * {@link org.apache.uima.util.XMLizable}, so it can be serialized to and deserialized from an XML
  * element.
+ * 
+ * 
  */
 public interface FeatureDescription extends MetaDataObject {
 
   /**
-   * @return the name of this Feature.
+   * Gets the name of this Feature.
+   * 
+   * @return the name of this Feature
    */
-  String getName();
+  public String getName();
 
   /**
    * Sets the name of this Feature.
@@ -37,12 +41,14 @@ public interface FeatureDescription extends MetaDataObject {
    * @param aName
    *          the name of this Feature
    */
-  void setName(String aName);
+  public void setName(String aName);
 
   /**
-   * @return the verbose description of this Feature.
+   * Gets the verbose description of this Feature.
+   * 
+   * @return the description of this Feature
    */
-  String getDescription();
+  public String getDescription();
 
   /**
    * Sets the verbose description of this Feature.
@@ -50,12 +56,14 @@ public interface FeatureDescription extends MetaDataObject {
    * @param aDescription
    *          the description of this Feature
    */
-  void setDescription(String aDescription);
+  public void setDescription(String aDescription);
 
   /**
-   * @return the name of the range Type of this Feature.
+   * Gets the name of the range Type of this Feature.
+   * 
+   * @return the name of the range Type of this Feature
    */
-  String getRangeTypeName();
+  public String getRangeTypeName();
 
   /**
    * Sets the name of the range Type of this Feature.
@@ -63,7 +71,7 @@ public interface FeatureDescription extends MetaDataObject {
    * @param aTypeName
    *          the name of the range Type of this Feature
    */
-  void setRangeTypeName(String aTypeName);
+  public void setRangeTypeName(String aTypeName);
 
   /**
    * For a feature with a range type that is an array or list, gets the expected type of the
@@ -73,7 +81,7 @@ public interface FeatureDescription extends MetaDataObject {
    * 
    * @return the expected element type of an array or list feature, null if there is no restriction.
    */
-  String getElementType();
+  public String getElementType();
 
   /**
    * For a multi-valued (array or list) feature, sets the expected type of the elements of that
@@ -85,7 +93,7 @@ public interface FeatureDescription extends MetaDataObject {
    *          the expected element type of an array or list feature, null if there is no
    *          restriction.
    */
-  void setElementType(String aElementType);
+  public void setElementType(String aElementType);
 
   /**
    * For a feature with a range type that is an array or list, gets whether value of the feature may
@@ -106,7 +114,7 @@ public interface FeatureDescription extends MetaDataObject {
    * 
    * @return true if multiple references to an array or list are allowed, false if not.
    */
-  Boolean getMultipleReferencesAllowed();
+  public Boolean getMultipleReferencesAllowed();
 
   /**
    * For a feature with a range type that is an array or list, sets whether value of the feature may
@@ -128,5 +136,5 @@ public interface FeatureDescription extends MetaDataObject {
    * @param aAllowed
    *          true if multiple references to an array or list are allowed, false if not.
    */
-  void setMultipleReferencesAllowed(Boolean aAllowed);
+  public void setMultipleReferencesAllowed(Boolean aAllowed);
 }

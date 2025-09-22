@@ -16,34 +16,32 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.uima.cas;
 
 import java.util.List;
 import java.util.Vector;
 
-import org.apache.uima.cas.impl.TypeImpl;
-
 /**
  * The interface describing types in the type system.
  * 
  * <p>
- * <a id="names">Type names</a> are Java strings that look like Java class names. For example, the
- * built-in annotation type is called <code>uima.tcas.Annotation</code>. The whole string is called
- * the (fully) qualified type name. The part after the last period is called the short or base name.
- * The rest of the name is the name space of the type. This part can be empty, in which case the
- * qualified and the base name are identical.
+ * <a name="names">Type names</a> are Java strings that look like Java class names. For example,
+ * the built-in annotation type is called <code>uima.tcas.Annotation</code>. The whole string is
+ * called the (fully) qualified type name. The part after the last period is called the short or
+ * base name. The rest of the name is the name space of the type. This part can be empty, in which
+ * case the qualified and the base name are identical.
  * 
  * <p>
- * <a id="identifiers">Type system identifiers</a> in general have the following syntax: they are
+ * <a name="identifiers">Type system identifiers</a> in general have the following syntax: they are
  * non-empty strings whose first character is a letter (Unicode letter), followed by an arbitrary
  * sequence of letters, digits and underscores. No other characters are legal parts of identifiers.
- * A type name is then a non-empty sequence of identifiers separated by periods. See also
- * <a href="./Feature.html#names">Feature names</a>.
+ * A type name is then a non-empty sequence of identifiers separated by periods. See also <a
+ * href="./Feature.html#names">Feature names</a>.
  * 
- * <p>
- * Implements Iterable over all the features defined for this type.
+ * 
  */
-public interface Type extends Iterable<Feature> {
+public interface Type {
 
   /**
    * Get the <a href="#names">fully qualified name</a> of the type.
@@ -125,18 +123,6 @@ public interface Type extends Iterable<Feature> {
   boolean isArray();
 
   /**
-   * Check if the type is a String subtype. Note: returns false if a plain string
-   * 
-   * @return <code>true</code> iff the type is a String subtype type; false for plain string
-   */
-  boolean isStringSubtype();
-
-  /**
-   * @return true if is a String or a StringSubtype
-   */
-  boolean isStringOrStringSubtype();
-
-  /**
    * For array types, returns the component type of the array type. For all other types, it will
    * return <code>null</code>.
    * 
@@ -144,12 +130,4 @@ public interface Type extends Iterable<Feature> {
    */
   Type getComponentType();
 
-  /**
-   * @param subtype
-   *          - a UIMA Type
-   * @return true if this type subsumes (is equal or a supertype of) the subtype argument
-   */
-  default boolean subsumes(Type subtype) {
-    return ((TypeImpl) this).subsumes((TypeImpl) subtype);
-  }
 }

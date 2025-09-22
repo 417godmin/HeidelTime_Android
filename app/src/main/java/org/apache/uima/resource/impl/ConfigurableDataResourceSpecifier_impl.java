@@ -30,8 +30,8 @@ import org.apache.uima.resource.metadata.impl.XmlizationInfo;
  * 
  * 
  */
-public class ConfigurableDataResourceSpecifier_impl extends MetaDataObject_impl
-        implements ConfigurableDataResourceSpecifier {
+public class ConfigurableDataResourceSpecifier_impl extends MetaDataObject_impl implements
+        ConfigurableDataResourceSpecifier {
   private static final long serialVersionUID = -5414343447386950507L;
 
   /** URL of the data. */
@@ -49,7 +49,6 @@ public class ConfigurableDataResourceSpecifier_impl extends MetaDataObject_impl
   /**
    * @see ConfigurableDataResourceSpecifier#getUrl()
    */
-  @Override
   public String getUrl() {
     return mUrl;
   }
@@ -57,7 +56,6 @@ public class ConfigurableDataResourceSpecifier_impl extends MetaDataObject_impl
   /**
    * @see ConfigurableDataResourceSpecifier#setUrl(String)
    */
-  @Override
   public void setUrl(String aUrl) {
     mUrl = aUrl;
   }
@@ -67,7 +65,6 @@ public class ConfigurableDataResourceSpecifier_impl extends MetaDataObject_impl
    * 
    * @see org.apache.uima.resource.ConfigurableDataResourceSpecifier#getMetaData()
    */
-  @Override
   public ResourceMetaData getMetaData() {
     return mMetaData;
   }
@@ -75,21 +72,17 @@ public class ConfigurableDataResourceSpecifier_impl extends MetaDataObject_impl
   /*
    * (non-Javadoc)
    * 
-   * @see
-   * org.apache.uima.resource.ConfigurableDataResourceSpecifier#setMetaData(org.apache.uima.resource
-   * .metadata.ResourceMetaData)
+   * @see org.apache.uima.resource.ConfigurableDataResourceSpecifier#setMetaData(org.apache.uima.resource.metadata.ResourceMetaData)
    */
-  @Override
   public void setMetaData(ResourceMetaData aMetaData) {
     mMetaData = aMetaData;
   }
 
-  @Override
   protected XmlizationInfo getXmlizationInfo() {
     return XMLIZATION_INFO;
   }
 
-  private static final XmlizationInfo XMLIZATION_INFO = new XmlizationInfo(
+  static final private XmlizationInfo XMLIZATION_INFO = new XmlizationInfo(
           "configurableDataResourceSpecifier", new PropertyXmlInfo[] { new PropertyXmlInfo("url"),
               new PropertyXmlInfo("metaData", null) });
 }

@@ -23,6 +23,8 @@ import org.apache.uima.resource.metadata.FeatureDescription;
 
 /**
  * Reference implementation of {@link FeatureDescription}. Under construction.
+ * 
+ * 
  */
 public class FeatureDescription_impl extends MetaDataObject_impl implements FeatureDescription {
 
@@ -89,64 +91,91 @@ public class FeatureDescription_impl extends MetaDataObject_impl implements Feat
     setMultipleReferencesAllowed(aMultipleReferencesAllowed);
   }
 
-  @Override
+  /**
+   * @see FeatureDescription#getName()
+   */
   public String getName() {
     return mName;
   }
 
-  @Override
+  /**
+   * @see FeatureDescription#setName(String)
+   */
   public void setName(String aName) {
     mName = aName;
   }
 
-  @Override
+  /**
+   * @see FeatureDescription#getDescription()
+   */
   public String getDescription() {
     return mDescription;
   }
 
-  @Override
+  /**
+   * @see FeatureDescription#setDescription(String)
+   */
   public void setDescription(String aDescription) {
     mDescription = aDescription;
   }
 
-  @Override
+  /**
+   * @see FeatureDescription#getRangeTypeName()
+   */
   public String getRangeTypeName() {
     return mRangeTypeName;
   }
 
-  @Override
+  /**
+   * @see FeatureDescription#setRangeTypeName(String)
+   */
   public void setRangeTypeName(String aTypeName) {
     mRangeTypeName = aTypeName;
   }
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.resource.metadata.FeatureDescription#getElementType()
+   */
   public String getElementType() {
     return mElementType;
   }
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.resource.metadata.FeatureDescription#isMultipleReferencesAllowed()
+   */
   public Boolean getMultipleReferencesAllowed() {
     return mMultipleReferencesAllowed;
   }
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.resource.metadata.FeatureDescription#setElementType(java.lang.String)
+   */
   public void setElementType(String aElementType) {
     mElementType = aElementType;
   }
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.resource.metadata.FeatureDescription#setMultipleReferencesAllowed(Boolean)
+   */
   public void setMultipleReferencesAllowed(Boolean aAllowed) {
     mMultipleReferencesAllowed = aAllowed;
   }
 
-  @Override
   protected XmlizationInfo getXmlizationInfo() {
     return XMLIZATION_INFO;
   }
 
-  private static final XmlizationInfo XMLIZATION_INFO = new XmlizationInfo("featureDescription",
+  static final private XmlizationInfo XMLIZATION_INFO = new XmlizationInfo("featureDescription",
           new PropertyXmlInfo[] { new PropertyXmlInfo("name"),
-              new PropertyXmlInfo("description", false), new PropertyXmlInfo("rangeTypeName", true),
-              new PropertyXmlInfo("elementType", true),
+              new PropertyXmlInfo("description", false),
+              new PropertyXmlInfo("rangeTypeName", true), new PropertyXmlInfo("elementType", true),
               new PropertyXmlInfo("multipleReferencesAllowed") });
 }

@@ -23,6 +23,8 @@ import org.apache.uima.resource.metadata.AllowedValue;
 
 /**
  * Reference implementation of {@link AllowedValue}.
+ * 
+ * 
  */
 public class AllowedValue_impl extends MetaDataObject_impl implements AllowedValue {
 
@@ -34,6 +36,9 @@ public class AllowedValue_impl extends MetaDataObject_impl implements AllowedVal
   /** Verbose description of this value. */
   private String mDescription;
 
+  /**
+   * Default constructor.
+   */
   public AllowedValue_impl() {
   }
 
@@ -50,32 +55,42 @@ public class AllowedValue_impl extends MetaDataObject_impl implements AllowedVal
     setDescription(aDescription);
   }
 
-  @Override
+  /**
+   * @see AllowedValue#getString()
+   */
   public String getString() {
     return mString;
   }
 
-  @Override
+  /**
+   * @see AllowedValue#setString(String)
+   */
   public void setString(String aString) {
     mString = aString;
   }
 
-  @Override
+  /**
+   * @see AllowedValue#getDescription()
+   */
   public String getDescription() {
     return mDescription;
   }
 
-  @Override
+  /**
+   * @see AllowedValue#setDescription(String)
+   */
   public void setDescription(String aDescription) {
     mDescription = aDescription;
   }
 
-  @Override
+  /**
+   * @see MetaDataObject_impl#getXmlizationInfo()
+   */
   protected XmlizationInfo getXmlizationInfo() {
     return XMLIZATION_INFO;
   }
 
-  private static final XmlizationInfo XMLIZATION_INFO = new XmlizationInfo("value",
+  static final private XmlizationInfo XMLIZATION_INFO = new XmlizationInfo("value",
           new PropertyXmlInfo[] { new PropertyXmlInfo("string"),
               new PropertyXmlInfo("description", false), });
 }

@@ -21,8 +21,10 @@ package org.apache.uima.resource.metadata;
 
 /**
  * A description of a key defining a CAS feature structure index. This implements
- * <code>MetaDataObject</code>, which implements {@link org.apache.uima.util.XMLizable}, so it can
- * be serialized to and deserialized from an XML element.
+ * <code>MetaDataObject</code>, which implements {@link org.apache.uima.util.XMLizable}, so it
+ * can be serialized to and deserialized from an XML element.
+ * 
+ * 
  */
 public interface FsIndexKeyDescription extends MetaDataObject {
   /**
@@ -30,13 +32,13 @@ public interface FsIndexKeyDescription extends MetaDataObject {
    * For integer and float values, this is the standard linear order, and for strings it is
    * lexicographic order.
    */
-  int STANDARD_COMPARE = 0;
+  public static final int STANDARD_COMPARE = 0;
 
   /**
    * Comparator that orders FeatureStructures according to the reverse order of their key features
    * (the opposite order as that defined by STANDARD_COMPARE.
    */
-  int REVERSE_STANDARD_COMPARE = 1;
+  public static final int REVERSE_STANDARD_COMPARE = 1;
 
   /**
    * Gets whether this is a special "type priority" key. A type priority key indicates that the
@@ -48,7 +50,7 @@ public interface FsIndexKeyDescription extends MetaDataObject {
    * 
    * @return true if and only if this is a type priority key
    */
-  boolean isTypePriority();
+  public boolean isTypePriority();
 
   /**
    * Gets whether this is a special "type priority" key. A type priority key indicates that the
@@ -61,7 +63,7 @@ public interface FsIndexKeyDescription extends MetaDataObject {
    * @param aTypePriority
    *          true if and only if this is a type priority key
    */
-  void setTypePriority(boolean aTypePriority);
+  public void setTypePriority(boolean aTypePriority);
 
   /**
    * Gets the name of the key's Feature. FeatureStructures will be ordered in the index based on the
@@ -69,7 +71,7 @@ public interface FsIndexKeyDescription extends MetaDataObject {
    * 
    * @return the name of this key's Feature
    */
-  String getFeatureName();
+  public String getFeatureName();
 
   /**
    * Sets the name of the key's Feature. FeatureStructures will be ordered in the index based on the
@@ -78,7 +80,7 @@ public interface FsIndexKeyDescription extends MetaDataObject {
    * @param aName
    *          the name of this key's Feature
    */
-  void setFeatureName(String aName);
+  public void setFeatureName(String aName);
 
   /**
    * Gets the comparator for this key. This determines the ordering of FeatureStructures in the
@@ -86,7 +88,7 @@ public interface FsIndexKeyDescription extends MetaDataObject {
    * 
    * @return this key's comparator
    */
-  int getComparator();
+  public int getComparator();
 
   /**
    * Sets the comparator for this key. This determines the ordering of FeatureStructures in the
@@ -95,6 +97,6 @@ public interface FsIndexKeyDescription extends MetaDataObject {
    * @param aComparator
    *          this key's comparator
    */
-  void setComparator(int aComparator);
+  public void setComparator(int aComparator);
 
 }

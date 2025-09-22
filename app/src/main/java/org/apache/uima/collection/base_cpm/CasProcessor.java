@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.uima.collection.base_cpm;
 
 import java.io.IOException;
@@ -46,6 +47,8 @@ import org.apache.uima.util.ProcessTrace;
  * <p>
  * All CAS processors must publish their metadata via the {@link #getProcessingResourceMetaData()}
  * method.
+ * 
+ * 
  */
 public interface CasProcessor {
   /**
@@ -54,21 +57,21 @@ public interface CasProcessor {
    * 
    * @return true if this CAS processor is stateless, false if it is stateful.
    */
-  boolean isStateless();
+  public boolean isStateless();
 
   /**
    * Gets whether this is a read-only CAS Processor, which does not modify the CAS.
    * 
    * @return true if this CAS processor does not modify the CAS, false if it does.
    */
-  boolean isReadOnly();
+  public boolean isReadOnly();
 
   /**
    * Gets the metadata that describes this <code>CasProcesor</code>.
    * 
    * @return an object containing all metadata for this CasProcessor
    */
-  ProcessingResourceMetaData getProcessingResourceMetaData();
+  public ProcessingResourceMetaData getProcessingResourceMetaData();
 
   /**
    * Completes the processing of a batch. A collection may be divided into one or more batches - it
@@ -83,7 +86,8 @@ public interface CasProcessor {
    * @throws IOException
    *           if an I/O failure occurs
    */
-  void batchProcessComplete(ProcessTrace aTrace) throws ResourceProcessException, IOException;
+  public void batchProcessComplete(ProcessTrace aTrace) throws ResourceProcessException,
+          IOException;
 
   /**
    * Completes the processing of an entire collection.
@@ -96,5 +100,7 @@ public interface CasProcessor {
    * @throws IOException
    *           if an I/O failure occurs
    */
-  void collectionProcessComplete(ProcessTrace aTrace) throws ResourceProcessException, IOException;
+  public void collectionProcessComplete(ProcessTrace aTrace) throws ResourceProcessException,
+          IOException;
+
 }

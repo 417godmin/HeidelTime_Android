@@ -44,7 +44,6 @@ public class Attribute_impl extends MetaDataObject_impl implements Attribute {
    * 
    * @see org.apache.uima.search.Attribute#getName()
    */
-  @Override
   public String getName() {
     return mName;
   }
@@ -54,7 +53,6 @@ public class Attribute_impl extends MetaDataObject_impl implements Attribute {
    * 
    * @see org.apache.uima.search.Attribute#setName(java.lang.String)
    */
-  @Override
   public void setName(String aName) {
     mName = aName;
   }
@@ -64,7 +62,6 @@ public class Attribute_impl extends MetaDataObject_impl implements Attribute {
    * 
    * @see org.apache.uima.search.Attribute#getValue()
    */
-  @Override
   public String getValue() {
     return mValue;
   }
@@ -74,7 +71,6 @@ public class Attribute_impl extends MetaDataObject_impl implements Attribute {
    * 
    * @see org.apache.uima.search.Attribute#setValue(java.lang.String)
    */
-  @Override
   public void setValue(String aValue) {
     mValue = aValue;
   }
@@ -84,11 +80,10 @@ public class Attribute_impl extends MetaDataObject_impl implements Attribute {
    * 
    * @see MetaDataObject_impl#getXMLAttributes()
    */
-  @Override
   protected AttributesImpl getXMLAttributes() {
     AttributesImpl attrs = super.getXMLAttributes();
-    attrs.addAttribute("", "name", "name", "", getName());
-    attrs.addAttribute("", "value", "value", "", getValue());
+    attrs.addAttribute("", "name", "name", null, getName());
+    attrs.addAttribute("", "value", "value", null, getValue());
     return attrs;
   }
 
@@ -98,7 +93,6 @@ public class Attribute_impl extends MetaDataObject_impl implements Attribute {
    * @see org.apache.uima.util.XMLizable#buildFromXMLElement(Element,
    *      XMLParser)
    */
-  @Override
   public void buildFromXMLElement(Element aElement, XMLParser aParser,
           XMLParser.ParsingOptions aOptions) throws InvalidXMLException {
     setName(aElement.getAttribute("name"));
@@ -113,12 +107,11 @@ public class Attribute_impl extends MetaDataObject_impl implements Attribute {
    * 
    * @see org.apache.uima.resource.metadata.impl.MetaDataObject_impl#getXmlizationInfo()
    */
-  @Override
   protected XmlizationInfo getXmlizationInfo() {
     return XMLIZATION_INFO;
   }
 
-  private static final XmlizationInfo XMLIZATION_INFO = new XmlizationInfo("attribute",
+  static final private XmlizationInfo XMLIZATION_INFO = new XmlizationInfo("attribute",
           new PropertyXmlInfo[] {
           // name and value are attributes, not elements
           });

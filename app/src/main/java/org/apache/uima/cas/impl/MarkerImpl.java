@@ -22,52 +22,76 @@ package org.apache.uima.cas.impl;
 import org.apache.uima.cas.CASRuntimeException;
 import org.apache.uima.cas.FeatureStructure;
 import org.apache.uima.cas.Marker;
-import org.apache.uima.jcas.cas.TOP;
 
 /**
- * A MarkerImpl holds a high-water "mark" in the CAS, for all views. Typically, one is obtained via
- * the createMarker call on a CAS.
+ * A MarkerImpl holds a high-water "mark" in the CAS,
+ * for all views.
+ * Typically, one is obtained via the createMarker call
+ * on a CAS.
  * 
- * Currently only one marker is used per CAS. The Marker enables testing on each CAS update if the
- * update is "below" or "above" the marker - this is used for implementing delta serialization, in
- * which only the changed data is sent.
+ * Currently only one marker is used per CAS.
+ * The Marker enables testing on each CAS update if the
+ * update is "below" or "above" the marker - this is
+ * used for implementing delta serialization, in which
+ * only the changed data is sent.
  */
 public class MarkerImpl implements Marker {
-
-  protected int nextFSId; // next FS id
+	
+  protected int nextFSId;    //next FS addr
+  protected int nextStringHeapAddr; 
+  protected int nextByteHeapAddr;
+  protected int nextShortHeapAddr;
+  protected int nextLongHeapAddr;
   protected boolean isValid;
-
+  
   CASImpl cas;
 
-  MarkerImpl(int nextFSId, CASImpl cas) {
-    this.nextFSId = nextFSId;
+  MarkerImpl(int nextFSAddr, int nextStringHeapAddr, 
+		     int nextByteHeapAddr, int nextShortHeapAddr, int nextLongHeapAddr, 
+		     CASImpl cas) {
+    this.nextFSId = nextFSAddr;
+    this.nextStringHeapAddr = nextStringHeapAddr;
+    this.nextByteHeapAddr = nextByteHeapAddr;
+    this.nextShortHeapAddr = nextShortHeapAddr;
+    this.nextLongHeapAddr = nextLongHeapAddr;
     this.cas = cas;
-    isValid = true;
+    this.isValid = true;
   }
 
-  @Override
   public boolean isNew(FeatureStructure fs) {
-    // check if same CAS instance
-    if (!isValid || !cas.isInCAS(fs)) {
-      throw new CASRuntimeException(CASRuntimeException.CAS_MISMATCH,
-              "FS and Marker are not from the same CAS.");
-    }
-    return isNew(fs._id());
+  	//check if same CAS instance
+  	//TODO: define a CASRuntimeException
+  	if (!isValid || ((FeatureStructureImpl) fs).getCASImpl() != this.cas) {
+  		CASRuntimeException e = new CASRuntimeException(
+  		          CASRuntimeException.CAS_MISMATCH,
+  		          new String[] { "FS and Marker are not from the same CAS." });
+  		      throw e;
+  	}
+  	return isNew( ((FeatureStructureImpl) fs).getAddress());
   }
 
-  @Override
   public boolean isModified(FeatureStructure fs) {
-    if (isNew(fs)) {
-      return false; // new fs's are not modified ones
-    }
-    return cas.isInModifiedPreexisting((TOP) fs);
+	if (!isValid || ((FeatureStructureImpl) fs).getCASImpl() != this.cas) {
+		CASRuntimeException e = new CASRuntimeException(
+		          CASRuntimeException.CAS_MISMATCH,
+		          new String[] { "FS and Marker are not from the same CAS." });
+		      throw e;
+	}
+	int addr = ((FeatureStructureImpl) fs).getAddress();
+	  return isModified(addr);
   }
-
-  boolean isNew(int id) {
-    return (id >= nextFSId);
+  
+  boolean isNew(int addr) {
+	  return (addr >= nextFSId);
   }
-
-  @Override
+  
+  boolean isModified(int addr) {
+  	if (isNew(addr)) {
+  		return false;
+      }
+  	return this.cas.getModifiedFSList().contains(addr);
+  }
+  
   public boolean isValid() {
     return isValid;
   }
@@ -76,4 +100,20 @@ public class MarkerImpl implements Marker {
     return nextFSId;
   }
 
+  public int getNextStringHeapAddr() {
+    return nextStringHeapAddr;
+  }
+
+  public int getNextByteHeapAddr() {
+    return nextByteHeapAddr;
+  }
+
+  public int getNextShortHeapAddr() {
+    return nextShortHeapAddr;
+  }
+
+  public int getNextLongHeapAddr() {
+    return nextLongHeapAddr;
+  }
+  
 }

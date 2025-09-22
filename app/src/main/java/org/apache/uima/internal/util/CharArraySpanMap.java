@@ -28,9 +28,10 @@ public class CharArraySpanMap {
 
   private static final class Entry {
     private Entry() {
-      start = 0;
-      length = 0;
-      value = null;
+      super();
+      this.start = 0;
+      this.length = 0;
+      this.value = null;
     }
 
     private int start;
@@ -79,18 +80,19 @@ public class CharArraySpanMap {
    */
   @SuppressWarnings("unchecked")
   public CharArraySpanMap(int initialArraySize, int initialMapSize) {
+    super();
     if (initialArraySize < MIN_ARRAY_SIZE) {
       initialArraySize = MIN_ARRAY_SIZE;
     }
     if (initialMapSize < MIN_MAP_SIZE) {
       initialMapSize = MIN_MAP_SIZE;
     }
-    charArray = new char[initialArraySize];
-    map = new ArrayList[initialMapSize];
+    this.charArray = new char[initialArraySize];
+    this.map = new ArrayList[initialMapSize];
     for (int i = 0; i < initialMapSize; i++) {
-      map[i] = new ArrayList<>();
+      this.map[i] = new ArrayList<Entry>();
     }
-    pos = 0;
+    this.pos = 0;
   }
 
   private final int isInList(String s, ArrayList<Entry> entryList) {
@@ -107,7 +109,7 @@ public class CharArraySpanMap {
       }
       found = true;
       for (int j = 0; j < strLen; j++) {
-        if (s.charAt(j) != charArray[j + entry.start]) {
+        if (s.charAt(j) != this.charArray[j + entry.start]) {
           found = false;
           break;
         }
@@ -137,7 +139,7 @@ public class CharArraySpanMap {
       k = entry.start;
       max = start + strLen;
       for (int count = start; count < max; count++) {
-        if (inputArray[count] != charArray[k]) {
+        if (inputArray[count] != this.charArray[k]) {
           found = false;
           break;
         }
@@ -162,18 +164,18 @@ public class CharArraySpanMap {
    */
   public void put(String s, Object value) {
     final int hashCode = CharArrayString.hashCode(s);
-    ArrayList<Entry> list = map[hashCode % map.length];
+    ArrayList<Entry> list = this.map[hashCode % this.map.length];
     final int listPos = isInList(s, list);
     if (listPos >= 0) {
       Entry entry = list.get(listPos);
       entry.value = value;
       return;
     }
-    final int start = pos;
+    final int start = this.pos;
     addString(s);
     Entry entry = new Entry();
     entry.start = start;
-    entry.length = pos - start;
+    entry.length = this.pos - start;
     entry.value = value;
     list.add(entry);
   }
@@ -195,22 +197,22 @@ public class CharArraySpanMap {
    */
   public final boolean containsKey(char[] characterArray, int start, int length) {
     final int hashCode = CharArrayString.hashCode(characterArray, start, (start + length));
-    final ArrayList<Entry> list = map[hashCode % map.length];
+    final ArrayList<Entry> list = this.map[hashCode % this.map.length];
     final int listPos = isInList(characterArray, start, length, list);
     return (listPos >= 0);
   }
 
   public final Object get(char[] characterArray, int start, int length) {
     final int hashCode = CharArrayString.hashCode(characterArray, start, (start + length));
-    final ArrayList<Entry> list = map[hashCode % map.length];
+    final ArrayList<Entry> list = this.map[hashCode % this.map.length];
     final int listPos = isInList(characterArray, start, length, list);
     return (listPos >= 0) ? list.get(listPos).value : null;
   }
 
   private final void addString(String s) {
     final int strLen = s.length();
-    final int newMinLength = pos + strLen;
-    int newLength = charArray.length;
+    final int newMinLength = this.pos + strLen;
+    int newLength = this.charArray.length;
     boolean needToCopy = false;
     while (newLength < newMinLength) {
       newLength += MIN_ARRAY_SIZE;
@@ -218,12 +220,12 @@ public class CharArraySpanMap {
     }
     if (needToCopy) {
       char[] newCharArray = new char[newLength];
-      System.arraycopy(charArray, 0, newCharArray, 0, pos);
-      charArray = newCharArray;
+      System.arraycopy(this.charArray, 0, newCharArray, 0, this.pos);
+      this.charArray = newCharArray;
     }
     for (int i = 0; i < strLen; i++) {
-      charArray[pos] = s.charAt(i);
-      ++pos;
+      this.charArray[this.pos] = s.charAt(i);
+      ++this.pos;
     }
   }
 

@@ -19,132 +19,56 @@
 
 package org.apache.uima.jcas.cas;
 
-import java.util.NoSuchElementException;
-import java.util.PrimitiveIterator.OfInt;
-import java.util.Spliterator;
-import java.util.Spliterators;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
-
-import org.apache.uima.cas.impl.CASImpl;
-import org.apache.uima.cas.impl.TypeImpl;
+import org.apache.uima.cas.CASRuntimeException;
 import org.apache.uima.jcas.JCas;
+import org.apache.uima.jcas.JCasRegistry;
 
-public abstract class IntegerList extends TOP implements CommonList, Iterable<Integer> {
+public class IntegerList extends TOP {
 
-  public static OfInt EMPTY_INT_ITERATOR = new OfInt() {
+	public final static int typeIndexID = JCasRegistry.register(IntegerList.class);
 
-    @Override
-    public boolean hasNext() {
-      return false;
-    }
+	public final static int type = typeIndexID;
 
-    @Override
-    public int nextInt() {
-      throw new NoSuchElementException();
-    }
-  };
+	public int getTypeIndexID() {
+		return typeIndexID;
+	}
 
-  // Never called.
-  protected IntegerList() { // Disable default constructor
-  }
+	// Never called.
+	protected IntegerList() { // Disable default constructor
+	}
 
-  public IntegerList(JCas jcas) {
-    super(jcas);
-  }
+	/* Internal - Constructor used by generator */
+	public IntegerList(int addr, TOP_Type type) {
+		super(addr, type);
+	}
 
-  /**
-   * used by generator Make a new AnnotationBase
-   * 
-   * @param c
-   *          -
-   * @param t
-   *          -
-   */
+	public IntegerList(JCas jcas) {
+		super(jcas);
+	}
 
-  public IntegerList(TypeImpl t, CASImpl c) {
-    super(t, c);
-  }
-
-  public int getNthElement(int i) {
-    return ((NonEmptyIntegerList) getNonEmptyNthNode(i)).getHead();
-  }
-
-  @Override
-  public NonEmptyIntegerList createNonEmptyNode() {
-    NonEmptyIntegerList node = new NonEmptyIntegerList(_casView.getTypeSystemImpl().intNeListType,
-            _casView);
-    return node;
-  }
-
-  @Override
-  public NonEmptyIntegerList pushNode() {
-    NonEmptyIntegerList n = createNonEmptyNode();
-    n.setTail(this);
-    return n;
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Iterable#iterator() overridden by NonEmptyIntegerList
-   */
-  @Override
-  public OfInt iterator() {
-    return EMPTY_INT_ITERATOR;
-  }
-
-  /**
-   * pushes item onto front of this list
-   * 
-   * @param item
-   *          the item to push onto the list
-   * @return the new list, with this item as the head value of the first element
-   */
-  public NonEmptyIntegerList push(int item) {
-    return new NonEmptyIntegerList(_casView.getJCasImpl(), item, this);
-  }
-
-  @Override
-  public EmptyIntegerList emptyList() {
-    return _casView.emptyIntegerList();
-  }
-
-  /**
-   * Create an IntegerList from an existing array of ints
-   * 
-   * @param jcas
-   *          the JCas to use
-   * @param a
-   *          the array of ints to populate the list with
-   * @return an IntegerList, with the elements from the array
-   */
-  public static IntegerList create(JCas jcas, int[] a) {
-    IntegerList integerList = jcas.getCasImpl().emptyIntegerList();
-    for (int i = a.length - 1; i >= 0; i--) {
-      integerList = integerList.push(a[i]);
-    }
-    return integerList;
-  }
-
-  public Stream<Integer> stream() {
-    return StreamSupport.stream(spliterator(), false);
-  }
-
-  @Override
-  public Spliterator.OfInt spliterator() {
-    return Spliterators.spliterator(iterator(), Long.MAX_VALUE, 0);
-  }
-
-  public boolean contains(int v) {
-    IntegerList node = this;
-    while (node instanceof NonEmptyIntegerList) {
-      NonEmptyIntegerList n = (NonEmptyIntegerList) node;
-      if (n.getHead() == v) {
-        return true;
-      }
-      node = n.getTail();
-    }
-    return false;
-  }
+	public int getNthElement(int i) {
+		if (this instanceof EmptyIntegerList) {
+			CASRuntimeException casEx = new CASRuntimeException(
+					CASRuntimeException.JCAS_GET_NTH_ON_EMPTY_LIST, new String[] { "EmptyIntegerList" });
+			throw casEx;
+		}
+		if (i < 0) {
+			CASRuntimeException casEx = new CASRuntimeException(
+					CASRuntimeException.JCAS_GET_NTH_NEGATIVE_INDEX, new String[] { Integer.toString(i) });
+			throw casEx;
+		}
+		int originali = i;
+		IntegerList cg = this;
+		for (;; i--) {
+			if (cg instanceof EmptyIntegerList) {
+				CASRuntimeException casEx = new CASRuntimeException(
+						CASRuntimeException.JCAS_GET_NTH_PAST_END, new String[] { Integer.toString(originali) });
+				throw casEx;
+			}
+			NonEmptyIntegerList c = (NonEmptyIntegerList) cg;
+			if (i == 0)
+				return c.getHead();
+			cg = c.getTail();
+		}
+	}
 }

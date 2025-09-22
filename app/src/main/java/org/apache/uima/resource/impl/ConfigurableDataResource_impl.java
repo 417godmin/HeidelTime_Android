@@ -65,7 +65,6 @@ public class ConfigurableDataResource_impl extends Resource_ImplBase implements 
    * 
    * @see org.apache.uima.resource.Resource#initialize(ResourceSpecifier, Map)
    */
-  @Override
   public boolean initialize(ResourceSpecifier aSpecifier, Map<String, Object> aAdditionalParams)
           throws ResourceInitializationException {
     // aSpecifier must be a ConfigurableDataResourceSpecifier
@@ -82,7 +81,7 @@ public class ConfigurableDataResource_impl extends Resource_ImplBase implements 
     }
 
     // set metadata
-    setMetaData(spec.getMetaData());
+    this.setMetaData(spec.getMetaData());
 
     // now attempt to create a URL, which can actually be used to access the data
     // Get Relative Path Resolver
@@ -94,22 +93,25 @@ public class ConfigurableDataResource_impl extends Resource_ImplBase implements 
       relPathResolver = new RelativePathResolver_impl();
     }
 
-    mFileUrl = relPathResolver.resolveRelativePath(mUri.toString());
-
+    // Get the file URL, resolving relative path as necessary
+    try {
+      mFileUrl = relPathResolver.resolveRelativePath(new URL(mUri.toString()));
+    } catch (IOException e) {
+      // this is OK. The URI may not be a valid URL (e.g. it may use a non-standard protocol).
+      // in this case getUrl returns null but getUri can still be used to access the URI
+    }
     return true;
   }
 
   /**
    * @see org.apache.uima.resource.Resource#destroy()
    */
-  @Override
   public void destroy() {
   }
 
   /**
    * @see DataResource#getInputStream()
    */
-  @Override
   public InputStream getInputStream() throws IOException {
     return mFileUrl.openStream();
   }
@@ -119,7 +121,6 @@ public class ConfigurableDataResource_impl extends Resource_ImplBase implements 
    * 
    * @see org.apache.uima.resource.DataResource#getUri()
    */
-  @Override
   public URI getUri() {
     return mUri;
   }
@@ -127,7 +128,6 @@ public class ConfigurableDataResource_impl extends Resource_ImplBase implements 
   /**
    * @see DataResource#getUrl()
    */
-  @Override
   public URL getUrl() {
     return mFileUrl;
   }
@@ -145,25 +145,23 @@ public class ConfigurableDataResource_impl extends Resource_ImplBase implements 
   /**
    * @see DataResource#equals(Object)
    */
-  @Override
   public boolean equals(Object obj) {
     // obj must be a DataResource_impl
-    if (!(obj instanceof ConfigurableDataResource_impl)) {
+    if (!(obj instanceof ConfigurableDataResource_impl))
       return false;
-    }
 
     // URIs must be the same
     URI uri = ((ConfigurableDataResource_impl) obj).getUri();
-    if (uri == null || !uri.equals(getUri())) {
+    if (uri == null || !uri.equals(this.getUri()))
       return false;
-    }
 
     // Local Cache Files must be the same
     File localCache = ((ConfigurableDataResource_impl) obj).getLocalCache();
-    if ((localCache == null && getLocalCache() != null)
-            || (localCache != null && !localCache.equals(getLocalCache()))) {
+    if (localCache == null && this.getLocalCache() != null)
       return false;
-    }
+
+    if (localCache != null && !localCache.equals(this.getLocalCache()))
+      return false;
 
     return true;
   }
@@ -171,13 +169,11 @@ public class ConfigurableDataResource_impl extends Resource_ImplBase implements 
   /**
    * @see DataResource#hashCode()
    */
-  @Override
   public int hashCode() {
     // add hash codes of member variables
     int hashCode = 0;
-    if (mUri != null) {
+    if (mUri != null)
       hashCode += mUri.hashCode();
-    }
 
     return hashCode;
   }

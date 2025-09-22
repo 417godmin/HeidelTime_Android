@@ -29,7 +29,7 @@ import org.apache.uima.resource.metadata.impl.XmlizationInfo;
  * Implementation of {@link SofaMapping}.
  */
 public class SofaMapping_impl extends MetaDataObject_impl implements SofaMapping {
-
+  
   private static final long serialVersionUID = -6115544748030506703L;
 
   private String mComponentKey = CAS.NAME_DEFAULT_TEXT_SOFA;
@@ -38,42 +38,65 @@ public class SofaMapping_impl extends MetaDataObject_impl implements SofaMapping
 
   private String mAggregateSofaName;
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.analysis_engine.metadata.SofaMapping#getComponentKey()
+   */
   public String getComponentKey() {
     return mComponentKey;
   }
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.analysis_engine.metadata.SofaMapping#setComponentKey(java.lang.String)
+   */
   public void setComponentKey(String aComponentKey) {
     mComponentKey = aComponentKey;
   }
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.analysis_engine.metadata.SofaMapping#getComponentSofaName()
+   */
   public String getComponentSofaName() {
     return mComponentSofaName;
   }
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.analysis_engine.metadata.SofaMapping#setComponentSofaName(java.lang.String)
+   */
   public void setComponentSofaName(String aComponentSofaName) {
     mComponentSofaName = aComponentSofaName;
   }
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.analysis_engine.metadata.SofaMapping#getAggregateSofaName()
+   */
   public String getAggregateSofaName() {
     return mAggregateSofaName;
   }
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.analysis_engine.metadata.SofaMapping#setAggregateSofaName(java.lang.String)
+   */
   public void setAggregateSofaName(String aAggregateSofaName) {
     mAggregateSofaName = aAggregateSofaName;
   }
 
-  @Override
   protected XmlizationInfo getXmlizationInfo() {
     return XMLIZATION_INFO;
   }
 
-  private static final XmlizationInfo XMLIZATION_INFO = new XmlizationInfo("sofaMapping",
+  static final private XmlizationInfo XMLIZATION_INFO = new XmlizationInfo("sofaMapping",
           new PropertyXmlInfo[] { new PropertyXmlInfo("componentKey"),
               new PropertyXmlInfo("componentSofaName"), new PropertyXmlInfo("aggregateSofaName") });
 }

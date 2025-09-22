@@ -42,19 +42,18 @@ import org.xml.sax.SAXException;
 
 /**
  * Reference implementation of {@link ConfigurationParameterSettings}.
+ * 
+ * 
  */
-public class ConfigurationParameterSettings_impl extends MetaDataObject_impl
-        implements ConfigurationParameterSettings {
+public class ConfigurationParameterSettings_impl extends MetaDataObject_impl implements
+        ConfigurationParameterSettings {
 
   static final long serialVersionUID = 3476535733588304983L;
-
-  static final NameValuePair[] EMPTY_NAME_VALUE_PAIR_ARRAY = new NameValuePair[0];
 
   private static final Method methodGetSettingsForGroups;
   static {
     try {
-      methodGetSettingsForGroups = ConfigurationParameterSettings.class
-              .getDeclaredMethod("getSettingsForGroups");
+      methodGetSettingsForGroups = ConfigurationParameterSettings.class.getDeclaredMethod("getSettingsForGroups");
     } catch (Exception e) {
       throw new UIMARuntimeException(e);
     }
@@ -62,18 +61,17 @@ public class ConfigurationParameterSettings_impl extends MetaDataObject_impl
   /**
    * Settings for parameters that are not in any group.
    */
-  private NameValuePair[] mParameterSettings = EMPTY_NAME_VALUE_PAIR_ARRAY;
+  private NameValuePair[] mParameterSettings = new NameValuePair[0];
 
   /**
    * Settings for parameters in groups. This HashMap has <code>String</code> keys (the group name)
    * and <code>NameValuePair[]</code> values (the parameter names and their values).
    */
-  private Map<String, NameValuePair[]> mSettingsForGroups = new HashMap<>();
+  private Map<String, NameValuePair[]> mSettingsForGroups = new HashMap<String, NameValuePair[]>();
 
   /**
    * @see ConfigurationParameterSettings#getParameterSettings()
    */
-  @Override
   public NameValuePair[] getParameterSettings() {
     return mParameterSettings;
   }
@@ -81,8 +79,7 @@ public class ConfigurationParameterSettings_impl extends MetaDataObject_impl
   /**
    * @see ConfigurationParameterSettings#setParameterSettings(NameValuePair[])
    */
-  @Override
-  public void setParameterSettings(NameValuePair... aSettings) {
+  public void setParameterSettings(NameValuePair[] aSettings) {
     if (aSettings == null) {
       throw new UIMA_IllegalArgumentException(UIMA_IllegalArgumentException.ILLEGAL_ARGUMENT,
               new Object[] { "null", "aSettings", "setParameterSettings" });
@@ -90,12 +87,16 @@ public class ConfigurationParameterSettings_impl extends MetaDataObject_impl
     mParameterSettings = aSettings;
   }
 
-  @Override
+  /**
+   * @see ConfigurationParameterSettings#getSettingsForGroups()
+   */
   public Map<String, NameValuePair[]> getSettingsForGroups() {
     return mSettingsForGroups;
   }
 
-  @Override
+  /**
+   * @see ConfigurationParameterSettings#getParameterValue(String)
+   */
   public Object getParameterValue(String aParamName) {
     NameValuePair[] nvps = getParameterSettings();
     if (nvps != null) {
@@ -108,7 +109,10 @@ public class ConfigurationParameterSettings_impl extends MetaDataObject_impl
     return null;
   }
 
-  @Override
+  /**
+   * @see ConfigurationParameterSettings#getParameterValue(String,
+   *      String)
+   */
   public Object getParameterValue(String aGroupName, String aParamName) {
     if (aGroupName == null) {
       return getParameterValue(aParamName);
@@ -125,7 +129,10 @@ public class ConfigurationParameterSettings_impl extends MetaDataObject_impl
     }
   }
 
-  @Override
+  /**
+   * @see ConfigurationParameterSettings#setParameterValue(String,
+   *      Object)
+   */
   public void setParameterValue(String aParamName, Object aValue) {
     if (aValue != null) // setting a value
     {
@@ -145,7 +152,7 @@ public class ConfigurationParameterSettings_impl extends MetaDataObject_impl
         newArr[newArr.length - 1] = newNVP;
         setParameterSettings(newArr);
       } else {
-        setParameterSettings(new NameValuePair_impl(aParamName, aValue));
+        setParameterSettings(new NameValuePair[] { new NameValuePair_impl(aParamName, aValue) });
       }
     } else // clearing a value
     {
@@ -165,7 +172,10 @@ public class ConfigurationParameterSettings_impl extends MetaDataObject_impl
     }
   }
 
-  @Override
+  /**
+   * @see ConfigurationParameterSettings#setParameterValue(String,
+   *      String, Object)
+   */
   public void setParameterValue(String aGroupName, String aParamName, Object aValue) {
     if (aGroupName == null) {
       setParameterValue(aParamName, aValue);
@@ -209,19 +219,23 @@ public class ConfigurationParameterSettings_impl extends MetaDataObject_impl
     }
   }
 
-  @Override
+  /**
+   * @see MetaDataObject_impl#getXmlizationInfo()
+   */
   protected XmlizationInfo getXmlizationInfo() {
     return XMLIZATION_INFO;
   }
 
   @Override
   public List<MetaDataAttr> getAdditionalAttributes() {
-    return Collections
-            .singletonList(new MetaDataAttr("settingsForGroups", methodGetSettingsForGroups, null, // no
-                                                                                                   // writer
-                    Map.class));
+    return Collections.singletonList(
+        new MetaDataAttr(
+            "settingsForGroups",
+            methodGetSettingsForGroups,
+            null,  // no writer
+            Map.class));
   }
-
+  
   /**
    * Overridden to add the settingsForGroups property to the result list. Default introspection
    * implementation won't return it because it has no set method. We've also overridden the XML
@@ -229,10 +243,8 @@ public class ConfigurationParameterSettings_impl extends MetaDataObject_impl
    * 
    * @see MetaDataObject#listAttributes()
    * @deprecated - use getAdditionalAttributes instead
-   * @forRemoval 4.0.0
    */
-  @Override
-  @Deprecated(since = "2.6.0")
+  @Deprecated
   public List<NameClassPair> listAttributes() {
     List<NameClassPair> result = super.listAttributes();
     result.add(new NameClassPair("settingsForGroups", Map.class.getName()));
@@ -243,28 +255,30 @@ public class ConfigurationParameterSettings_impl extends MetaDataObject_impl
    * Overridden becuase of settingsForGroups property, which is a Map and isn't handled by default
    * XMLization routines.
    * 
-   * @see XMLizable#buildFromXMLElement(Element, XMLParser)
+   * @see XMLizable#buildFromXMLElement(Element,
+   *      XMLParser)
    */
-  @Override
   public void buildFromXMLElement(Element aElement, XMLParser aParser,
           XMLParser.ParsingOptions aOptions) throws InvalidXMLException {
-    List<XMLizable> nvps = new ArrayList<>();
+    List<XMLizable> nvps = new ArrayList<XMLizable>();
     // get all child nodes
     NodeList childNodes = aElement.getChildNodes();
     for (int i = 0; i < childNodes.getLength(); i++) {
       Node curNode = childNodes.item(i);
-      if (curNode instanceof Element elem) {
+      if (curNode instanceof Element) {
+        Element elem = (Element) curNode;
         // check element tag name
         if ("nameValuePair".equals(elem.getTagName())) {
           nvps.add(aParser.buildObject(elem, aOptions));
         } else if ("settingsForGroup".equals(elem.getTagName())) {
           String key = elem.getAttribute("name");
 
-          List<XMLizable> vals = new ArrayList<>();
+          List<XMLizable> vals = new ArrayList<XMLizable>();
           NodeList arrayNodes = elem.getChildNodes();
           for (int j = 0; j < arrayNodes.getLength(); j++) {
             Node curArrayNode = arrayNodes.item(j);
-            if (curArrayNode instanceof Element valElem) {
+            if (curArrayNode instanceof Element) {
+              Element valElem = (Element) curArrayNode;
               vals.add(aParser.buildObject(valElem));
             }
           }
@@ -274,8 +288,8 @@ public class ConfigurationParameterSettings_impl extends MetaDataObject_impl
             mSettingsForGroups.put(key, valArr);
           }
         } else {
-          throw new InvalidXMLException(InvalidXMLException.UNKNOWN_ELEMENT,
-                  new Object[] { elem.getTagName() });
+          throw new InvalidXMLException(InvalidXMLException.UNKNOWN_ELEMENT, new Object[] { elem
+                  .getTagName() });
         }
       }
     }
@@ -291,19 +305,18 @@ public class ConfigurationParameterSettings_impl extends MetaDataObject_impl
    * @see MetaDataObject_impl#writePropertyAsElement(PropertyXmlInfo, String)
    */
   @Override
-  protected void writePropertyAsElement(PropertyXmlInfo aPropInfo, String aNamespace)
-          throws SAXException {
+  protected void writePropertyAsElement(PropertyXmlInfo aPropInfo, String aNamespace) throws SAXException {
     if ("settingsForGroups".equals(aPropInfo.propertyName)) {
-      writeMapPropertyToXml("settingsForGroups", null, "name", "settingsForGroup", true,
+      this.writeMapPropertyToXml("settingsForGroups", null, "name", "settingsForGroup", true,
               aNamespace);
     } else {
       super.writePropertyAsElement(aPropInfo, aNamespace);
     }
   }
 
-  private static final XmlizationInfo XMLIZATION_INFO = new XmlizationInfo(
-          "configurationParameterSettings",
-          new PropertyXmlInfo[] { new PropertyXmlInfo("parameterSettings", null),
+  static final private XmlizationInfo XMLIZATION_INFO = new XmlizationInfo(
+          "configurationParameterSettings", new PropertyXmlInfo[] {
+              new PropertyXmlInfo("parameterSettings", null),
               new PropertyXmlInfo("settingsForGroups", null) // NOTE: custom XMLization
           });
 }

@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.uima.collection;
 
 import java.io.IOException;
@@ -41,11 +42,13 @@ import org.apache.uima.util.XMLInputSource;
  * Users of a <code>CollectionReader</code> should always {@link #close() close} it when they are
  * finished using it.
  * <p>
- * <code>CollectionReader</code>s are also {@link ConfigurableResource}s, and can be instantiated
- * from descriptors. See
+ * <code>CollectionReader</code>s are also {@link ConfigurableResource}s, and can be
+ * instantiated from descriptors. See
  * {@link org.apache.uima.util.XMLParser#parseCollectionReaderDescription(XMLInputSource)} and
  * {@link org.apache.uima.UIMAFramework#produceCollectionReader(ResourceSpecifier,Map)} for more
  * information.
+ * 
+ * 
  */
 public interface CollectionReader extends BaseCollectionReader, ConfigurableResource {
   /**
@@ -63,12 +66,12 @@ public interface CollectionReader extends BaseCollectionReader, ConfigurableReso
    * @throws ResourceInitializationException
    *           if the type system is not compatible with this Collection Reader
    */
-  void typeSystemInit(TypeSystem aTypeSystem) throws ResourceInitializationException;
+  public void typeSystemInit(TypeSystem aTypeSystem) throws ResourceInitializationException;
 
   /**
    * Gets the next element of the collection. The element will be stored in the provided CAS object.
-   * If this is a consuming <code>CollectionReader</code> (see {@link #isConsuming()}), this element
-   * will also be removed from the collection.
+   * If this is a consuming <code>CollectionReader</code> (see {@link #isConsuming()}), this
+   * element will also be removed from the collection.
    * 
    * @param aCAS
    *          the CAS to populate with the next element of the collection
@@ -80,7 +83,7 @@ public interface CollectionReader extends BaseCollectionReader, ConfigurableReso
    * @throws CollectionException
    *           if there is some other problem with reading from the Collection
    */
-  void getNext(CAS aCAS) throws IOException, CollectionException;
+  public void getNext(CAS aCAS) throws IOException, CollectionException;
 
   /**
    * Gets the CAS Initializer that has been assigned to this Collection Reader. Note that
@@ -90,10 +93,9 @@ public interface CollectionReader extends BaseCollectionReader, ConfigurableReso
    * @return the CAS Initializer for this Collection Reader
    * 
    * @deprecated As of v2.0 CAS Initializers are deprecated.
-   * @forRemoval 4.0.0
    */
-  @Deprecated(since = "2.0.0")
-  CasInitializer getCasInitializer();
+  @Deprecated
+  public CasInitializer getCasInitializer();
 
   /**
    * Assigns a CAS Initializer for this Collection Reader to use. Note that CollectionReader
@@ -104,8 +106,8 @@ public interface CollectionReader extends BaseCollectionReader, ConfigurableReso
    *          the CAS Initializer for this Collection Reader
    * 
    * @deprecated As of v2.0 CAS Initializers are deprecated.
-   * @forRemoval 4.0.0
    */
-  @Deprecated(since = "2.0.0")
-  void setCasInitializer(CasInitializer aCasInitializer);
+  @Deprecated
+  public void setCasInitializer(CasInitializer aCasInitializer);
+
 }

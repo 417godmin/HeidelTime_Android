@@ -33,10 +33,11 @@ public class BinaryTree {
   private Object value;
 
   public BinaryTree() {
-    mother = null;
-    left = null;
-    right = null;
-    value = null;
+    super();
+    this.mother = null;
+    this.left = null;
+    this.right = null;
+    this.value = null;
   }
 
   public void setValue(Object value) {
@@ -44,31 +45,31 @@ public class BinaryTree {
   }
 
   public BinaryTree newLeftDtr() {
-    left = new BinaryTree();
-    left.mother = this;
-    return left;
+    this.left = new BinaryTree();
+    this.left.mother = this;
+    return this.left;
   }
 
   public BinaryTree newRightDtr() {
-    right = new BinaryTree();
-    right.mother = this;
-    return right;
+    this.right = new BinaryTree();
+    this.right.mother = this;
+    return this.right;
   }
 
   public BinaryTree getLeftDtr() {
-    return left;
+    return this.left;
   }
 
   public BinaryTree getRightDtr() {
-    return right;
+    return this.right;
   }
 
   public BinaryTree getMother() {
-    return mother;
+    return this.mother;
   }
 
   public Object getValue() {
-    return value;
+    return this.value;
   }
 
 }

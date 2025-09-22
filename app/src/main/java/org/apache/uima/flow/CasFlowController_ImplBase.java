@@ -30,7 +30,11 @@ import org.apache.uima.cas.TypeSystem;
 public abstract class CasFlowController_ImplBase extends FlowController_ImplBase {
   private TypeSystem mLastTypeSystem;
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.flow.FlowController#getRequiredCasInterface()
+   */
   public Class<CAS> getRequiredCasInterface() {
     return CAS.class;
   }
@@ -41,23 +45,22 @@ public abstract class CasFlowController_ImplBase extends FlowController_ImplBase
    * 
    * @see FlowController#computeFlow(AbstractCas)
    */
-  @Override
   public final Flow computeFlow(AbstractCas aCAS) throws AnalysisEngineProcessException {
-    if (aCAS instanceof CAS cas) {
-      checkTypeSystemChange(cas);
-      return computeFlow(cas);
+    if (aCAS instanceof CAS) {
+      checkTypeSystemChange((CAS) aCAS);
+      return computeFlow((CAS) aCAS);
     } else {
       throw new AnalysisEngineProcessException(
-              AnalysisEngineProcessException.INCORRECT_CAS_INTERFACE,
-              new Object[] { CAS.class, aCAS.getClass() });
+              AnalysisEngineProcessException.INCORRECT_CAS_INTERFACE, new Object[] { CAS.class,
+                  aCAS.getClass() });
     }
   }
 
   /**
    * This method must be overriden by subclasses. It takes a {@link CAS} and returns a {@link Flow}
    * object that is responsible for routing this particular CAS through the components of this
-   * Aggregate. The <code>Flow</code> object should be given a handle to the CAS, so that it can use
-   * information in the CAS to make routing decisions.
+   * Aggregate. The <code>Flow</code> object should be given a handle to the CAS, so that it can
+   * use information in the CAS to make routing decisions.
    * <p>
    * FlowController implementations will typically define their own class that implements
    * {@link Flow} by extending from the base class {@link CasFlow_ImplBase}. This method would then

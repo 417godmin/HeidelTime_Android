@@ -28,13 +28,15 @@ import org.apache.uima.resource.metadata.ResourceMetaData;
 
 /**
  * Insulates applications from the knowledge that they are interacting with a
- * {@link ResourceService_impl} rather than a local instance of a {@link Resource}. This is an
- * abstract base class that specific resource adapter implementations may extend.
+ * {@link ResourceService_impl} rather than a local instance of a {@link Resource}. This is an abstract
+ * base class that specific resource adapter implementations may extend.
  * <p>
  * This class implements the {@link Resource} interface and encapsulates all communications with a
  * remote <code>ResourceService</code>. Thus, applications can interact with this adapter in the
- * same way they would interact with any <code>Resource</code>, and can be completely unaware of the
- * fact that a remote <code>ResourceService</code> is being used.
+ * same way they would interact with any <code>Resource</code>, and can be completely unaware of
+ * the fact that a remote <code>ResourceService</code> is being used.
+ * 
+ * 
  */
 public abstract class ResourceServiceAdapter extends Resource_ImplBase {
 
@@ -68,7 +70,9 @@ public abstract class ResourceServiceAdapter extends Resource_ImplBase {
     return mStub;
   }
 
-  @Override
+  /**
+   * @see Resource#getMetaData()
+   */
   public ResourceMetaData getMetaData() {
     try {
       if (mCachedMetaData == null) {
@@ -78,5 +82,11 @@ public abstract class ResourceServiceAdapter extends Resource_ImplBase {
     } catch (ResourceServiceException e) {
       throw new UIMARuntimeException(e);
     }
+  }
+
+  /**
+   * @see Resource#destroy()
+   */
+  public void destroy() {
   }
 }

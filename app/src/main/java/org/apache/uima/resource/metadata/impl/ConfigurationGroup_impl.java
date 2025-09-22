@@ -27,12 +27,13 @@ import org.apache.uima.resource.metadata.ConfigurationGroup;
 import org.apache.uima.resource.metadata.ConfigurationParameter;
 import org.apache.uima.util.InvalidXMLException;
 import org.apache.uima.util.XMLParser;
-import org.apache.uima.util.impl.Constants;
 import org.w3c.dom.Element;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * Reference implementation of {@link ConfigurationGroup}.
+ * 
+ * 
  */
 public class ConfigurationGroup_impl extends MetaDataObject_impl implements ConfigurationGroup {
 
@@ -46,12 +47,11 @@ public class ConfigurationGroup_impl extends MetaDataObject_impl implements Conf
   /**
    * Parameters contained within the group(s).
    */
-  private ConfigurationParameter[] mConfigurationParameters = Constants.EMPTY_CONFIG_PARM_ARRAY;
+  private ConfigurationParameter[] mConfigurationParameters = new ConfigurationParameter[0];
 
   /**
    * @see ConfigurationGroup#getNames()
    */
-  @Override
   public String[] getNames() {
     return mNames;
   }
@@ -59,25 +59,29 @@ public class ConfigurationGroup_impl extends MetaDataObject_impl implements Conf
   /**
    * @see ConfigurationGroup#setNames(String[])
    */
-  @Override
-  public void setNames(String... aNames) {
+  public void setNames(String[] aNames) {
     mNames = aNames;
   }
 
   /**
    * @see ConfigurationGroup#getConfigurationParameters()
    */
-  @Override
   public ConfigurationParameter[] getConfigurationParameters() {
     return mConfigurationParameters;
   }
 
-  @Override
-  public void setConfigurationParameters(ConfigurationParameter... aParams) {
+  /**
+   * @see ConfigurationGroup#setConfigurationParameters(ConfigurationParameter[])
+   */
+  public void setConfigurationParameters(ConfigurationParameter[] aParams) {
     mConfigurationParameters = aParams;
   }
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.resource.metadata.ConfigurationParameterDeclarations#addConfigurationParameter(org.apache.uima.resource.metadata.ConfigurationParameter)
+   */
   public void addConfigurationParameter(ConfigurationParameter aConfigurationParameter) {
     ConfigurationParameter[] current = getConfigurationParameters();
     ConfigurationParameter[] newArr = new ConfigurationParameter[current.length + 1];
@@ -86,7 +90,11 @@ public class ConfigurationGroup_impl extends MetaDataObject_impl implements Conf
     setConfigurationParameters(newArr);
   }
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.resource.metadata.ConfigurationParameterDeclarations#removeConfigurationParameter(org.apache.uima.resource.metadata.ConfigurationParameter)
+   */
   public void removeConfigurationParameter(ConfigurationParameter aConfigurationParameter) {
     ConfigurationParameter[] current = getConfigurationParameters();
     for (int i = 0; i < current.length; i++) {
@@ -105,16 +113,15 @@ public class ConfigurationGroup_impl extends MetaDataObject_impl implements Conf
    * 
    * @see MetaDataObject_impl#getXMLAttributes()
    */
-  @Override
   protected AttributesImpl getXMLAttributes() {
     AttributesImpl attrs = super.getXMLAttributes();
-    StringBuilder buf = new StringBuilder();
+    StringBuffer buf = new StringBuffer();
     String[] names = getNames();
     buf.append(names[0]);
     for (int i = 1; i < names.length; i++) {
       buf.append(' ').append(names[i]);
     }
-    attrs.addAttribute("", "names", "names", "", buf.toString());
+    attrs.addAttribute("", "names", "names", null, buf.toString());
     return attrs;
   }
 
@@ -124,17 +131,16 @@ public class ConfigurationGroup_impl extends MetaDataObject_impl implements Conf
    * @see org.apache.uima.util.XMLizable#buildFromXMLElement(Element,
    *      XMLParser)
    */
-  @Override
   public void buildFromXMLElement(Element aElement, XMLParser aParser,
           XMLParser.ParsingOptions aOptions) throws InvalidXMLException {
     String names = aElement.getAttribute("names");
     if (names.length() == 0) {
-      throw new InvalidXMLException(InvalidXMLException.REQUIRED_ATTRIBUTE_MISSING,
-              new Object[] { "names", "configurationGroup" });
+      throw new InvalidXMLException(InvalidXMLException.REQUIRED_ATTRIBUTE_MISSING, new Object[] {
+          "names", "configurationGroup" });
     }
     // treat names as a space-separated list
     StringTokenizer tokenizer = new StringTokenizer(names, " \t");
-    List<String> nameList = new ArrayList<>();
+    List<String> nameList = new ArrayList<String>();
     while (tokenizer.hasMoreTokens()) {
       nameList.add(tokenizer.nextToken());
     }
@@ -146,13 +152,15 @@ public class ConfigurationGroup_impl extends MetaDataObject_impl implements Conf
     super.buildFromXMLElement(aElement, aParser, aOptions);
   }
 
-  @Override
+  /**
+   * @see MetaDataObject_impl#getXmlizationInfo()
+   */
   protected XmlizationInfo getXmlizationInfo() {
     return XMLIZATION_INFO;
   }
 
-  private static final XmlizationInfo XMLIZATION_INFO = new XmlizationInfo("configurationGroup",
+  static final private XmlizationInfo XMLIZATION_INFO = new XmlizationInfo("configurationGroup",
           new PropertyXmlInfo[] {
-              // NOTE: names property is XMLized as an attribute
-              new PropertyXmlInfo("configurationParameters", null), });
+          // NOTE: names property is XMLized as an attribute
+          new PropertyXmlInfo("configurationParameters", null), });
 }

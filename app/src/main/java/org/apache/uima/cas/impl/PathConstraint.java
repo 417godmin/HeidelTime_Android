@@ -31,6 +31,7 @@ abstract class PathConstraint implements FSMatchConstraint {
   protected ArrayList<String> featNames;
 
   protected PathConstraint() {
+    super();
   }
 
   PathConstraint(ArrayList<String> featNames) {
@@ -38,17 +39,16 @@ abstract class PathConstraint implements FSMatchConstraint {
     this.featNames = featNames;
   }
 
-  @Override
   public String toString() {
-    if (featNames == null) {
+    if (this.featNames == null) {
       return "";
     }
     StringBuffer buf = new StringBuffer();
-    for (int i = 0; i < featNames.size(); i++) {
+    for (int i = 0; i < this.featNames.size(); i++) {
       if (i > 0) {
         buf.append('.');
       }
-      buf.append(featNames.get(i));
+      buf.append(this.featNames.get(i));
     }
     return buf.toString();
   }

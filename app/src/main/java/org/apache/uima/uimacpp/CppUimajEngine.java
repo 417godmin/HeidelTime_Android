@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
 
 import org.apache.uima.UIMAFramework;
 import org.apache.uima.analysis_engine.AnalysisEngine;
@@ -81,10 +80,11 @@ public class CppUimajEngine {
   public CppUimajEngine() {
   }
 
-  public int initialize(String config, String dataPath, int[] typeInheritance, int[] typePriorities,
-          int[] featureDefs, int[] featureOffset, String[] typeNames, String[] featureNames,
-          int[] stringSubTypes, String[] stringSubTypeValues, int[] stringSubTypeValuePos,
-          String[] indexIDs, int[] indexKinds, int[] compStarts, int[] compDefs) {
+  public int initialize(String config, String dataPath, int[] typeInheritance,
+          int[] typePriorities, int[] featureDefs, int[] featureOffset, String[] typeNames,
+          String[] featureNames, int[] stringSubTypes, String[] stringSubTypeValues,
+          int[] stringSubTypeValuePos, String[] indexIDs, int[] indexKinds, int[] compStarts,
+          int[] compDefs) {
     int result = 0;
     try {
       // System.out.println("CppUimajEngine::initialize()");
@@ -112,7 +112,7 @@ public class CppUimajEngine {
       serializer.stringSubtypeValues = stringSubTypeValues;
       serializer.stringSubtypeValuePos = stringSubTypeValuePos;
 
-      byte[] bar = config.getBytes(StandardCharsets.UTF_16);
+      byte[] bar = config.getBytes("UTF-16");
       ByteArrayInputStream bais = new ByteArrayInputStream(bar);
       XMLInputSource in = new XMLInputSource(bais, null);
       ResourceSpecifier specifier = UIMAFramework.getXMLParser().parseResourceSpecifier(in);
@@ -127,9 +127,8 @@ public class CppUimajEngine {
         Capability[] capabilities = ccdesc.getCasConsumerMetaData().getCapabilities();
         for (int i = 0; i < capabilities.length; i++) {
           String[] inputsofas = capabilities[i].getInputSofas();
-          if (inputsofas.length > 0) {
+          if (inputsofas.length > 0)
             requiresTCas = false;
-          }
         }
       } else {
         ae = UIMAFramework.produceAnalysisEngine(specifier, resMgr, null);
@@ -147,7 +146,7 @@ public class CppUimajEngine {
       completeSerializer.setCasMgrSerializer(serializer);
       completeSerializer.setCasSerializer(Serialization.serializeCAS(casImpl));
 
-      casImpl.getBinaryCasSerDes().reinit(completeSerializer);
+      casImpl.reinit(completeSerializer);
 
       // System.out.println(cc.getProcessingResourceMetaData().getName());
     } catch (Exception exc) {
@@ -187,7 +186,7 @@ public class CppUimajEngine {
       serializer.shortHeapArray = aShortHeapArray;
       serializer.longHeapArray = aLongHeapArray;
 
-      casImpl.getBinaryCasSerDes().reinit(serializer);
+      casImpl.reinit(serializer);
 
       // 2. create result spec
       if (ae != null) {
@@ -195,13 +194,13 @@ public class CppUimajEngine {
         ResultSpecification rs = ae.createResultSpecification(casImpl.getTypeSystem());
         for (int i = 0; i < resultSpecTypes.length; ++i) {
           // allAnnotatorFeatures is not considere here! (TODO)
-          rs.addResultType(
-                  casImpl.getTypeSystemImpl().ll_getTypeForCode(resultSpecTypes[i]).getName(),
-                  false);
+          rs
+                  .addResultType(casImpl.getTypeSystemImpl().ll_getTypeForCode(resultSpecTypes[i]).getName(),
+                          false);
         }
         for (int i = 0; i < resultSpecFeatures.length; ++i) {
-          rs.addResultFeature(casImpl.getTypeSystemImpl()
-                  .ll_getFeatureForCode(resultSpecFeatures[i]).getName());
+          rs.addResultFeature(casImpl.getTypeSystemImpl().ll_getFeatureForCode(resultSpecFeatures[i])
+                  .getName());
         }
         // 3. call process with cas
         ae.process(casImpl, rs);
@@ -314,7 +313,7 @@ public class CppUimajEngine {
 
     try {
       byte[] bar;
-      bar = inDesc.getBytes(StandardCharsets.UTF_16);
+      bar = inDesc.getBytes("UTF-16");
       ByteArrayInputStream bais = new ByteArrayInputStream(bar);
       XMLInputSource in = new XMLInputSource(bais, null);
       ResourceSpecifier specifier = UIMAFramework.getXMLParser().parseResourceSpecifier(in);
@@ -352,8 +351,6 @@ public class CppUimajEngine {
     return null;
   }
 
-  @Deprecated(since = "3.6.0")
-  @Override
   protected void finalize() throws Throwable {
     if (ae != null) {
       destroy();

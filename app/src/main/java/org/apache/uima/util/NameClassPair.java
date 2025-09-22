@@ -74,18 +74,17 @@ public class NameClassPair implements java.io.Serializable {
    * 
    * @return the class name
    */
-  @Override
   public boolean equals(Object aObj) {
     if (!(aObj instanceof NameClassPair)) {
       return false;
     }
     NameClassPair that = (NameClassPair) aObj;
 
-    boolean nameMatch = getName() == null ? that.getName() == null
-            : getName().equals(that.getName());
+    boolean nameMatch = this.getName() == null ? that.getName() == null : this.getName().equals(
+            that.getName());
 
-    boolean classNameMatch = getClassName() == null ? that.getClassName() == null
-            : getClassName().equals(that.getClassName());
+    boolean classNameMatch = this.getClassName() == null ? that.getClassName() == null : this
+            .getClassName().equals(that.getClassName());
 
     return nameMatch && classNameMatch;
   }
@@ -96,7 +95,6 @@ public class NameClassPair implements java.io.Serializable {
    * 
    * @return the hash code for this object
    */
-  @Override
   public int hashCode() {
     // add the hash codes of the Name and ClassName properties
     int result = 0;
@@ -114,7 +112,6 @@ public class NameClassPair implements java.io.Serializable {
    * 
    * @return string representation of this object
    */
-  @Override
   public String toString() {
     return "(" + mName + "," + mClassName + ")";
   }

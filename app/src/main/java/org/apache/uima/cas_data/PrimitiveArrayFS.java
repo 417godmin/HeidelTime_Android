@@ -31,26 +31,26 @@ public interface PrimitiveArrayFS extends FeatureStructure {
    * 
    * @return the size
    */
-  int size();
+  public int size();
 
   /**
    * Gets this value as an integer array.
    * 
    * @return integer array value, empty array if value is not an array
    */
-  int[] toIntArray();
+  public int[] toIntArray();
 
   /**
    * Gets this value as an float array.
    * 
    * @return float array value, empty array if value is not an array
    */
-  float[] toFloatArray();
+  public float[] toFloatArray();
 
   /**
    * Gets this value as an string array.
    * 
    * @return string array value, empty array if value is not an array
    */
-  String[] toStringArray();
+  public String[] toStringArray();
 }

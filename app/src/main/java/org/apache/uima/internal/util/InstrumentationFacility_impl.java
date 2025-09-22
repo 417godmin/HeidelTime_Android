@@ -43,7 +43,6 @@ public class InstrumentationFacility_impl implements InstrumentationFacility {
    * @see InstrumentationFacility#startEvent(String,
    *      String, String)
    */
-  @Override
   public void startEvent(String aComponentName, String aEventType, String aDescription) {
     if (mProcessTrace != null) {
       mProcessTrace.startEvent(aComponentName, aEventType, aDescription);
@@ -54,7 +53,6 @@ public class InstrumentationFacility_impl implements InstrumentationFacility {
    * @see InstrumentationFacility#endEvent(String, String,
    *      String)
    */
-  @Override
   public void endEvent(String aComponentName, String aEventType, String aResultMessage) {
     if (mProcessTrace != null) {
       mProcessTrace.endEvent(aComponentName, aEventType, aResultMessage);
@@ -65,7 +63,6 @@ public class InstrumentationFacility_impl implements InstrumentationFacility {
    * @see InstrumentationFacility#addEvent(String, String,
    *      String, int, String)
    */
-  @Override
   public void addEvent(String aResourceName, String aType, String aDescription, int aDuration,
           String aResultMsg) {
     if (mProcessTrace != null) {
@@ -76,9 +73,7 @@ public class InstrumentationFacility_impl implements InstrumentationFacility {
   /**
    * Sets the process trace object wrapped by this instrumentation facility. This is not part of the
    * InstrumentationFacility interface.
-   * 
-   * @param aProcessTrace
-   *          -
+   * @param aProcessTrace -
    */
   public void setProcessTrace(ProcessTrace aProcessTrace) {
     mProcessTrace = aProcessTrace;

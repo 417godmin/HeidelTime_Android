@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.uima.cas;
 
 import java.io.InputStream;
@@ -32,18 +33,19 @@ import java.io.InputStream;
  * data outside the CAS.
  * </ul>
  * <p>
- * SofaFS (the feature structure that represents a SofA) are created as a side effect of creating a
- * new CAS view. To create a new CAS view, use {@link CAS#createView
- * CAS.createView(string-view-name)}. From the returned CAS view, you can get the associated SofaFS
- * instance, using {@link CAS#getSofa CAS.getSofa()}. The SofaFS interface
- * provides methods to set the values of the features of the Sofa FS. Generic CAS APIs should never
- * be used to create Sofas or set their features.
+ * SofaFS (the feature structure that represents a SofA) are created as a side effect of
+ * creating a new CAS view.  To create a new CAS view, use 
+ * {@link CAS#createView CAS.createView(string-view-name)}.
+ * From the returned CAS view, you can get the associated SofaFS instance, using
+ * {@link CAS#getSofa CAS.getSofa()}.
+ * The SofaFS interface provides methods to set the values of the features of the Sofa FS. Generic CAS APIs
+ * should never be used to create Sofas or set their features.
  * <p>
  * Sofa data can be contained locally in the CAS itself or it can be remote from CAS. To set the
  * local Sofa data in the Sofa FS use:
- * {@link SofaFS#setLocalSofaData(FeatureStructure) SofaFS.setLocalSofaData()}.
- * If the data is remote from the CAS use: {@link SofaFS#setRemoteSofaURI
- * SofaFS.setRemoteSofaURI()}.
+ * {@link SofaFS#setLocalSofaData(FeatureStructure) SofaFS.setLocalSofaData()}. If the data is
+ * remote from the CAS use:
+ * {@link SofaFS#setRemoteSofaURI SofaFS.setRemoteSofaURI()}.
  * <p>
  * Once set, the Sofa data cannot be set again until the CAS has been reset. This is so that
  * annotators cannot change the subject of analysis during processing.
@@ -53,31 +55,24 @@ public interface SofaFS extends FeatureStructure {
 
   /**
    * Set the URI for a Remote Subject of Analysis. Once set, this URI may not be changed.
-   * 
-   * @param aURI
-   *          the URI for a remote Sofa
+   * @param aURI the URI for a remote Sofa 
    * @throws CASRuntimeException
    *           if the Sofa data has already been set
    */
-  void setRemoteSofaURI(String aURI);
+  void setRemoteSofaURI(String aURI) throws CASRuntimeException;
 
   /**
    * Set the Local Subject of Analysis to be a predefined ArrayFS. Once set, the Sofa data cannot be
    * changed.
-   * 
-   * @param aFS
-   *          the SofA
+   * @param aFS the SofA
    * @throws CASRuntimeException
    *           if given FS is not an ArrayFS, or if the Sofa data has already been set
    */
-
   void setLocalSofaData(FeatureStructure aFS) throws CASRuntimeException;
 
   /**
    * Set the Local Subject of Analysis to be a String. Once set, the Sofa data cannot be changed.
-   * 
-   * @param aString
-   *          The subject of analysis
+   * @param aString  The subject of analysis 
    * @throws CASRuntimeException
    *           if the Sofa data has already been set
    */
@@ -85,15 +80,13 @@ public interface SofaFS extends FeatureStructure {
 
   /**
    * Get the Local Subject of Analysis returns null if not previously set.
-   * 
-   * @return the local SofA
+   * @return the local SofA 
    */
   FeatureStructure getLocalFSData();
 
   /**
    * Get the Local Subject of Analysis returns null if not previously set.
-   * 
-   * @return the SofA
+   * @return the SofA 
    */
   String getLocalStringData();
 
@@ -119,16 +112,7 @@ public interface SofaFS extends FeatureStructure {
   String getSofaURI();
 
   /**
-   * Get the Sofa Ref value. (same as getSofaRef())
-   * 
-   * @return the Sofa Reference value
-   */
-
-  int getSofaNum();
-
-  /**
    * Get the Sofa Ref value.
-   * 
    * @return the Sofa Reference value
    */
   int getSofaRef();
@@ -142,4 +126,5 @@ public interface SofaFS extends FeatureStructure {
    * @return an InputStream for reading Sofa data. null returned if there is no Sofa data.
    */
   InputStream getSofaDataStream();
+
 }

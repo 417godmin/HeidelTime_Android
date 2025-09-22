@@ -27,7 +27,8 @@ package org.apache.uima.resource;
  * Instead of a single URL, this specifier defines a URL prefix and a URL suffix. The ISO language
  * identifier is then placed between the prefix and suffix to form the complete URL of the file. If
  * that file does not exist, more general language identifiers will be tried. For example, if there
- * is no resource for <code>en-US</code>, the resource for <code>en</code> will be used instead.
+ * is no resource for <code>en-US</code>, the resource for <code>en</code> will be used
+ * instead.
  * 
  * 
  */
@@ -38,14 +39,14 @@ public interface FileLanguageResourceSpecifier extends ResourceSpecifier {
    * 
    * @return the URL prefix
    */
-  String getFileUrlPrefix();
+  public String getFileUrlPrefix();
 
   /**
    * Retrieves the URL suffix.
    * 
    * @return the URL suffix
    */
-  String getFileUrlSuffix();
+  public String getFileUrlSuffix();
 
   /**
    * Sets the URL prefix.
@@ -53,7 +54,7 @@ public interface FileLanguageResourceSpecifier extends ResourceSpecifier {
    * @param aPrefix
    *          the URL prefix
    */
-  void setFileUrlPrefix(String aPrefix);
+  public void setFileUrlPrefix(String aPrefix);
 
   /**
    * Sets the URL suffix.
@@ -61,5 +62,5 @@ public interface FileLanguageResourceSpecifier extends ResourceSpecifier {
    * @param aSuffix
    *          the URL suffix
    */
-  void setFileUrlSuffix(String aSuffix);
+  public void setFileUrlSuffix(String aSuffix);
 }

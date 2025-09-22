@@ -40,7 +40,7 @@ public interface IndexRule extends XMLizable, Serializable {
    * 
    * @return the CAS type name for this build item
    */
-  Style[] getStyles();
+  public Style[] getStyles();
 
   /**
    * Sets the styles that comprise this index rule.
@@ -48,5 +48,5 @@ public interface IndexRule extends XMLizable, Serializable {
    * @param aStyles
    *          the CAS type name for this build item
    */
-  void setStyles(Style[] aStyles);
+  public void setStyles(Style[] aStyles);
 }

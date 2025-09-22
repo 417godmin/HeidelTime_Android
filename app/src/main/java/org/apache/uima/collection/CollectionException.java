@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.uima.collection;
 
 import org.apache.uima.UIMAException;
@@ -23,6 +24,8 @@ import org.apache.uima.UIMAException;
 /**
  * Thrown to indicate that there is a problem with some aspect of a Collection. For example, this
  * exception could be thrown if a collection could not be read from or written to.
+ * 
+ * 
  */
 public class CollectionException extends UIMAException {
   private static final long serialVersionUID = -78797158130497524L;
@@ -43,6 +46,7 @@ public class CollectionException extends UIMAException {
    * Creates a new exception with a null message.
    */
   public CollectionException() {
+    super();
   }
 
   /**
@@ -63,8 +67,8 @@ public class CollectionException extends UIMAException {
    *          located.
    * @param aMessageKey
    *          an identifier that maps to the message for this exception. The message may contain
-   *          placeholders for arguments as defined by the {@link java.text.MessageFormat
-   *          MessageFormat} class.
+   *          placeholders for arguments as defined by the
+   *          {@link java.text.MessageFormat MessageFormat} class.
    * @param aArguments
    *          The arguments to the message. <code>null</code> may be used if the message has no
    *          arguments.
@@ -81,8 +85,8 @@ public class CollectionException extends UIMAException {
    *          located.
    * @param aMessageKey
    *          an identifier that maps to the message for this exception. The message may contain
-   *          placeholders for arguments as defined by the {@link java.text.MessageFormat
-   *          MessageFormat} class.
+   *          placeholders for arguments as defined by the
+   *          {@link java.text.MessageFormat MessageFormat} class.
    * @param aArguments
    *          The arguments to the message. <code>null</code> may be used if the message has no
    *          arguments.
@@ -99,8 +103,8 @@ public class CollectionException extends UIMAException {
    * 
    * @param aMessageKey
    *          an identifier that maps to the message for this exception. The message may contain
-   *          placeholders for arguments as defined by the {@link java.text.MessageFormat
-   *          MessageFormat} class.
+   *          placeholders for arguments as defined by the
+   *          {@link java.text.MessageFormat MessageFormat} class.
    * @param aArguments
    *          The arguments to the message. <code>null</code> may be used if the message has no
    *          arguments.
@@ -115,8 +119,8 @@ public class CollectionException extends UIMAException {
    * 
    * @param aMessageKey
    *          an identifier that maps to the message for this exception. The message may contain
-   *          placeholders for arguments as defined by the {@link java.text.MessageFormat
-   *          MessageFormat} class.
+   *          placeholders for arguments as defined by the
+   *          {@link java.text.MessageFormat MessageFormat} class.
    * @param aArguments
    *          The arguments to the message. <code>null</code> may be used if the message has no
    *          arguments.

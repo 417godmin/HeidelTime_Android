@@ -32,7 +32,6 @@ public abstract class JCasFlowController_ImplBase extends FlowController_ImplBas
    * 
    * @see org.apache.uima.flow.FlowController#getRequiredCasInterface()
    */
-  @Override
   public Class<JCas> getRequiredCasInterface() {
     return JCas.class;
   }
@@ -41,14 +40,13 @@ public abstract class JCasFlowController_ImplBase extends FlowController_ImplBas
    * Overriden to check that <code>aCAS</code> is an instanceof {@link JCas}. If it is, then
    * {@link #computeFlow(JCas)} is called. If not, an exception is thrown.
    */
-  @Override
   public final Flow computeFlow(AbstractCas aCAS) throws AnalysisEngineProcessException {
     if (aCAS instanceof JCas) {
       return computeFlow((JCas) aCAS);
     } else {
       throw new AnalysisEngineProcessException(
-              AnalysisEngineProcessException.INCORRECT_CAS_INTERFACE,
-              new Object[] { JCas.class, aCAS.getClass() });
+              AnalysisEngineProcessException.INCORRECT_CAS_INTERFACE, new Object[] { JCas.class,
+                  aCAS.getClass() });
     }
   }
 
@@ -59,9 +57,9 @@ public abstract class JCasFlowController_ImplBase extends FlowController_ImplBas
    * use information in the CAS to make routing decisions.
    * <p>
    * FlowController implementations will typically define their own class that implements
-   * {@link Flow} by extending from the base class {@link JCasFlow_ImplBase}. This method would then
-   * just instantiate the flow object, call its <code>setCas</code> method to provide a handle to
-   * the JCas, and return the flow object.
+   * {@link Flow} by extending from the base class {@link JCasFlow_ImplBase}. This method would
+   * then just instantiate the flow object, call its <code>setCas</code> method to provide a
+   * handle to the JCas, and return the flow object.
    * 
    * @param aJCas
    *          the JCas to be routed

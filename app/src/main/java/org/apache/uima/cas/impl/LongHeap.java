@@ -22,7 +22,7 @@ package org.apache.uima.cas.impl;
 import java.util.Arrays;
 
 /**
- * the v2 CAS long aux heap - used in modeling some binary (de)serialization
+ * Encapsulate 64 bit storage for a CAS.
  */
 final class LongHeap extends CommonAuxHeap {
 
@@ -36,22 +36,18 @@ final class LongHeap extends CommonAuxHeap {
     super(heapBaseSize, heapMultLimit);
   }
 
-  @Override
-  void initMemory() {
-    heap = new long[heapBaseSize];
+  final void initMemory() {
+    this.heap = new long[this.heapBaseSize];
+  }
+  
+  final void initMemory(int size) {
+    this.heap = new long[size];
   }
 
-  @Override
-  void initMemory(int size) {
-    heap = new long[size];
+  final int getCapacity() {
+    return this.heap.length;
   }
-
-  @Override
-  int getCapacity() {
-    return heap.length;
-  }
-
-  @Override
+  
   void growHeapIfNeeded() {
     if (heap.length >= heapPos)
       return;
@@ -62,14 +58,13 @@ final class LongHeap extends CommonAuxHeap {
     heap = new_array;
   }
 
-  @Override
   void resetToZeros() {
-    Arrays.fill(heap, 0, heapPos, NULL);
+    Arrays.fill(this.heap, 0, this.heapPos, NULL);
   }
 
   // Getters
   long getHeapValue(int offset) {
-    return heap[offset];
+    return this.heap[offset];
   }
 
   // setters
@@ -83,34 +78,13 @@ final class LongHeap extends CommonAuxHeap {
     return pos;
   }
 
-  int addLongArray(long[] val) {
-    int pos = reserve(val.length);
-    System.arraycopy(val, 0, heap, pos, val.length);
-    return pos;
-  }
-
-  int addDoubleArray(double[] val) {
-    int pos = reserve(val.length);
-    int i = pos;
-    for (double d : val) {
-      heap[i++] = CASImpl.double2long(d);
-    }
-    return pos;
-  }
-
   protected void reinit(long[] longHeap) {
     int argLength = longHeap.length;
     if (argLength > heap.length)
       heap = new long[argLength];
 
     System.arraycopy(longHeap, 0, heap, 0, argLength);
-    heapPos = argLength;
-  }
-
-  public long[] toArray() {
-    long[] r = new long[heapPos];
-    System.arraycopy(heap, 0, r, 0, heapPos);
-    return r;
+    this.heapPos = argLength;
   }
 
 }

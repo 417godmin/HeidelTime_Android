@@ -23,8 +23,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -47,29 +45,29 @@ import org.apache.uima.resource.ResourceInitializationException;
  * <li>As a standalone Java application - <br>
  * <code>
  * java -Xmx512M -DUIMA_HOME=%UIMA_HOME% 
- * org.apache.uima.pear.tools.LocalInstallationAgent
+ * org.apache.uima.pear.tools.LocalInstallationAgent  
  * main_component_root_directory
  * </code><br>
  * where the <code>main_component_root_directory</code> is the path to the root directory of the
- * main component (root directory of the single PEAR structure);</li>
+ * main component (root directory of the single PEAR structure); </li>
  * <li>As a Java object - <br>
  * in this case the caller is expected to set the <code>UIMA_HOME</code> variable, using the
  * <code>setUimaHomePath()</code> method, immediately after creating a new instance of the
  * <code>LocalInstallationAgent</code> class. <br>
- * <b>Note:</b> Some TAEs require large heap size, so the '-Xmx[heapSize]' JVM option may be needed.
- * <br>
+ * <b>Note:</b> Some TAEs require large heap size, so the '-Xmx[heapSize]' JVM option may be
+ * needed. <br>
  * Localization of component files is performed by using the <code>localizeComponent()</code>
  * method. <br>
  * Verification of localized files is performed by using the <code>verifyLocalizedComponent()</code>
  * method. <br>
  * The applications prints all messages to the standard output and error messages to the standard
- * error output.</li>
+ * error output. </li>
  * </ul>
  * In both modes the application uses the <code>metadata/PEAR.properties</code> file for the
  * component localization information. <br>
  * <b>Note:</b> during the localization phase the application creates backup copies of all files in
- * both the <code>conf</code> and <code>desc</code> directories, adding the extension ".$" to each
- * backup file. If the application fails, please make sure all original files in both the
+ * both the <code>conf</code> and <code>desc</code> directories, adding the extension ".$" to
+ * each backup file. If the application fails, please make sure all original files in both the
  * directories are restored from appropriate "*.$" backup copies.
  * 
  * @see InstallationDescriptor
@@ -184,10 +182,8 @@ public class LocalInstallationAgent {
    * Performs localization of a given installation descriptor object using information from a
    * specified PEAR configuration.
    * 
-   * @param insdObject
-   *          installation descriptor object
-   * @param packageConfig
-   *          pear configuration properties
+   * @param insdObject installation descriptor object
+   * @param packageConfig pear configuration properties
    */
   public static void localizeInstallationDescriptor(InstallationDescriptor insdObject,
           Properties packageConfig) {
@@ -289,13 +285,21 @@ public class LocalInstallationAgent {
     System.out.println("[LocalInstallationAgent]: " + "loaded installation descriptor");
     // load PEAR configuration
     File packageConfigFile = new File(_mainRootDir, InstallationController.PACKAGE_CONFIG_FILE);
-    try (InputStream iStream = new FileInputStream(packageConfigFile)) {
+    InputStream iStream = null;
+    try {
+      iStream = new FileInputStream(packageConfigFile);
       _packageConfig.load(iStream);
+      iStream.close();
+      System.out.println("[LocalInstallationAgent]: " + "loaded PEAR configuration");
+    } finally {
+      if (iStream != null) {
+        try {
+          iStream.close();
+        } catch (Exception e) {
+          //ignore close exception
+        }
+      }
     }
-
-    System.out.println("[LocalInstallationAgent]: " + "loaded PEAR configuration");
-
-    // ignore close exception
     // check that package configuration has required properties
     if (checkPackageConfig(_packageConfig, _insdObject)) {
       // localize files in conf and desc dirs
@@ -332,11 +336,12 @@ public class LocalInstallationAgent {
       File orgFile = dirList.next();
       String bakFileName = orgFile.getName().concat(BACKUP_FILE_SUFFIX);
       File bakFile = new File(orgFile.getParent(), bakFileName);
-      Files.copy(orgFile.toPath(), bakFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-      // localize original file
-      localizeComponentFile(orgFile, _insdObject, _packageConfig);
-      // add to localized file list
-      fileList[fileCounter++] = orgFile;
+      if (FileUtil.copyFile(orgFile, bakFile)) {
+        // localize original file
+        localizeComponentFile(orgFile, _insdObject, _packageConfig);
+        // add to localized file list
+        fileList[fileCounter++] = orgFile;
+      }
     }
     // backup and localize files in desc dir
     dirList = descDirFiles.iterator();
@@ -344,11 +349,12 @@ public class LocalInstallationAgent {
       File orgFile = dirList.next();
       String bakFileName = orgFile.getName().concat(BACKUP_FILE_SUFFIX);
       File bakFile = new File(orgFile.getParent(), bakFileName);
-      Files.copy(orgFile.toPath(), bakFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-      // localize original file
-      localizeComponentFile(orgFile, _insdObject, _packageConfig);
-      // add to localized file list
-      fileList[fileCounter++] = orgFile;
+      if (FileUtil.copyFile(orgFile, bakFile)) {
+        // localize original file
+        localizeComponentFile(orgFile, _insdObject, _packageConfig);
+        // add to localized file list
+        fileList[fileCounter++] = orgFile;
+      }
     }
     return fileList;
   }
@@ -363,15 +369,19 @@ public class LocalInstallationAgent {
    *           if any I/O exception occurred.
    */
   public synchronized boolean undoComponentLocalization() throws IOException {
-    boolean completed;
+    boolean completed = false;
     int counter = 0;
     for (int i = 0; i < _localizedFiles.length; i++) {
       File orgFile = _localizedFiles[i];
       String bakFileName = orgFile.getName().concat(BACKUP_FILE_SUFFIX);
       File bakFile = new File(orgFile.getParent(), bakFileName);
-      Files.copy(bakFile.toPath(), orgFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-      bakFile.delete();
-      counter++;
+      if (FileUtil.copyFile(bakFile, orgFile)) {
+        bakFile.delete();
+        counter++;
+      } else {
+        System.err.println("[LocalInstallationAgent]: " + "failed to undo changes for the file "
+                + orgFile.getAbsolutePath());
+      }
     }
     completed = (counter == _localizedFiles.length);
     return completed;
@@ -389,14 +399,14 @@ public class LocalInstallationAgent {
    * 
    * @throws ResourceInitializationException
    *           if the specified component cannot be instantiated.
-   * 
+   *           
    * @throws UIMAException
    *           if this exception occurred while identifying UIMA component category.
-   * 
+   *           
    * @see InstallationTester
    */
-  public synchronized boolean verifyLocalizedComponent()
-          throws IOException, ResourceInitializationException, UIMAException {
+  public synchronized boolean verifyLocalizedComponent() throws IOException,
+          ResourceInitializationException, UIMAException {
     // check input parameters
     if (_insdObject == null)
       throw new RuntimeException("null installation descriptor");
@@ -408,10 +418,10 @@ public class LocalInstallationAgent {
 
     // run installation verification test
 
-    InstallationTester installTester = new InstallationTester(
-            new PackageBrowser(new File(_mainRootDir.getAbsolutePath())));
+    InstallationTester installTester = new InstallationTester(new PackageBrowser(new File(
+            _mainRootDir.getAbsolutePath())));
     TestStatus status = installTester.doTest();
-
+    
     if (status.getRetCode() == TestStatus.TEST_SUCCESSFUL) {
       return true;
     } else {

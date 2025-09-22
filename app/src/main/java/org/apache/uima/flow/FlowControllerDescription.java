@@ -33,5 +33,5 @@ public interface FlowControllerDescription extends ResourceCreationSpecifier {
    * @return the <code>ProcessingResourceMetaData</code> object containing the FlowController's
    *         metadata. This object can be modified.
    */
-  ProcessingResourceMetaData getFlowControllerMetaData();
+  public ProcessingResourceMetaData getFlowControllerMetaData();
 }

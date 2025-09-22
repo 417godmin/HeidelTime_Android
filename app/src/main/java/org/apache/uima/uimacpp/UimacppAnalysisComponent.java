@@ -57,7 +57,7 @@ public class UimacppAnalysisComponent extends AnalysisComponent_ImplBase {
   private UimacppEngine engine;
 
   private AnalysisEngineImplBase ae;
-
+ 
   private ResourceCreationSpecifier resourceDescription;
 
   private Logger log;
@@ -76,39 +76,35 @@ public class UimacppAnalysisComponent extends AnalysisComponent_ImplBase {
    */
   private static final Class<UimacppAnalysisComponent> CLASS_NAME = UimacppAnalysisComponent.class;
 
-  public UimacppAnalysisComponent(ResourceCreationSpecifier aeDescription,
-          AnalysisEngineImplBase ae) {
-    this.ae = ae;
-    // TAF won't except the new <fsIndexCollection> element, but actuall it doesn't need it,
-    // because the index definitions are transmitted with the serialized CAS. So we can
-    // just null it out.
-    // BUT do this in a clone, so we don't affect Java!
-    resourceDescription = (ResourceCreationSpecifier) aeDescription.clone();
-    ((ProcessingResourceMetaData) resourceDescription.getMetaData()).setFsIndexCollection(null);
-    tsReinit = true;
-    // System.out.println("Data path: " + dataPath);
-  }
+  public UimacppAnalysisComponent(ResourceCreationSpecifier aeDescription, AnalysisEngineImplBase ae) {
+	    super();
+	    this.ae = ae;
+	    // TAF won't except the new <fsIndexCollection> element, but actuall it doesn't need it,
+	    // because the index definitions are transmitted with the serialized CAS. So we can
+	    // just null it out.
+      // BUT do this in a clone, so we don't affect Java!
+      this.resourceDescription = (ResourceCreationSpecifier)aeDescription.clone();
+	    ((ProcessingResourceMetaData)this.resourceDescription.getMetaData()).setFsIndexCollection(null);
+	    this.tsReinit = true;
+	    // System.out.println("Data path: " + dataPath);
+	  }
 
   /**
-   * @param context
-   *          the UIMA Context
-   * @throws ResourceInitializationException
-   *           wraps exceptions thrown from called routines
+   * @param context the UIMA Context 
+   * @throws ResourceInitializationException wraps exceptions thrown from called routines
    * @see org.apache.uima.analysis_component.AnalysisComponent#initialize(UimaContext)
    */
-  @Override
   public void initialize(UimaContext context) throws ResourceInitializationException {
     try {
-      uimaContext = context;
+      this.uimaContext = context;
       // update the sofa mappings in the AE descriptor with the mappings
       // specified in the context if the AE descriptor is for an aggregate
       // Ae and contains sofa mappings
-      if (resourceDescription instanceof AnalysisEngineDescription
-              && !((AnalysisEngineDescription) resourceDescription).isPrimitive()) {
+      if (resourceDescription instanceof AnalysisEngineDescription && 
+    	   ! ((AnalysisEngineDescription) resourceDescription).isPrimitive()) {
         ComponentInfo compInfo = ((UimaContextAdmin) context).getComponentInfo();
-        SofaMapping[] aggSofaMapping = ((AnalysisEngineDescription) resourceDescription)
-                .getSofaMappings();
-
+        SofaMapping[] aggSofaMapping = ((AnalysisEngineDescription)resourceDescription).getSofaMappings();
+        
         if (aggSofaMapping != null && aggSofaMapping.length > 0) {
           for (int i = 0; i < aggSofaMapping.length; i++) {
             String absoluteSofaName = compInfo
@@ -117,21 +113,18 @@ public class UimacppAnalysisComponent extends AnalysisComponent_ImplBase {
           }
         }
       }
-      log = context.getLogger();
-
-      /*
-       * set the configuration parameters into the parsed resourceDescription
+      this.log = context.getLogger();
+      
+      /* set the configuration parameters into the parsed resourceDescription 
        * 
        */
-
+      
       AnalysisEngineDescription aed = (AnalysisEngineDescription) resourceDescription;
-      ConfigurationParameterSettings parmSettings = aed.getAnalysisEngineMetaData()
-              .getConfigurationParameterSettings();
+      ConfigurationParameterSettings parmSettings = aed.getAnalysisEngineMetaData().getConfigurationParameterSettings();
       /*
-       * loop thru all the parameters in the component, and set them to the possibly overridden
-       * values
+       * loop thru all the parameters in the component, and set them to the possibly overridden values
        */
-      // for group parameters (Note: unsure if C++ actually supports group parameters ...
+      // for group parameters (Note: unsure if C++ actually supports group parameters ... 
       Map<String, NameValuePair[]> groups = parmSettings.getSettingsForGroups();
       for (Map.Entry<String, NameValuePair[]> group : groups.entrySet()) {
         for (NameValuePair nvp : group.getValue()) {
@@ -150,8 +143,8 @@ public class UimacppAnalysisComponent extends AnalysisComponent_ImplBase {
       }
 
       if (engine == null) {
-        UimacppEngine.configureResourceManager(System.getProperty("java.io.tmpdir"),
-                ae.getResourceManager().getDataPath());
+        UimacppEngine.configureResourceManager(System.getProperty("java.io.tmpdir"), ae
+                .getResourceManager().getDataPath());
 
         StringWriter strWriter = new StringWriter();
         resourceDescription.toXML(strWriter);
@@ -161,44 +154,37 @@ public class UimacppAnalysisComponent extends AnalysisComponent_ImplBase {
     } catch (UimacppException e) {
       logJTafException(e);
       throw new ResourceInitializationException(
-              ResourceInitializationException.ERROR_INITIALIZING_FROM_DESCRIPTOR,
-              new Object[] { resourceDescription.getMetaData().getName(),
-                  resourceDescription.getSourceUrlString() },
-              e);
+              ResourceInitializationException.ERROR_INITIALIZING_FROM_DESCRIPTOR, new Object[] {
+                  resourceDescription.getMetaData().getName(),
+                  resourceDescription.getSourceUrlString() }, e);
     } catch (SAXException e) {
       throw new ResourceInitializationException(
-              ResourceInitializationException.ERROR_INITIALIZING_FROM_DESCRIPTOR,
-              new Object[] { resourceDescription.getMetaData().getName(),
-                  resourceDescription.getSourceUrlString() },
-              e);
+              ResourceInitializationException.ERROR_INITIALIZING_FROM_DESCRIPTOR, new Object[] {
+                  resourceDescription.getMetaData().getName(),
+                  resourceDescription.getSourceUrlString() }, e);
     } catch (IOException e) {
       throw new ResourceInitializationException(
-              ResourceInitializationException.ERROR_INITIALIZING_FROM_DESCRIPTOR,
-              new Object[] { resourceDescription.getMetaData().getName(),
-                  resourceDescription.getSourceUrlString() },
-              e);
+              ResourceInitializationException.ERROR_INITIALIZING_FROM_DESCRIPTOR, new Object[] {
+                  resourceDescription.getMetaData().getName(),
+                  resourceDescription.getSourceUrlString() }, e);
     }
   }
 
   /**
    * @see org.apache.uima.analysis_component.CasAnnotator_ImplBase#typeSystemInit(TypeSystem)
-   * @param ts
-   *          TypeSystem to use in the initialization
-   * @throws AnnotatorConfigurationException
-   *           pass thru
-   * @throws AnnotatorInitializationException
-   *           pass thru
+   * @param ts TypeSystem to use in the initialization
+   * @throws AnnotatorConfigurationException pass thru
+   * @throws AnnotatorInitializationException pass thru
    */
-  public void typeSystemInit(TypeSystem ts)
-          throws AnnotatorConfigurationException, AnnotatorInitializationException {
+  public void typeSystemInit(TypeSystem ts) throws AnnotatorConfigurationException,
+          AnnotatorInitializationException {
     // set flag to update TAF type system on next call to process
-    tsReinit = true;
+    this.tsReinit = true;
   }
 
   /**
    * @see org.apache.uima.analysis_component.AnalysisComponent#reconfigure()
    */
-  @Override
   public void reconfigure() {
     // destroy engine; it will be reinitialized on next call to process
     destroy();
@@ -210,29 +196,25 @@ public class UimacppAnalysisComponent extends AnalysisComponent_ImplBase {
   }
 
   /**
-   * @see org.apache.uima.analysis_engine.annotator.GenericAnnotator#process(CAS,
-   *      ResultSpecification)
-   * @param cas
-   *          the CAS to process
-   * @param aResultSpec
-   *          the Result Specification to use
-   * @throws AnnotatorProcessException
-   *           wraps exceptions thrown from called methods
+   * @see org.apache.uima.analysis_engine.annotator.GenericAnnotator#process(CAS, ResultSpecification)
+   * @param cas the CAS to process
+   * @param aResultSpec the Result Specification to use
+   * @throws AnnotatorProcessException wraps exceptions thrown from called methods
    */
   public void process(CAS cas, ResultSpecification aResultSpec) throws AnnotatorProcessException {
     try {
       if (engine == null) {
-        UimacppEngine.configureResourceManager(System.getProperty("java.io.tmpdir"),
-                ae.getResourceManager().getDataPath());
+        UimacppEngine.configureResourceManager(System.getProperty("java.io.tmpdir"), ae
+                .getResourceManager().getDataPath());
 
         StringWriter strWriter = new StringWriter();
         resourceDescription.toXML(strWriter);
         strWriter.close();
         engine = UimacppEngine.createJTafTAE(strWriter.getBuffer().toString());
-        tsReinit = true;
+        this.tsReinit = true;
       }
-      if (tsReinit) {
-        tsReinit = false;
+      if (this.tsReinit) {
+        this.tsReinit = false;
         CASMgrSerializer serializer = Serialization.serializeCASMgr((CASMgr) cas);
         engine.typeSystemInit(serializer);
       }
@@ -259,10 +241,8 @@ public class UimacppAnalysisComponent extends AnalysisComponent_ImplBase {
   /*
    * (non-Javadoc)
    * 
-   * @see
-   * org.apache.uima.analysis_component.AnalysisComponent#process(org.apache.uima.cas.AbstractCas)
+   * @see org.apache.uima.analysis_component.AnalysisComponent#process(org.apache.uima.cas.AbstractCas)
    */
-  @Override
   public void process(AbstractCas aCAS) throws AnalysisEngineProcessException {
     this.process((CAS) aCAS);
   }
@@ -272,7 +252,6 @@ public class UimacppAnalysisComponent extends AnalysisComponent_ImplBase {
    * 
    * @see org.apache.uima.analysis_component.AnalysisComponent#hasNext()
    */
-  @Override
   public boolean hasNext() throws AnalysisEngineProcessException {
     try {
       if (engine != null) {
@@ -291,7 +270,6 @@ public class UimacppAnalysisComponent extends AnalysisComponent_ImplBase {
    * 
    * @see org.apache.uima.analysis_component.AnalysisComponent#next()
    */
-  @Override
   public AbstractCas next() throws AnalysisEngineProcessException {
 
     try {
@@ -312,7 +290,6 @@ public class UimacppAnalysisComponent extends AnalysisComponent_ImplBase {
    * 
    * @see org.apache.uima.analysis_component.AnalysisComponent#getRequiredCasInterface()
    */
-  @Override
   public Class<CAS> getRequiredCasInterface() {
     return CAS.class;
   }
@@ -322,12 +299,11 @@ public class UimacppAnalysisComponent extends AnalysisComponent_ImplBase {
    * 
    * @see org.apache.uima.analysis_component.AnalysisComponent#getCasInstancesRequired()
    */
-  @Override
   public int getCasInstancesRequired() {
     return 1;
   }
 
-  @Override
+  
   public void batchProcessComplete() throws AnalysisEngineProcessException {
     try {
       if (engine != null) {
@@ -339,7 +315,7 @@ public class UimacppAnalysisComponent extends AnalysisComponent_ImplBase {
     }
   }
 
-  @Override
+  
   public void collectionProcessComplete() throws AnalysisEngineProcessException {
     try {
       if (engine != null) {
@@ -354,7 +330,6 @@ public class UimacppAnalysisComponent extends AnalysisComponent_ImplBase {
   /**
    * @see org.apache.uima.analysis_engine.annotator.BaseAnnotator#destroy()
    */
-  @Override
   public void destroy() {
     try {
       if (engine != null) {
@@ -368,8 +343,11 @@ public class UimacppAnalysisComponent extends AnalysisComponent_ImplBase {
 
   }
 
-  @Deprecated(since = "3.6.0")
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see java.lang.Object#finalize()
+   */
   protected void finalize() throws Throwable {
     destroy();
   }
@@ -382,7 +360,6 @@ public class UimacppAnalysisComponent extends AnalysisComponent_ImplBase {
   /**
    * Get the logging level of the logger for TAFAnnotator. TAF only supports three levels of
    * logging. All logging levels INFO and below are mapped to the TAF message level.
-   * 
    * @return the logging level
    */
   public static int getLoggingLevel() {
@@ -413,11 +390,10 @@ public class UimacppAnalysisComponent extends AnalysisComponent_ImplBase {
     } else if (msglevel == TAF_LOGLEVEL_ERROR) {
       level = Level.SEVERE;
     }
-    if (sourceMethod.length() > 0) {
+    if (sourceMethod.length() > 0)
       uimacppLogger.log(level, sourceClass + "::" + sourceMethod + ": " + message);
-    } else {
+    else
       uimacppLogger.log(level, sourceClass + ": " + message);
-    }
 
     // TODO: add Logger method log(level, sourceClass, sourceMethod, message);
   }
@@ -444,7 +420,8 @@ public class UimacppAnalysisComponent extends AnalysisComponent_ImplBase {
       }
 
       log.logrb(Level.SEVERE, CLASS_NAME.getName(), "logJTafException", LOG_RESOURCE_BUNDLE,
-              "UIMA_taf_internal_exception__SEVERE", new Object[] { errorCode, errorName });
+              "UIMA_taf_internal_exception__SEVERE",
+              new Object[] { Long.valueOf(errorCode), errorName });
     }
     Exception et = e.getEmbeddedException();
 

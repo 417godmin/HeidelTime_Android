@@ -21,6 +21,7 @@ package org.apache.uima.resource.metadata.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.uima.UIMAFramework;
@@ -29,116 +30,146 @@ import org.apache.uima.resource.metadata.Capability;
 import org.apache.uima.resource.metadata.LanguagePrecondition;
 import org.apache.uima.resource.metadata.MimeTypePrecondition;
 import org.apache.uima.resource.metadata.Precondition;
-import org.apache.uima.util.impl.Constants;
 
 /**
- * Reference implementation of {@link Capability}.
+ * Reference implementation of {@link Capability}
+ * 
+ * 
  */
 public class Capability_impl extends MetaDataObject_impl implements Capability {
 
   static final long serialVersionUID = -2821073595288674925L;
 
-  private static final TypeOrFeature[] EMPTY_TYPE_OR_FEATURE_ARRAY = new TypeOrFeature[0];
-
-  private static final Precondition[] EMPTY_PRECONDITION_ARRAY = new Precondition[0];
-
+  private static final String[] EMPTY_STRINGS = new String[0];
   /** a description of this capability */
   private String mDescription;
 
   /** Input Types and/or Features. */
-  private TypeOrFeature[] mInputs = EMPTY_TYPE_OR_FEATURE_ARRAY;
+  private TypeOrFeature[] mInputs = new TypeOrFeature[0];
 
   /** Output Types and/or Features. */
-  private TypeOrFeature[] mOutputs = EMPTY_TYPE_OR_FEATURE_ARRAY;
+  private TypeOrFeature[] mOutputs = new TypeOrFeature[0];
 
   /** Preconditions (includes languages supported). */
-  private Precondition[] mPreconditions = EMPTY_PRECONDITION_ARRAY;
+  private Precondition[] mPreconditions = new Precondition[0];
 
   /** input SofAs */
-  private String[] mInputSofas = Constants.EMPTY_STRING_ARRAY;
+  private String[] mInputSofas = EMPTY_STRINGS;
 
   /** output SofAs */
-  private String[] mOutputSofas = Constants.EMPTY_STRING_ARRAY;
+  private String[] mOutputSofas = EMPTY_STRINGS;
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.resource.metadata.Capability#getDescription()
+   */
   public String getDescription() {
     return mDescription;
   }
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.resource.metadata.Capability#setDescription(java.lang.String)
+   */
   public void setDescription(String aDescription) {
     mDescription = aDescription;
   }
 
-  @Override
+  /**
+   * @see Capability#getInputs()
+   */
   public TypeOrFeature[] getInputs() {
     return mInputs;
   }
 
-  @Override
+  /**
+   * @see Capability#getOutputs()
+   */
   public TypeOrFeature[] getOutputs() {
     return mOutputs;
   }
 
-  @Override
+  /**
+   * @see Capability#getPreconditions()
+   */
   public Precondition[] getPreconditions() {
     return mPreconditions;
   }
 
-  @Override
+  /**
+   * @see Capability#getLanguagesSupported()
+   */
   public String[] getLanguagesSupported() {
     // search for LanguagePreconditions
     Precondition[] preconditions = getPreconditions();
     for (int i = 0; i < preconditions.length; i++) {
-      if (preconditions[i] instanceof LanguagePrecondition languagePrecondition) {
-        return languagePrecondition.getLanguages();
+      if (preconditions[i] instanceof LanguagePrecondition) {
+        return ((LanguagePrecondition) preconditions[i]).getLanguages();
       }
     }
 
     // No language precondition found. Return an empty array.
-    return Constants.EMPTY_STRING_ARRAY;
+    return EMPTY_STRINGS;
   }
 
-  @Override
+  /**
+   * @see Capability#getMimeTypesSupported()
+   */
   public String[] getMimeTypesSupported() {
     // search for MimeTypePreconditions
     Precondition[] preconditions = getPreconditions();
-    for (Precondition precondition : preconditions) {
-      if (precondition instanceof MimeTypePrecondition mimeTypePrecondition) {
-        return mimeTypePrecondition.getMimeTypes();
+    for (int i = 0; i < preconditions.length; i++) {
+      if (preconditions[i] instanceof MimeTypePrecondition) {
+        return ((MimeTypePrecondition) preconditions[i]).getMimeTypes();
       }
     }
 
     // No language precondition found. Return an empty array.
-    return Constants.EMPTY_STRING_ARRAY;
+    return EMPTY_STRINGS;
   }
 
-  @Override
-  public void setInputs(TypeOrFeature... aInputs) {
+  /**
+   * @see Capability#setInputs(TypeOrFeature[])
+   */
+  public void setInputs(TypeOrFeature[] aInputs) {
     mInputs = aInputs;
   }
 
-  @Override
-  public void setOutputs(TypeOrFeature... aOutputs) {
+  /**
+   * @see Capability#setOutputs(TypeOrFeature[])
+   */
+  public void setOutputs(TypeOrFeature[] aOutputs) {
     mOutputs = aOutputs;
   }
 
-  @Override
-  public void setPreconditions(Precondition... aPreconditions) {
+  /**
+   * @see Capability#setPreconditions(Precondition[])
+   */
+  public void setPreconditions(Precondition[] aPreconditions) {
     mPreconditions = aPreconditions;
   }
 
-  @Override
-  public void setLanguagesSupported(String... aLanguageIDs) {
+  /**
+   * @see Capability#setLanguagesSupported(String[])
+   */
+  public void setLanguagesSupported(String[] aLanguageIDs) {
     // create a list of existing preconditions
-    List<Precondition> preconditions = new ArrayList<>();
+    List<Precondition> preconditions = new ArrayList<Precondition>();
     Precondition[] precondArray = getPreconditions();
     if (precondArray != null) {
       preconditions.addAll(Arrays.asList(precondArray));
     }
 
     // remove any existing LanguagePrecondtiions
-    preconditions.removeIf(LanguagePrecondition.class::isInstance);
+    Iterator<Precondition> i = preconditions.iterator();
+    while (i.hasNext()) {
+      Precondition p = i.next();
+      if (p instanceof LanguagePrecondition) {
+        i.remove();
+      }
+    }
 
     // add new precondition
     if (aLanguageIDs != null && aLanguageIDs.length > 0) {
@@ -153,17 +184,25 @@ public class Capability_impl extends MetaDataObject_impl implements Capability {
     setPreconditions(newPrecondArray);
   }
 
-  @Override
-  public void setMimeTypesSupported(String... aMimeTypes) {
+  /**
+   * @see Capability#setMimeTypesSupported(String[])
+   */
+  public void setMimeTypesSupported(String[] aMimeTypes) {
     // create a list of existing preconditions
-    List<Precondition> preconditions = new ArrayList<>();
+    List<Precondition> preconditions = new ArrayList<Precondition>();
     Precondition[] precondArray = getPreconditions();
     if (precondArray != null) {
       preconditions.addAll(Arrays.asList(precondArray));
     }
 
     // remove any existing MimeTypePrecondtiions
-    preconditions.removeIf(MimeTypePrecondition.class::isInstance);
+    Iterator<Precondition> i = preconditions.iterator();
+    while (i.hasNext()) {
+      Precondition p = i.next();
+      if (p instanceof MimeTypePrecondition) {
+        i.remove();
+      }
+    }
 
     // add new precondition
     if (aMimeTypes != null && aMimeTypes.length > 0) {
@@ -178,7 +217,10 @@ public class Capability_impl extends MetaDataObject_impl implements Capability {
     setPreconditions(newPrecondArray);
   }
 
-  @Override
+  /**
+   * @see Capability#addInputType(String,
+   *      boolean)
+   */
   public void addInputType(String aTypeName, boolean aAllAnnotatorFeatures) {
     TypeOrFeature type = UIMAFramework.getResourceSpecifierFactory().createTypeOrFeature();
     type.setType(true);
@@ -192,7 +234,9 @@ public class Capability_impl extends MetaDataObject_impl implements Capability {
     setInputs(newArr);
   }
 
-  @Override
+  /**
+   * @see Capability#addInputFeature(String)
+   */
   public void addInputFeature(String aFeatureName) {
     TypeOrFeature feat = UIMAFramework.getResourceSpecifierFactory().createTypeOrFeature();
     feat.setType(false);
@@ -205,7 +249,10 @@ public class Capability_impl extends MetaDataObject_impl implements Capability {
     setInputs(newArr);
   }
 
-  @Override
+  /**
+   * @see Capability#addOutputType(String,
+   *      boolean)
+   */
   public void addOutputType(String aTypeName, boolean aAllAnnotatorFeatures) {
     TypeOrFeature type = UIMAFramework.getResourceSpecifierFactory().createTypeOrFeature();
     type.setType(true);
@@ -219,7 +266,9 @@ public class Capability_impl extends MetaDataObject_impl implements Capability {
     setOutputs(newArr);
   }
 
-  @Override
+  /**
+   * @see Capability#addOutputFeature(String)
+   */
   public void addOutputFeature(String aFeatureName) {
     TypeOrFeature feat = UIMAFramework.getResourceSpecifierFactory().createTypeOrFeature();
     feat.setType(false);
@@ -232,7 +281,9 @@ public class Capability_impl extends MetaDataObject_impl implements Capability {
     setOutputs(newArr);
   }
 
-  @Override
+  /**
+   * @see Capability#addSupportedLanguage(String)
+   */
   public void addSupportedLanguage(String aLanguage) {
     String[] oldArr = getLanguagesSupported();
     String[] newArr = new String[oldArr.length + 1];
@@ -241,7 +292,11 @@ public class Capability_impl extends MetaDataObject_impl implements Capability {
     setLanguagesSupported(newArr);
   }
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.resource.metadata.Capability#removeSupportedLanguage(java.lang.String)
+   */
   public void removeSupportedLanguage(String aLanguage) {
     String[] current = getLanguagesSupported();
     for (int i = 0; i < current.length; i++) {
@@ -255,27 +310,47 @@ public class Capability_impl extends MetaDataObject_impl implements Capability {
     }
   }
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.resource.metadata.Capability#getInputSofaNames()
+   */
   public String[] getInputSofas() {
     return mInputSofas;
   }
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.resource.metadata.Capability#getOutputSofaNames()
+   */
   public String[] getOutputSofas() {
     return mOutputSofas;
   }
 
-  @Override
-  public void setInputSofas(String... aInputSofaNames) {
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.resource.metadata.Capability#setInputSofaNames(java.lang.String[])
+   */
+  public void setInputSofas(String[] aInputSofaNames) {
     mInputSofas = aInputSofaNames;
   }
 
-  @Override
-  public void setOutputSofas(String... aOutputSofaNames) {
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.resource.metadata.Capability#setOutputSofaNames(java.lang.String[])
+   */
+  public void setOutputSofas(String[] aOutputSofaNames) {
     mOutputSofas = aOutputSofaNames;
   }
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.resource.metadata.Capability#addInputSofaName(java.lang.String)
+   */
   public void addInputSofa(String aSofaName) {
     String[] oldArr = getInputSofas();
     String[] newArr = new String[oldArr.length + 1];
@@ -284,7 +359,11 @@ public class Capability_impl extends MetaDataObject_impl implements Capability {
     setInputSofas(newArr);
   }
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.resource.metadata.Capability#addOutputSofaName(java.lang.String)
+   */
   public void addOutputSofa(String aSofaName) {
     String[] oldArr = getOutputSofas();
     String[] newArr = new String[oldArr.length + 1];
@@ -293,12 +372,11 @@ public class Capability_impl extends MetaDataObject_impl implements Capability {
     setOutputSofas(newArr);
   }
 
-  @Override
   protected XmlizationInfo getXmlizationInfo() {
     return XMLIZATION_INFO;
   }
 
-  private static final XmlizationInfo XMLIZATION_INFO = new XmlizationInfo("capability",
+  static final private XmlizationInfo XMLIZATION_INFO = new XmlizationInfo("capability",
           new PropertyXmlInfo[] { new PropertyXmlInfo("description"),
               new PropertyXmlInfo("inputs", false), new PropertyXmlInfo("outputs", false),
               new PropertyXmlInfo("inputSofas", "inputSofas", true, "sofaName"),

@@ -34,72 +34,70 @@ import org.apache.uima.internal.util.SortedIntSet;
  */
 class FSTypeConstraintImpl implements FSTypeConstraint {
 
-  private static final long serialVersionUID = 7557683109761796280L;
+	private static final long serialVersionUID = 7557683109761796280L;
 
-  private Set<String> nameSet = new HashSet<>();
+	private Set<String> nameSet = new HashSet<String>();
 
-  private transient SortedIntSet typeSet = new SortedIntSet();
+	private transient SortedIntSet typeSet = new SortedIntSet();
 
-  private transient TypeSystem ts;
+	private transient TypeSystem ts;
 
-  @Override
-  public boolean match(FeatureStructure fs) {
-    final FeatureStructureImplC fsi = (FeatureStructureImplC) fs;
-    compile(fsi.getCAS().getTypeSystem());
-    final int typeCode = fsi._getTypeCode();
-    TypeSystemImpl tsi = (TypeSystemImpl) ts;
-    for (int i = 0; i < typeSet.size(); i++) {
-      if (tsi.subsumes(typeSet.get(i), typeCode)) {
-        return true;
-      }
-    }
-    return false;
-  }
+	public boolean match(FeatureStructure fs) {
+		compile(((FeatureStructureImpl) fs).getCAS().getTypeSystem());
+		final FeatureStructureImpl fsi = (FeatureStructureImpl) fs;
+		final int typeCode = fsi.getCASImpl().getHeapValue(fsi.getAddress());
+		TypeSystemImpl tsi = (TypeSystemImpl) this.ts;
+		for (int i = 0; i < typeSet.size(); i++) {
+			if (tsi.subsumes(typeSet.get(i), typeCode)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
-  private final void compile(TypeSystem ts1) {
-    if (ts == ts1) {
-      return;
-    }
-    ts = ts1;
-    TypeSystemImpl tsi = (TypeSystemImpl) ts1;
-    int typeCode;
-    for (String typeName : nameSet) {
-      typeCode = tsi.ll_getCodeForTypeName(typeName);
-      if (typeCode < tsi.getSmallestType()) {
-        throw new CASRuntimeException(CASRuntimeException.UNKNOWN_CONSTRAINT_TYPE, typeName);
-      }
-      typeSet.add(typeCode);
-    }
-  }
+	private final void compile(TypeSystem ts1) {
+		if (ts == ts1) {
+			return;
+		}
+		ts = ts1;
+		TypeSystemImpl tsi = (TypeSystemImpl) ts1;
+		int typeCode;
+		for (String typeName : nameSet) {
+			typeCode = tsi.ll_getCodeForTypeName(typeName);
+			if (typeCode < tsi.getSmallestType()) {
+				CASRuntimeException e = new CASRuntimeException(
+						CASRuntimeException.UNKNOWN_CONSTRAINT_TYPE, new String[] { typeName });
+				throw e;
+			}
+			typeSet.add(typeCode);
+		}
+	}
 
-  @Override
-  public void add(Type type) {
-    ts = null; // This will force a recompile.
-    nameSet.add(type.getName());
-  }
+	public void add(Type type) {
+		this.ts = null; // This will force a recompile.
+		nameSet.add(type.getName());
+	}
 
-  @Override
-  public void add(String type) {
-    ts = null; // Will force recompile.
-    nameSet.add(type);
-  }
+	public void add(String type) {
+		ts = null; // Will force recompile.
+		nameSet.add(type);
+	}
 
-  @Override
-  public String toString() {
-    StringBuilder buf = new StringBuilder();
-    buf.append("isa ( ");
-    boolean start = true;
-    for (String name : nameSet) {
-      if (start) {
-        start = false;
-      } else {
-        buf.append("| ");
-      }
-      buf.append(name);
-      buf.append(' ');
-    }
-    buf.append(')');
-    return buf.toString();
-  }
+	public String toString() {
+		StringBuilder buf = new StringBuilder();
+		buf.append("isa ( ");
+		boolean start = true;
+		for (String name : nameSet) {
+			if (start) {
+				start = false;
+			} else {
+				buf.append("| ");
+			}
+			buf.append(name);
+			buf.append(' ');
+		}
+		buf.append(')');
+		return buf.toString();
+	}
 
 }

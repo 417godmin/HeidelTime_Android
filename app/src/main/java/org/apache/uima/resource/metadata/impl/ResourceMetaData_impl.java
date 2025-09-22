@@ -40,7 +40,10 @@ import org.w3c.dom.Element;
 
 /**
  * Reference implementation of {@link ResourceMetaData}.
+ * 
+ * 
  */
+
 public class ResourceMetaData_impl extends MetaDataObject_impl implements ResourceMetaData {
 
   static final long serialVersionUID = 3408359518094534817L;
@@ -69,13 +72,17 @@ public class ResourceMetaData_impl extends MetaDataObject_impl implements Resour
   /** Configuration Parameter Settings for the Resource */
   private ConfigurationParameterSettings mConfigurationParameterSettings = new ConfigurationParameterSettings_impl();
 
-  @Override
+  /**
+   * @see ResourceMetaData#resolveImports()
+   */
   public void resolveImports() throws InvalidXMLException {
     // does nothing by default; may be overriden in subclasses
 
   }
 
-  @Override
+  /**
+   * @see ResourceMetaData#resolveImports(ResourceManager)
+   */
   public void resolveImports(ResourceManager aResourceManager) throws InvalidXMLException {
     // does nothing by default; may be overriden in subclasses
   }
@@ -86,84 +93,115 @@ public class ResourceMetaData_impl extends MetaDataObject_impl implements Resour
   public ResourceMetaData_impl() {
   }
 
-  @Override
+  /**
+   * @see ResourceMetaData#getUUID()
+   */
   public String getUUID() {
     return mUUID;
   }
 
-  @Override
+  /**
+   * @see ResourceMetaData#setUUID(String)
+   */
   public void setUUID(String aUUID) {
     mUUID = aUUID;
   }
 
-  @Override
+  /**
+   * @see ResourceMetaData#getName()
+   */
   public String getName() {
     return mName;
   }
 
-  @Override
+  /**
+   * @see ResourceMetaData#setName(String)
+   */
   public void setName(String aName) {
     mName = aName;
   }
 
-  @Override
+  /**
+   * @see ResourceMetaData#getVersion()
+   */
   public String getVersion() {
     return mVersion;
   }
 
-  @Override
+  /**
+   * @see ResourceMetaData#setVersion(String)
+   */
   public void setVersion(String aVersion) {
     mVersion = aVersion;
   }
 
-  @Override
+  /**
+   * @see ResourceMetaData#getDescription()
+   */
   public String getDescription() {
     return mDescription;
   }
 
-  @Override
+  /**
+   * @see ResourceMetaData#setDescription(String)
+   */
   public void setDescription(String aDescription) {
     mDescription = aDescription;
   }
 
-  @Override
+  /**
+   * @see ResourceMetaData#getVendor()
+   */
   public String getVendor() {
     return mVendor;
   }
 
-  @Override
+  /**
+   * @see ResourceMetaData#setVendor(String)
+   */
   public void setVendor(String aVendor) {
     mVendor = aVendor;
   }
 
-  @Override
+  /**
+   * @see ResourceMetaData#getCopyright()
+   */
   public String getCopyright() {
     return mCopyright;
   }
 
-  @Override
+  /**
+   * @see ResourceMetaData#setCopyright(String)
+   */
   public void setCopyright(String aCopyright) {
     mCopyright = aCopyright;
   }
 
-  @Override
+  /**
+   * @see ResourceMetaData#getConfigurationParameterSettings()
+   */
   public ConfigurationParameterSettings getConfigurationParameterSettings() {
     return mConfigurationParameterSettings;
   }
 
-  @Override
+  /**
+   * @see ResourceMetaData#setConfigurationParameterSettings(ConfigurationParameterSettings)
+   */
   public void setConfigurationParameterSettings(ConfigurationParameterSettings aSettings) {
     mConfigurationParameterSettings = aSettings;
   }
 
-  @Override
+  /**
+   * @see ResourceMetaData#getConfigurationParameterDeclarations()
+   */
   public ConfigurationParameterDeclarations getConfigurationParameterDeclarations() {
     return mConfigurationParameterDeclarations;
   }
 
-  @Override
-  public void setConfigurationParameterDeclarations(
-          ConfigurationParameterDeclarations aDeclarations) {
+  /**
+   * @see ResourceMetaData#setConfigurationParameterDeclarations(ConfigurationParameterDeclarations)
+   */
+  public void setConfigurationParameterDeclarations(ConfigurationParameterDeclarations aDeclarations) {
     mConfigurationParameterDeclarations = aDeclarations;
   }
 
@@ -186,23 +224,22 @@ public class ResourceMetaData_impl extends MetaDataObject_impl implements Resour
    * 
    * @see ResourceMetaData#validateConfigurationParameterSettings()
    */
-  @Override
   public void validateConfigurationParameterSettings() throws ResourceConfigurationException {
     ConfigurationParameterDeclarations cfgParamDecls = getConfigurationParameterDeclarations();
     ConfigurationParameterSettings cfgParamSettings = getConfigurationParameterSettings();
 
     // check that all settings refer to declared parameters and are of the correct data type
     // Must check both the group-less ones AND any group ones'
-    // For backwards compatibility (see Jira 3123) if have some group-less settings and
+    // For backwards compatibility (see Jira 3123) if have some group-less settings and 
     // if special environment variable is set then ignore any errors in group parameter settings.
     // NOTE - for 2.4.1 act as if backwards compatibility is enabled.
     boolean support240bug = false;
     NameValuePair[] nvps = cfgParamSettings.getParameterSettings();
     if (nvps.length > 0) {
       validateConfigurationParameterSettings(nvps, null, cfgParamDecls);
-      support240bug = true; // System.getenv("UIMA_Jira3123") != null; // restore this post 2.4.1
+      support240bug = true; // System.getenv("UIMA_Jira3123") != null;  // restore this post 2.4.1
     }
-
+    
     try {
       Map<String, NameValuePair[]> settingsForGroups = cfgParamSettings.getSettingsForGroups();
       Set<Entry<String, NameValuePair[]>> entrySet = settingsForGroups.entrySet();
@@ -220,13 +257,11 @@ public class ResourceMetaData_impl extends MetaDataObject_impl implements Resour
       // If the error was ignored in old releases describe the work-around
       if (!support240bug) {
         if (nvps.length > 0) {
-          UIMAFramework.getLogger().log(Level.SEVERE,
-                  "To restore back-level support for this error set environment variable UIMA_Jira3123");
+          UIMAFramework.getLogger().log(Level.SEVERE, "To restore back-level support for this error set environment variable UIMA_Jira3123");
         }
         throw e;
       }
-      UIMAFramework.getLogger().log(Level.WARNING,
-              "Ignoring error in parameter setting: " + e.getMessage());
+      UIMAFramework.getLogger().log(Level.WARNING, "Ignoring error in parameter setting: " + e.getMessage());
     }
   }
 
@@ -256,12 +291,12 @@ public class ResourceMetaData_impl extends MetaDataObject_impl implements Resour
       if (param == null) {
         if (aGroupName == null) {
           throw new ResourceConfigurationException(
-                  ResourceConfigurationException.NONEXISTENT_PARAMETER,
-                  new Object[] { name, getName() });
+                  ResourceConfigurationException.NONEXISTENT_PARAMETER, new Object[] { name,
+                      getName() });
         } else {
           throw new ResourceConfigurationException(
-                  ResourceConfigurationException.NONEXISTENT_PARAMETER_IN_GROUP,
-                  new Object[] { name, aGroupName, getName() });
+                  ResourceConfigurationException.NONEXISTENT_PARAMETER_IN_GROUP, new Object[] {
+                      name, aGroupName, getName() });
         }
       } else {
         // check datatype
@@ -311,11 +346,10 @@ public class ResourceMetaData_impl extends MetaDataObject_impl implements Resour
 
     if (valClass != getClassForParameterType(paramType)) {
       throw new ResourceConfigurationException(
-              ResourceConfigurationException.PARAMETER_TYPE_MISMATCH,
-              new Object[] { getName(), valClass.getName(), paramName, paramType });
-      /*
-       * Parameter type mismatch in component "{0}". A value of class {1} cannot be assigned to the
-       * configuration parameter {2}, which has type {3}.
+              ResourceConfigurationException.PARAMETER_TYPE_MISMATCH, new Object[] { getName(),
+                  valClass.getName(), paramName, paramType });
+      /*  Parameter type mismatch in component "{0}".  A value of class {1} cannot be 
+          assigned to the configuration parameter {2}, which has type {3}.
        */
     }
   }
@@ -329,26 +363,16 @@ public class ResourceMetaData_impl extends MetaDataObject_impl implements Resour
    * @return expected Java class for parameter values of this type
    */
   protected Class<?> getClassForParameterType(String paramType) {
-    if (paramType == null) {
-      return null; // Legacy behavior - maybe better throw an IllegalArgumentException
-    }
-
-    switch (paramType) {
-      case ConfigurationParameter.TYPE_STRING:
-        return String.class;
-      case ConfigurationParameter.TYPE_BOOLEAN:
-        return Boolean.class;
-      case ConfigurationParameter.TYPE_INTEGER:
-        return Integer.class;
-      case ConfigurationParameter.TYPE_LONG:
-        return Long.class;
-      case ConfigurationParameter.TYPE_FLOAT:
-        return Float.class;
-      case ConfigurationParameter.TYPE_DOUBLE:
-        return Double.class;
-      default:
-        return null; // Legacy behavior - maybe better throw an IllegalArgumentException
-    }
+    if (ConfigurationParameter.TYPE_STRING.equals(paramType)) {
+      return String.class;
+    } else if (ConfigurationParameter.TYPE_BOOLEAN.equals(paramType)) {
+      return Boolean.class;
+    } else if (ConfigurationParameter.TYPE_INTEGER.equals(paramType)) {
+      return Integer.class;
+    } else if (ConfigurationParameter.TYPE_FLOAT.equals(paramType)) {
+      return Float.class;
+    } else
+      return null;
   }
 
   /**
@@ -358,7 +382,6 @@ public class ResourceMetaData_impl extends MetaDataObject_impl implements Resour
    * @see org.apache.uima.util.XMLizable#buildFromXMLElement(Element,
    *      XMLParser)
    */
-  @Override
   public void buildFromXMLElement(Element aElement, XMLParser aParser,
           XMLParser.ParsingOptions aOptions) throws InvalidXMLException {
     super.buildFromXMLElement(aElement, aParser, aOptions);
@@ -369,29 +392,23 @@ public class ResourceMetaData_impl extends MetaDataObject_impl implements Resour
     }
   }
 
-  @Override
   protected XmlizationInfo getXmlizationInfo() {
     return XMLIZATION_INFO;
   }
 
   /**
    * Static method to get XmlizationInfo, used by subclasses to set up their own XmlizationInfo.
-   * 
    * @return -
    */
   protected static XmlizationInfo getXmlizationInfoForClass() {
     return XMLIZATION_INFO;
   }
 
-  private static final XmlizationInfo XMLIZATION_INFO = new XmlizationInfo("resourceMetaData",
-          new PropertyXmlInfo[] { //
-              new PropertyXmlInfo("name", false), //
-              new PropertyXmlInfo("description"), //
-              new PropertyXmlInfo("version"), //
-              new PropertyXmlInfo("vendor"), //
-              new PropertyXmlInfo("copyright"), //
-              new PropertyXmlInfo("configurationParameterDeclarations", null), //
-              new PropertyXmlInfo("configurationParameterSettings", null) //
-          });
+  static final private XmlizationInfo XMLIZATION_INFO = new XmlizationInfo("resourceMetaData",
+          new PropertyXmlInfo[] { new PropertyXmlInfo("name", false),
+              new PropertyXmlInfo("description"), new PropertyXmlInfo("version"),
+              new PropertyXmlInfo("vendor"), new PropertyXmlInfo("copyright"),
+              new PropertyXmlInfo("configurationParameterDeclarations", null),
+              new PropertyXmlInfo("configurationParameterSettings", null) });
 
 }

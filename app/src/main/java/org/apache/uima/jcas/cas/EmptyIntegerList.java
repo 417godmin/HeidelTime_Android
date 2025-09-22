@@ -19,23 +19,15 @@
 
 package org.apache.uima.jcas.cas;
 
-import org.apache.uima.cas.CAS;
-import org.apache.uima.cas.impl.CASImpl;
-import org.apache.uima.cas.impl.TypeImpl;
-import org.apache.uima.cas.impl.TypeImpl_list;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
 
-public class EmptyIntegerList extends IntegerList implements EmptyList {
+public class EmptyIntegerList extends IntegerList {
 
-  /* public static string for use where constants are needed, e.g. in some Java Annotations */
-  public static final String _TypeName = CAS.TYPE_NAME_EMPTY_INTEGER_LIST;
+  public final static int typeIndexID = JCasRegistry.register(EmptyIntegerList.class);
 
-  public static final int typeIndexID = JCasRegistry.register(EmptyIntegerList.class);
+  public final static int type = typeIndexID;
 
-  public static final int type = typeIndexID;
-
-  @Override
   public int getTypeIndexID() {
     return typeIndexID;
   }
@@ -44,25 +36,13 @@ public class EmptyIntegerList extends IntegerList implements EmptyList {
   protected EmptyIntegerList() {
   }
 
-  public EmptyIntegerList(TypeImpl_list ti) {
-    super(ti, null);
+ /* Internal - Constructor used by generator */
+  public EmptyIntegerList(int addr, TOP_Type type) {
+    super(addr, type);
   }
 
   public EmptyIntegerList(JCas jcas) {
     super(jcas);
-  }
-
-  /**
-   * used by generator Make a new AnnotationBase
-   * 
-   * @param c
-   *          -
-   * @param t
-   *          -
-   */
-
-  public EmptyIntegerList(TypeImpl t, CASImpl c) {
-    super(t, c);
   }
 
 }

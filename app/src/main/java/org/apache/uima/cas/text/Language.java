@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.uima.cas.text;
 
 public class Language {
@@ -38,9 +39,11 @@ public class Language {
 
   private String territoryPart = null;
 
+  
   public Language(String language) {
-    lang = normalize(language);
-    parseLanguage();
+    super();
+    this.lang = normalize(language);
+    this.parseLanguage();
   }
 
   public static final String normalize(String lang) {
@@ -53,35 +56,34 @@ public class Language {
   }
 
   public String getLanguagePart() {
-    return langPart;
+    return this.langPart;
   }
 
   public String getTerritoryPart() {
-    return territoryPart;
+    return this.territoryPart;
   }
 
   public String getFullLanguage() {
-    return lang;
+    return this.lang;
   }
 
   private final void parseLanguage() {
-    int pos = lang.indexOf(CANONICAL_LANG_SEPARATOR);
+    int pos = this.lang.indexOf(CANONICAL_LANG_SEPARATOR);
     if (pos >= 0) {
-      langPart = lang.substring(0, pos);
+      this.langPart = this.lang.substring(0, pos);
     } else {
-      langPart = lang;
+      this.langPart = this.lang;
       return;
     }
     ++pos;
-    if (pos < lang.length()) {
-      territoryPart = lang.substring(pos);
+    if (pos < this.lang.length()) {
+      this.territoryPart = this.lang.substring(pos);
     }
   }
 
-  @Override
   public String toString() {
-    return "Full language string: " + getFullLanguage() + ", language part: " + getLanguagePart()
-            + ", territory part: " + getTerritoryPart();
+    return "Full language string: " + this.getFullLanguage() + ", language part: "
+            + this.getLanguagePart() + ", territory part: " + this.getTerritoryPart();
   }
 
   public static void main(String[] args) {
@@ -89,4 +91,5 @@ public class Language {
     System.out.println(Language.ZH_CN);
     System.out.println(new Language("en_US_NY"));
   }
+
 }

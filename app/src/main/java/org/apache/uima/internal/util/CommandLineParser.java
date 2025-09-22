@@ -21,8 +21,6 @@ package org.apache.uima.internal.util;
 
 import java.util.HashMap;
 
-import org.apache.uima.util.impl.Constants;
-
 /**
  * Simple command line parsing utility.
  * 
@@ -47,10 +45,13 @@ public class CommandLineParser {
     private final boolean hasArg;
 
     private CmdLineParam(boolean hasArg) {
+      super();
       this.hasArg = hasArg;
     }
 
   }
+  
+  private final static String[] EMPTY_STRINGS = new String[0];
 
   private HashMap<String, CmdLineParam> paramMap = null;
 
@@ -62,7 +63,8 @@ public class CommandLineParser {
    * Create a new command line parser.
    */
   public CommandLineParser() {
-    paramMap = new HashMap<>();
+    super();
+    this.paramMap = new HashMap<String, CmdLineParam>();
   }
 
   /**
@@ -76,10 +78,10 @@ public class CommandLineParser {
    * @return <code>false</code> iff <code>paramName</code> already exists.
    */
   public boolean addParameter(String paramName, boolean hasArg) {
-    if (paramMap.containsKey(paramName)) {
+    if (this.paramMap.containsKey(paramName)) {
       return false;
     }
-    paramMap.put(paramName, new CmdLineParam(hasArg));
+    this.paramMap.put(paramName, new CmdLineParam(hasArg));
     return true;
   }
 
@@ -104,10 +106,10 @@ public class CommandLineParser {
    * @return <code>false</code> iff the parameter does not exist or the alias is already known.
    */
   public boolean addAlias(String param, String alias) {
-    if (paramMap.containsKey(alias) || !paramMap.containsKey(param)) {
+    if (this.paramMap.containsKey(alias) || !this.paramMap.containsKey(param)) {
       return false;
     }
-    paramMap.put(alias, paramMap.get(param));
+    this.paramMap.put(alias, this.paramMap.get(param));
     return true;
   }
 
@@ -121,30 +123,30 @@ public class CommandLineParser {
    *           parameter in the list).
    */
   public void parseCmdLine(String[] args) throws Exception {
-    cmdLineMap = new HashMap<>();
+    this.cmdLineMap = new HashMap<CmdLineParam, String>();
     int i = 0;
     while (i < args.length) {
       String cmdLineArg = args[i];
-      if (paramMap.containsKey(cmdLineArg)) {
-        CmdLineParam metaParam = paramMap.get(cmdLineArg);
+      if (this.paramMap.containsKey(cmdLineArg)) {
+        CmdLineParam metaParam = this.paramMap.get(cmdLineArg);
         if (metaParam.hasArg) {
           ++i;
           if (i >= args.length) {
             // TODO: throw proper exception.
             throw new Exception("Required argument to parameter missing: " + cmdLineArg);
           }
-          cmdLineMap.put(metaParam, args[i]);
+          this.cmdLineMap.put(metaParam, args[i]);
         } else {
-          cmdLineMap.put(metaParam, null);
+          this.cmdLineMap.put(metaParam, null);
         }
       } else {
-        restArgs = new String[args.length - i];
-        System.arraycopy(args, i, restArgs, 0, restArgs.length);
+        this.restArgs = new String[args.length - i];
+        System.arraycopy(args, i, this.restArgs, 0, this.restArgs.length);
         return;
       }
       ++i;
     }
-    restArgs = Constants.EMPTY_STRING_ARRAY;
+    this.restArgs = EMPTY_STRINGS;
   }
 
   /**
@@ -153,7 +155,7 @@ public class CommandLineParser {
    * @return The tail end of the args list, usually file name arguments.
    */
   public String[] getRestArgs() {
-    return restArgs;
+    return this.restArgs;
   }
 
   /**
@@ -161,11 +163,12 @@ public class CommandLineParser {
    * 
    * @param paramName
    *          The name of the parameter.
-   * @return <code>true</code> iff the name was added with {@link #addParameter(String, boolean)
-   *         addParameter()} or {@link #addAlias(String, String) addAlias()}.
+   * @return <code>true</code> iff the name was added with
+   *         {@link #addParameter(String, boolean) addParameter()} or
+   *         {@link #addAlias(String, String) addAlias()}.
    */
   public boolean isKnownParameter(String paramName) {
-    return paramMap.containsKey(paramName);
+    return this.paramMap.containsKey(paramName);
   }
 
   /**
@@ -176,10 +179,10 @@ public class CommandLineParser {
    * @return <code>true</code> iff the name is known and was used as a command line argument.
    */
   public boolean isInArgsList(String paramName) {
-    if (!paramMap.containsKey(paramName)) {
+    if (!this.paramMap.containsKey(paramName)) {
       return false;
     }
-    return cmdLineMap.containsKey(paramMap.get(paramName));
+    return this.cmdLineMap.containsKey(this.paramMap.get(paramName));
   }
 
   /**
@@ -192,7 +195,7 @@ public class CommandLineParser {
    */
   public String getParamArgument(String paramName) {
     if (isKnownParameter(paramName)) {
-      return cmdLineMap.get(paramMap.get(paramName));
+      return this.cmdLineMap.get(this.paramMap.get(paramName));
     }
     return null;
   }

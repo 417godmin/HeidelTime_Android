@@ -56,24 +56,22 @@ public class AnalysisEngineService_impl extends ResourceService_impl {
   /**
    * Initialize this service. This is where the CAS pool is created.
    * 
-   * @see ResourceService_impl#initialize(ResourceSpecifier,
-   *      Map)
+   * @see ResourceService_impl#initialize(ResourceSpecifier, Map)
    */
-  @Override
-  public void initialize(ResourceSpecifier aResourceSpecifier,
-          Map<String, Object> aResourceInitParams) throws ResourceInitializationException {
+  public void initialize(ResourceSpecifier aResourceSpecifier, Map<String, Object> aResourceInitParams)
+          throws ResourceInitializationException {
     super.initialize(aResourceSpecifier, aResourceInitParams);
     Integer numInstances = (Integer) aResourceInitParams
             .get(AnalysisEngine.PARAM_NUM_SIMULTANEOUS_REQUESTS);
     if (numInstances == null) {
-      numInstances = 1;
+      numInstances = Integer.valueOf(1);
     }
-    mCasPool = new CasPool(numInstances, getAnalysisEngine());
+    mCasPool = new CasPool(numInstances.intValue(), getAnalysisEngine());
 
     // also record timeout period to use for CAS pool
     Integer timeoutInteger = (Integer) aResourceInitParams.get(AnalysisEngine.PARAM_TIMEOUT_PERIOD);
     if (timeoutInteger != null) {
-      mTimeout = timeoutInteger;
+      mTimeout = timeoutInteger.intValue();
     } else {
       mTimeout = 0;
     }
@@ -82,21 +80,17 @@ public class AnalysisEngineService_impl extends ResourceService_impl {
   /**
    * An alternative form of initialize that takes the number of simultaneous requests and timeout
    * period as explicit arguments.
-   * 
-   * @param aResourceSpecifier
-   *          -
-   * @param aNumSimultaneousRequests
-   *          -
-   * @param aTimeout
-   *          -
-   * @throws ResourceInitializationException
-   *           -
+   * @param aResourceSpecifier -
+   * @param aNumSimultaneousRequests - 
+   * @param aTimeout -
+   * @throws ResourceInitializationException -
    */
   public void initialize(ResourceSpecifier aResourceSpecifier, int aNumSimultaneousRequests,
           int aTimeout) throws ResourceInitializationException {
-    Map<String, Object> initParams = new HashMap<>();
-    initParams.put(AnalysisEngine.PARAM_NUM_SIMULTANEOUS_REQUESTS, aNumSimultaneousRequests);
-    initParams.put(AnalysisEngine.PARAM_TIMEOUT_PERIOD, aTimeout);
+    Map<String, Object> initParams = new HashMap<String, Object>();
+    initParams.put(AnalysisEngine.PARAM_NUM_SIMULTANEOUS_REQUESTS, Integer.valueOf(
+            aNumSimultaneousRequests));
+    initParams.put(AnalysisEngine.PARAM_TIMEOUT_PERIOD, Integer.valueOf(aTimeout));
     this.initialize(aResourceSpecifier, initParams);
   }
 
@@ -107,8 +101,7 @@ public class AnalysisEngineService_impl extends ResourceService_impl {
    *          data to be processed
    * @param aResultSpec
    *          specifies which results the Analysis Engine should produce
-   * @throws ResourceServiceException
-   *           -
+   * @throws ResourceServiceException -
    * @return the results of analysis
    */
   public ServiceDataCargo process(ServiceDataCargo aData, ResultSpecification aResultSpec)
@@ -140,12 +133,13 @@ public class AnalysisEngineService_impl extends ResourceService_impl {
 
       // return results
       return new ServiceDataCargo(cas, trace);
-    } catch (ResourceServiceException e) {
-      resultMessage = e.getLocalizedMessage();
-      throw e;
     } catch (Exception e) {
       resultMessage = e.getLocalizedMessage();
-      throw new ResourceServiceException(e);
+      if (e instanceof ResourceServiceException) {
+        throw (ResourceServiceException) e;
+      } else {
+        throw new ResourceServiceException(e);
+      }
     } finally {
       // release CAS
       if (cas != null) {
@@ -167,7 +161,6 @@ public class AnalysisEngineService_impl extends ResourceService_impl {
   /**
    * @see ResourceService_impl#getResourceClass()
    */
-  @Override
   protected Class<? extends Resource> getResourceClass() {
     return AnalysisEngine.class;
   }

@@ -1,124 +1,103 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 package org.apache.uima.internal.util;
 
-import java.io.*;
-import java.util.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
-import org.apache.uima.cas.impl.CASCompleteSerializer;
-import org.apache.uima.cas.impl.CASMgrSerializer;
-import org.apache.uima.cas.impl.CASSerializer;
+/**
+ * Serialize and Deserialize arbitrary objects to/from byte arrays, 
+ * using standard Java object serialization/deserialization support.
+ * 
+ * Used in the Vinci and Soap transports to serialize/deserialize 
+ * CASSerializer objects or
+ * CASCompleteSerializer objects (includes type system and index definitions) or
+ * (for SOAP) arbitrary objects
+ * 
+ * 
+ * This class is abstract only to prevent instantiation.
+ * All the methods are static.
+ */
+public abstract class SerializationUtils {
 
-public final class SerializationUtils {
-
-  private static final Set<Class<?>> CAS_MGR_SERIALIZER_SAFE_CLASSES;
-  private static final Set<Class<?>> CAS_SERIALIZER_SAFE_CLASSES;
-  private static final Set<Class<?>> CAS_COMPLETE_SERIALIZER_SAFE_CLASSES;
-
-  static {
-    Set<Class<?>> tmp = new HashSet<>();
-    tmp.add(CASMgrSerializer.class);
-    tmp.add(String.class);
-    CAS_MGR_SERIALIZER_SAFE_CLASSES = Collections.unmodifiableSet(tmp);
-
-    tmp = new HashSet<>();
-    tmp.add(CASSerializer.class);
-    tmp.add(String.class);
-    CAS_SERIALIZER_SAFE_CLASSES = Collections.unmodifiableSet(tmp);
-
-    tmp = new HashSet<>();
-    tmp.add(CASCompleteSerializer.class);
-    tmp.add(String.class);
-    tmp.add(CASMgrSerializer.class);
-    tmp.add(CASSerializer.class);
-    CAS_COMPLETE_SERIALIZER_SAFE_CLASSES = Collections.unmodifiableSet(tmp);
-  }
-
-  private SerializationUtils() {}
-
+  /**
+   * Serializes an object to a byte array.
+   * 
+   * @param aObject
+   *          object to serialize
+   * 
+   * @return <code>aObject</code> encoded as a byte array. If <code>aObject</code> is
+   *         <code>null</code>, <code>null</code> is returned.
+   * 
+   * @throws IOException
+   *           if an I/O error occurs
+   */
   public static byte[] serialize(Serializable aObject) throws IOException {
-    if (aObject == null) return null;
+    if (aObject == null) {
+      return null;
+    }
+
     ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
-    ObjectOutputStream objStream = new ObjectOutputStream(byteStream);
-    objStream.writeObject(aObject);
-    objStream.flush();
-    return byteStream.toByteArray();
-  }
-
-  public static Object deserialize(byte[] aBytes) throws IOException, ClassNotFoundException {
-    Object object = deserialize(aBytes, unionSets(CAS_SERIALIZER_SAFE_CLASSES,
-            CAS_COMPLETE_SERIALIZER_SAFE_CLASSES,
-            CAS_MGR_SERIALIZER_SAFE_CLASSES));
-    if (object != null &&
-            !(object instanceof CASMgrSerializer
-                    || object instanceof CASSerializer
-                    || object instanceof CASCompleteSerializer)) {
-      throw new IOException("Unexpected object type: [" + object.getClass().getName() + "]");
-    }
-    return object;
-  }
-
-  public static CASCompleteSerializer deserializeCASCompleteSerializer(byte[] aBytes) throws IOException {
-    Object object = deserialize(aBytes, CAS_COMPLETE_SERIALIZER_SAFE_CLASSES);
-    if (object != null && !(object instanceof CASCompleteSerializer)) {
-      throw new IOException("Unexpected object type: [" + object.getClass().getName() + "]");
-    }
-    return (CASCompleteSerializer) object;
-  }
-
-  // 其他方法类似，调用deserialize(byte[], Set)即可
-
-  private static <T> T deserialize(byte[] aBytes, Set<Class<?>> allowList) throws IOException {
-    if (aBytes == null) return null;
-    ByteArrayInputStream is = new ByteArrayInputStream(aBytes);
-    return deserialize(is, allowList);
-  }
-
-  @SuppressWarnings("unchecked")
-  private static <T> T deserialize(InputStream aIs, Set<Class<?>> allowList) throws IOException {
-    ObjectInputStream ois = new ObjectInputStream(aIs);
+    ObjectOutputStream objStream = null;
     try {
-      Object obj = ois.readObject(); // 去掉 ObjectInputFilter
-      if (!allowList.contains(obj.getClass())) {
-        throw new IOException("Deserialization of class " + obj.getClass().getName() + " not allowed");
-      }
-      return (T) obj;
-    } catch (ClassNotFoundException e) {
-      throw new IOException("Unexpected deserialization error", e);
+      objStream = new ObjectOutputStream(byteStream);
+      objStream.writeObject(aObject);
+      objStream.flush();
+      return byteStream.toByteArray();
+    } finally {
+      if (objStream != null)
+        objStream.close();
     }
   }
 
-  @SafeVarargs
-  private static Set<Class<?>> unionSets(Set<Class<?>>... sets) {
-    Set<Class<?>> result = new HashSet<>();
-    for (Set<Class<?>> s : sets) result.addAll(s);
-    return Collections.unmodifiableSet(result);
-  }
   /**
-   * 反序列化 CASSerializer 或 CASCompleteSerializer（Android 兼容版）
+   * Deserializes an object from a byte array.
+   * 
+   * @param aBytes
+   *          byte array to read from
+   * 
+   * @return The <code>Object</code> deserialized from <code>aBytes</code>. If
+   *         <code>aBytes</code> is <code>null</code>, <code>null</code> is returned.
+   * 
+   * @throws IOException
+   *           if an I/O error occurs
+   * @throws ClassNotFoundException
+   *           if a required class could not be found
    */
-  public static Object deserializeCASSerializerOrCASCompleteSerializer(InputStream aIs)
-          throws IOException {
-    // 合并允许的类型集合
-    Set<Class<?>> allowed = new HashSet<>();
-    allowed.addAll(CAS_SERIALIZER_SAFE_CLASSES);
-    allowed.addAll(CAS_COMPLETE_SERIALIZER_SAFE_CLASSES);
-
-    Object object = deserialize(aIs, allowed);
-
-    if (object != null &&
-            !(object instanceof CASSerializer || object instanceof CASCompleteSerializer)) {
-      throw new IOException("Unexpected object type: [" + object.getClass().getName() + "]");
+  public static Object deserialize(byte[] aBytes) throws IOException, ClassNotFoundException {
+    if (aBytes == null) {
+      return null;
     }
 
-    return object;
-  }
-  /**
-   * 从输入流反序列化 CASMgrSerializer（Android 兼容版）
-   */
-  public static CASMgrSerializer deserializeCASMgrSerializer(InputStream aIs) throws IOException {
-    Object object = deserialize(aIs, CAS_MGR_SERIALIZER_SAFE_CLASSES);
-    if (object != null && !(object instanceof CASMgrSerializer)) {
-      throw new IOException("Unexpected object type: [" + object.getClass().getName() + "]");
+    ByteArrayInputStream byteStream = new ByteArrayInputStream(aBytes);
+    ObjectInputStream objStream = null;
+    try {
+      objStream = new ObjectInputStream(byteStream);
+      return objStream.readObject();
+    } finally {
+      if (objStream != null)
+        objStream.close();
     }
-    return (CASMgrSerializer) object;
   }
 }

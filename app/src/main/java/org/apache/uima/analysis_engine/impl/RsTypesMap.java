@@ -24,32 +24,30 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * This object holds the set of RsTypes for a result spec There is one instance of this per
- * ResultSpecification_impl
+ * This object holds the set of RsTypes for a result spec
+ * There is one instance of this per ResultSpecification_impl
  */
 public class RsTypesMap implements Iterable<RsType> {
-
-  private final Map<String, RsType> types;
-
+    
+  private final Map<String, RsType> types;  
+  
   RsTypesMap() {
-    types = new HashMap<>();
+    types = new HashMap<String, RsType>();
   }
-
+  
   /**
    * cloning constructor - clones its arg
-   * 
    * @param src
    */
   RsTypesMap(RsTypesMap src) {
-    types = new HashMap<>(src.types);
+    types = new HashMap<String, RsType>(src.types);
     for (Map.Entry<String, RsType> e : types.entrySet()) {
-      e.setValue(new RsType(e.getValue())); // copy
+      e.setValue(new RsType(e.getValue()));  // copy
     }
   }
 
   /**
-   * add a type (not a type:feat)
-   * 
+   * add a type (not a type:feat) 
    * @param typeName
    * @param isAllFeat
    * @param languages
@@ -63,7 +61,7 @@ public class RsTypesMap implements Iterable<RsType> {
     }
     if (isAllFeat) {
       if (!t.isAllFeatures) {
-        replace = true; // if setting for the 1st time, replace the x-unspec which is the default
+        replace = true;  // if setting for the 1st time, replace the x-unspec which is the default
       }
       t.isAllFeatures = true;
       t.languagesAllFeat = addLanguages(t.languagesAllFeat, languages, replace);
@@ -75,7 +73,7 @@ public class RsTypesMap implements Iterable<RsType> {
       t.languagesNotAllFeat = addLanguages(t.languagesNotAllFeat, languages, replace);
     }
   }
-
+  
   void add(String typeName, boolean isAllFeat, RsLangs rslangs, boolean replace) {
     RsType t = types.get(typeName);
     if (null == t) {
@@ -96,11 +94,11 @@ public class RsTypesMap implements Iterable<RsType> {
       t.languagesNotAllFeat = addLanguages(t.languagesNotAllFeat, rslangs, replace);
     }
   }
-
+ 
+  
   /**
-   * add a feature (not a plain type) If feature exists, augments (union) its languages or replaces
-   * it
-   * 
+   * add a feature (not a plain type)
+   *   If feature exists, augments (union) its languages or replaces it
    * @param typeName
    * @param featName
    * @param languages
@@ -127,19 +125,20 @@ public class RsTypesMap implements Iterable<RsType> {
       feat.languages = addLanguages(feat.languages, rslangs, replace);
     }
   }
-
+  
   RsLangs addLanguages(RsLangs existing, Object langs, boolean replace) {
     String[] saLangs = null;
-    RsLangs rsLangs = null;
+    RsLangs  rsLangs = null;
     if (langs instanceof String[]) {
-      saLangs = (String[]) langs;
+      saLangs = (String[])langs;
     } else {
-      rsLangs = (RsLangs) langs;
+      rsLangs = (RsLangs)langs;
     }
-
-    boolean noLangs = (null == langs) ? true
-            : (null != saLangs) ? (0 == ((String[]) langs).length) : RsLangs.isEmpty(rsLangs);
-
+   
+    boolean noLangs = (null == langs) ? true 
+        : (null != saLangs) ? (0 == ((String[])langs).length)
+        : RsLangs.isEmpty(rsLangs);        
+    
     if (noLangs) {
       if (replace) {
         return null;
@@ -147,7 +146,7 @@ public class RsTypesMap implements Iterable<RsType> {
       return existing;
     }
     if (null == existing && !replace) { // existing is x-unspecified
-      return null; // subsumes everything
+      return null;                      // subsumes everything
     }
     if (replace) {
       if (saLangs != null) {
@@ -159,10 +158,10 @@ public class RsTypesMap implements Iterable<RsType> {
     }
     // not replace, and existing
     existing = (null != saLangs) ? RsLangs.addAll(existing, saLangs)
-            : RsLangs.addAll(existing, rsLangs);
+                                 : RsLangs.addAll(existing, rsLangs);
     return existing;
   }
-
+  
   RsLangs addLanguages(RsLangs existing, RsLangs rslangs, boolean replace) {
     if (RsLangs.isEmpty(rslangs)) {
       if (replace) {
@@ -170,7 +169,7 @@ public class RsTypesMap implements Iterable<RsType> {
       }
       return existing;
     }
-    if (null == existing && !replace) { // existing is x-unspecified
+    if (null == existing && !replace) {  // existing is x-unspecified
       return null;
     }
     if (replace) {
@@ -180,11 +179,11 @@ public class RsTypesMap implements Iterable<RsType> {
     existing = RsLangs.addAll(existing, rslangs);
     return existing;
   }
-
-  /**
-   * Remove a type, regardless of languages NOTE: doesn't remove type:feature entries associated
-   * with that type
-   * 
+  
+      
+  /** 
+   * Remove a type, regardless of languages
+   * NOTE: doesn't remove type:feature entries associated with that type
    * @param type
    */
   void remove(String type) {
@@ -200,14 +199,13 @@ public class RsTypesMap implements Iterable<RsType> {
       t.languagesNotAllFeat = null;
     }
   }
-
+  
   /**
-   * remove a feature, regardless of languages If all features are removed, null out the rsFeats
-   * slot. If all features are removed, and no type instance, remove the type also.
-   * 
+   * remove a feature, regardless of languages
+   * If all features are removed, null out the rsFeats slot.
+   * If all features are removed, and no type instance, remove the type also.
    * @param typeName
-   * @param feature
-   *          Short Name
+   * @param feature Short Name
    */
   void remove(String type, String feature) {
     RsType t = types.get(type);
@@ -223,24 +221,23 @@ public class RsTypesMap implements Iterable<RsType> {
       }
     }
   }
-
+  
   RsType getRsType(String typeName) {
     return types.get(typeName);
   }
-
+  
   RsFeat get(String typeName, String shortFeatName) {
     RsType t = types.get(typeName);
     if (t == null || t.features == null) {
       return null;
     }
     return t.features.get(shortFeatName);
-  }
-
+  }  
+  
   int nbrOfTypes() {
     return types.size();
   }
 
-  @Override
   public Iterator<RsType> iterator() {
     return types.values().iterator();
   }
@@ -258,7 +255,10 @@ public class RsTypesMap implements Iterable<RsType> {
     if (this == obj) {
       return true;
     }
-    if ((obj == null) || (getClass() != obj.getClass())) {
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
       return false;
     }
     RsTypesMap other = (RsTypesMap) obj;

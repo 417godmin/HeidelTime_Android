@@ -50,6 +50,7 @@ public class UIMA_IllegalArgumentException extends UIMARuntimeException {
    * Creates a new exception with a null message.
    */
   public UIMA_IllegalArgumentException() {
+    super();
   }
 
   /**
@@ -70,8 +71,8 @@ public class UIMA_IllegalArgumentException extends UIMARuntimeException {
    *          located.
    * @param aMessageKey
    *          an identifier that maps to the message for this exception. The message may contain
-   *          placeholders for arguments as defined by the {@link java.text.MessageFormat
-   *          MessageFormat} class.
+   *          placeholders for arguments as defined by the
+   *          {@link java.text.MessageFormat MessageFormat} class.
    * @param aArguments
    *          The arguments to the message. <code>null</code> may be used if the message has no
    *          arguments.
@@ -89,8 +90,8 @@ public class UIMA_IllegalArgumentException extends UIMARuntimeException {
    *          located.
    * @param aMessageKey
    *          an identifier that maps to the message for this exception. The message may contain
-   *          placeholders for arguments as defined by the {@link java.text.MessageFormat
-   *          MessageFormat} class.
+   *          placeholders for arguments as defined by the
+   *          {@link java.text.MessageFormat MessageFormat} class.
    * @param aArguments
    *          The arguments to the message. <code>null</code> may be used if the message has no
    *          arguments.
@@ -99,7 +100,7 @@ public class UIMA_IllegalArgumentException extends UIMARuntimeException {
    */
   public UIMA_IllegalArgumentException(String aResourceBundleName, String aMessageKey,
           Object[] aArguments, Throwable aCause) {
-    super(aCause, aResourceBundleName, aMessageKey, aArguments);
+    super(aResourceBundleName, aMessageKey, aArguments, aCause);
   }
 
   /**
@@ -107,8 +108,8 @@ public class UIMA_IllegalArgumentException extends UIMARuntimeException {
    * 
    * @param aMessageKey
    *          an identifier that maps to the message for this exception. The message may contain
-   *          placeholders for arguments as defined by the {@link java.text.MessageFormat
-   *          MessageFormat} class.
+   *          placeholders for arguments as defined by the
+   *          {@link java.text.MessageFormat MessageFormat} class.
    * @param aArguments
    *          The arguments to the message. <code>null</code> may be used if the message has no
    *          arguments.
@@ -123,8 +124,8 @@ public class UIMA_IllegalArgumentException extends UIMARuntimeException {
    * 
    * @param aMessageKey
    *          an identifier that maps to the message for this exception. The message may contain
-   *          placeholders for arguments as defined by the {@link java.text.MessageFormat
-   *          MessageFormat} class.
+   *          placeholders for arguments as defined by the
+   *          {@link java.text.MessageFormat MessageFormat} class.
    * @param aArguments
    *          The arguments to the message. <code>null</code> may be used if the message has no
    *          arguments.
@@ -132,6 +133,6 @@ public class UIMA_IllegalArgumentException extends UIMARuntimeException {
    *          the original exception that caused this exception to be thrown, if any
    */
   public UIMA_IllegalArgumentException(String aMessageKey, Object[] aArguments, Throwable aCause) {
-    super(aCause, aMessageKey, aArguments);
+    super(aMessageKey, aArguments, aCause);
   }
 }

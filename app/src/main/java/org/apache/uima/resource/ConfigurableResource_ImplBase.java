@@ -27,13 +27,12 @@ package org.apache.uima.resource;
  * 
  * 
  */
-public abstract class ConfigurableResource_ImplBase extends Resource_ImplBase
-        implements ConfigurableResource {
+public abstract class ConfigurableResource_ImplBase extends Resource_ImplBase implements
+        ConfigurableResource {
 
   /**
    * @see ConfigurableResource#getConfigParameterValue(String)
    */
-  @Override
   public Object getConfigParameterValue(String aParamName) {
     return getUimaContext().getConfigParameterValue(aParamName);
   }
@@ -42,7 +41,6 @@ public abstract class ConfigurableResource_ImplBase extends Resource_ImplBase
    * @see ConfigurableResource#getConfigParameterValue(String,
    *      String)
    */
-  @Override
   public Object getConfigParameterValue(String aGroupName, String aParamName) {
     return getUimaContext().getConfigParameterValue(aGroupName, aParamName);
   }
@@ -51,7 +49,6 @@ public abstract class ConfigurableResource_ImplBase extends Resource_ImplBase
    * @see ConfigurableResource#setConfigParameterValue(String,
    *      Object)
    */
-  @Override
   public void setConfigParameterValue(String aParamName, Object aValue) {
     getUimaContextAdmin().getConfigurationManager().setConfigParameterValue(
             getUimaContextAdmin().getQualifiedContextName() + aParamName, aValue);
@@ -61,7 +58,6 @@ public abstract class ConfigurableResource_ImplBase extends Resource_ImplBase
    * @see ConfigurableResource#setConfigParameterValue(String,
    *      String, Object)
    */
-  @Override
   public void setConfigParameterValue(String aGroupName, String aParamName, Object aValue) {
     getUimaContextAdmin().getConfigurationManager().setConfigParameterValue(
             getUimaContextAdmin().getQualifiedContextName() + aParamName, aGroupName, aValue);
@@ -70,10 +66,9 @@ public abstract class ConfigurableResource_ImplBase extends Resource_ImplBase
   /**
    * @see ConfigurableResource#reconfigure()
    */
-  @Override
   public void reconfigure() throws ResourceConfigurationException {
-    getUimaContextAdmin().getConfigurationManager()
-            .reconfigure(getUimaContextAdmin().getQualifiedContextName());
+    getUimaContextAdmin().getConfigurationManager().reconfigure(
+            getUimaContextAdmin().getQualifiedContextName());
   }
 
 }

@@ -26,34 +26,45 @@ import org.apache.uima.resource.metadata.TypePriorityList;
 
 /**
  * Reference implementation of {@link TypePriorityList}.
+ * 
+ * 
  */
 public class TypePriorityList_impl extends MetaDataObject_impl implements TypePriorityList {
 
   static final long serialVersionUID = 4700170375564691096L;
 
-  private List<String> mTypeNames = new ArrayList<>();
+  private List<String> mTypeNames = new ArrayList<String>();
 
-  @Override
+  /**
+   * @see TypePriorityList#getTypes()
+   * synchronized to prevent concurrent modification exceptions
+   */
   public synchronized String[] getTypes() {
     String[] result = new String[mTypeNames.size()];
     mTypeNames.toArray(result);
     return result;
   }
 
-  @Override
-  public synchronized void setTypes(String... aTypeNames) {
+  /**
+   * @see TypePriorityList#setTypes(String[])
+   */
+  public synchronized void setTypes(String[] aTypeNames) {
     mTypeNames.clear();
     for (int i = 0; i < aTypeNames.length; i++) {
       mTypeNames.add(aTypeNames[i]);
     }
   }
 
-  @Override
+  /**
+   * @see TypePriorityList#addType(String)
+   */
   public synchronized void addType(String aTypeName) {
     mTypeNames.add(aTypeName);
   }
 
-  @Override
+  /**
+   * @see TypePriorityList#removeType(String)
+   */
   public synchronized void removeType(String aTypeName) {
     mTypeNames.remove(aTypeName);
   }
@@ -61,12 +72,11 @@ public class TypePriorityList_impl extends MetaDataObject_impl implements TypePr
   /*
    * (non-Javadoc) Special purpose clone method to deal with ArrayList.
    */
-  @Override
   public synchronized Object clone() {
-    // surprise: super.clone sets the final field to the same array list as the original
+    //surprise: super.clone sets the final field to the same array list as the original
     TypePriorityList_impl clone = (TypePriorityList_impl) super.clone();
-
-    clone.mTypeNames = new ArrayList<>(); // because above clone has set it to the == object
+    
+    clone.mTypeNames = new ArrayList<>();  // because above clone has set it to the == object
     for (String name : mTypeNames) {
       clone.addType(name);
     }
@@ -74,9 +84,11 @@ public class TypePriorityList_impl extends MetaDataObject_impl implements TypePr
     return clone;
   }
 
-  @Override
+  /**
+   * @see MetaDataObject_impl#getXmlizationInfo()
+   */
   protected XmlizationInfo getXmlizationInfo() {
-    return new XmlizationInfo("priorityList",
-            new PropertyXmlInfo[] { new PropertyXmlInfo("types", null, false, "type") });
+    return new XmlizationInfo("priorityList", new PropertyXmlInfo[] { new PropertyXmlInfo("types",
+            null, false, "type") });
   }
 }

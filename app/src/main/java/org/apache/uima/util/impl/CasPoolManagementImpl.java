@@ -30,13 +30,15 @@ public class CasPoolManagementImpl implements CasPoolManagement, CasPoolManageme
 
   private WeakReference<CasPool> mCasPoolRef;
   private String mUniqueMBeanName;
-
+  
   public CasPoolManagementImpl(CasPool aCasPool, String aUniqueMBeanName) {
-    mCasPoolRef = new WeakReference<>(aCasPool);
-    mUniqueMBeanName = aUniqueMBeanName;
+    mCasPoolRef = new WeakReference<CasPool>(aCasPool);
+    mUniqueMBeanName = aUniqueMBeanName; 
   }
-
-  @Override
+  
+  /* (non-Javadoc)
+   * @see org.apache.uima.util.CasPoolManagement#getAvailableInstances()
+   */
   public int getAvailableInstances() {
     CasPool casPool = mCasPoolRef.get();
     if (casPool != null) {
@@ -46,7 +48,17 @@ public class CasPoolManagementImpl implements CasPoolManagement, CasPoolManageme
     }
   }
 
-  @Override
+//  /* (non-Javadoc)
+//   * @see org.apache.uima.util.CasPoolManagement#getAverageWaitTime()
+//   */
+//  public int getAverageWaitTime() {
+//    // TODO Auto-generated method stub
+//    return 0;
+//  }
+
+  /* (non-Javadoc)
+   * @see org.apache.uima.util.CasPoolManagement#getPoolSize()
+   */
   public int getPoolSize() {
     CasPool casPool = mCasPoolRef.get();
     if (casPool != null) {
@@ -56,8 +68,10 @@ public class CasPoolManagementImpl implements CasPoolManagement, CasPoolManageme
     }
   }
 
-  @Override
+  /* (non-Javadoc)
+   * @see org.apache.uima.resource.impl.ManagementObject_ImplBase#getUniqueMBeanName()
+   */
   public String getUniqueMBeanName() {
     return mUniqueMBeanName;
-  }
+  }  
 }

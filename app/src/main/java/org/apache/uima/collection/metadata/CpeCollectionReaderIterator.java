@@ -24,43 +24,41 @@ import org.apache.uima.resource.metadata.MetaDataObject;
 /**
  * An object that holds configuration that is part of the CPE descriptor. It provides the means of
  * configuring CPE Collection Reader Iterator.
+ * 
  */
 public interface CpeCollectionReaderIterator extends MetaDataObject {
-  /**
+  /** 
    * @return Descriptor
    */
-  CpeComponentDescriptor getDescriptor();
+  public CpeComponentDescriptor getDescriptor();
 
   /**
    * Associate Descriptor with the Collection Reader Iterator
    * 
-   * @param descriptor
-   *          the component descriptor
+   * @param descriptor the component descriptor
    */
-  void setDescriptor(CpeComponentDescriptor descriptor);
+  public void setDescriptor(CpeComponentDescriptor descriptor);
 
   /**
    * @return override parameters. These override parameters in the Collection Reader component
-   *         descriptor.
+   * descriptor. 
    */
-  CasProcessorConfigurationParameterSettings getConfigurationParameterSettings();
+  public CasProcessorConfigurationParameterSettings getConfigurationParameterSettings();
 
   /**
    * Set parameters that will override params defined in the Collection Reader component descriptor.
    * 
-   * @param settings
-   *          the configuration parameter settings
+   * @param settings the configuration parameter settings
    */
-  void setConfigurationParameterSettings(CasProcessorConfigurationParameterSettings settings);
+  public void setConfigurationParameterSettings(CasProcessorConfigurationParameterSettings settings);
 
-  CpeSofaMappings getSofaNameMappings();
+  public CpeSofaMappings getSofaNameMappings();
 
   /**
    * Set Sofa Name Mappings
    * 
-   * @param mappings
-   *          the sofa mappings
+   * @param mappings the sofa mappings
    */
-  void setSofaNameMappings(CpeSofaMappings mappings);
+  public void setSofaNameMappings(CpeSofaMappings mappings);
 
 }

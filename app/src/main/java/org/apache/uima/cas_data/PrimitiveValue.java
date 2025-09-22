@@ -31,21 +31,20 @@ public interface PrimitiveValue extends FeatureValue {
    * 
    * @return string value
    */
-  @Override
-  String toString();
+  public String toString();
 
   /**
    * Gets this value as an integer.
    * 
    * @return integer value, 0 if a non-integer
    */
-  int toInt();
+  public int toInt();
 
   /**
    * Gets this value as a float.
    * 
    * @return float value, 0 if a non-number.
    */
-  float toFloat();
+  public float toFloat();
 
 }

@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.uima.cas_data.impl;
 
 import java.util.Arrays;
@@ -36,6 +37,8 @@ import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * Takes a CasData and generates XCAS SAX events.
+ * 
+ * 
  */
 public class CasDataToXCas {
   private String mDocumentTextTypeName = "uima.cpm.DocumentText";
@@ -60,8 +63,7 @@ public class CasDataToXCas {
   /**
    * Sets the name of the CASData FeatureStructure Type that stores the document text.
    * 
-   * @param aDocumentTextTypeName
-   *          the document text type name
+   * @param aDocumentTextTypeName the document text type name
    */
   public void setDocumentTextTypeName(String aDocumentTextTypeName) {
     mDocumentTextTypeName = aDocumentTextTypeName;
@@ -97,8 +99,7 @@ public class CasDataToXCas {
   }
 
   /**
-   * @param aIncludeAnnotationSpannedText
-   *          -
+   * @param aIncludeAnnotationSpannedText -
    */
   public void setIncludeAnnotationSpannedText(boolean aIncludeAnnotationSpannedText) {
     mIncludeAnnotationSpannedText = aIncludeAnnotationSpannedText;
@@ -107,8 +108,7 @@ public class CasDataToXCas {
   /**
    * Specifies names of types that will not be included in the XCAS
    * 
-   * @param aTypesToFilter
-   *          -
+   * @param aTypesToFilter -
    */
   public void setTypesToFilter(String[] aTypesToFilter) {
     mTypesToFilter = Arrays.asList(aTypesToFilter);
@@ -117,8 +117,7 @@ public class CasDataToXCas {
   /**
    * Sets the ContentHandler to receive the SAX events.
    * 
-   * @param aHandler
-   *          -
+   * @param aHandler -
    */
   public void setContentHandler(ContentHandler aHandler) {
     mHandler = aHandler;
@@ -206,7 +205,7 @@ public class CasDataToXCas {
 
   private void _generate(FeatureStructure aFS, DocTextHolder aDocTextHolder) throws SAXException {
     // document text is special case
-    if (aFS.getType().equals(getDocumentTextTypeName())) {
+    if (aFS.getType().equals(this.getDocumentTextTypeName())) {
       _generateDocFS(aFS, aDocTextHolder);
     } else {
       // generate attributes for features (except "value" feature, which is represented in element
@@ -252,16 +251,16 @@ public class CasDataToXCas {
 
       // encode array subelements
       String[] arrayElems = null;
-      if (aFS instanceof PrimitiveArrayFS primitiveArrayFS) {
-        arrayElems = primitiveArrayFS.toStringArray();
-      } else if (aFS instanceof ReferenceArrayFS referenceArrayFS) {
-        arrayElems = referenceArrayFS.getIdRefArray();
+      if (aFS instanceof PrimitiveArrayFS) {
+        arrayElems = ((PrimitiveArrayFS) aFS).toStringArray();
+      } else if (aFS instanceof ReferenceArrayFS) {
+        arrayElems = ((ReferenceArrayFS) aFS).getIdRefArray();
       }
       if (arrayElems != null) {
-        for (var arrayElem : arrayElems) {
+        for (int j = 0; j < arrayElems.length; j++) {
           mHandler.startElement("", "i", "i", new AttributesImpl());
-          if (arrayElem != null) {
-            mHandler.characters(arrayElem.toCharArray(), 0, arrayElem.length());
+          if (arrayElems[j] != null) {
+            mHandler.characters(arrayElems[j].toCharArray(), 0, arrayElems[j].length());
           }
           mHandler.endElement("", "i", "i");
         }
@@ -311,7 +310,7 @@ public class CasDataToXCas {
   private void _generateDocFS(FeatureStructure aFS, DocTextHolder aDocTextHolder)
           throws SAXException {
     AttributesImpl attrs = new AttributesImpl();
-    String textFeature = getDocumentTextFeatureName();
+    String textFeature = this.getDocumentTextFeatureName();
     FeatureValue docTextValue = aFS.getFeatureValue(textFeature);
     if (docTextValue != null) {
       String text = docTextValue.toString();
@@ -333,4 +332,5 @@ public class CasDataToXCas {
   private static class DocTextHolder {
     char[] docText;
   }
+
 }

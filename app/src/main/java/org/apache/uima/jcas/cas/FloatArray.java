@@ -19,32 +19,20 @@
 
 package org.apache.uima.jcas.cas;
 
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-
-import org.apache.uima.cas.CAS;
-import org.apache.uima.cas.CommonArrayFS;
-import org.apache.uima.cas.impl.CASImpl;
-import org.apache.uima.cas.impl.FloatArrayFSImpl;
-import org.apache.uima.cas.impl.TypeImpl;
+import org.apache.uima.cas.FloatArrayFS;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
 
 /** Java Cas model for Cas FloatArray. */
-public final class FloatArray extends TOP
-        implements CommonPrimitiveArray<Float>, Iterable<Float>, FloatArrayFSImpl {
-
-  /* public static string for use where constants are needed, e.g. in some Java Annotations */
-  public static final String _TypeName = CAS.TYPE_NAME_FLOAT_ARRAY;
+public final class FloatArray extends TOP implements FloatArrayFS {
 
   /**
    * Each cover class when loaded sets an index. Used in the JCas typeArray to go from the cover
    * class or class instance to the corresponding instance of the _Type class
    */
-  public static final int typeIndexID = JCasRegistry.register(FloatArray.class);
+  public final static int typeIndexID = JCasRegistry.register(FloatArray.class);
 
-  public static final int type = typeIndexID;
+  public final static int type = typeIndexID;
 
   /**
    * used to obtain reference to the _Type instance
@@ -52,55 +40,38 @@ public final class FloatArray extends TOP
    * @return the type array index
    */
   // can't be factored - refs locally defined field
-  @Override
   public int getTypeIndexID() {
     return typeIndexID;
   }
 
-  private final float[] theArray;
-
   private FloatArray() { // never called. Here to disable default constructor
-    theArray = null;
+  }
+
+  // * There are n creation actions
+  // * 1 - create via factory.create() a new one
+  // * 2 - iterator or dereferencing calling generator to create
+
+ /* Internal - Constructor used by generator */
+  public FloatArray(int addr, TOP_Type type) {
+    super(addr, type);
   }
 
   /**
    * Make a new FloatArray of given size
-   * 
-   * @param jcas
-   *          the JCas
-   * @param length
-   *          the size of the array
+   * @param jcas the JCas
+   * @param length the size of the array
    */
   public FloatArray(JCas jcas, int length) {
-    super(jcas);
-    theArray = new float[length];
-    if (CASImpl.traceFSs) { // tracing done after array setting, skipped in super class
-      _casView.traceFSCreate(this);
-    }
-    if (_casView.isId2Fs()) {
-      _casView.adjustLastFsV2Size_arrays(length);
-    }
-  }
+    this(
+    /* addr */
+    jcas.getLowLevelCas().ll_createArray(jcas.getType(typeIndexID).casTypeCode, length),
+    /* type */
+    jcas.getType(typeIndexID));
 
-  /**
-   * used by generator Make a new FloatArray of given size
-   * 
-   * @param c
-   *          -
-   * @param t
-   *          -
-   * @param length
-   *          the length of the array in bytes
-   */
-  public FloatArray(TypeImpl t, CASImpl c, int length) {
-    super(t, c);
-    theArray = new float[length];
-    if (CASImpl.traceFSs) { // tracing done after array setting, skipped in super class
-      _casView.traceFSCreate(this);
-    }
-    if (_casView.isId2Fs()) {
-      _casView.adjustLastFsV2Size_arrays(length);
-    }
+    // at this point we can use the jcasType value, as it is set
+    // can't do this earlier as the very first statement is required by
+    // JAVA to be the super or alternate constructor call
+    jcasType.casImpl.checkArrayPreconditions(length);
   }
 
   // /**
@@ -117,9 +88,9 @@ public final class FloatArray extends TOP
   /**
    * return the indexed value from the corresponding Cas FloatArray as a float,
    */
-  @Override
   public float get(int i) {
-    return theArray[i];
+    jcasType.casImpl.checkArrayBounds(addr, i);
+    return jcasType.ll_cas.ll_getFloatArrayValue(addr, i);
   }
 
   /**
@@ -130,35 +101,39 @@ public final class FloatArray extends TOP
    * @param v
    *          value to set
    */
-  @Override
   public void set(int i, float v) {
-    theArray[i] = v;
-    _casView.maybeLogArrayUpdate(this, null, i);
+    jcasType.casImpl.checkArrayBounds(addr, i);
+    jcasType.ll_cas.ll_setFloatArrayValue(addr, i, v);
   }
 
   /**
-   * @see org.apache.uima.cas.FloatArrayFS#copyFromArray(float[], int, int, int)
+   * @see FloatArrayFS#copyFromArray(float[], int, int, int)
    */
-  @Override
-  public void copyFromArray(float[] src, int srcPos, int destPos, int length) {
-    System.arraycopy(src, srcPos, theArray, destPos, length);
-    _casView.maybeLogArrayUpdates(this, destPos, length);
+  public void copyFromArray(float[] src, int srcOffset, int destOffset, int length) {
+    jcasType.casImpl.checkArrayBounds(addr, destOffset, length);
+    for (int i = 0; i < length; i++) {
+      jcasType.ll_cas.ll_setFloatArrayValue(addr, i + destOffset, src[i + srcOffset]);
+    }
   }
 
   /**
-   * @see org.apache.uima.cas.FloatArrayFS#copyToArray(int, float[], int, int)
+   * @see FloatArrayFS#copyToArray(int, float[], int, int)
    */
-  @Override
-  public void copyToArray(int srcPos, float[] dest, int destPos, int length) {
-    System.arraycopy(theArray, srcPos, dest, destPos, length);
+  public void copyToArray(int srcOffset, float[] dest, int destOffset, int length) {
+    jcasType.casImpl.checkArrayBounds(addr, srcOffset, length);
+    for (int i = 0; i < length; i++) {
+      dest[i + destOffset] = jcasType.ll_cas.ll_getFloatArrayValue(addr, i + srcOffset);
+    }
   }
 
   /**
    * @see org.apache.uima.cas.ArrayFS#toArray()
    */
-  @Override
   public float[] toArray() {
-    return Arrays.copyOf(theArray, theArray.length);
+    final int size = size();
+    float[] outArray = new float[size];
+    copyToArray(0, outArray, 0, size);
+    return outArray;
   }
 
   /**
@@ -167,113 +142,39 @@ public final class FloatArray extends TOP
    * @return size of array
    */
 
-  @Override
   public int size() {
-    return theArray.length;
+    return jcasType.casImpl.ll_getArraySize(addr);
   }
 
   /**
-   * @see org.apache.uima.cas.FloatArrayFS#copyToArray(int, String[], int, int)
+   * @see FloatArrayFS#copyToArray(int, String[], int, int)
    */
-  @Override
   public void copyToArray(int srcOffset, String[] dest, int destOffset, int length) {
-    _casView.checkArrayBounds(theArray.length, srcOffset, length);
+    jcasType.casImpl.checkArrayBounds(addr, srcOffset, length);
     for (int i = 0; i < length; i++) {
-      dest[i + destOffset] = Float.toString(theArray[i + srcOffset]);
+      dest[i + destOffset] = Float.toString(jcasType.ll_cas.ll_getFloatArrayValue(addr, i
+              + srcOffset));
     }
   }
 
   /**
-   * @see org.apache.uima.cas.FloatArrayFS#copyFromArray(String[], int, int, int)
+   * @see FloatArrayFS#copyFromArray(String[], int, int, int)
    */
-  @Override
   public void copyFromArray(String[] src, int srcOffset, int destOffset, int length) {
-    _casView.checkArrayBounds(theArray.length, destOffset, length);
+    jcasType.casImpl.checkArrayBounds(addr, destOffset, length);
     for (int i = 0; i < length; i++) {
-      // use "set" to get proper journaling
-      set(i + destOffset, Float.parseFloat(src[i + srcOffset]));
+      jcasType.ll_cas.ll_setFloatArrayValue(addr, i + destOffset, Float.parseFloat(src[i
+              + srcOffset]));
     }
   }
 
-  // internal use only
-  public float[] _getTheArray() {
-    return theArray;
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.apache.uima.jcas.cas.CommonArray#copyValuesFrom(org.apache.uima.jcas.cas.CommonArray)
-   */
-  @Override
-  public void copyValuesFrom(CommonArrayFS v) {
-    FloatArray bv = (FloatArray) v;
-    System.arraycopy(bv.theArray, 0, theArray, 0, theArray.length);
-    _casView.maybeLogArrayUpdates(this, 0, size());
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.apache.uima.jcas.cas.CommonPrimitiveArray#setArrayValueFromString(int,
-   * java.lang.String)
-   */
-  @Override
-  public void setArrayValueFromString(int i, String v) {
-    set(i, Float.parseFloat(v));
-  }
-
   /**
-   * @param jcas
-   *          Which CAS to create the array in
-   * @param a
-   *          the source for the array's initial values
-   * @return a newly created and populated array
+   * @see FloatArrayFS#toStringArray()
    */
-  public static FloatArray create(JCas jcas, float[] a) {
-    FloatArray floatArray = new FloatArray(jcas, a.length);
-    floatArray.copyFromArray(a, 0, 0, a.length);
-    return floatArray;
+  public String[] toStringArray() {
+    final int size = size();
+    String[] strArray = new String[size];
+    copyToArray(0, strArray, 0, size);
+    return strArray;
   }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Iterable#iterator()
-   */
-  @Override
-  public Iterator<Float> iterator() {
-    return new Iterator<Float>() {
-
-      int i = 0;
-
-      @Override
-      public boolean hasNext() {
-        return i < size();
-      }
-
-      @Override
-      public Float next() {
-        if (!hasNext())
-          throw new NoSuchElementException();
-        return get(i++);
-      }
-
-    };
-  }
-
-  /**
-   * @param item
-   *          the item to see if is in the array
-   * @return true if the item is in the array
-   */
-  public boolean contains(float item) {
-    for (float b : theArray) {
-      if (b == item) {
-        return true;
-      }
-    }
-    return false;
-  }
-
 }

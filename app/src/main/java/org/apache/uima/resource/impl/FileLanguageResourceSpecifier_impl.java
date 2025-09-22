@@ -29,8 +29,8 @@ import org.apache.uima.resource.metadata.impl.XmlizationInfo;
  * 
  * 
  */
-public class FileLanguageResourceSpecifier_impl extends MetaDataObject_impl
-        implements FileLanguageResourceSpecifier {
+public class FileLanguageResourceSpecifier_impl extends MetaDataObject_impl implements
+        FileLanguageResourceSpecifier {
 
   static final long serialVersionUID = 4660680936104675527L;
 
@@ -49,7 +49,6 @@ public class FileLanguageResourceSpecifier_impl extends MetaDataObject_impl
   /**
    * @see FileLanguageResourceSpecifier#getFileUrlPrefix()
    */
-  @Override
   public String getFileUrlPrefix() {
     return mFileUrlPrefix;
   }
@@ -57,7 +56,6 @@ public class FileLanguageResourceSpecifier_impl extends MetaDataObject_impl
   /**
    * @see FileLanguageResourceSpecifier#getFileUrlSuffix()
    */
-  @Override
   public String getFileUrlSuffix() {
     return mFileUrlSuffix;
   }
@@ -65,7 +63,6 @@ public class FileLanguageResourceSpecifier_impl extends MetaDataObject_impl
   /**
    * @see FileLanguageResourceSpecifier#setFileUrlPrefix(String)
    */
-  @Override
   public void setFileUrlPrefix(String aPrefix) {
     mFileUrlPrefix = aPrefix;
   }
@@ -73,17 +70,15 @@ public class FileLanguageResourceSpecifier_impl extends MetaDataObject_impl
   /**
    * @see FileLanguageResourceSpecifier#setFileUrlSuffix(String)
    */
-  @Override
   public void setFileUrlSuffix(String aSuffix) {
     mFileUrlSuffix = aSuffix;
   }
 
-  @Override
   protected XmlizationInfo getXmlizationInfo() {
     return XMLIZATION_INFO;
   }
 
-  private static final XmlizationInfo XMLIZATION_INFO = new XmlizationInfo(
+  static final private XmlizationInfo XMLIZATION_INFO = new XmlizationInfo(
           "fileLanguageResourceSpecifier", new PropertyXmlInfo[] {
               new PropertyXmlInfo("fileUrlPrefix"), new PropertyXmlInfo("fileUrlSuffix"), });
 }

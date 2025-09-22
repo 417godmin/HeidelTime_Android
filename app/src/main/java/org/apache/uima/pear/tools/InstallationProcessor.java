@@ -34,9 +34,9 @@ import org.apache.uima.pear.util.FileUtil;
 import org.apache.uima.pear.util.StringUtil;
 
 /**
- * The <code>InstallationProcessor</code> class implements operations specified in the installation
- * descriptor. This class also allows generating the default Vinci Service descriptor for the
- * specified component.
+ * The <code>InstallationProcessor</code> class implements operations specified in the
+ * installation descriptor. This class also allows generating the default Vinci Service descriptor
+ * for the specified component.
  * 
  * @see InstallationDescriptor
  */
@@ -72,11 +72,11 @@ public class InstallationProcessor {
   // Attributes
   private String _mainRootPath;
 
-  private Hashtable<String, String> _installationTable = new Hashtable<>();
+  private Hashtable<String, String> _installationTable = new Hashtable<String, String>();
 
-  private Hashtable<String, String> _urlSubstitutionTable = new Hashtable<>();
+  private Hashtable<String, String> _urlSubstitutionTable = new Hashtable<String, String>();
 
-  private Hashtable<String, String> _pathSubstitutionTable = new Hashtable<>();
+  private Hashtable<String, String> _pathSubstitutionTable = new Hashtable<String, String>();
 
   private InstallationDescriptor _insdObject = null;
 
@@ -85,19 +85,17 @@ public class InstallationProcessor {
   private InstallationController _controller = null;
 
   /**
-   * Builds $component_id$&lt;suffix&gt; regular expression string for a given component ID and a
-   * given 'suffix' string. Valid 'suffix' strings are
-   * InstallationDescriptor.DELEGATE_ROOT_SUFFIX_REGEX for absolute path,
-   * InstallationDescriptor.DELEGATE_ROOT_REL_SUFFIX_REGEX for relative path,
+   * Builds $component_id$&lt;suffix&gt; regular expression string for a given component ID and a given
+   * 'suffix' string. Valid 'suffix' strings are InstallationDescriptor.DELEGATE_ROOT_SUFFIX_REGEX
+   * for absolute path, InstallationDescriptor.DELEGATE_ROOT_REL_SUFFIX_REGEX for relative path,
    * InstallationDescriptor.DELEGATE_ROOT_URL_SUFFIX_REGEX for URL.
    * 
    * @param componentId
    *          The given component ID.
-   * @param suffix
-   *          a suffix to be added to the component ID Valid 'suffix' strings are
-   *          InstallationDescriptor.DELEGATE_ROOT_SUFFIX_REGEX for absolute path,
-   *          InstallationDescriptor.DELEGATE_ROOT_REL_SUFFIX_REGEX for relative path,
-   *          InstallationDescriptor.DELEGATE_ROOT_URL_SUFFIX_REGEX for URL.
+   * @param suffix a suffix to be added to the component ID
+   * Valid 'suffix' strings are InstallationDescriptor.DELEGATE_ROOT_SUFFIX_REGEX
+   * for absolute path, InstallationDescriptor.DELEGATE_ROOT_REL_SUFFIX_REGEX for relative path,
+   * InstallationDescriptor.DELEGATE_ROOT_URL_SUFFIX_REGEX for URL.
    * @return The $component_id$root regular expression string.
    */
   protected static String componentIdRootRegExp(String componentId, String suffix) {
@@ -124,9 +122,19 @@ public class InstallationProcessor {
   public static void generateVSDescriptor(InstallationDescriptor insdObject, File mainRootDir)
           throws IOException {
     File vsDescriptorFile = new File(mainRootDir, VS_DESCRIPTOR_PATH);
-    try (PrintWriter oWriter = new PrintWriter(new FileWriter(vsDescriptorFile))) {
+    PrintWriter oWriter = null;
+    try {
+      oWriter = new PrintWriter(new FileWriter(vsDescriptorFile));
       String xmlContent = generateVSDescriptorContent(insdObject);
       oWriter.println(xmlContent);
+      oWriter.close();
+    } finally {
+      if (oWriter != null) {
+        try {
+          oWriter.close();
+        } catch (Exception e) {
+        }
+      }
     }
   }
 
@@ -192,12 +200,11 @@ public class InstallationProcessor {
       throw new RuntimeException("no " + InstallationDescriptorHandler.FILE_TAG + " defined");
     String findString = action.params.getProperty(InstallationDescriptorHandler.FIND_STRING_TAG);
     if (findString == null)
-      throw new RuntimeException(
-              "no " + InstallationDescriptorHandler.FIND_STRING_TAG + " defined");
+      throw new RuntimeException("no " + InstallationDescriptorHandler.FIND_STRING_TAG + " defined");
     String replaceWith = action.params.getProperty(InstallationDescriptorHandler.REPLACE_WITH_TAG);
     if (replaceWith == null)
-      throw new RuntimeException(
-              "no " + InstallationDescriptorHandler.REPLACE_WITH_TAG + " defined");
+      throw new RuntimeException("no " + InstallationDescriptorHandler.REPLACE_WITH_TAG
+              + " defined");
     // replace all specified path-strings in specified file
     File inputFile = new File(filePath);
     FileUtil.replaceStringInFile(inputFile, StringUtil.toRegExpString(findString), replaceWith);
@@ -266,8 +273,8 @@ public class InstallationProcessor {
   }
 
   /**
-   * Similar to previous constructor, but sets a given <code>InstallationController</code> object as
-   * the requestor.
+   * Similar to previous constructor, but sets a given <code>InstallationController</code> object
+   * as the requestor.
    * 
    * @param mainRootPath
    *          The given main component root path.
@@ -325,8 +332,9 @@ public class InstallationProcessor {
     File mainRootDir = new File(_mainRootPath);
     File xmlInsDFile = new File(mainRootDir, INSD_FILE_PATH);
     if (_controller != null)
-      _controller.getOutMsgWriter().println("[InstallationProcessor]: "
-              + "start processing InsD file - " + xmlInsDFile.getAbsolutePath());
+      _controller.getOutMsgWriter().println(
+              "[InstallationProcessor]: " + "start processing InsD file - "
+                      + xmlInsDFile.getAbsolutePath());
     else
       System.out.println("[InstallationProcessor]: " + "start processing InsD file - "
               + xmlInsDFile.getAbsolutePath());
@@ -342,10 +350,10 @@ public class InstallationProcessor {
     // set main root path
     _insdObject.setMainComponentRoot(_mainRootPath);
     // perform required actions
-    Iterator<InstallationDescriptor.ActionInfo> actionList = _insdObject.getInstallationActions()
-            .iterator();
+    Iterator<InstallationDescriptor.ActionInfo> actionList = _insdObject.getInstallationActions().iterator();
     while (actionList.hasNext()) {
-      InstallationDescriptor.ActionInfo action = actionList.next();
+      InstallationDescriptor.ActionInfo action = actionList
+              .next();
       // substitute string 'variables' in action parameters
       substituteStringVariablesInAction(action.params);
       // perform FIND_AND_REPLACE_PATH_ACT action

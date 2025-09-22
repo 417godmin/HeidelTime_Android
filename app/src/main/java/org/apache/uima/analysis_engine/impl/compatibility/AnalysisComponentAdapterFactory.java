@@ -54,24 +54,20 @@ public class AnalysisComponentAdapterFactory {
    * 
    * @return an object that wraps <code>aAdaptee</code> and implements the
    *         <code>AnalysisComponent</code> interface.
-   * @throws ResourceInitializationException
-   *           if passed an adaptee which is not an analysis component
+   * @throws ResourceInitializationException if passed an adaptee which is not an analysis component
    */
   public static AnalysisComponent createAdapter(Object aAdaptee, AnalysisEngineMetaData aMetaData,
-                                                Map<String, Object> aAdditionalParams) throws ResourceInitializationException {
+          Map<String, Object> aAdditionalParams) throws ResourceInitializationException {
     if (aAdaptee instanceof BaseAnnotator) {
-      BaseAnnotator baseAnnotator = (BaseAnnotator) aAdaptee;
-      return new AnnotatorAdapter(baseAnnotator, aMetaData, aAdditionalParams);
+      return new AnnotatorAdapter((BaseAnnotator) aAdaptee, aMetaData, aAdditionalParams);
     } else if (aAdaptee instanceof CasConsumer) {
-      CasConsumer casConsumer = (CasConsumer) aAdaptee;
-      return new CasConsumerAdapter(casConsumer, aMetaData);
+      return new CasConsumerAdapter((CasConsumer) aAdaptee, aMetaData);
     } else if (aAdaptee instanceof CollectionReader) {
-      CollectionReader collectionReader = (CollectionReader) aAdaptee;
-      return new CollectionReaderAdapter(collectionReader, aMetaData);
+      return new CollectionReaderAdapter((CollectionReader) aAdaptee, aMetaData);
     } else {
       throw new ResourceInitializationException(
-              ResourceInitializationException.NOT_AN_ANALYSIS_COMPONENT,
-              new Object[] { aAdaptee.getClass().getName(), aMetaData.getSourceUrlString() });
+              ResourceInitializationException.NOT_AN_ANALYSIS_COMPONENT, new Object[] {
+                  aAdaptee.getClass().getName(), aMetaData.getSourceUrlString() });
     }
   }
 

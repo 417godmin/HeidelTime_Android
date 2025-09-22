@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.uima.collection.impl;
 
 import java.util.ArrayList;
@@ -25,7 +26,6 @@ import org.apache.uima.Constants;
 import org.apache.uima.UIMAFramework;
 import org.apache.uima.collection.CasInitializer;
 import org.apache.uima.collection.CasInitializerDescription;
-import org.apache.uima.internal.util.Class_TCCL;
 import org.apache.uima.resource.ResourceInitializationException;
 import org.apache.uima.resource.ResourceManager;
 import org.apache.uima.resource.impl.ResourceCreationSpecifier_impl;
@@ -42,11 +42,10 @@ import org.w3c.dom.Element;
 
 /**
  * @deprecated As of v2.0, CAS Initializers are deprecated.
- * @forRemoval 4.0.0
  */
-@Deprecated(since = "2.0.0")
-public class CasInitializerDescription_impl extends ResourceCreationSpecifier_impl
-        implements CasInitializerDescription {
+@Deprecated
+public class CasInitializerDescription_impl extends ResourceCreationSpecifier_impl implements
+        CasInitializerDescription {
 
   private static final long serialVersionUID = -4559482063745943204L;
 
@@ -66,12 +65,18 @@ public class CasInitializerDescription_impl extends ResourceCreationSpecifier_im
     getCasInitializerMetaData().setOperationalProperties(opProps);
   }
 
-  @Override
+  /**
+   * @see CasInitializerDescription#getCasInitializerMetaData()
+   */
   public ProcessingResourceMetaData getCasInitializerMetaData() {
     return (ProcessingResourceMetaData) getMetaData();
   }
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.resource.ResourceCreationSpecifier#doFullValidation(org.apache.uima.resource.ResourceManager)
+   */
   public void doFullValidation(ResourceManager aResourceManager)
           throws ResourceInitializationException {
     // check that user class was specified
@@ -81,10 +86,15 @@ public class CasInitializerDescription_impl extends ResourceCreationSpecifier_im
               new Object[] { getSourceUrlString() });
     }
     // try to load user class
-    // just UIMA extension ClassLoader if available
+    // ust UIMA extension ClassLoader if available
     Class<?> implClass;
+    ClassLoader cl = aResourceManager.getExtensionClassLoader();
     try {
-      implClass = Class_TCCL.forName(getImplementationName(), aResourceManager);
+      if (cl != null) {
+        implClass = cl.loadClass(getImplementationName());
+      } else {
+        implClass = Class.forName(getImplementationName());
+      }
     } catch (ClassNotFoundException e) {
       throw new ResourceInitializationException(ResourceInitializationException.CLASS_NOT_FOUND,
               new Object[] { getImplementationName(), getSourceUrlString() }, e);
@@ -96,7 +106,7 @@ public class CasInitializerDescription_impl extends ResourceCreationSpecifier_im
                   getImplementationName(), CasInitializer.class.getName(), getSourceUrlString() });
     }
     // try to create a CAS
-    List<ProcessingResourceMetaData> metadata = new ArrayList<>();
+    List<ProcessingResourceMetaData> metadata = new ArrayList<ProcessingResourceMetaData>();
     metadata.add(getCasInitializerMetaData());
     CasCreationUtils.createCas(metadata);
   }
@@ -104,7 +114,6 @@ public class CasInitializerDescription_impl extends ResourceCreationSpecifier_im
   /**
    * Overridden to set default operational properties if they are not specified in descriptor.
    */
-  @Override
   public void buildFromXMLElement(Element aElement, XMLParser aParser, ParsingOptions aOptions)
           throws InvalidXMLException {
     super.buildFromXMLElement(aElement, aParser, aOptions);
@@ -118,14 +127,13 @@ public class CasInitializerDescription_impl extends ResourceCreationSpecifier_im
     }
   }
 
-  @Override
   protected XmlizationInfo getXmlizationInfo() {
     return XMLIZATION_INFO;
   }
 
-  private static final XmlizationInfo XMLIZATION_INFO = new XmlizationInfo(
-          "casInitializerDescription",
-          new PropertyXmlInfo[] { new PropertyXmlInfo("frameworkImplementation"),
+  static final private XmlizationInfo XMLIZATION_INFO = new XmlizationInfo(
+          "casInitializerDescription", new PropertyXmlInfo[] {
+              new PropertyXmlInfo("frameworkImplementation"),
               new PropertyXmlInfo("implementationName"), new PropertyXmlInfo("metaData", null),
               new PropertyXmlInfo("externalResourceDependencies"),
               new PropertyXmlInfo("resourceManagerConfiguration", null) });

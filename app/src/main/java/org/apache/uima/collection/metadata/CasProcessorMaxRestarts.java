@@ -30,55 +30,52 @@ public interface CasProcessorMaxRestarts extends MetaDataObject {
   /**
    * Sets max tolerated restarts threshold for CasProcessor
    * 
-   * @param aRestartCount
-   *          - max restart count
+   * @param aRestartCount -
+   *          max restart count
    */
-  void setRestartCount(int aRestartCount);
+  public void setRestartCount(int aRestartCount);
 
   /**
    * Returns max restarts threshold fro CasProcessor
    * 
    * @return - restart count
    */
-  int getRestartCount();
+  public int getRestartCount();
 
   /**
    * Sets a strategy to apply by the CPE when max restart count is exceeded. The three supported
    * strategies are:
    * <ul>
-   * <li>terminate - termines the CPE
-   * <li>continue - continue despite the error
-   * <li>disable - disable CasProcessor
+   * <li> terminate - termines the CPE
+   * <li> continue - continue despite the error
+   * <li> disable - disable CasProcessor
    * </ul>
-   * 
-   * @param aAction
-   *          - action to take
+   * @param aAction -
+   *          action to take
    */
-  void setAction(String aAction);
+  public void setAction(String aAction);
 
   /**
    * Returns a strategy to apply by the CPE when max restart count is exceeded. The three supported
    * strategies are:
    * <ul>
-   * <li>terminate - termines the CPE
-   * <li>continue - continue despite the error
-   * <li>disable - disable CasProcessor
+   * <li> terminate - termines the CPE
+   * <li> continue - continue despite the error
+   * <li> disable - disable CasProcessor
    * </ul>
-   * 
    * @return - action as String
    */
-  String getAction();
+  public String getAction();
 
   /**
    * 
    * @return the wait time between successive retries
    */
-  int getWaitTimeBetweenRetries();
+  public int getWaitTimeBetweenRetries();
 
   /**
-   * @param i
-   *          time to wait between successive retries
+   * @param i time to wait between successive retries
    */
-  void setWaitTimeBetweenRetries(int i);
+  public void setWaitTimeBetweenRetries(int i);
 
 }

@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.uima.analysis_engine.asb.impl;
 
 import org.apache.uima.UIMAFramework;
@@ -42,7 +43,7 @@ public class FlowContainer {
   private FlowControllerContainer mFlowControllerContainer;
 
   private boolean mSofaAware;
-
+  
   private CASImpl mCAS;
 
   private UimaTimer mTimer = UIMAFramework.newTimer();
@@ -51,37 +52,38 @@ public class FlowContainer {
     mFlow = aFlow;
     mFlowControllerContainer = aFlowControllerContainer;
     mSofaAware = mFlowControllerContainer.getProcessingResourceMetaData().isSofaAware();
-    mCAS = (CASImpl) aCAS;
+    mCAS = (CASImpl)aCAS;
   }
 
-  public FlowContainer newCasProduced(final CAS newCAS, String producedBy)
+  public FlowContainer newCasProduced(CAS newCAS, String producedBy)
           throws AnalysisEngineProcessException {
     mTimer.startIt();
     CAS view = null;
     try {
-      view = Util.getStartingView(newCAS, mSofaAware,
-              mFlowControllerContainer.getUimaContextAdmin().getComponentInfo());
+      view = Util.getStartingView(
+          newCAS, 
+          mSofaAware, 
+          mFlowControllerContainer.getUimaContextAdmin().getComponentInfo());
       // now get the right interface(e.g. CAS or JCAS)
       // must be done before call to switchClassLoader
-      Class<? extends AbstractCas> requiredInterface = mFlowControllerContainer
-              .getRequiredCasInterface();
+      Class<? extends AbstractCas> requiredInterface = mFlowControllerContainer.getRequiredCasInterface();
       AbstractCas casToPass = getCasManager().getCasInterface(view, requiredInterface);
 
-      ((CASImpl) view).switchClassLoaderLockCasCL(getFlowClassLoader());
+      ((CASImpl)view).switchClassLoaderLockCasCL(getFlowClassLoader());
       Flow flow = mFlow.newCasProduced(casToPass, producedBy);
       if (flow instanceof CasFlow_ImplBase) {
-        ((CasFlow_ImplBase) flow).setCas(view);
+        ((CasFlow_ImplBase)flow).setCas(view);
       }
       if (flow instanceof JCasFlow_ImplBase) {
-        ((JCasFlow_ImplBase) flow).setJCas(view.getJCas());
+        ((JCasFlow_ImplBase)flow).setJCas(view.getJCas());
       }
       return new FlowContainer(flow, mFlowControllerContainer, newCAS);
     } catch (CASException e) {
       throw new AnalysisEngineProcessException(e);
     } finally {
-      newCAS.setCurrentComponentInfo(null);
       if (null != view) {
-        ((CASImpl) view).restoreClassLoaderUnlockCas();
+        ((CASImpl)view).restoreClassLoaderUnlockCas();
+        view.setCurrentComponentInfo(null);
       }
       mTimer.stopIt();
       getMBean().reportAnalysisTime(mTimer.getDuration());
@@ -100,28 +102,25 @@ public class FlowContainer {
       getMBean().reportAnalysisTime(mTimer.getDuration());
     }
   }
-
+  
   public void aborted() {
     try {
       mCAS.switchClassLoaderLockCasCL(getFlowClassLoader());
       mFlow.aborted();
     } finally {
       mCAS.restoreClassLoaderUnlockCas();
-      // https://issues.apache.org/jira/browse/UIMA-6057
-      mCAS.restoreClassLoaderUnlockCas(); // this one unlocks the aborted CAS itself
     }
   }
-
+  
   public boolean continueOnFailure(String failedAeKey, Exception failure) {
     try {
       mCAS.switchClassLoaderLockCasCL(getFlowClassLoader());
       return mFlow.continueOnFailure(failedAeKey, failure);
     } finally {
       mCAS.restoreClassLoaderUnlockCas();
-      // https://issues.apache.org/jira/browse/UIMA-6057
-      mCAS.restoreClassLoaderUnlockCas(); // this one unlocks the failed CAS itself
     }
   }
+
 
   private CasManager getCasManager() {
     return mFlowControllerContainer.getResourceManager().getCasManager();
@@ -129,14 +128,13 @@ public class FlowContainer {
 
   /**
    * Gets the MBean to use to report performance statistics.
-   * 
    * @return the MBean to use to report performance statistics
    */
   public AnalysisEngineManagementImpl getMBean() {
     return (AnalysisEngineManagementImpl) mFlowControllerContainer.getUimaContextAdmin()
             .getManagementInterface();
   }
-
+  
   private ClassLoader getFlowClassLoader() {
     return mFlowControllerContainer.getResourceManager().getExtensionClassLoader();
   }

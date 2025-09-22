@@ -71,8 +71,8 @@ public class ResourcePool {
    * @throws ResourceInitializationException
    *           if the Resource instances could not be created
    */
-  public ResourcePool(int aNumInstances, ResourceSpecifier aResourceSpecifier,
-          Class<? extends Resource> aResourceClass) throws ResourceInitializationException {
+  public ResourcePool(int aNumInstances, ResourceSpecifier aResourceSpecifier, Class<? extends Resource> aResourceClass)
+          throws ResourceInitializationException {
     this(aNumInstances, aResourceSpecifier, aResourceClass, null);
   }
 
@@ -94,8 +94,7 @@ public class ResourcePool {
    *           if the Resource instances could not be created
    */
   public ResourcePool(int aNumInstances, ResourceSpecifier aResourceSpecifier,
-          Class<? extends Resource> aResourceClass, Map<String, Object> aResourceInitParams)
-          throws ResourceInitializationException {
+          Class<? extends Resource> aResourceClass, Map<String, Object> aResourceInitParams) throws ResourceInitializationException {
     mNumInstances = aNumInstances;
 
     fillPool(aResourceSpecifier, aResourceClass, aResourceInitParams);
@@ -180,7 +179,6 @@ public class ResourcePool {
 
   /*
    * Checks out a specific resource from the pool, waiting as long as needed until it is free
-   * 
    * @param r
    */
 
@@ -193,7 +191,7 @@ public class ResourcePool {
     }
     mFreeInstances.remove(r);
   }
-
+  
   /**
    * Destroys all Resources in this pool.
    */
@@ -241,13 +239,12 @@ public class ResourcePool {
    * @throws ResourceInitializationException
    *           if the Resource instances could not be created
    */
-  protected void fillPool(ResourceSpecifier aResourceSpecifier,
-          Class<? extends Resource> aResourceClass, Map<String, Object> aResourceInitParams)
-          throws ResourceInitializationException {
+  protected void fillPool(ResourceSpecifier aResourceSpecifier, Class<? extends Resource> aResourceClass,
+          Map<String, Object> aResourceInitParams) throws ResourceInitializationException {
     // fill the pool
     for (int i = 0; i < mNumInstances; i++) {
-      Resource_ImplBase resource = (Resource_ImplBase) UIMAFramework.produceResource(aResourceClass,
-              aResourceSpecifier, aResourceInitParams);
+      Resource_ImplBase resource = (Resource_ImplBase) UIMAFramework.produceResource(
+              aResourceClass, aResourceSpecifier, aResourceInitParams);
 
       mAllInstances.add(resource);
       mFreeInstances.add(resource);
@@ -262,9 +259,9 @@ public class ResourcePool {
     return mFreeInstances;
   }
 
-  private final Vector<Resource> mAllInstances = new Vector<>();
+  private final Vector<Resource> mAllInstances = new Vector<Resource>();
 
-  private final Vector<Resource> mFreeInstances = new Vector<>();
+  private final Vector<Resource> mFreeInstances = new Vector<Resource>();
 
   private final int mNumInstances;
 

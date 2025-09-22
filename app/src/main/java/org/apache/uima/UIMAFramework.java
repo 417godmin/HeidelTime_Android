@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.uima;
 
 import java.util.HashMap;
@@ -52,6 +53,8 @@ import org.apache.uima.util.XMLParser;
  * class name of the <code>UIMAFramework</code> subclass that you wish to use. Note that this must
  * be done prior to loading this class. If the <code>uima.framework_impl</code> property has not
  * been set when this class is loaded, the default reference implementation will be used.
+ * 
+ * 
  */
 public abstract class UIMAFramework {
   /**
@@ -73,10 +76,9 @@ public abstract class UIMAFramework {
   /**
    * Key to be used in the Properties object returned by
    * {@link #getDefaultPerformanceTuningProperties()}. The value of this key indicates whether
-   * socket KeepAlive should be turned on (currently implemented only for Vinci clients). The
-   * default is true. A value of "false" (case insensitive) for this property disables the
-   * keepAlive; any other value leaves the default setting of true.
-   * 
+   * socket KeepAlive should be turned on (currently implemented only for Vinci clients).  The
+   * default is true.  A value of "false" (case insensitive) for this property disables the keepAlive; 
+   * any other value leaves the default setting of true.
    * @see java.net.Socket#setKeepAlive(boolean)
    */
   public static final Object SOCKET_KEEPALIVE_ENABLED = "socket_keepalive_enabled";
@@ -91,16 +93,6 @@ public abstract class UIMAFramework {
   public static final String JCAS_CACHE_ENABLED = "jcas_cache_enabled";
 
   /**
-   * Key to be used in the Properties object returned by
-   * {@link #getDefaultPerformanceTuningProperties()}. The value of this key indicates whether
-   * user-defined JCas classes should be loaded or skipped, during type system commit. The default
-   * is false; set to "true" to skip. This is used by the Component Descriptor Editor when
-   * manipulating type systems, to avoid any issues with loading and working with different type
-   * systems where any JCas classes might not match.
-   */
-  public static final String SKIP_USER_JCAS_LOADING = "SKIP_USER_JCAS_LOADING";
-
-  /**
    * To be implemented by subclasses; this should return a Properties object representing the
    * default performance tuning settings for the framework. It must return a new Properties object
    * each time it is called.
@@ -113,8 +105,8 @@ public abstract class UIMAFramework {
    * The singleton instance of <code>UIMAFramework</code> used by this application. The value of
    * this field is determined by the <code>uima.framework_impl</code> System property. During this
    * class's static initializer, a new instance of whatever class is named by this property will be
-   * created. If no value for this property is set, the default reference implementation
-   * ({@link org.apache.uima.impl.UIMAFramework_impl}) will be used.
+   * created. If no value for this property is set, the default reference implementation ({@link org.apache.uima.impl.UIMAFramework_impl})
+   * will be used.
    */
   private static final UIMAFramework mInstance;
 
@@ -163,9 +155,9 @@ public abstract class UIMAFramework {
   }
 
   /**
-   * Get a reference to the <code>ResourceFactory</code>. Most applications do not need to deal with
-   * the <code>ResourceFactory</code> - instead one of the static <code>produce</code> methods on
-   * this class may be used to create Resources.
+   * Get a reference to the <code>ResourceFactory</code>. Most applications do not need to deal
+   * with the <code>ResourceFactory</code> - instead one of the static <code>produce</code>
+   * methods on this class may be used to create Resources.
    * <p>
    * The framework's Resource Factory always implements {@link CompositeResourceFactory}. A
    * composite resource factory produces resources by delegating to other {@link ResourceFactory}
@@ -179,8 +171,8 @@ public abstract class UIMAFramework {
   }
 
   /**
-   * Get a reference to the {@link ResourceSpecifierFactory}. This factory is used when constructing
-   * {@link ResourceSpecifier}s from scratch.
+   * Get a reference to the {@link ResourceSpecifierFactory}. This factory is used when
+   * constructing {@link ResourceSpecifier}s from scratch.
    * <p>
    * 
    * @return the <code>ResourceSpecifierFactory</code> to be used by the application.
@@ -190,8 +182,8 @@ public abstract class UIMAFramework {
   }
 
   /**
-   * Get a reference to the UIMA {@link XMLParser}, which is used to parse {@link ResourceSpecifier}
-   * objects from their XML representations.
+   * Get a reference to the UIMA {@link XMLParser}, which is used to parse
+   * {@link ResourceSpecifier} objects from their XML representations.
    * 
    * @return the <code>XMLParser</code> to be used by the application.
    */
@@ -204,7 +196,8 @@ public abstract class UIMAFramework {
    * <code>CollectionProcessingManager</code> facilitates the development of applications that
    * process collections of entities using an {@link AnalysisEngine}.
    * 
-   * @return a new <code>CollectionProcessingManager</code> instance to be used by the application.
+   * @return a new <code>CollectionProcessingManager</code> instance to be used by the
+   *         application.
    */
   public static CollectionProcessingManager newCollectionProcessingManager() {
     return getInstance()._newCollectionProcessingManager(null);
@@ -216,10 +209,11 @@ public abstract class UIMAFramework {
    * process collections of entities using an {@link AnalysisEngine}.
    * 
    * @param aResourceManager
-   *          the <code>ResourceManager</code> to be used by this CPM. If not specified, the default
-   *          one returned by {@link #newDefaultResourceManager()} will be used.
+   *          the <code>ResourceManager</code> to be used by this CPM. If not specified, the
+   *          default one returned by {@link #newDefaultResourceManager()} will be used.
    * 
-   * @return a new <code>CollectionProcessingManager</code> instance to be used by the application.
+   * @return a new <code>CollectionProcessingManager</code> instance to be used by the
+   *         application.
    */
   public static CollectionProcessingManager newCollectionProcessingManager(
           ResourceManager aResourceManager) {
@@ -228,19 +222,20 @@ public abstract class UIMAFramework {
 
   /**
    * Produces an appropriate <code>Resource</code> instance from a <code>ResourceSpecifier</code>.
-   * The <code>ResourceSpecifier</code> may either specify how to construct a new instance or how to
-   * locate an existing instance.
+   * The <code>ResourceSpecifier</code> may either specify how to construct a new instance or how
+   * to locate an existing instance.
    * 
    * @param aSpecifier
    *          an object that specifies how to acquire an instance of a <code>Resource</code>.
    * @param aAdditionalParams
    *          a Map containing additional parameters to pass to the
-   *          {@link Resource#initialize(ResourceSpecifier,Map)} method. May be <code>null</code> if
-   *          there are no parameters. Parameter names are defined as constants on the
-   *          {@link AnalysisEngine}, and {@link Resource}. Furthermore, the entry under the key
-   *          {@link Resource#PARAM_PERFORMANCE_TUNING_SETTINGS} is a map which may contain settings
-   *          with keys defined as constants here {@link UIMAFramework} interfaces. For example this
-   *          can be used to set performance-tuning settings as described in
+   *          {@link Resource#initialize(ResourceSpecifier,Map)} method. May be <code>null</code>
+   *          if there are no parameters. Parameter names are defined as constants on the
+   *          {@link AnalysisEngine}, and {@link Resource}.
+   *          Furthermore, the entry under the key {@link Resource#PARAM_PERFORMANCE_TUNING_SETTINGS}
+   *          is a map which may contain settings with keys defined as constants here {@link UIMAFramework} interfaces. 
+   *          For example this can be used to set
+   *          performance-tuning settings as described in
    *          {@link #getDefaultPerformanceTuningProperties()}.
    * 
    * @return a <code>Resource</code> instance.
@@ -248,15 +243,15 @@ public abstract class UIMAFramework {
    * @throws ResourceInitializationException
    *           if a failure occurred during production of the resource.
    */
-  public static Resource produceResource(ResourceSpecifier aSpecifier,
-          Map<String, Object> aAdditionalParams) throws ResourceInitializationException {
+  public static Resource produceResource(ResourceSpecifier aSpecifier, Map<String, Object> aAdditionalParams)
+          throws ResourceInitializationException {
     return produceResource(Resource.class, aSpecifier, aAdditionalParams);
   }
 
   /**
    * Produces an appropriate <code>Resource</code> instance of a specified class from a
-   * <code>ResourceSpecifier</code>. The <code>ResourceSpecifier</code> may either specify how to
-   * construct a new instance or how to locate an existing instance.
+   * <code>ResourceSpecifier</code>. The <code>ResourceSpecifier</code> may either specify how
+   * to construct a new instance or how to locate an existing instance.
    * 
    * @param aResourceClass
    *          a subclass of <code>Resource</code> to be produced.
@@ -264,12 +259,13 @@ public abstract class UIMAFramework {
    *          an object that specifies how to acquire an instance of a <code>Resource</code>.
    * @param aAdditionalParams
    *          a Map containing additional parameters to pass to the
-   *          {@link Resource#initialize(ResourceSpecifier,Map)} method. May be <code>null</code> if
-   *          there are no parameters. Parameter names are defined as constants on the
-   *          {@link AnalysisEngine}, and {@link Resource}. Furthermore, the entry under the key
-   *          {@link Resource#PARAM_PERFORMANCE_TUNING_SETTINGS} is a map which may contain settings
-   *          with keys defined as constants here {@link UIMAFramework} interfaces. For example this
-   *          can be used to set performance-tuning settings as described in
+   *          {@link Resource#initialize(ResourceSpecifier,Map)} method. May be <code>null</code>
+   *          if there are no parameters. Parameter names are defined as constants on the
+   *          {@link AnalysisEngine}, and {@link Resource}.
+   *          Furthermore, the entry under the key {@link Resource#PARAM_PERFORMANCE_TUNING_SETTINGS}
+   *          is a map which may contain settings with keys defined as constants here {@link UIMAFramework} interfaces. 
+   *          For example this can be used to set
+   *          performance-tuning settings as described in
    *          {@link #getDefaultPerformanceTuningProperties()}.
    * 
    * @return a <code>Resource</code> instance. This will be a subclass of
@@ -278,9 +274,8 @@ public abstract class UIMAFramework {
    * @throws ResourceInitializationException
    *           if a failure occurred during production of the resource.
    */
-  public static Resource produceResource(Class<? extends Resource> aResourceClass,
-          ResourceSpecifier aSpecifier, Map<String, Object> aAdditionalParams)
-          throws ResourceInitializationException {
+  public static Resource produceResource(Class<? extends Resource> aResourceClass, ResourceSpecifier aSpecifier,
+          Map<String, Object> aAdditionalParams) throws ResourceInitializationException {
     Resource resource = getResourceFactory().produceResource(aResourceClass, aSpecifier,
             aAdditionalParams);
     if (resource == null) {
@@ -292,24 +287,26 @@ public abstract class UIMAFramework {
 
   /**
    * Produces an appropriate <code>Resource</code> instance of a specified class from a
-   * <code>ResourceSpecifier</code>. The <code>ResourceSpecifier</code> may either specify how to
-   * construct a new instance or how to locate an existing instance.
+   * <code>ResourceSpecifier</code>. The <code>ResourceSpecifier</code> may either specify how
+   * to construct a new instance or how to locate an existing instance.
    * 
    * @param aResourceClass
    *          a subclass of <code>Resource</code> to be produced.
    * @param aSpecifier
    *          an object that specifies how to acquire an instance of a <code>Resource</code>.
    * @param aResourceManager
-   *          the <code>ResourceManager</code> to be used by this analysis engine. If not specified,
-   *          the default one returned by {@link #newDefaultResourceManager()} will be used.
+   *          the <code>ResourceManager</code> to be used by this analysis engine. If not
+   *          specified, the default one returned by {@link #newDefaultResourceManager()} will be
+   *          used.
    * @param aAdditionalParams
    *          a Map containing additional parameters to pass to the
-   *          {@link Resource#initialize(ResourceSpecifier,Map)} method. May be <code>null</code> if
-   *          there are no parameters. Parameter names are defined as constants on the
-   *          {@link AnalysisEngine}, and {@link Resource}. Furthermore, the entry under the key
-   *          {@link Resource#PARAM_PERFORMANCE_TUNING_SETTINGS} is a map which may contain settings
-   *          with keys defined as constants here {@link UIMAFramework} interfaces. For example this
-   *          can be used to set performance-tuning settings as described in
+   *          {@link Resource#initialize(ResourceSpecifier,Map)} method. May be <code>null</code>
+   *          if there are no parameters. Parameter names are defined as constants on the
+   *          {@link AnalysisEngine}, and {@link Resource}.
+   *          Furthermore, the entry under the key {@link Resource#PARAM_PERFORMANCE_TUNING_SETTINGS}
+   *          is a map which may contain settings with keys defined as constants here {@link UIMAFramework} interfaces. 
+   *          For example this can be used to set
+   *          performance-tuning settings as described in
    *          {@link #getDefaultPerformanceTuningProperties()}.
    * 
    * @return a <code>Resource</code> instance. This will be a subclass of
@@ -318,37 +315,36 @@ public abstract class UIMAFramework {
    * @throws ResourceInitializationException
    *           if a failure occurred during production of the resource.
    */
-  public static Resource produceResource(Class<? extends Resource> aResourceClass,
-          ResourceSpecifier aSpecifier, ResourceManager aResourceManager,
-          Map<String, Object> aAdditionalParams) throws ResourceInitializationException {
+  public static Resource produceResource(Class<? extends Resource> aResourceClass, ResourceSpecifier aSpecifier,
+          ResourceManager aResourceManager, Map<String, Object> aAdditionalParams)
+          throws ResourceInitializationException {
     // add ResourceManager to aAdditionalParams map
     if (aResourceManager != null) {
       if (aAdditionalParams == null) {
-        aAdditionalParams = new HashMap<>();
-      } else { // copy to avoid modifying the original which might be immutable
-        aAdditionalParams = new HashMap<>(aAdditionalParams);
+        aAdditionalParams = new HashMap<String, Object>();
+      } else {  // copy to avoid modifying the original which might be immutable
+        aAdditionalParams = new HashMap<String, Object>(aAdditionalParams);
       }
       aAdditionalParams.put(Resource.PARAM_RESOURCE_MANAGER, aResourceManager);
     }
 
     return produceResource(aResourceClass, aSpecifier, aAdditionalParams);
   }
-
+  
   /**
-   * Called if AE initialization succeeds. Sets the AE state to Ready and time it took to initialize
-   * the AE.
+   * Called if AE initialization succeeds. Sets the AE state to Ready and time
+   * it took to initialize the AE. 
    * 
    * @param ae
    * @param initStartTime
    */
   private static void updateAeState(AnalysisEngine ae, long initStartTime) {
-    if (ae.getManagementInterface() instanceof AnalysisEngineManagementImpl) {
-      ((AnalysisEngineManagementImpl) ae.getManagementInterface()).setState(State.Ready);
-      ((AnalysisEngineManagementImpl) ae.getManagementInterface())
-              .setInitializationTime(System.currentTimeMillis() - initStartTime);
-    }
+	  if ( ae.getManagementInterface() instanceof AnalysisEngineManagementImpl) {
+	      ((AnalysisEngineManagementImpl)ae.getManagementInterface()).setState(State.Ready);
+	      ((AnalysisEngineManagementImpl)ae.getManagementInterface()).
+	        setInitializationTime( System.currentTimeMillis() - initStartTime);
+	    }
   }
-
   /**
    * Produces an {@link AnalysisEngine} instance from a <code>ResourceSpecifier</code>. The
    * <code>ResourceSpecifier</code> may either specify how to construct a new instance or how to
@@ -359,8 +355,8 @@ public abstract class UIMAFramework {
    * information.
    * 
    * @param aSpecifier
-   *          an object that specifies how to acquire an instance of a <code>Resource</code>. This
-   *          must specify a subclass of <code>AnalysisEngine</code>.
+   *          an object that specifies how to acquire an instance of a <code>Resource</code>.
+   *          This must specify a subclass of <code>AnalysisEngine</code>.
    * 
    * @return an <code>AnalysisEngine</code> instance.
    * 
@@ -369,13 +365,13 @@ public abstract class UIMAFramework {
    */
   public static AnalysisEngine produceAnalysisEngine(ResourceSpecifier aSpecifier)
           throws ResourceInitializationException {
-    AnalysisEngine ae = null;
-    // Fetch current time to compute initialization time
-    long initStartTime = System.currentTimeMillis();
-    ae = (AnalysisEngine) produceResource(AnalysisEngine.class, aSpecifier, null);
-    // initialization succeeded, update AE state and initialization time
-    updateAeState(ae, initStartTime);
-    return ae;
+	    AnalysisEngine ae = null;
+	    //	Fetch current time to compute initialization time
+	    long initStartTime = System.currentTimeMillis();
+	    ae = (AnalysisEngine) produceResource(AnalysisEngine.class, aSpecifier, null);
+	    //	initialization succeeded, update AE state and initialization time
+	    updateAeState(ae,initStartTime);
+	    return ae;
 
   }
 
@@ -385,16 +381,17 @@ public abstract class UIMAFramework {
    * locate an existing instance.
    * 
    * @param aSpecifier
-   *          an object that specifies how to acquire an instance of a <code>Resource</code>. This
-   *          must specify a subclass of <code>AnalysisEngine</code>.
+   *          an object that specifies how to acquire an instance of a <code>Resource</code>.
+   *          This must specify a subclass of <code>AnalysisEngine</code>.
    * @param aAdditionalParams
    *          a Map containing additional parameters to pass to the
-   *          {@link Resource#initialize(ResourceSpecifier,Map)} method. May be <code>null</code> if
-   *          there are no parameters. Parameter names are defined as constants on the
-   *          {@link AnalysisEngine}, and {@link Resource}. Furthermore, the entry under the key
-   *          {@link Resource#PARAM_PERFORMANCE_TUNING_SETTINGS} is a map which may contain settings
-   *          with keys defined as constants here {@link UIMAFramework} interfaces. For example this
-   *          can be used to set performance-tuning settings as described in
+   *          {@link Resource#initialize(ResourceSpecifier,Map)} method. May be <code>null</code>
+   *          if there are no parameters. Parameter names are defined as constants on the
+   *          {@link AnalysisEngine}, and {@link Resource}.
+   *          Furthermore, the entry under the key {@link Resource#PARAM_PERFORMANCE_TUNING_SETTINGS}
+   *          is a map which may contain settings with keys defined as constants here {@link UIMAFramework} interfaces. 
+   *          For example this can be used to set
+   *          performance-tuning settings as described in
    *          {@link #getDefaultPerformanceTuningProperties()}.
    * 
    * @return an <code>AnalysisEngine</code> instance.
@@ -404,13 +401,13 @@ public abstract class UIMAFramework {
    */
   public static AnalysisEngine produceAnalysisEngine(ResourceSpecifier aSpecifier,
           Map<String, Object> aAdditionalParams) throws ResourceInitializationException {
-    AnalysisEngine ae = null;
-    // Fetch current time to compute initialization time
-    long initStartTime = System.currentTimeMillis();
-    ae = (AnalysisEngine) produceResource(AnalysisEngine.class, aSpecifier, aAdditionalParams);
-    // initialization succeeded, update AE state and initialization time
-    updateAeState(ae, initStartTime);
-    return ae;
+	    AnalysisEngine ae = null;
+	    //	Fetch current time to compute initialization time
+	    long initStartTime = System.currentTimeMillis();
+	    ae = (AnalysisEngine) produceResource(AnalysisEngine.class, aSpecifier, aAdditionalParams);
+	    //	initialization succeeded, update AE state and initialization time
+	    updateAeState(ae,initStartTime);
+	    return ae;
 
   }
 
@@ -420,19 +417,21 @@ public abstract class UIMAFramework {
    * locate an existing instance.
    * 
    * @param aSpecifier
-   *          an object that specifies how to acquire an instance of a <code>Resource</code>. This
-   *          must specify a subclass of <code>AnalysisEngine</code>.
+   *          an object that specifies how to acquire an instance of a <code>Resource</code>.
+   *          This must specify a subclass of <code>AnalysisEngine</code>.
    * @param aResourceManager
-   *          the <code>ResourceManager</code> to be used by this analysis engine. If not specified,
-   *          the default one returned by {@link #newDefaultResourceManager()} will be used.
+   *          the <code>ResourceManager</code> to be used by this analysis engine. If not
+   *          specified, the default one returned by {@link #newDefaultResourceManager()} will be
+   *          used.
    * @param aAdditionalParams
    *          a Map containing additional parameters to pass to the
-   *          {@link Resource#initialize(ResourceSpecifier,Map)} method. May be <code>null</code> if
-   *          there are no parameters. Parameter names are defined as constants on the
-   *          {@link AnalysisEngine}, and {@link Resource}. Furthermore, the entry under the key
-   *          {@link Resource#PARAM_PERFORMANCE_TUNING_SETTINGS} is a map which may contain settings
-   *          with keys defined as constants here {@link UIMAFramework} interfaces. For example this
-   *          can be used to set performance-tuning settings as described in
+   *          {@link Resource#initialize(ResourceSpecifier,Map)} method. May be <code>null</code>
+   *          if there are no parameters. Parameter names are defined as constants on the
+   *          {@link AnalysisEngine}, and {@link Resource}.
+   *          Furthermore, the entry under the key {@link Resource#PARAM_PERFORMANCE_TUNING_SETTINGS}
+   *          is a map which may contain settings with keys defined as constants here {@link UIMAFramework} interfaces. 
+   *          For example this can be used to set
+   *          performance-tuning settings as described in
    *          {@link #getDefaultPerformanceTuningProperties()}.
    * 
    * @return an <code>AnalysisEngine</code> instance.
@@ -444,12 +443,12 @@ public abstract class UIMAFramework {
           ResourceManager aResourceManager, Map<String, Object> aAdditionalParams)
           throws ResourceInitializationException {
     AnalysisEngine ae = null;
-    // Fetch current time to compute initialization time
+    //	Fetch current time to compute initialization time
     long initStartTime = System.currentTimeMillis();
     ae = (AnalysisEngine) produceResource(AnalysisEngine.class, aSpecifier, aResourceManager,
             aAdditionalParams);
-    // initialization succeeded, update AE state and initialization time
-    updateAeState(ae, initStartTime);
+    //	initialization succeeded, update AE state and initialization time
+    updateAeState(ae,initStartTime);
     return ae;
   }
 
@@ -465,18 +464,18 @@ public abstract class UIMAFramework {
    * {@link AnalysisEngine#PARAM_TIMEOUT_PERIOD} in the parameter map.
    * 
    * @param aSpecifier
-   *          an object that specifies how to acquire an instance of a <code>Resource</code>. This
-   *          must specify a subclass of <code>AnalysisEngine</code>.
+   *          an object that specifies how to acquire an instance of a <code>Resource</code>.
+   *          This must specify a subclass of <code>AnalysisEngine</code>.
    * @param aMaxSimultaneousRequests
    *          the number of simultaneous requests that this AnalysisEngine should be able to
    *          process. The value for this parameter should be chosen careful - see the JavaDocs for
    *          {@link AnalysisEngine#PARAM_NUM_SIMULTANEOUS_REQUESTS}.
-   * @param aTimeoutPeriod
-   *          - when the number of simultaneous requests exceeds
-   *          <code>aMaxSimultaneousReqeusts</code>, additional requests will wait for other
-   *          requests to finish. This parameter determines the maximum number of milliseconds that
-   *          a new request should wait before throwing an exception - a value of 0 will cause them
-   *          to wait forever. See the JavaDocs for {@link AnalysisEngine#PARAM_TIMEOUT_PERIOD}.
+   * @param aTimeoutPeriod -
+   *          when the number of simultaneous requests exceeds <code>aMaxSimultaneousReqeusts</code>,
+   *          additional requests will wait for other requests to finish. This parameter determines
+   *          the maximum number of milliseconds that a new request should wait before throwing an
+   *          exception - a value of 0 will cause them to wait forever. See the JavaDocs for
+   *          {@link AnalysisEngine#PARAM_TIMEOUT_PERIOD}.
    * 
    * @return an <code>AnalysisEngine</code> instance.
    * 
@@ -486,18 +485,19 @@ public abstract class UIMAFramework {
   public static AnalysisEngine produceAnalysisEngine(ResourceSpecifier aSpecifier,
           int aMaxSimultaneousRequests, int aTimeoutPeriod) throws ResourceInitializationException {
     // add parameters to the aAdditionalParams map
-    Map<String, Object> aAdditionalParams = new HashMap<>();
+    Map<String, Object> aAdditionalParams = new HashMap<String, Object>();
 
-    aAdditionalParams.put(AnalysisEngine.PARAM_NUM_SIMULTANEOUS_REQUESTS, aMaxSimultaneousRequests);
-    aAdditionalParams.put(AnalysisEngine.PARAM_TIMEOUT_PERIOD, aTimeoutPeriod);
+    aAdditionalParams.put(AnalysisEngine.PARAM_NUM_SIMULTANEOUS_REQUESTS, Integer.valueOf(
+            aMaxSimultaneousRequests));
+    aAdditionalParams.put(AnalysisEngine.PARAM_TIMEOUT_PERIOD, Integer.valueOf(aTimeoutPeriod));
 
     AnalysisEngine ae = null;
-    // Fetch current time to compute initialization time
+    //	Fetch current time to compute initialization time
     long initStartTime = System.currentTimeMillis();
 
     ae = (AnalysisEngine) produceResource(AnalysisEngine.class, aSpecifier, aAdditionalParams);
-    // initialization succeeded, update AE state and initialization time
-    updateAeState(ae, initStartTime);
+    //	initialization succeeded, update AE state and initialization time
+    updateAeState(ae,initStartTime);
     return ae;
   }
 
@@ -511,8 +511,8 @@ public abstract class UIMAFramework {
    * information.
    * 
    * @param aSpecifier
-   *          an object that specifies how to acquire an instance of a <code>Resource</code>. This
-   *          must specify a subclass of <code>TextAnalysisEngine</code>.
+   *          an object that specifies how to acquire an instance of a <code>Resource</code>.
+   *          This must specify a subclass of <code>TextAnalysisEngine</code>.
    * 
    * @return a <code>TextAnalysisEngine</code> instance.
    * 
@@ -521,9 +521,8 @@ public abstract class UIMAFramework {
    * 
    * @deprecated As of v2.0, {@link #produceAnalysisEngine(ResourceSpecifier)} should be used
    *             instead.
-   * @forRemoval 4.0.0
    */
-  @Deprecated(since = "2.0.0")
+  @Deprecated
   public static TextAnalysisEngine produceTAE(ResourceSpecifier aSpecifier)
           throws ResourceInitializationException {
     return (TextAnalysisEngine) produceResource(TextAnalysisEngine.class, aSpecifier, null);
@@ -535,16 +534,17 @@ public abstract class UIMAFramework {
    * locate an existing instance.
    * 
    * @param aSpecifier
-   *          an object that specifies how to acquire an instance of a <code>Resource</code>. This
-   *          must specify a subclass of <code>TextAnalysisEngine</code>.
+   *          an object that specifies how to acquire an instance of a <code>Resource</code>.
+   *          This must specify a subclass of <code>TextAnalysisEngine</code>.
    * @param aAdditionalParams
    *          a Map containing additional parameters to pass to the
-   *          {@link Resource#initialize(ResourceSpecifier,Map)} method. May be <code>null</code> if
-   *          there are no parameters. Parameter names are defined as constants on the
-   *          {@link AnalysisEngine}, and {@link Resource}. Furthermore, the entry under the key
-   *          {@link Resource#PARAM_PERFORMANCE_TUNING_SETTINGS} is a map which may contain settings
-   *          with keys defined as constants here {@link UIMAFramework} interfaces. For example this
-   *          can be used to set performance-tuning settings as described in
+   *          {@link Resource#initialize(ResourceSpecifier,Map)} method. May be <code>null</code>
+   *          if there are no parameters. Parameter names are defined as constants on the
+   *          {@link AnalysisEngine}, and {@link Resource}.
+   *          Furthermore, the entry under the key {@link Resource#PARAM_PERFORMANCE_TUNING_SETTINGS}
+   *          is a map which may contain settings with keys defined as constants here {@link UIMAFramework} interfaces. 
+   *          For example this can be used to set
+   *          performance-tuning settings as described in
    *          {@link #getDefaultPerformanceTuningProperties()}.
    * 
    * @return a <code>TextAnalysisEngine</code> instance.
@@ -554,11 +554,10 @@ public abstract class UIMAFramework {
    * 
    * @deprecated As of v2.0, {@link #produceAnalysisEngine(ResourceSpecifier,Map)} should be used
    *             instead.
-   * @forRemoval 4.0.0
    */
-  @Deprecated(since = "2.0.0")
-  public static TextAnalysisEngine produceTAE(ResourceSpecifier aSpecifier,
-          Map<String, Object> aAdditionalParams) throws ResourceInitializationException {
+  @Deprecated
+  public static TextAnalysisEngine produceTAE(ResourceSpecifier aSpecifier, Map<String, Object> aAdditionalParams)
+          throws ResourceInitializationException {
     return (TextAnalysisEngine) produceResource(TextAnalysisEngine.class, aSpecifier,
             aAdditionalParams);
   }
@@ -569,19 +568,21 @@ public abstract class UIMAFramework {
    * locate an existing instance.
    * 
    * @param aSpecifier
-   *          an object that specifies how to acquire an instance of a <code>Resource</code>. This
-   *          must specify a subclass of <code>TextAnalysisEngine</code>.
+   *          an object that specifies how to acquire an instance of a <code>Resource</code>.
+   *          This must specify a subclass of <code>TextAnalysisEngine</code>.
    * @param aResourceManager
-   *          the <code>ResourceManager</code> to be used by this analysis engine. If not specified,
-   *          the default one returned by {@link #newDefaultResourceManager()} will be used.
+   *          the <code>ResourceManager</code> to be used by this analysis engine. If not
+   *          specified, the default one returned by {@link #newDefaultResourceManager()} will be
+   *          used.
    * @param aAdditionalParams
    *          a Map containing additional parameters to pass to the
-   *          {@link Resource#initialize(ResourceSpecifier,Map)} method. May be <code>null</code> if
-   *          there are no parameters. Parameter names are defined as constants on the
-   *          {@link AnalysisEngine}, and {@link Resource}. Furthermore, the entry under the key
-   *          {@link Resource#PARAM_PERFORMANCE_TUNING_SETTINGS} is a map which may contain settings
-   *          with keys defined as constants here {@link UIMAFramework} interfaces. For example this
-   *          can be used to set performance-tuning settings as described in
+   *          {@link Resource#initialize(ResourceSpecifier,Map)} method. May be <code>null</code>
+   *          if there are no parameters. Parameter names are defined as constants on the
+   *          {@link AnalysisEngine}, and {@link Resource}.
+   *          Furthermore, the entry under the key {@link Resource#PARAM_PERFORMANCE_TUNING_SETTINGS}
+   *          is a map which may contain settings with keys defined as constants here {@link UIMAFramework} interfaces. 
+   *          For example this can be used to set
+   *          performance-tuning settings as described in
    *          {@link #getDefaultPerformanceTuningProperties()}.
    * 
    * @return a <code>TextAnalysisEngine</code> instance.
@@ -591,9 +592,8 @@ public abstract class UIMAFramework {
    * 
    * @deprecated As of v2.0, {@link #produceAnalysisEngine(ResourceSpecifier,ResourceManager,Map)}
    *             should be used instead.
-   * @forRemoval 4.0.0
    */
-  @Deprecated(since = "2.0.0")
+  @Deprecated
   public static TextAnalysisEngine produceTAE(ResourceSpecifier aSpecifier,
           ResourceManager aResourceManager, Map<String, Object> aAdditionalParams)
           throws ResourceInitializationException {
@@ -606,25 +606,25 @@ public abstract class UIMAFramework {
    * <code>ResourceSpecifier</code> may either specify how to construct a new instance or how to
    * locate an existing instance.
    * <p>
-   * This version of <code>produceTAE</code> allows the convenient creation of TAEs that can handle
-   * multiple simultaneous requests. Using this method is equivalent to using
+   * This version of <code>produceTAE</code> allows the convenient creation of TAEs that can
+   * handle multiple simultaneous requests. Using this method is equivalent to using
    * {@link #produceTAE(ResourceSpecifier,Map)} and including values for
    * {@link AnalysisEngine#PARAM_NUM_SIMULTANEOUS_REQUESTS} and
    * {@link AnalysisEngine#PARAM_TIMEOUT_PERIOD} in the parameter map.
    * 
    * @param aSpecifier
-   *          an object that specifies how to acquire an instance of a <code>Resource</code>. This
-   *          must specify a subclass of <code>TextAnalysisEngine</code>.
+   *          an object that specifies how to acquire an instance of a <code>Resource</code>.
+   *          This must specify a subclass of <code>TextAnalysisEngine</code>.
    * @param aMaxSimultaneousRequests
    *          the number of simultaneous requests that this TAE should be able to process. The value
    *          for this parameter should be chosen careful - see the JavaDocs for
    *          {@link AnalysisEngine#PARAM_NUM_SIMULTANEOUS_REQUESTS}.
-   * @param aTimeoutPeriod
-   *          - when the number of simultaneous requests exceeds
-   *          <code>aMaxSimultaneousReqeusts</code>, additional requests will wait for other
-   *          requests to finish. This parameter determines the maximum number of milliseconds that
-   *          a new request should wait before throwing an exception - a value of 0 will cause them
-   *          to wait forever. See the JavaDocs for {@link AnalysisEngine#PARAM_TIMEOUT_PERIOD}.
+   * @param aTimeoutPeriod -
+   *          when the number of simultaneous requests exceeds <code>aMaxSimultaneousReqeusts</code>,
+   *          additional requests will wait for other requests to finish. This parameter determines
+   *          the maximum number of milliseconds that a new request should wait before throwing an
+   *          exception - a value of 0 will cause them to wait forever. See the JavaDocs for
+   *          {@link AnalysisEngine#PARAM_TIMEOUT_PERIOD}.
    * 
    * @return a <code>TextAnalysisEngine</code> instance.
    * 
@@ -638,10 +638,11 @@ public abstract class UIMAFramework {
   public static TextAnalysisEngine produceTAE(ResourceSpecifier aSpecifier,
           int aMaxSimultaneousRequests, int aTimeoutPeriod) throws ResourceInitializationException {
     // add parameters to the aAdditionalParams map
-    Map<String, Object> aAdditionalParams = new HashMap<>();
+    Map<String, Object> aAdditionalParams = new HashMap<String, Object>();
 
-    aAdditionalParams.put(AnalysisEngine.PARAM_NUM_SIMULTANEOUS_REQUESTS, aMaxSimultaneousRequests);
-    aAdditionalParams.put(AnalysisEngine.PARAM_TIMEOUT_PERIOD, aTimeoutPeriod);
+    aAdditionalParams.put(AnalysisEngine.PARAM_NUM_SIMULTANEOUS_REQUESTS, Integer.valueOf(
+            aMaxSimultaneousRequests));
+    aAdditionalParams.put(AnalysisEngine.PARAM_TIMEOUT_PERIOD, Integer.valueOf(aTimeoutPeriod));
 
     return (TextAnalysisEngine) produceResource(TextAnalysisEngine.class, aSpecifier,
             aAdditionalParams);
@@ -653,8 +654,8 @@ public abstract class UIMAFramework {
    * locate an existing instance.
    * 
    * @param aSpecifier
-   *          an object that specifies how to acquire an instance of a <code>Resource</code>. This
-   *          must specify a subclass of <code>CasConsumer</code>.
+   *          an object that specifies how to acquire an instance of a <code>Resource</code>.
+   *          This must specify a subclass of <code>CasConsumer</code>.
    * 
    * @return a <code>CasConsumer</code> instance.
    * 
@@ -672,16 +673,17 @@ public abstract class UIMAFramework {
    * locate an existing instance.
    * 
    * @param aSpecifier
-   *          an object that specifies how to acquire an instance of a <code>Resource</code>. This
-   *          must specify a subclass of <code>CasConsumer</code>.
+   *          an object that specifies how to acquire an instance of a <code>Resource</code>.
+   *          This must specify a subclass of <code>CasConsumer</code>.
    * @param aAdditionalParams
    *          a Map containing additional parameters to pass to the
-   *          {@link Resource#initialize(ResourceSpecifier,Map)} method. May be <code>null</code> if
-   *          there are no parameters. Parameter names are defined as constants on the
-   *          {@link AnalysisEngine}, and {@link Resource}. Furthermore, the entry under the key
-   *          {@link Resource#PARAM_PERFORMANCE_TUNING_SETTINGS} is a map which may contain settings
-   *          with keys defined as constants here {@link UIMAFramework} interfaces. For example this
-   *          can be used to set performance-tuning settings as described in
+   *          {@link Resource#initialize(ResourceSpecifier,Map)} method. May be <code>null</code>
+   *          if there are no parameters. Parameter names are defined as constants on the
+   *          {@link AnalysisEngine}, and {@link Resource}.
+   *          Furthermore, the entry under the key {@link Resource#PARAM_PERFORMANCE_TUNING_SETTINGS}
+   *          is a map which may contain settings with keys defined as constants here {@link UIMAFramework} interfaces. 
+   *          For example this can be used to set
+   *          performance-tuning settings as described in
    *          {@link #getDefaultPerformanceTuningProperties()}.
    * 
    * @return a <code>CasConsumer</code> instance.
@@ -689,8 +691,8 @@ public abstract class UIMAFramework {
    * @throws ResourceInitializationException
    *           if a failure occurred during production of the resource.
    */
-  public static CasConsumer produceCasConsumer(ResourceSpecifier aSpecifier,
-          Map<String, Object> aAdditionalParams) throws ResourceInitializationException {
+  public static CasConsumer produceCasConsumer(ResourceSpecifier aSpecifier, Map<String, Object> aAdditionalParams)
+          throws ResourceInitializationException {
     return (CasConsumer) produceResource(CasConsumer.class, aSpecifier, aAdditionalParams);
   }
 
@@ -700,19 +702,20 @@ public abstract class UIMAFramework {
    * locate an existing instance.
    * 
    * @param aSpecifier
-   *          an object that specifies how to acquire an instance of a <code>Resource</code>. This
-   *          must specify a subclass of <code>CasConsumer</code>.
+   *          an object that specifies how to acquire an instance of a <code>Resource</code>.
+   *          This must specify a subclass of <code>CasConsumer</code>.
    * @param aResourceManager
-   *          the <code>ResourceManager</code> to be used by this CasConsumer. If not specified, the
-   *          default one returned by {@link #newDefaultResourceManager()} will be used.
+   *          the <code>ResourceManager</code> to be used by this CasConsumer. If not specified,
+   *          the default one returned by {@link #newDefaultResourceManager()} will be used.
    * @param aAdditionalParams
    *          a Map containing additional parameters to pass to the
-   *          {@link Resource#initialize(ResourceSpecifier,Map)} method. May be <code>null</code> if
-   *          there are no parameters. Parameter names are defined as constants on the
-   *          {@link AnalysisEngine}, and {@link Resource}. Furthermore, the entry under the key
-   *          {@link Resource#PARAM_PERFORMANCE_TUNING_SETTINGS} is a map which may contain settings
-   *          with keys defined as constants here {@link UIMAFramework} interfaces. For example this
-   *          can be used to set performance-tuning settings as described in
+   *          {@link Resource#initialize(ResourceSpecifier,Map)} method. May be <code>null</code>
+   *          if there are no parameters. Parameter names are defined as constants on the
+   *          {@link AnalysisEngine}, and {@link Resource}.
+   *          Furthermore, the entry under the key {@link Resource#PARAM_PERFORMANCE_TUNING_SETTINGS}
+   *          is a map which may contain settings with keys defined as constants here {@link UIMAFramework} interfaces. 
+   *          For example this can be used to set
+   *          performance-tuning settings as described in
    *          {@link #getDefaultPerformanceTuningProperties()}.
    * 
    * @return an <code>CasConsumer</code> instance.
@@ -733,8 +736,8 @@ public abstract class UIMAFramework {
    * locate an existing instance.
    * 
    * @param aSpecifier
-   *          an object that specifies how to acquire an instance of a <code>Resource</code>. This
-   *          must specify a subclass of <code>CollectionReader</code>.
+   *          an object that specifies how to acquire an instance of a <code>Resource</code>.
+   *          This must specify a subclass of <code>CollectionReader</code>.
    * 
    * @return a <code>CollectionReader</code> instance.
    * 
@@ -752,16 +755,17 @@ public abstract class UIMAFramework {
    * locate an existing instance.
    * 
    * @param aSpecifier
-   *          an object that specifies how to acquire an instance of a <code>Resource</code>. This
-   *          must specify a subclass of <code>CollectionReader</code>.
+   *          an object that specifies how to acquire an instance of a <code>Resource</code>.
+   *          This must specify a subclass of <code>CollectionReader</code>.
    * @param aAdditionalParams
    *          a Map containing additional parameters to pass to the
-   *          {@link Resource#initialize(ResourceSpecifier,Map)} method. May be <code>null</code> if
-   *          there are no parameters. Parameter names are defined as constants on the
-   *          {@link AnalysisEngine}, and {@link Resource}. Furthermore, the entry under the key
-   *          {@link Resource#PARAM_PERFORMANCE_TUNING_SETTINGS} is a map which may contain settings
-   *          with keys defined as constants here {@link UIMAFramework} interfaces. For example this
-   *          can be used to set performance-tuning settings as described in
+   *          {@link Resource#initialize(ResourceSpecifier,Map)} method. May be <code>null</code>
+   *          if there are no parameters. Parameter names are defined as constants on the
+   *          {@link AnalysisEngine}, and {@link Resource}.
+   *          Furthermore, the entry under the key {@link Resource#PARAM_PERFORMANCE_TUNING_SETTINGS}
+   *          is a map which may contain settings with keys defined as constants here {@link UIMAFramework} interfaces. 
+   *          For example this can be used to set
+   *          performance-tuning settings as described in
    *          {@link #getDefaultPerformanceTuningProperties()}.
    * 
    * @return a <code>CollectionReader</code> instance.
@@ -771,8 +775,7 @@ public abstract class UIMAFramework {
    */
   public static CollectionReader produceCollectionReader(ResourceSpecifier aSpecifier,
           Map<String, Object> aAdditionalParams) throws ResourceInitializationException {
-    return (CollectionReader) produceResource(CollectionReader.class, aSpecifier,
-            aAdditionalParams);
+    return (CollectionReader) produceResource(CollectionReader.class, aSpecifier, aAdditionalParams);
   }
 
   /**
@@ -781,20 +784,21 @@ public abstract class UIMAFramework {
    * locate an existing instance.
    * 
    * @param aSpecifier
-   *          an object that specifies how to acquire an instance of a <code>Resource</code>. This
-   *          must specify a subclass of <code>CollectionReader</code>.
+   *          an object that specifies how to acquire an instance of a <code>Resource</code>.
+   *          This must specify a subclass of <code>CollectionReader</code>.
    * @param aResourceManager
    *          the <code>ResourceManager</code> to be used by this CollectionReader. If not
    *          specified, the default one returned by {@link #newDefaultResourceManager()} will be
    *          used.
    * @param aAdditionalParams
    *          a Map containing additional parameters to pass to the
-   *          {@link Resource#initialize(ResourceSpecifier,Map)} method. May be <code>null</code> if
-   *          there are no parameters. Parameter names are defined as constants on the
-   *          {@link AnalysisEngine}, and {@link Resource}. Furthermore, the entry under the key
-   *          {@link Resource#PARAM_PERFORMANCE_TUNING_SETTINGS} is a map which may contain settings
-   *          with keys defined as constants here {@link UIMAFramework} interfaces. For example this
-   *          can be used to set performance-tuning settings as described in
+   *          {@link Resource#initialize(ResourceSpecifier,Map)} method. May be <code>null</code>
+   *          if there are no parameters. Parameter names are defined as constants on the
+   *          {@link AnalysisEngine}, and {@link Resource}.
+   *          Furthermore, the entry under the key {@link Resource#PARAM_PERFORMANCE_TUNING_SETTINGS}
+   *          is a map which may contain settings with keys defined as constants here {@link UIMAFramework} interfaces. 
+   *          For example this can be used to set
+   *          performance-tuning settings as described in
    *          {@link #getDefaultPerformanceTuningProperties()}.
    * 
    * @return an <code>CollectionReader</code> instance.
@@ -815,8 +819,8 @@ public abstract class UIMAFramework {
    * locate an existing instance.
    * 
    * @param aSpecifier
-   *          an object that specifies how to acquire an instance of a <code>Resource</code>. This
-   *          must specify a subclass of <code>CasInitializer</code>.
+   *          an object that specifies how to acquire an instance of a <code>Resource</code>.
+   *          This must specify a subclass of <code>CasInitializer</code>.
    * 
    * @return a <code>CasInitializer</code> instance.
    * 
@@ -826,9 +830,8 @@ public abstract class UIMAFramework {
    * @deprecated As of v2.0, CAS Initializers are deprecated. A component that performs an operation
    *             like HTML detagging should instead be implemented as a "multi-Sofa" annotator. See
    *             org.apache.uima.examples.XmlDetagger for an example.
-   * @forRemoval 4.0.0
    */
-  @Deprecated(since = "2.0.0")
+  @Deprecated
   public static CasInitializer produceCasInitializer(ResourceSpecifier aSpecifier)
           throws ResourceInitializationException {
     return (CasInitializer) produceResource(CasInitializer.class, aSpecifier, null);
@@ -840,16 +843,17 @@ public abstract class UIMAFramework {
    * locate an existing instance.
    * 
    * @param aSpecifier
-   *          an object that specifies how to acquire an instance of a <code>Resource</code>. This
-   *          must specify a subclass of <code>CasInitializer</code>.
+   *          an object that specifies how to acquire an instance of a <code>Resource</code>.
+   *          This must specify a subclass of <code>CasInitializer</code>.
    * @param aAdditionalParams
    *          a Map containing additional parameters to pass to the
-   *          {@link Resource#initialize(ResourceSpecifier,Map)} method. May be <code>null</code> if
-   *          there are no parameters. Parameter names are defined as constants on the
-   *          {@link AnalysisEngine}, and {@link Resource}. Furthermore, the entry under the key
-   *          {@link Resource#PARAM_PERFORMANCE_TUNING_SETTINGS} is a map which may contain settings
-   *          with keys defined as constants here {@link UIMAFramework} interfaces. For example this
-   *          can be used to set performance-tuning settings as described in
+   *          {@link Resource#initialize(ResourceSpecifier,Map)} method. May be <code>null</code>
+   *          if there are no parameters. Parameter names are defined as constants on the
+   *          {@link AnalysisEngine}, and {@link Resource}.
+   *          Furthermore, the entry under the key {@link Resource#PARAM_PERFORMANCE_TUNING_SETTINGS}
+   *          is a map which may contain settings with keys defined as constants here {@link UIMAFramework} interfaces. 
+   *          For example this can be used to set
+   *          performance-tuning settings as described in
    *          {@link #getDefaultPerformanceTuningProperties()}.
    * 
    * @return a <code>CasInitializer</code> instance.
@@ -868,19 +872,21 @@ public abstract class UIMAFramework {
    * locate an existing instance.
    * 
    * @param aSpecifier
-   *          an object that specifies how to acquire an instance of a <code>Resource</code>. This
-   *          must specify a subclass of <code>CasInitializer</code>.
+   *          an object that specifies how to acquire an instance of a <code>Resource</code>.
+   *          This must specify a subclass of <code>CasInitializer</code>.
    * @param aResourceManager
-   *          the <code>ResourceManager</code> to be used by this CasInitializer. If not specified,
-   *          the default one returned by {@link #newDefaultResourceManager()} will be used.
+   *          the <code>ResourceManager</code> to be used by this CasInitializer. If not
+   *          specified, the default one returned by {@link #newDefaultResourceManager()} will be
+   *          used.
    * @param aAdditionalParams
    *          a Map containing additional parameters to pass to the
-   *          {@link Resource#initialize(ResourceSpecifier,Map)} method. May be <code>null</code> if
-   *          there are no parameters. Parameter names are defined as constants on the
-   *          {@link AnalysisEngine}, and {@link Resource}. Furthermore, the entry under the key
-   *          {@link Resource#PARAM_PERFORMANCE_TUNING_SETTINGS} is a map which may contain settings
-   *          with keys defined as constants here {@link UIMAFramework} interfaces. For example this
-   *          can be used to set performance-tuning settings as described in
+   *          {@link Resource#initialize(ResourceSpecifier,Map)} method. May be <code>null</code>
+   *          if there are no parameters. Parameter names are defined as constants on the
+   *          {@link AnalysisEngine}, and {@link Resource}.
+   *          Furthermore, the entry under the key {@link Resource#PARAM_PERFORMANCE_TUNING_SETTINGS}
+   *          is a map which may contain settings with keys defined as constants here {@link UIMAFramework} interfaces. 
+   *          For example this can be used to set
+   *          performance-tuning settings as described in
    *          {@link #getDefaultPerformanceTuningProperties()}.
    * 
    * @return an <code>CasInitializer</code> instance.
@@ -921,11 +927,12 @@ public abstract class UIMAFramework {
    * @param aAdditionalParams
    *          a Map containing additional parameters to pass to the
    *          {@link CollectionProcessingEngine#initialize(CpeDescription,Map)} method. May be
-   *          <code>null</code> if there are no parameters. Parameter names are defined as constants
-   *          on the {@link AnalysisEngine}, and {@link Resource}. Furthermore, the entry under the
-   *          key {@link Resource#PARAM_PERFORMANCE_TUNING_SETTINGS} is a map which may contain
-   *          settings with keys defined as constants here {@link UIMAFramework} interfaces. For
-   *          example this can be used to set performance-tuning settings as described in
+   *          <code>null</code> if there are no parameters. Parameter names are defined as constants on the
+   *          {@link AnalysisEngine}, and {@link Resource}.
+   *          Furthermore, the entry under the key {@link Resource#PARAM_PERFORMANCE_TUNING_SETTINGS}
+   *          is a map which may contain settings with keys defined as constants here {@link UIMAFramework} interfaces. 
+   *          For example this can be used to set
+   *          performance-tuning settings as described in
    *          {@link #getDefaultPerformanceTuningProperties()}.
    * 
    * @return a <code>CollectionProcessingEngine</code> instance.
@@ -946,17 +953,18 @@ public abstract class UIMAFramework {
    *          an object that specifies how to create an instance of a
    *          <code>CollectionProcessingEngine</code>.
    * @param aResourceManager
-   *          the <code>ResourceManager</code> to be used by this CollectionProcessingEngine. If not
-   *          specified, the default one returned by {@link #newDefaultResourceManager()} will be
-   *          used.
+   *          the <code>ResourceManager</code> to be used by this CollectionProcessingEngine. If
+   *          not specified, the default one returned by {@link #newDefaultResourceManager()} will
+   *          be used.
    * @param aAdditionalParams
    *          a Map containing additional parameters to pass to the
    *          {@link CollectionProcessingEngine#initialize(CpeDescription,Map)} method. May be
-   *          <code>null</code> if there are no parameters. Parameter names are defined as constants
-   *          on the {@link AnalysisEngine}, and {@link Resource}. Furthermore, the entry under the
-   *          key {@link Resource#PARAM_PERFORMANCE_TUNING_SETTINGS} is a map which may contain
-   *          settings with keys defined as constants here {@link UIMAFramework} interfaces. For
-   *          example this can be used to set performance-tuning settings as described in
+   *          <code>null</code> if there are no parameters. Parameter names are defined as constants on the
+   *          {@link AnalysisEngine}, and {@link Resource}.
+   *          Furthermore, the entry under the key {@link Resource#PARAM_PERFORMANCE_TUNING_SETTINGS}
+   *          is a map which may contain settings with keys defined as constants here {@link UIMAFramework} interfaces. 
+   *          For example this can be used to set
+   *          performance-tuning settings as described in
    *          {@link #getDefaultPerformanceTuningProperties()}.
    * 
    * @return a <code>CollectionProcessingEngine</code> instance.
@@ -965,14 +973,14 @@ public abstract class UIMAFramework {
    *           if a failure occurred during production of the CPE.
    */
   public static CollectionProcessingEngine produceCollectionProcessingEngine(
-          CpeDescription aCpeDescription, ResourceManager aResourceManager,
-          Map<String, Object> aAdditionalParams) throws ResourceInitializationException {
+          CpeDescription aCpeDescription, ResourceManager aResourceManager, Map<String, Object> aAdditionalParams)
+          throws ResourceInitializationException {
     if (aResourceManager != null) {
       if (aAdditionalParams == null) {
-        aAdditionalParams = new HashMap<>();
+        aAdditionalParams = new HashMap<String, Object>();
       } else {
         // copy to avoid modifying original, which might be immutable, etc.
-        aAdditionalParams = new HashMap<>(aAdditionalParams);
+        aAdditionalParams = new HashMap<String, Object>(aAdditionalParams);
       }
       aAdditionalParams.put(Resource.PARAM_RESOURCE_MANAGER, aResourceManager);
     }
@@ -1050,8 +1058,7 @@ public abstract class UIMAFramework {
   }
 
   /**
-   * Gets a new instance of the default {@link org.apache.uima.resource.ResourceManagerPearWrapper}
-   * used by this implementation.
+   * Gets a new instance of the default {@link org.apache.uima.resource.ResourceManagerPearWrapper} used by this implementation. 
    * 
    * @return a new <code>ResourceManagerPearWrapper</code> to be used by the application.
    */
@@ -1068,12 +1075,12 @@ public abstract class UIMAFramework {
   public static ConfigurationManager newConfigurationManager() {
     return getInstance()._newConfigurationManager();
   }
-
+  
   // ugly way to pass vars to 0-arg constructors
-  // for root uima context
-  public static final ThreadLocal<ResourceManager> newContextResourceManager = new ThreadLocal<>();
-  public static final ThreadLocal<ConfigurationManager> newContextConfigManager = new ThreadLocal<>();
-
+  //    for root uima context
+  public static final ThreadLocal<ResourceManager> newContextResourceManager = new ThreadLocal<ResourceManager>();
+  public static final ThreadLocal<ConfigurationManager> newContextConfigManager = new ThreadLocal<ConfigurationManager>();
+  
   /**
    * Gets a new instance of a {@link UimaContext}. Applications do not generally need to call this
    * method.
@@ -1088,34 +1095,22 @@ public abstract class UIMAFramework {
    *          Parameter settings.
    * 
    * @return a new UIMA Context to be used by the application.
-   * @deprecated Use {@link #newUimaContext()} or {@link #uimaContextBuilder()} instead.
-   * @forRemoval 4.0.0
    */
-  @Deprecated(since = "3.6.0")
   public static UimaContextAdmin newUimaContext(Logger aLogger, ResourceManager aResourceManager,
           ConfigurationManager aConfigManager) {
-    // We use an ugly trick to make the 3 values available to the new UIMA context during its
-    // initialization -
-    // we put them in threadlocals for this class (UIMAFramework).
-    UimaContextAdmin context;
+    // We use an ugly trick to make the 3 values available to the new UIMA context during its initialization - 
+    //   we put them in threadlocals for this class (UIMAFramework).
+    UimaContextAdmin context; 
     try {
       newContextResourceManager.set(aResourceManager);
-      newContextConfigManager.set(aConfigManager);
+      newContextConfigManager.set(aConfigManager);     
       context = getInstance()._newUimaContext();
     } finally {
       newContextResourceManager.set(null);
       newContextConfigManager.set(null);
     }
-    context.initializeRoot(aLogger);
+    context.initializeRoot(aLogger, aResourceManager, aConfigManager);
     return context;
-  }
-
-  public static UimaContextAdmin newUimaContext() {
-    return uimaContextBuilder().build();
-  }
-
-  public static UimaContextAdminBuilder uimaContextBuilder() {
-    return new UimaContextAdminBuilder();
   }
 
   /**
@@ -1136,8 +1131,8 @@ public abstract class UIMAFramework {
    * </pre>
    * 
    * <p>
-   * Valid keys for the {@link Properties} object returned by this method are specified as constants
-   * on this interface.
+   * Valid keys for the {@link Properties} object returned by this method are specified as
+   * constants on this interface.
    * 
    * @return the default set of performance tuning properties. A new object is returned each time
    *         this method is called, so changes made to the returned objects will not affect other
@@ -1238,9 +1233,7 @@ public abstract class UIMAFramework {
   /**
    * To be implemented by subclasses; this should return a reference to the UIMA {@link Logger} of
    * the specified source class.
-   * 
-   * @param component
-   *          the class to get the logger for
+   * @param component the class to get the logger for 
    * @return the <code>Logger</code> of the specified source class
    */
   protected abstract Logger _getLogger(Class<?> component);
@@ -1274,7 +1267,8 @@ public abstract class UIMAFramework {
    * @return a new <code>ResourceManagerPearWrapper</code> to be used by the application.
    */
   protected abstract ResourceManager _newDefaultResourceManagerPearWrapper();
-
+  
+  
   /**
    * To be implemented by subclasses; this should return a new instance of the default
    * {@link ConfigurationManager} used by this implementation.
@@ -1301,11 +1295,12 @@ public abstract class UIMAFramework {
    * @param aAdditionalParams
    *          a Map containing additional parameters to pass to the
    *          {@link CollectionProcessingEngine#initialize(CpeDescription,Map)} method. May be
-   *          <code>null</code> if there are no parameters. Parameter names are defined as constants
-   *          on the {@link AnalysisEngine}, and {@link Resource}. Furthermore, the entry under the
-   *          key {@link Resource#PARAM_PERFORMANCE_TUNING_SETTINGS} is a map which may contain
-   *          settings with keys defined as constants here {@link UIMAFramework} interfaces. For
-   *          example this can be used to set performance-tuning settings as described in
+   *          <code>null</code> if there are no parameters. Parameter names are defined as constants on the
+   *          {@link AnalysisEngine}, and {@link Resource}.
+   *          Furthermore, the entry under the key {@link Resource#PARAM_PERFORMANCE_TUNING_SETTINGS}
+   *          is a map which may contain settings with keys defined as constants here {@link UIMAFramework} interfaces. 
+   *          For example this can be used to set
+   *          performance-tuning settings as described in
    *          {@link #getDefaultPerformanceTuningProperties()}.
    * 
    * @return a <code>CollectionProcessingEngine</code> instance.
@@ -1335,9 +1330,6 @@ public abstract class UIMAFramework {
       mInstance._initialize();
     } catch (Exception e) {
       // could not load reference implementation
-      System.err.println(
-              "Could not create UIMA framework, using framework class name: " + frameworkClassName);
-      e.printStackTrace();
       throw new UIMA_IllegalStateException(UIMA_IllegalStateException.COULD_NOT_CREATE_FRAMEWORK,
               new Object[] { frameworkClassName }, e);
     }

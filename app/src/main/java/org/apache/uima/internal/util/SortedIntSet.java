@@ -33,13 +33,14 @@ public class SortedIntSet {
 
   /** Default constructor. */
   public SortedIntSet() {
-    vector = new IntVector();
+    super();
+    this.vector = new IntVector();
   }
 
   public SortedIntSet(int[] array) {
     this();
     for (int i = 0; i < array.length; i++) {
-      add(array[i]);
+      this.add(array[i]);
     }
   }
 
@@ -49,52 +50,48 @@ public class SortedIntSet {
    * @param ele
    *          The element we're looking for.
    * @return The position, if found; a negative value, else. See
-   *         {@link IntArrayUtils#binarySearch
-   *         IntArrayUtils.binarySearch()}.
+   *         {@link IntArrayUtils#binarySearch IntArrayUtils.binarySearch()}.
    */
   public int find(int ele) {
-    int[] array = vector.getArray();
-    return IntArrayUtils.binarySearch(array, ele, 0, vector.size());
+    int[] array = this.vector.getArray();
+    return IntArrayUtils.binarySearch(array, ele, 0, this.vector.size());
   }
 
   /**
-   * @param ele
-   *          -
-   * @return <code>true</code> iff <code>ele</code> is contained in the set.
+   * @param ele - 
+   * @return <code>true</code> iff <code>ele</code> is contained in
+   *  the set.
    */
   public boolean contains(int ele) {
-    return find(ele) >= 0;
+    return this.find(ele) >= 0;
   }
 
   /**
    * Add element to set.
    * 
-   * @param ele
-   *          -
+   * @param ele - 
    * @return <code>true</code> iff <code>ele</code> was not already contained in the set.
    */
   public boolean add(int ele) {
-    final int pos = find(ele);
+    final int pos = this.find(ele);
     if (pos >= 0) {
       return false;
     }
-    vector.add(-(pos + 1), ele);
+    this.vector.add(-(pos + 1), ele);
     return true;
   }
 
   /**
    * Remove element from set.
-   * 
-   * @param ele
-   *          -
+   * @param ele - 
    * @return <code>true</code> iff <code>ele</code> was actually contained in the set.
    */
   public boolean remove(int ele) {
-    final int pos = find(ele);
+    final int pos = this.find(ele);
     if (pos < 0) {
       return false;
     }
-    vector.remove(pos);
+    this.vector.remove(pos);
     return true;
   }
 
@@ -104,7 +101,7 @@ public class SortedIntSet {
    * @return Current number of elements in set.
    */
   public int size() {
-    return vector.size();
+    return this.vector.size();
   }
 
   /**
@@ -115,24 +112,24 @@ public class SortedIntSet {
    * @return The element at this position.
    */
   public int get(int pos) {
-    return vector.get(pos);
+    return this.vector.get(pos);
   }
 
   public void union(SortedIntSet set) {
     final int max = set.size();
     for (int i = 0; i < max; i++) {
-      add(set.get(i));
+      this.add(set.get(i));
     }
   }
 
   public void removeAll() {
-    vector.removeAllElements();
+    this.vector.removeAllElements();
   }
 
   public int[] toArray() {
-    return vector.toArrayCopy();
+    return this.vector.toArrayCopy();
   }
-
+  
   public int[] getArray() {
     return vector.getArray();
   }

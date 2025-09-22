@@ -38,85 +38,70 @@ import org.apache.uima.cas.FeaturePath;
  */
 public class ConstraintFactoryImpl extends ConstraintFactory {
 
-  @Override
-  public FSTypeConstraint createTypeConstraint() {
-    return new FSTypeConstraintImpl();
-  }
+	public FSTypeConstraint createTypeConstraint() {
+		return new FSTypeConstraintImpl();
+	}
 
-  @Override
-  public FSIntConstraint createIntConstraint() {
-    return new FSIntConstraintImpl();
-  }
+	public FSIntConstraint createIntConstraint() {
+		return new FSIntConstraintImpl();
+	}
 
-  @Override
-  public FSFloatConstraint createFloatConstraint() {
-    return new FSFloatConstraintImpl();
-  }
+	public FSFloatConstraint createFloatConstraint() {
+		return new FSFloatConstraintImpl();
+	}
 
-  @Override
-  public FSStringConstraint createStringConstraint() {
-    return new FSStringConstraintImpl();
-  }
+	public FSStringConstraint createStringConstraint() {
+		return new FSStringConstraintImpl();
+	}
 
-  @Override
-  public FSBooleanConstraint createBooleanConstraint() {
-    return new FSBooleanConstraintImpl();
-  }
+	public FSBooleanConstraint createBooleanConstraint() {
+		return new FSBooleanConstraintImpl();
+	}
 
-  @Override
-  public FSMatchConstraint embedConstraint(FeaturePath featPath, FSConstraint constraint) {
-    ArrayList<String> path = new ArrayList<>();
-    for (int i = 0; i < featPath.size(); i++) {
-      path.add(featPath.getFeature(i).getShortName());
-    }
-    if (constraint instanceof FSMatchConstraint) {
-      return new EmbeddedConstraint(path, constraint);
-    } else if (constraint instanceof FSIntConstraint) {
-      FSIntConstraint fsIntConstraint = (FSIntConstraint) constraint;
-      return new IntConstraint(path, fsIntConstraint);
-    } else if (constraint instanceof FSFloatConstraint) {
-      FSFloatConstraint fsFloatConstraint = (FSFloatConstraint) constraint;
-      return new FloatConstraint(path, fsFloatConstraint);
-    } else if (constraint instanceof FSStringConstraint) {
-      FSStringConstraint fsStringConstraint = (FSStringConstraint) constraint;
-      return new StringConstraint(path, fsStringConstraint);
-    } else if (constraint instanceof FSBooleanConstraint) {
-      FSBooleanConstraint fsBooleanConstraint = (FSBooleanConstraint) constraint;
-      return new BooleanConstraint(path, fsBooleanConstraint);
-    } else {
-      return null;
-    }
-  }
+	public FSMatchConstraint embedConstraint(FeaturePath featPath,
+			FSConstraint constraint) {
+		ArrayList<String> path = new ArrayList<String>();
+		for (int i = 0; i < featPath.size(); i++) {
+			path.add(featPath.getFeature(i).getShortName());
+		}
+		if (constraint instanceof FSMatchConstraint) {
+			return new EmbeddedConstraint(path, constraint);
+		} else if (constraint instanceof FSIntConstraint) {
+			return new IntConstraint(path, (FSIntConstraint) constraint);
+		} else if (constraint instanceof FSFloatConstraint) {
+			return new FloatConstraint(path, (FSFloatConstraint) constraint);
+		} else if (constraint instanceof FSStringConstraint) {
+			return new StringConstraint(path, (FSStringConstraint) constraint);
+		} else if (constraint instanceof FSBooleanConstraint) {
+			return new BooleanConstraint(path, (FSBooleanConstraint) constraint);
+		} else {
+			return null;
+		}
+	}
 
-  @Override
-  public FSMatchConstraint embedConstraint(ArrayList<String> path, FSConstraint constraint) {
-    if (constraint instanceof FSMatchConstraint) {
-      return new EmbeddedConstraint(path, constraint);
-    } else if (constraint instanceof FSIntConstraint) {
-      FSIntConstraint fsIntConstraint = (FSIntConstraint) constraint;
-      return new IntConstraint(path, fsIntConstraint);
-    } else if (constraint instanceof FSFloatConstraint) {
-      FSFloatConstraint fsFloatConstraint = (FSFloatConstraint) constraint;
-      return new FloatConstraint(path, fsFloatConstraint);
-    } else if (constraint instanceof FSStringConstraint) {
-      FSStringConstraint fsStringConstraint = (FSStringConstraint) constraint;
-      return new StringConstraint(path, fsStringConstraint);
-    } else if (constraint instanceof FSBooleanConstraint) {
-      FSBooleanConstraint fsBooleanConstraint = (FSBooleanConstraint) constraint;
-      return new BooleanConstraint(path, fsBooleanConstraint);
-    } else {
-      return null;
-    }
-  }
+	public FSMatchConstraint embedConstraint(ArrayList<String> path,
+			FSConstraint constraint) {
+		if (constraint instanceof FSMatchConstraint) {
+			return new EmbeddedConstraint(path, constraint);
+		} else if (constraint instanceof FSIntConstraint) {
+			return new IntConstraint(path, (FSIntConstraint) constraint);
+		} else if (constraint instanceof FSFloatConstraint) {
+			return new FloatConstraint(path, (FSFloatConstraint) constraint);
+		} else if (constraint instanceof FSStringConstraint) {
+			return new StringConstraint(path, (FSStringConstraint) constraint);
+		} else if (constraint instanceof FSBooleanConstraint) {
+			return new BooleanConstraint(path, (FSBooleanConstraint) constraint);
+		} else {
+			return null;
+		}
+	}
 
-  @Override
-  public FSMatchConstraint and(FSMatchConstraint c1, FSMatchConstraint c2) {
-    return new ConjunctiveConstraint(c1, c2);
-  }
+	public FSMatchConstraint and(FSMatchConstraint c1, FSMatchConstraint c2) {
+		return new ConjunctiveConstraint(c1, c2);
+	}
 
-  @Override
-  public FSMatchConstraint or(FSMatchConstraint c1, FSMatchConstraint c2) {
-    return new DisjunctiveConstraint(c1, c2);
-  }
+	public FSMatchConstraint or(FSMatchConstraint c1, FSMatchConstraint c2) {
+		return new DisjunctiveConstraint(c1, c2);
+	}
 
 }

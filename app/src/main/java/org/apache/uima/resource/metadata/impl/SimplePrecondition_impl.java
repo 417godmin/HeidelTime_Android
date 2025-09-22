@@ -22,10 +22,13 @@ package org.apache.uima.resource.metadata.impl;
 import org.apache.uima.UIMA_IllegalArgumentException;
 import org.apache.uima.cas.CAS;
 import org.apache.uima.cas.FSMatchConstraint;
+import org.apache.uima.resource.metadata.Precondition;
 import org.apache.uima.resource.metadata.SimplePrecondition;
 
 /**
  * Reference implementation of {@link SimplePrecondition}.
+ * 
+ * 
  */
 public class SimplePrecondition_impl extends MetaDataObject_impl implements SimplePrecondition {
 
@@ -49,87 +52,115 @@ public class SimplePrecondition_impl extends MetaDataObject_impl implements Simp
 
   private boolean mDefault;
 
-  @Override
+  /**
+   * @see Precondition#getPreconditionType()
+   */
   public String getPreconditionType() {
     return PRECONDITION_TYPE;
   }
 
-  @Override
+  /**
+   * @see SimplePrecondition#getDefault()
+   */
   public boolean getDefault() {
     return mDefault;
   }
 
-  @Override
+  /**
+   * @see SimplePrecondition#getFeatureName()
+   */
   public String getFeatureName() {
     return mFeatureName;
   }
 
-  @Override
+  /**
+   * @see SimplePrecondition#getFsIndexName()
+   */
   public String getFsIndexName() {
     return mFsIndexName;
   }
 
-  @Override
+  /**
+   * @see SimplePrecondition#getFsMatchConstraint()
+   */
   public FSMatchConstraint getFsMatchConstraint() {
     return mFsMatchConstraint;
   }
 
-  @Override
+  /**
+   * @see SimplePrecondition#setDefault(boolean)
+   */
   public void setDefault(boolean aDefault) {
     mDefault = aDefault;
   }
 
-  @Override
+  /**
+   * @see SimplePrecondition#setFeatureName(String)
+   */
   public void setFeatureName(String aFeatureName) {
     mFeatureName = aFeatureName;
   }
 
-  @Override
+  /**
+   * @see SimplePrecondition#setFsIndexName(String)
+   */
   public void setFsIndexName(String aIndexName) {
     mFsIndexName = aIndexName;
   }
 
-  @Override
+  /**
+   * @see SimplePrecondition#setFsMatchConstraint(FSMatchConstraint)
+   */
   public void setFsMatchConstraint(FSMatchConstraint aConstraint) {
     mFsMatchConstraint = aConstraint;
 
   }
 
-  @Override
+  /**
+   * @see Precondition#evaluate(CAS)
+   */
   public boolean evaluate(CAS aCAS) {
     return false;
   }
 
-  @Override
+  /**
+   * @see SimplePrecondition#getComparisonValue()
+   */
   public Object getComparisonValue() {
     return mComparisonValue;
   }
 
-  @Override
+  /**
+   * @see SimplePrecondition#setComparisonValue(Object)
+   */
   public void setComparisonValue(Object aValue) {
     mComparisonValue = aValue;
   }
 
-  @Override
+  /**
+   * @see SimplePrecondition#getPredicate()
+   */
   public String getPredicate() {
     return mPredicate;
   }
 
-  @Override
+  /**
+   * @see SimplePrecondition#setPredicate(String)
+   */
   public void setPredicate(String aPredicate) {
     // check to make sure value is legal
     if (!isValidPredicateName(aPredicate)) {
       throw new UIMA_IllegalArgumentException(
-              UIMA_IllegalArgumentException.METADATA_ATTRIBUTE_TYPE_MISMATCH,
-              new Object[] { aPredicate, "predicate" });
+              UIMA_IllegalArgumentException.METADATA_ATTRIBUTE_TYPE_MISMATCH, new Object[] {
+                  aPredicate, "predicate" });
     }
     mPredicate = aPredicate;
   }
 
   /**
    * Determines whether the given String is a valid name a predicate defined by this class. Valid
-   * predicate names are legal arguments to the {@link #setPredicate(String)} method, and are
-   * defined by constants on the {@link SimplePrecondition} interface.
+   * predicate names are legal arguments to the {@link #setPredicate(String)} method, and are defined
+   * by constants on the {@link SimplePrecondition} interface.
    * 
    * @param aName
    *          an Object to test
@@ -141,15 +172,12 @@ public class SimplePrecondition_impl extends MetaDataObject_impl implements Simp
     return EQUAL.equals(aName) || ELEMENT_OF.equals(aName) || LANGUAGE_SUBSUMED.equals(aName);
   }
 
-  @Override
   protected XmlizationInfo getXmlizationInfo() {
     return XMLIZATION_INFO;
   }
 
-  private static final XmlizationInfo XMLIZATION_INFO = new XmlizationInfo("simplePrecondition",
-          new PropertyXmlInfo[] { //
-              new PropertyXmlInfo("featureDescription", null), //
-              new PropertyXmlInfo("comparisonValue"), //
-              new PropertyXmlInfo("predicate", "predicate") //
-          });
+  static final private XmlizationInfo XMLIZATION_INFO = new XmlizationInfo(
+          "simplePrecondition",
+          new PropertyXmlInfo[] { new PropertyXmlInfo("featureDescription", null),
+              new PropertyXmlInfo("comparisonValue"), new PropertyXmlInfo("predicate", "predicate") });
 }

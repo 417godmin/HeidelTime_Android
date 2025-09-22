@@ -398,7 +398,7 @@
 
 	<complexType name="FsIndexType">
 		<sequence>
-			<element name="label" type="string" />
+			<element name="label" type="Name" />
 			<element name="typeName" type="Name" />
 			<element name="kind" minOccurs="0" maxOccurs="1">
 				<simpleType>
@@ -675,13 +675,6 @@
     <complexType>
       <sequence>
         <element name="pearPath" type="string"/>
-        <element name="pearParameters" minOccurs="0">
-          <complexType>
-            <sequence>
-              <element name="nameValuePair" type="rs:NameValuePairType" minOccurs="0" maxOccurs="unbounded" />
-            </sequence>
-          </complexType>
-        </element>
         <element name="parameters" minOccurs="0">
           <complexType>
             <sequence>

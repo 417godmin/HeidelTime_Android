@@ -53,21 +53,21 @@ public interface BaseCPM {
    * CasData CAS type that holds document text. When creating CasData forms of the CAS, a feature
    * structure of this type must be created by the collection reader.
    */
-  String DOCUMENT_TEXT_TYPE = "uima.cpm.DocumentText";
+  public static final String DOCUMENT_TEXT_TYPE = "uima.cpm.DocumentText";
 
   /**
    * Only used for alternate CasData forms of the CAS (not used in this UIMA SDK release). Name of
    * CAS feature (on DOCUMENT_TEXT_TYPE feature structure) that holds document text. When creating
    * CasDta forms of the CAS, this feature must be set by the collection reader.
    */
-  String DOCUMENT_TEXT_FEATURE = "Text";
+  public static final String DOCUMENT_TEXT_FEATURE = "Text";
 
   /**
    * Gets the Collection Reader for this CPM.
    * 
    * @return the collection reader
    */
-  BaseCollectionReader getCollectionReader();
+  public BaseCollectionReader getCollectionReader();
 
   /**
    * Sets the Collection Reader for this CPM.
@@ -75,19 +75,19 @@ public interface BaseCPM {
    * @param aCollectionReader
    *          the collection reader
    */
-  void setCollectionReader(BaseCollectionReader aCollectionReader);
+  public void setCollectionReader(BaseCollectionReader aCollectionReader);
 
   /**
-   * Gets the <code>CasProcessors</code>s assigned to this CPM, in the order in which they will be
-   * called by the CPM.
+   * Gets the <code>CasProcessors</code>s assigned to this CPM, in the order in which they will
+   * be called by the CPM.
    * 
    * @return an array of <code>CasProcessor</code>s
    */
-  CasProcessor[] getCasProcessors();
+  public CasProcessor[] getCasProcessors();
 
   /**
-   * Adds a <code>CasProcessor</code> to this CPM's list of consumers. The new CasProcessor will be
-   * added to the end of the list of CAS Processors.
+   * Adds a <code>CasProcessor</code> to this CPM's list of consumers. The new CasProcessor will
+   * be added to the end of the list of CAS Processors.
    * 
    * @param aCasProcessor
    *          a <code>CasProcessor</code> to add
@@ -95,11 +95,11 @@ public interface BaseCPM {
    * @throws ResourceConfigurationException
    *           if this CPM is currently processing
    */
-  void addCasProcessor(CasProcessor aCasProcessor) throws ResourceConfigurationException;
+  public void addCasProcessor(CasProcessor aCasProcessor) throws ResourceConfigurationException;
 
   /**
-   * Adds a <code>CasProcessor</code> to this CPM's list of consumers. The new CasProcessor will be
-   * added at the specified index.
+   * Adds a <code>CasProcessor</code> to this CPM's list of consumers. The new CasProcessor will
+   * be added at the specified index.
    * 
    * @param aCasProcessor
    *          the CasProcessor to add
@@ -109,7 +109,7 @@ public interface BaseCPM {
    * @throws ResourceConfigurationException
    *           if this CPM is currently processing
    */
-  void addCasProcessor(CasProcessor aCasProcessor, int aIndex)
+  public void addCasProcessor(CasProcessor aCasProcessor, int aIndex)
           throws ResourceConfigurationException;
 
   /**
@@ -119,7 +119,7 @@ public interface BaseCPM {
    *          the <code>CasProcessor</code> to remove
    * 
    */
-  void removeCasProcessor(CasProcessor aCasProcessor);
+  public void removeCasProcessor(CasProcessor aCasProcessor);
 
   /**
    * Disables a <code>CasProcessor</code> in this CPM's list of CasProcessors.
@@ -128,7 +128,7 @@ public interface BaseCPM {
    *          the name of the <code>CasProcessor</code> to disable
    * 
    */
-  void disableCasProcessor(String aCasProcessorName);
+  public void disableCasProcessor(String aCasProcessorName);
 
   /**
    * Gets whether this CPM is required to process the collection's elements serially (as opposed to
@@ -137,7 +137,7 @@ public interface BaseCPM {
    * 
    * @return true if and only if serial processing is required
    */
-  boolean isSerialProcessingRequired();
+  public boolean isSerialProcessingRequired();
 
   /**
    * Sets whether this CPM is required to process the collection's elements serially (as opposed to
@@ -149,7 +149,7 @@ public interface BaseCPM {
    *          true if and only if serial processing is required
    * 
    */
-  void setSerialProcessingRequired(boolean aRequired);
+  public void setSerialProcessingRequired(boolean aRequired);
 
   /**
    * Gets whether this CPM will automatically pause processing if an exception occurs. If processing
@@ -157,7 +157,7 @@ public interface BaseCPM {
    * 
    * @return true if and only if this CPM will pause on exception
    */
-  boolean isPauseOnException();
+  public boolean isPauseOnException();
 
   /**
    * Sets whether this CPM will automatically pause processing if an exception occurs. If processing
@@ -167,7 +167,7 @@ public interface BaseCPM {
    *          true if and only if this CPM should pause on exception
    * 
    */
-  void setPauseOnException(boolean aPause);
+  public void setPauseOnException(boolean aPause);
 
   /**
    * Registers a listsner to receive status callbacks.
@@ -175,7 +175,7 @@ public interface BaseCPM {
    * @param aListener
    *          the listener to add
    */
-  void addStatusCallbackListener(BaseStatusCallbackListener aListener);
+  public void addStatusCallbackListener(BaseStatusCallbackListener aListener);
 
   /**
    * Unregisters a status callback listener.
@@ -183,7 +183,7 @@ public interface BaseCPM {
    * @param aListener
    *          the listener to remove
    */
-  void removeStatusCallbackListener(BaseStatusCallbackListener aListener);
+  public void removeStatusCallbackListener(BaseStatusCallbackListener aListener);
 
   /**
    * Initiates processing of a collection. This method starts the processing in another thread and
@@ -198,7 +198,7 @@ public interface BaseCPM {
    * @throws ResourceInitializationException
    *           if an error occurs during initialization
    */
-  void process() throws ResourceInitializationException;
+  public void process() throws ResourceInitializationException;
 
   /**
    * Determines whether this CPM is currently processing. This means that a processing request has
@@ -207,53 +207,53 @@ public interface BaseCPM {
    * 
    * @return true if and only if this CPM is currently processing.
    */
-  boolean isProcessing();
+  public boolean isProcessing();
 
   /**
    * Pauses processing. Processing can later be resumed by calling the {@link #resume(boolean)}
    * method.
    * 
    */
-  void pause();
+  public void pause();
 
   /**
    * Determines whether this CPM's processing is currently paused.
    * 
    * @return true if and only if this CPM's processing is currently paused.
    */
-  boolean isPaused();
+  public boolean isPaused();
 
   /**
    * Resumes processing that has been paused.
    * 
    * @param aRetryFailed
    *          if processing was paused because an exception occurred (see
-   *          {@link #setPauseOnException(boolean)}), setting a value of <code>true</code> for this
-   *          parameter will cause the failed entity to be retried. A value of <code>false</code>
-   *          (the default) will cause processing to continue with the next entity after the
-   *          failure.
+   *          {@link #setPauseOnException(boolean)}), setting a value of <code>true</code> for
+   *          this parameter will cause the failed entity to be retried. A value of
+   *          <code>false</code> (the default) will cause processing to continue with the next
+   *          entity after the failure.
    * 
    */
-  void resume(boolean aRetryFailed);
+  public void resume(boolean aRetryFailed);
 
   /**
    * Resumes processing that has been paused.
    * 
    */
-  void resume();
+  public void resume();
 
   /**
    * Stops processing.
    * 
    */
-  void stop();
+  public void stop();
 
   /**
    * Gets a performance report for the processing that is currently occurring or has just completed.
    * 
    * @return an object containing performance statistics
    */
-  ProcessTrace getPerformanceReport();
+  public ProcessTrace getPerformanceReport();
 
   /**
    * Gets a progress report for the processing that is currently occurring or has just completed.
@@ -261,6 +261,6 @@ public interface BaseCPM {
    * @return an array of <code>Progress</code> objects, each of which represents the progress in a
    *         different set of units (for example number of entities or bytes)
    */
-  Progress[] getProgress();
+  public Progress[] getProgress();
 
 }

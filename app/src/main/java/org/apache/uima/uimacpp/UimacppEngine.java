@@ -39,7 +39,7 @@ public class UimacppEngine {
   private static String[] compatibleTafJniVersions = { "2.0" };
 
   static {
-    String uimacpp_lib = "org/apache/uima";
+    String uimacpp_lib = "uima";
     String debug = System.getProperty("DEBUG_UIMACPP");
     if (debug != null) {
       String osname = System.getProperty("os.name");
@@ -72,7 +72,8 @@ public class UimacppEngine {
   /**
    * this field is the physical pointer to the C++ TafClEngine object this TafWrapper object is
    * associated with. Do not use explicitly anywhere. It is set automatically by the
-   * <code>constructorJNI()</code> method and set to 0 by the <code>destructorJNI()</code> method.
+   * <code>constructorJNI()</code> method and set to 0 by the <code>destructorJNI()</code>
+   * method.
    */
   long cppEnginePointer = 0;
 
@@ -195,13 +196,9 @@ public class UimacppEngine {
 
   /**
    * Configure the TAF Resource Manager.
-   * 
-   * @param workDirectory
-   *          the work directory
-   * @param dataDirectory
-   *          the data directory
-   * @throws UimacppException
-   *           wraps any exception
+   * @param workDirectory the work directory
+   * @param dataDirectory the data directory
+   * @throws UimacppException wraps any exception
    */
   public static void configureResourceManager(String workDirectory, String dataDirectory)
           throws UimacppException {
@@ -226,12 +223,9 @@ public class UimacppEngine {
 
   /**
    * create a TAF engine with a config file
-   * 
-   * @param configFile
-   *          the configuration file used for initialization
+   * @param configFile the configuration file used for initialization
    * @return a UimacppEngine
-   * @throws UimacppException
-   *           pass thru
+   * @throws UimacppException pass thru
    */
   public static UimacppEngine createJTafTAE(String configFile) throws UimacppException {
     UimacppEngine result = new UimacppEngine();
@@ -303,9 +297,7 @@ public class UimacppEngine {
 
   /**
    * de-initializes the TAF engine.
-   * 
-   * @throws UimacppException
-   *           wraps any exception
+   * @throws UimacppException wraps any exception
    */
   public void destroy() throws UimacppException {
     try {
@@ -332,23 +324,17 @@ public class UimacppEngine {
 
   /**
    * process the document.
-   * 
-   * @param rs
-   *          the result specification
-   * @param aCas
-   *          the CAS
-   * @param casIsEmpty
-   *          tbd
-   * @throws UimacppException
-   *           wraps any exception
+   * @param rs the result specification
+   * @param aCas the CAS
+   * @param casIsEmpty tbd
+   * @throws UimacppException wraps any exception
    */
-  public void process(ResultSpecification rs, CAS aCas, boolean casIsEmpty)
-          throws UimacppException {
+  public void process(ResultSpecification rs, CAS aCas, boolean casIsEmpty) throws UimacppException {
 
-    int isTCas = 0;
-    String sofaName = aCas.getViewName();
+    int isTCas=0;
+    String sofaName=aCas.getViewName();
     if (sofaName != null) {
-      isTCas = 1;
+      isTCas=1;
     }
 
     cas = aCas.getCurrentView();
@@ -391,10 +377,8 @@ public class UimacppEngine {
 
   /**
    * hasNext
-   * 
    * @return true if there's a next element
-   * @throws UimacppException
-   *           wraps any exception
+   * @throws UimacppException wraps any exception
    */
   public boolean hasNext() throws UimacppException {
 
@@ -428,11 +412,8 @@ public class UimacppEngine {
 
   /**
    * next
-   * 
-   * @param segment
-   *          tbd
-   * @throws UimacppException
-   *           wraps any exception
+   * @param segment tbd 
+   * @throws UimacppException wraps any exception
    */
   public void next(CAS segment) throws UimacppException {
 
@@ -471,9 +452,7 @@ public class UimacppEngine {
 
   /**
    * batchProcessComplete
-   * 
-   * @throws UimacppException
-   *           wraps any exception
+   * @throws UimacppException wraps any exception
    */
   public void batchProcessComplete() throws UimacppException {
     try {
@@ -485,9 +464,7 @@ public class UimacppEngine {
 
   /**
    * CasConsumer collectionProcessComplete
-   * 
-   * @throws UimacppException
-   *           wraps any exception
+   * @throws UimacppException wraps any exception
    */
   public void collectionProcessComplete() throws UimacppException {
     try {
@@ -499,12 +476,9 @@ public class UimacppEngine {
 
   /**
    * helper function to get the error message for some TAF error ID.
-   * 
-   * @param errorCode
-   *          the code used as the key to look up the error message
+   * @param errorCode the code used as the key to look up the error message
    * @return the error message
-   * @throws UimacppException
-   *           wraps any exception
+   * @throws UimacppException wraps any exception
    */
   public static String getErrorMessage(long errorCode) throws UimacppException {
     try {
@@ -517,10 +491,8 @@ public class UimacppEngine {
 
   /**
    * helper function to get the TAF JNI version.
-   * 
    * @return Taf JNI Version
-   * @throws UimacppException
-   *           wraps any exception
+   * @throws UimacppException wraps any exception
    */
   public static String getTafJNIVersion() throws UimacppException {
     try {
@@ -553,8 +525,6 @@ public class UimacppEngine {
   }
 
   // //////////////////////////////////////////////////
-  @Deprecated(since = "3.6.0")
-  @Override
   protected void finalize() throws Throwable {
     synchronized (this) {
       if (cppEnginePointer != 0) {
@@ -585,7 +555,6 @@ class InternalTafException extends Exception {
     return errorCode;
   }
 
-  @Override
   public String getMessage() {
     return super.getMessage();
   }

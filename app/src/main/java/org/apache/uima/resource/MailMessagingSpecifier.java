@@ -19,6 +19,7 @@
 
 package org.apache.uima.resource;
 
+
 public interface MailMessagingSpecifier extends MessagingSpecifier {
 
   /**
@@ -26,28 +27,28 @@ public interface MailMessagingSpecifier extends MessagingSpecifier {
    * 
    * @return int
    */
-  int getHostImapPort();
+  public int getHostImapPort();
 
   /**
    * Returns the hostSmtpPort.
    * 
    * @return int
    */
-  int getHostSmtpPort();
+  public int getHostSmtpPort();
 
   /**
    * Returns the targetImapPort.
    * 
    * @return int
    */
-  int getTargetImapPort();
+  public int getTargetImapPort();
 
   /**
    * Returns the targetSmtpPort.
    * 
    * @return int
    */
-  int getTargetSmtpPort();
+  public int getTargetSmtpPort();
 
   /**
    * Sets the hostImapPort.
@@ -55,7 +56,7 @@ public interface MailMessagingSpecifier extends MessagingSpecifier {
    * @param hostImapPort
    *          The hostImapPort to set
    */
-  void setHostImapPort(int hostImapPort);
+  public void setHostImapPort(int hostImapPort);
 
   /**
    * Sets the hostSmtpPort.
@@ -63,7 +64,7 @@ public interface MailMessagingSpecifier extends MessagingSpecifier {
    * @param hostSmtpPort
    *          The hostSmtpPort to set
    */
-  void setHostSmtpPort(int hostSmtpPort);
+  public void setHostSmtpPort(int hostSmtpPort);
 
   /**
    * Sets the targetImapPort.
@@ -71,7 +72,7 @@ public interface MailMessagingSpecifier extends MessagingSpecifier {
    * @param targetImapPort
    *          The targetImapPort to set
    */
-  void setTargetImapPort(int targetImapPort);
+  public void setTargetImapPort(int targetImapPort);
 
   /**
    * Sets the targetSmtpPort.
@@ -79,5 +80,5 @@ public interface MailMessagingSpecifier extends MessagingSpecifier {
    * @param targetSmtpPort
    *          The targetSmtpPort to set
    */
-  void setTargetSmtpPort(int targetSmtpPort);
+  public void setTargetSmtpPort(int targetSmtpPort);
 }

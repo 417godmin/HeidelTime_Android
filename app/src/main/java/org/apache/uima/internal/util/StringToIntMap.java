@@ -22,8 +22,8 @@ package org.apache.uima.internal.util;
 import java.util.HashMap;
 
 /**
- * Straightforward, many-to-one map from Strings to ints, based on a Java {@link HashMap
- * HashMap}.
+ * Straightforward, many-to-one map from Strings to ints, based on a Java
+ * {@link HashMap HashMap}.
  * 
  * 
  */
@@ -39,7 +39,8 @@ public class StringToIntMap {
    * @see Object#Object()
    */
   public StringToIntMap() {
-    map = new HashMap<>();
+    super();
+    this.map = new HashMap<String, Integer>();
   }
 
   /**
@@ -51,7 +52,7 @@ public class StringToIntMap {
    * @return <code>true</code> if a value is defined for this string; <code>false</code> else.
    */
   public boolean containsKey(String key) {
-    return map.containsKey(key);
+    return this.map.containsKey(key);
   }
 
   /**
@@ -59,16 +60,16 @@ public class StringToIntMap {
    * 
    * @param key
    *          The string to be looked up.
-   * @return The int value for <code>key</code>, or <code>0</code> if <code>key</code> is not a key
-   *         in the map. Use {@link #containsKey(String) containsKey()} to find out if
+   * @return The int value for <code>key</code>, or <code>0</code> if <code>key</code> is not
+   *         a key in the map. Use {@link #containsKey(String) containsKey()} to find out if
    *         <code>key</code> is actually defined in the map.
    */
   public int get(String key) {
-    Integer i = map.get(key);
+    Integer i = this.map.get(key);
     if (i == null) {
       return DEFAULT_VALUE;
     }
-    return i;
+    return i.intValue();
   }
 
   /**
@@ -81,15 +82,15 @@ public class StringToIntMap {
    * @return The previous value of <code>key</code>, if it was set. <code>0</code> else.
    */
   public int put(String key, int value) {
-    Integer i = map.get(key);
+    Integer i = this.map.get(key);
     int rc;
     if (i == null) {
       rc = 0;
     } else {
-      rc = i;
+      rc = i.intValue();
     }
-    i = value;
-    map.put(key, i);
+    i = Integer.valueOf(value);
+    this.map.put(key, i);
     return rc;
   }
 

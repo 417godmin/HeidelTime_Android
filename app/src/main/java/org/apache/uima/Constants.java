@@ -16,31 +16,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.uima;
 
 /**
  * Some constants used by the UIMA framework.
+ * 
+ * 
  */
 public abstract class Constants {
   /**
    * A constant indicating the name of the "SOAP" protocol for service communication.
-   * 
-   * @deprecated SOAP protocol is no longer supported since UIMA v3.3.0. Constant to be removed in
-   *             UIMAv4.
-   * @forRemoval 4.0.0
    */
-  @Deprecated(since = "3.3.0")
   public static final String PROTOCOL_SOAP = "SOAP";
 
   /**
    * A constant indicating the name of the "SOAP with Attachments" protocol for service
    * communication.
-   * 
-   * @deprecated SOAP protocol is no longer supported since UIMA v3.3.0. Constant to be removed in
-   *             UIMAv4.
-   * @forRemoval 4.0.0
    */
-  @Deprecated(since = "3.3.0")
   public static final String PROTOCOL_SOAP_WITH_ATTACHMENTS = "SOAPwithAttachments";
 
   /**
@@ -68,16 +61,16 @@ public abstract class Constants {
    * A constant indicating the name of the "JMS" protocol for service communication.
    */
   public static final String PROTOCOL_JMS = "JMS";
-
+  
   /**
-   * Name of the UIMA Java framework, to be used in &lt;frameworkImplementation&gt; element of
-   * descriptors.
+   * Name of the UIMA Java framework, to be used in &lt;frameworkImplementation&gt; 
+   * element of descriptors.
    */
   public static final String JAVA_FRAMEWORK_NAME = "org.apache.uima.java";
-
+  
   /**
-   * Name of the UIMA C++ framework, to be used in &lt;frameworkImplementation&gt; element of
-   * descriptors.
+   * Name of the UIMA C++ framework, to be used in &lt;frameworkImplementation&gt; 
+   * element of descriptors.
    */
   public static final String CPP_FRAMEWORK_NAME = "org.apache.uima.cpp";
 }

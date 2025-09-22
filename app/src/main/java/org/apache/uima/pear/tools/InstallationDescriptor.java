@@ -104,8 +104,8 @@ public class InstallationDescriptor implements Serializable {
    */
   public static class ServiceInfo {
     // private attributes
-
-    private ArrayList<ArgInfo> _args = new ArrayList<>();
+    
+    private ArrayList<ArgInfo> _args = new ArrayList<ArgInfo>();
 
     // public attributes
     public String command;
@@ -161,7 +161,7 @@ public class InstallationDescriptor implements Serializable {
 
     public String deploymentType = InstallationDescriptorHandler.STANDARD_TAG;
 
-    public transient ServiceInfo serviceInfo = null; // ServiceInfo is not serializable
+    public ServiceInfo serviceInfo = null;
 
     public Hashtable<String, Properties> networkParams = null;
 
@@ -196,13 +196,13 @@ public class InstallationDescriptor implements Serializable {
 
   private ComponentInfo _mainComponent = null;
 
-  private Hashtable<String, ComponentInfo> _delegateComponents = new Hashtable<>();
+  private Hashtable<String, ComponentInfo> _delegateComponents = new Hashtable<String, ComponentInfo>();
 
-  private ArrayList<ActionInfo> _installationActions = new ArrayList<>();
+  private ArrayList<ActionInfo> _installationActions = new ArrayList<ActionInfo>();
 
   /**
-   * Adds a property specified by given name and value to a given <code>Properties</code> object. If
-   * the given object already contains a property with the given name, adds a new value to this
+   * Adds a property specified by given name and value to a given <code>Properties</code> object.
+   * If the given object already contains a property with the given name, adds a new value to this
    * property using PROPERTY_DELIMITER as the delimiter, unless the existing property value list
    * already contains the given new value.
    * 
@@ -367,8 +367,7 @@ public class InstallationDescriptor implements Serializable {
                     _mainComponent.rootDirPath);
             mAction.params.setProperty(key, value);
           }
-          Iterator<Map.Entry<String, ComponentInfo>> dlgEntries = getDelegateComponents().entrySet()
-                  .iterator();
+          Iterator<Map.Entry<String, ComponentInfo>> dlgEntries = getDelegateComponents().entrySet().iterator();
           while (dlgEntries.hasNext()) {
             Map.Entry<String, ComponentInfo> dlgEntry = dlgEntries.next();
             ComponentInfo dlgInfo = dlgEntry.getValue();
@@ -531,7 +530,7 @@ public class InstallationDescriptor implements Serializable {
    * @return The list of the <code>ComponentInfo</code> objects that encapsulate specifications of
    *         the registered delegate components (for aggregate component).
    */
-  public Hashtable<String, ComponentInfo> getDelegateComponents() {
+  public Hashtable <String, ComponentInfo>getDelegateComponents() {
     return _delegateComponents;
   }
 
@@ -544,8 +543,8 @@ public class InstallationDescriptor implements Serializable {
   }
 
   /**
-   * @return The list of the <code>ActionInfo</code> objects that encapsulate specifications of all
-   *         requested installation actions.
+   * @return The list of the <code>ActionInfo</code> objects that encapsulate specifications of
+   *         all requested installation actions.
    */
   public Collection<ActionInfo> getInstallationActions() {
     return _installationActions;
@@ -560,7 +559,7 @@ public class InstallationDescriptor implements Serializable {
    * @return The list of the <code>ActionInfo</code> objects that have the given action name.
    */
   public Collection<ActionInfo> getInstallationActions(String actionName) {
-    ArrayList<ActionInfo> selActions = new ArrayList<>();
+    ArrayList<ActionInfo> selActions = new ArrayList<ActionInfo>();
     Iterator<ActionInfo> allActions = getInstallationActions().iterator();
     while (allActions.hasNext()) {
       ActionInfo actInfo = allActions.next();
@@ -593,13 +592,13 @@ public class InstallationDescriptor implements Serializable {
    * @param relativePath
    *          If <code>true</code>, returns relative path, otherwise returns absolute path.
    * @return Absolute or relative path to the specified CAS Consumer descriptor for the main
-   *         (submitted) component, or <code>null</code>, if the main component was not specified.
+   *         (submitted) component, or <code>null</code>, if the main component was not
+   *         specified.
    */
   public synchronized String getMainCasConsumerDesc(boolean relativePath) {
     if (_mainComponent != null)
-      return relativePath
-              ? getRelativePathForComponentObject(_mainComponent.casConsumerDescFilePath,
-                      _mainComponent)
+      return relativePath ? getRelativePathForComponentObject(
+              _mainComponent.casConsumerDescFilePath, _mainComponent)
               : _mainComponent.casConsumerDescFilePath;
     return null;
   }
@@ -620,13 +619,13 @@ public class InstallationDescriptor implements Serializable {
    * @param relativePath
    *          If <code>true</code>, returns relative path, otherwise returns absolute path.
    * @return Absolute or relative path to the specified CAS Initializer descriptor for the main
-   *         (submitted) component, or <code>null</code>, if the main component was not specified.
+   *         (submitted) component, or <code>null</code>, if the main component was not
+   *         specified.
    */
   public synchronized String getMainCasInitializerDesc(boolean relativePath) {
     if (_mainComponent != null)
-      return relativePath
-              ? getRelativePathForComponentObject(_mainComponent.casInitializerDescFilePath,
-                      _mainComponent)
+      return relativePath ? getRelativePathForComponentObject(
+              _mainComponent.casInitializerDescFilePath, _mainComponent)
               : _mainComponent.casInitializerDescFilePath;
     return null;
   }
@@ -647,20 +646,20 @@ public class InstallationDescriptor implements Serializable {
    * @param relativePath
    *          If <code>true</code>, returns relative path, otherwise returns absolute path.
    * @return Absolute or relative path to the specified Collection Iterator descriptor for the main
-   *         (submitted) component, or <code>null</code>, if the main component was not specified.
+   *         (submitted) component, or <code>null</code>, if the main component was not
+   *         specified.
    */
   public synchronized String getMainCollIteratorDesc(boolean relativePath) {
     if (_mainComponent != null)
-      return relativePath
-              ? getRelativePathForComponentObject(_mainComponent.collIteratorDescFilePath,
-                      _mainComponent)
+      return relativePath ? getRelativePathForComponentObject(
+              _mainComponent.collIteratorDescFilePath, _mainComponent)
               : _mainComponent.collIteratorDescFilePath;
     return null;
   }
 
   /**
-   * @return The specified main component deployment type, or default deployment type
-   *         (<code>standard</code>), if no deployment type specified.
+   * @return The specified main component deployment type, or default deployment type (<code>standard</code>),
+   *         if no deployment type specified.
    */
   public synchronized String getMainComponentDeployment() {
     return (_mainComponent != null) ? _mainComponent.deploymentType : null;
@@ -676,8 +675,8 @@ public class InstallationDescriptor implements Serializable {
 
   /**
    * Returns absolute or relative path to the specified XML AE descriptor for the main (submitted)
-   * component, or <code>null</code>, if the main component was not specified. If the relative path
-   * is requested, returns the path relative to the main component root dir.
+   * component, or <code>null</code>, if the main component was not specified. If the relative
+   * path is requested, returns the path relative to the main component root dir.
    * 
    * @param relativePath
    *          If <code>true</code>, returns relative path, otherwise returns absolute path.
@@ -694,9 +693,8 @@ public class InstallationDescriptor implements Serializable {
           } else
             return _mainComponent.descFilePath;
         } else {
-          return relativePath
-                  ? getRelativePathForComponentObject(_mainComponent.descFilePath, _mainComponent)
-                  : _mainComponent.descFilePath;
+          return relativePath ? getRelativePathForComponentObject(_mainComponent.descFilePath,
+                  _mainComponent) : _mainComponent.descFilePath;
         }
       } else
         return _mainComponent.descFilePath;
@@ -713,8 +711,8 @@ public class InstallationDescriptor implements Serializable {
   }
 
   /**
-   * @return The specified name for the main (submitted) component, or <code>null</code> if the main
-   *         component was not specified.
+   * @return The specified name for the main (submitted) component, or <code>null</code> if the
+   *         main component was not specified.
    */
   public synchronized String getMainComponentName() {
     return (_mainComponent != null) ? _mainComponent.name : null;
@@ -726,8 +724,8 @@ public class InstallationDescriptor implements Serializable {
    * @return The specifications of the given network component parameter.
    */
   public synchronized Properties getMainComponentNetworkParam(String paramName) {
-    return (_mainComponent != null && _mainComponent.networkParams != null)
-            ? _mainComponent.networkParams.get(paramName)
+    return (_mainComponent != null && _mainComponent.networkParams != null) ? _mainComponent.networkParams
+            .get(paramName)
             : null;
   }
 
@@ -735,8 +733,8 @@ public class InstallationDescriptor implements Serializable {
    * @return The <code>Set</code> of the network component parameter names.
    */
   public synchronized Set<String> getMainComponentNetworkParamNames() {
-    return (_mainComponent != null && _mainComponent.networkParams != null)
-            ? _mainComponent.networkParams.keySet()
+    return (_mainComponent != null && _mainComponent.networkParams != null) ? _mainComponent.networkParams
+            .keySet()
             : null;
   }
 
@@ -806,8 +804,8 @@ public class InstallationDescriptor implements Serializable {
         dCompInfo.descFilePath = descFilePath.trim().replace('\\', '/');
       else {
         // substitute '$dlg_comp_id$root' macros
-        dCompInfo.descFilePath = InstallationProcessor
-                .substituteCompIdRootInString(dCompInfo.descFilePath, dlgId, dCompInfo.rootDirPath);
+        dCompInfo.descFilePath = InstallationProcessor.substituteCompIdRootInString(
+                dCompInfo.descFilePath, dlgId, dCompInfo.rootDirPath);
       }
     }
   }
@@ -837,8 +835,7 @@ public class InstallationDescriptor implements Serializable {
    * @param propValue
    *          The given property value.
    */
-  public synchronized void setDelegateComponentProperty(String id, String propName,
-          String propValue) {
+  public synchronized void setDelegateComponentProperty(String id, String propName, String propValue) {
     String dlgId = id.trim();
     ComponentInfo dCompInfo = _delegateComponents.get(dlgId);
     if (dCompInfo != null) {
@@ -864,8 +861,8 @@ public class InstallationDescriptor implements Serializable {
       // substitute $dlg_comp_id$root macros in the
       // delegate descriptor path
       if (dCompInfo.descFilePath != null) {
-        dCompInfo.descFilePath = InstallationProcessor
-                .substituteCompIdRootInString(dCompInfo.descFilePath, dlgId, dCompInfo.rootDirPath);
+        dCompInfo.descFilePath = InstallationProcessor.substituteCompIdRootInString(
+                dCompInfo.descFilePath, dlgId, dCompInfo.rootDirPath);
       }
     }
     // substitute $dlg_comp_id$root macros in apropriate
@@ -899,8 +896,8 @@ public class InstallationDescriptor implements Serializable {
       if (_mainComponent.rootDirPath == null) // set relative path
         _mainComponent.casConsumerDescFilePath = descFilePath.trim().replace('\\', '/');
       else { // substitute $main_root macros in descriptor path
-        _mainComponent.casConsumerDescFilePath = InstallationProcessor
-                .substituteMainRootInString(descFilePath, _mainComponent.rootDirPath);
+        _mainComponent.casConsumerDescFilePath = InstallationProcessor.substituteMainRootInString(
+                descFilePath, _mainComponent.rootDirPath);
       }
     }
   }
@@ -933,8 +930,8 @@ public class InstallationDescriptor implements Serializable {
       if (_mainComponent.rootDirPath == null) // set relative path
         _mainComponent.collIteratorDescFilePath = descFilePath.trim().replace('\\', '/');
       else { // substitute $main_root macros in descriptor path
-        _mainComponent.collIteratorDescFilePath = InstallationProcessor
-                .substituteMainRootInString(descFilePath, _mainComponent.rootDirPath);
+        _mainComponent.collIteratorDescFilePath = InstallationProcessor.substituteMainRootInString(
+                descFilePath, _mainComponent.rootDirPath);
       }
     }
   }
@@ -965,8 +962,8 @@ public class InstallationDescriptor implements Serializable {
   }
 
   /**
-   * Sets a given main component deployment type: <code>standard</code>, <code>service</code> or
-   * <code>network</code>.
+   * Sets a given main component deployment type: <code>standard</code>, <code>service</code>
+   * or <code>network</code>.
    * 
    * @param deplType
    *          The specified deployment type.
@@ -987,8 +984,8 @@ public class InstallationDescriptor implements Serializable {
       if (_mainComponent.rootDirPath == null) // set relative path
         _mainComponent.descFilePath = descFilePath.trim().replace('\\', '/');
       else { // substitute $main_root macros in descriptor path
-        _mainComponent.descFilePath = InstallationProcessor.substituteMainRootInString(descFilePath,
-                _mainComponent.rootDirPath);
+        _mainComponent.descFilePath = InstallationProcessor.substituteMainRootInString(
+                descFilePath, _mainComponent.rootDirPath);
       }
     }
   }
@@ -1027,7 +1024,7 @@ public class InstallationDescriptor implements Serializable {
   public synchronized void setMainComponentNetworkParam(String paramName, Properties paramSpecs) {
     if (_mainComponent != null) {
       if (_mainComponent.networkParams == null)
-        _mainComponent.networkParams = new Hashtable<>();
+        _mainComponent.networkParams = new Hashtable<String, Properties>();
       _mainComponent.networkParams.put(paramName, paramSpecs);
     }
   }
@@ -1107,13 +1104,21 @@ public class InstallationDescriptor implements Serializable {
    * @return String representation of the InsD object.
    * @see Object#toString()
    */
-  @Override
   public String toString() {
     StringWriter sWriter = new StringWriter();
-    try (PrintWriter oWriter = new PrintWriter(sWriter)) {
+    PrintWriter oWriter = null;
+    try {
+      oWriter = new PrintWriter(sWriter);
       InstallationDescriptorHandler.printInstallationDescriptor(this, oWriter);
       oWriter.flush();
     } catch (Exception exc) {
+    } finally {
+      if (oWriter != null) {
+        try {
+          oWriter.close();
+        } catch (Exception e) {
+        }
+      }
     }
     return sWriter.toString();
   }
@@ -1124,9 +1129,8 @@ public class InstallationDescriptor implements Serializable {
    * @param id
    *          The given new ID of the main component.
    * @deprecated Use setMainComponentId() method instead.
-   * @forRemoval 4.0.0
    */
-  @Deprecated(since = "2.3.1")
+  @Deprecated
   public synchronized void updateMainComponentId(String id) {
     setMainComponentId(id);
   }

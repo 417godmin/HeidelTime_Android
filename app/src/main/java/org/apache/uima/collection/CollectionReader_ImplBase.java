@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.uima.collection;
 
 import java.io.IOException;
@@ -34,11 +35,17 @@ import org.apache.uima.util.Level;
 /**
  * Base class for Collection Readers, which developers should extend with their own Collection
  * Reader implementation classes.
+ * 
+ * 
  */
-public abstract class CollectionReader_ImplBase extends ConfigurableResource_ImplBase
-        implements CollectionReader {
-  @Deprecated(since = "2.0.0")
-  private CasInitializer mCasInitializer;
+
+public abstract class CollectionReader_ImplBase extends ConfigurableResource_ImplBase implements
+        CollectionReader {
+  /**
+   * @deprecated
+   */
+  @Deprecated
+private CasInitializer mCasInitializer;
 
   /**
    * current class
@@ -54,7 +61,6 @@ public abstract class CollectionReader_ImplBase extends ConfigurableResource_Imp
    * @see org.apache.uima.resource.Resource#initialize(ResourceSpecifier,
    *      Map)
    */
-  @Override
   public boolean initialize(ResourceSpecifier aSpecifier, Map<String, Object> aAdditionalParams)
           throws ResourceInitializationException {
     if (aSpecifier instanceof ResourceCreationSpecifier) {
@@ -85,7 +91,6 @@ public abstract class CollectionReader_ImplBase extends ConfigurableResource_Imp
    * 
    * @see org.apache.uima.resource.Resource#destroy()
    */
-  @Override
   public void destroy() {
     try {
       close();
@@ -100,7 +105,6 @@ public abstract class CollectionReader_ImplBase extends ConfigurableResource_Imp
    * 
    * @see CollectionReader#typeSystemInit(TypeSystem)
    */
-  @Override
   public void typeSystemInit(TypeSystem aTypeSystem) throws ResourceInitializationException {
     if (getCasInitializer() != null) {
       getCasInitializer().typeSystemInit(aTypeSystem);
@@ -113,7 +117,6 @@ public abstract class CollectionReader_ImplBase extends ConfigurableResource_Imp
    * 
    * @see CollectionReader#getProcessingResourceMetaData()
    */
-  @Override
   public ProcessingResourceMetaData getProcessingResourceMetaData() {
     return (ProcessingResourceMetaData) getMetaData();
   }
@@ -123,7 +126,6 @@ public abstract class CollectionReader_ImplBase extends ConfigurableResource_Imp
    * 
    * @see CollectionReader#isConsuming()
    */
-  @Override
   public boolean isConsuming() {
     return false;
   }
@@ -135,10 +137,8 @@ public abstract class CollectionReader_ImplBase extends ConfigurableResource_Imp
    * @see CollectionReader#getCasInitializer()
    * 
    * @deprecated As of v2.0 CAS Initializers are deprecated.
-   * @forRemoval 4.0.0
    */
-  @Override
-  @Deprecated(since = "2.0.0")
+  @Deprecated
   public CasInitializer getCasInitializer() {
     return mCasInitializer;
   }
@@ -150,24 +150,21 @@ public abstract class CollectionReader_ImplBase extends ConfigurableResource_Imp
    * @see CollectionReader#setCasInitializer(CasInitializer)
    * 
    * @deprecated As of v2.0 CAS Initializers are deprecated.
-   * @forRemoval 4.0.0
    */
-  @Override
-  @Deprecated(since = "2.0.0")
+  @Deprecated
   public void setCasInitializer(CasInitializer aCasInitializer) {
     mCasInitializer = aCasInitializer;
   }
 
   /**
    * Notifies this Collection Reader that its configuration parameter settings have been changed. By
-   * default this method just calls {@link #destroy()} followed by {@link #initialize()}. Collection
-   * Readers that have expensive initialization that does not need to be redone whenever
+   * default this method just calls {@link #destroy()} followed by {@link #initialize()}.
+   * Collection Readers that have expensive initialization that does not need to be redone whenever
    * configuration parameters change may wish to override this method to provide a more efficient
    * implementation.
    * 
    * @see ConfigurableResource_ImplBase#reconfigure()
    */
-  @Override
   public void reconfigure() throws ResourceConfigurationException {
     super.reconfigure();
     destroy();

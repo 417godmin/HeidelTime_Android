@@ -29,7 +29,7 @@ public interface Mapping {
    * 
    * @return the CAS feature name
    */
-  String getFeature();
+  public String getFeature();
 
   /**
    * Sets the name of the feature that should be indexed.
@@ -37,7 +37,7 @@ public interface Mapping {
    * @param aFeature
    *          the CAS feature name
    */
-  void setFeature(String aFeature);
+  public void setFeature(String aFeature);
 
   /**
    * Gets the name that will be used to represent this feature in the index. This determines the
@@ -45,7 +45,7 @@ public interface Mapping {
    * 
    * @return the index name for the feature
    */
-  String getIndexName();
+  public String getIndexName();
 
   /**
    * Sets the name that will be used to represent this feature in the index. This determines the
@@ -54,5 +54,5 @@ public interface Mapping {
    * @param aIndexName
    *          the index name for the feature
    */
-  void setIndexName(String aIndexName);
+  public void setIndexName(String aIndexName);
 }

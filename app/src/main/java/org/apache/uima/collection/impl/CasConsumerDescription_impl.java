@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.uima.collection.impl;
 
 import java.util.ArrayList;
@@ -25,7 +26,6 @@ import org.apache.uima.Constants;
 import org.apache.uima.UIMAFramework;
 import org.apache.uima.collection.CasConsumer;
 import org.apache.uima.collection.CasConsumerDescription;
-import org.apache.uima.internal.util.Class_TCCL;
 import org.apache.uima.resource.ResourceInitializationException;
 import org.apache.uima.resource.ResourceManager;
 import org.apache.uima.resource.impl.ResourceCreationSpecifier_impl;
@@ -40,8 +40,12 @@ import org.apache.uima.util.XMLParser;
 import org.apache.uima.util.XMLParser.ParsingOptions;
 import org.w3c.dom.Element;
 
-public class CasConsumerDescription_impl extends ResourceCreationSpecifier_impl
-        implements CasConsumerDescription {
+/**
+ * 
+ * 
+ */
+public class CasConsumerDescription_impl extends ResourceCreationSpecifier_impl implements
+        CasConsumerDescription {
 
   private static final long serialVersionUID = -3876854246385758053L;
 
@@ -64,7 +68,6 @@ public class CasConsumerDescription_impl extends ResourceCreationSpecifier_impl
   /**
    * @see CasConsumerDescription#getCasConsumerMetaData()
    */
-  @Override
   public ProcessingResourceMetaData getCasConsumerMetaData() {
     return (ProcessingResourceMetaData) getMetaData();
   }
@@ -72,11 +75,8 @@ public class CasConsumerDescription_impl extends ResourceCreationSpecifier_impl
   /*
    * (non-Javadoc)
    * 
-   * @see
-   * org.apache.uima.resource.ResourceCreationSpecifier#doFullValidation(org.apache.uima.resource.
-   * ResourceManager)
+   * @see org.apache.uima.resource.ResourceCreationSpecifier#doFullValidation(org.apache.uima.resource.ResourceManager)
    */
-  @Override
   public void doFullValidation(ResourceManager aResourceManager)
           throws ResourceInitializationException {
     // check that user class was specified
@@ -86,10 +86,15 @@ public class CasConsumerDescription_impl extends ResourceCreationSpecifier_impl
               new Object[] { getSourceUrlString() });
     }
     // try to load user class
-    // just UIMA extension ClassLoader if available
+    // ust UIMA extension ClassLoader if available
     Class<?> implClass;
+    ClassLoader cl = aResourceManager.getExtensionClassLoader();
     try {
-      implClass = Class_TCCL.forName(getImplementationName(), aResourceManager);
+      if (cl != null) {
+        implClass = cl.loadClass(getImplementationName());
+      } else {
+        implClass = Class.forName(getImplementationName());
+      }
     } catch (ClassNotFoundException e) {
       throw new ResourceInitializationException(ResourceInitializationException.CLASS_NOT_FOUND,
               new Object[] { getImplementationName(), getSourceUrlString() }, e);
@@ -101,7 +106,7 @@ public class CasConsumerDescription_impl extends ResourceCreationSpecifier_impl
                   getImplementationName(), CasConsumer.class.getName(), getSourceUrlString() });
     }
     // try to create a CAS
-    List<ProcessingResourceMetaData> metadata = new ArrayList<>();
+    List<ProcessingResourceMetaData> metadata = new ArrayList<ProcessingResourceMetaData>();
     metadata.add(getCasConsumerMetaData());
     CasCreationUtils.createCas(metadata);
   }
@@ -109,7 +114,6 @@ public class CasConsumerDescription_impl extends ResourceCreationSpecifier_impl
   /**
    * Overridden to set default operational properties if they are not specified in descriptor.
    */
-  @Override
   public void buildFromXMLElement(Element aElement, XMLParser aParser, ParsingOptions aOptions)
           throws InvalidXMLException {
     super.buildFromXMLElement(aElement, aParser, aOptions);
@@ -123,13 +127,13 @@ public class CasConsumerDescription_impl extends ResourceCreationSpecifier_impl
     }
   }
 
-  @Override
   protected XmlizationInfo getXmlizationInfo() {
     return XMLIZATION_INFO;
   }
 
-  private static final XmlizationInfo XMLIZATION_INFO = new XmlizationInfo("casConsumerDescription",
-          new PropertyXmlInfo[] { new PropertyXmlInfo("frameworkImplementation"),
+  static final private XmlizationInfo XMLIZATION_INFO = new XmlizationInfo(
+          "casConsumerDescription", new PropertyXmlInfo[] {
+              new PropertyXmlInfo("frameworkImplementation"),
               new PropertyXmlInfo("implementationName"), new PropertyXmlInfo("metaData", null),
               new PropertyXmlInfo("externalResourceDependencies"),
               new PropertyXmlInfo("resourceManagerConfiguration", null) });

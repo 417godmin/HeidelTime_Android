@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.uima.analysis_engine;
 
 import org.apache.uima.resource.metadata.MetaDataObject;
@@ -25,6 +26,8 @@ import org.apache.uima.resource.metadata.MetaDataObject;
  * {@link org.apache.uima.resource.metadata.Capability} to declare which Types and Features the
  * Analysis Engine inputs and outputs, and it is also used by {@link ResultSpecification} to declare
  * the outputs that are desired by the application.
+ * 
+ * 
  */
 public interface TypeOrFeature extends MetaDataObject, Comparable<TypeOrFeature> {
 
@@ -33,7 +36,7 @@ public interface TypeOrFeature extends MetaDataObject, Comparable<TypeOrFeature>
    * 
    * @return true if Type, false if Feature
    */
-  boolean isType();
+  public boolean isType();
 
   /**
    * Sets whether this object refers to a Type or to a Feature.
@@ -41,14 +44,14 @@ public interface TypeOrFeature extends MetaDataObject, Comparable<TypeOrFeature>
    * @param aType
    *          true if Type, false if Feature
    */
-  void setType(boolean aType);
+  public void setType(boolean aType);
 
   /**
    * Gets the fully-qualified Type or Feature name.
    * 
    * @return the fully-qualified name
    */
-  String getName();
+  public String getName();
 
   /**
    * Sets the fully-qualified Type or Feature name.
@@ -56,7 +59,7 @@ public interface TypeOrFeature extends MetaDataObject, Comparable<TypeOrFeature>
    * @param aName
    *          the fully-qualified name
    */
-  void setName(String aName);
+  public void setName(String aName);
 
   /**
    * For Type references, this method determines whether this reference should be considered to also
@@ -66,7 +69,7 @@ public interface TypeOrFeature extends MetaDataObject, Comparable<TypeOrFeature>
    * @return true if this is a reference to all features, false if it is only a reference to the
    *         type
    */
-  boolean isAllAnnotatorFeatures();
+  public boolean isAllAnnotatorFeatures();
 
   /**
    * For Type references, sets whether this reference should be considered to also refer to all
@@ -77,5 +80,5 @@ public interface TypeOrFeature extends MetaDataObject, Comparable<TypeOrFeature>
    *          true if this is a reference to all features, false if it is only a reference to the
    *          type
    */
-  void setAllAnnotatorFeatures(boolean aAllAnnotatorFeatures);
+  public void setAllAnnotatorFeatures(boolean aAllAnnotatorFeatures);
 }

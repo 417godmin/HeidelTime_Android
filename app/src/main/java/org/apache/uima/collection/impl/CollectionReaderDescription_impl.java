@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.uima.collection.impl;
 
 import java.util.ArrayList;
@@ -24,7 +25,6 @@ import org.apache.uima.Constants;
 import org.apache.uima.UIMAFramework;
 import org.apache.uima.collection.CollectionReader;
 import org.apache.uima.collection.CollectionReaderDescription;
-import org.apache.uima.internal.util.Class_TCCL;
 import org.apache.uima.resource.ResourceInitializationException;
 import org.apache.uima.resource.ResourceManager;
 import org.apache.uima.resource.impl.ResourceCreationSpecifier_impl;
@@ -39,8 +39,9 @@ import org.apache.uima.util.XMLParser;
 import org.apache.uima.util.XMLParser.ParsingOptions;
 import org.w3c.dom.Element;
 
-public class CollectionReaderDescription_impl extends ResourceCreationSpecifier_impl
-        implements CollectionReaderDescription {
+
+public class CollectionReaderDescription_impl extends ResourceCreationSpecifier_impl implements
+        CollectionReaderDescription {
 
   private static final long serialVersionUID = -6654886877117758267L;
 
@@ -60,7 +61,6 @@ public class CollectionReaderDescription_impl extends ResourceCreationSpecifier_
     getCollectionReaderMetaData().setOperationalProperties(opProps);
   }
 
-  @Override
   public ProcessingResourceMetaData getCollectionReaderMetaData() {
     return (ProcessingResourceMetaData) getMetaData();
   }
@@ -68,11 +68,8 @@ public class CollectionReaderDescription_impl extends ResourceCreationSpecifier_
   /*
    * (non-Javadoc)
    * 
-   * @see
-   * org.apache.uima.resource.ResourceCreationSpecifier#doFullValidation(org.apache.uima.resource.
-   * ResourceManager)
+   * @see org.apache.uima.resource.ResourceCreationSpecifier#doFullValidation(org.apache.uima.resource.ResourceManager)
    */
-  @Override
   public void doFullValidation(ResourceManager aResourceManager)
           throws ResourceInitializationException {
     // check that user class was specified
@@ -82,11 +79,15 @@ public class CollectionReaderDescription_impl extends ResourceCreationSpecifier_
               new Object[] { getSourceUrlString() });
     }
     // try to load user class
-
-    // use UIMA extension ClassLoader if available
+    // ust UIMA extension ClassLoader if available
     Class<?> implClass;
+    ClassLoader cl = aResourceManager.getExtensionClassLoader();
     try {
-      implClass = Class_TCCL.forName(getImplementationName(), aResourceManager);
+      if (cl != null) {
+        implClass = cl.loadClass(getImplementationName());
+      } else {
+        implClass = Class.forName(getImplementationName());
+      }
     } catch (ClassNotFoundException e) {
       throw new ResourceInitializationException(ResourceInitializationException.CLASS_NOT_FOUND,
               new Object[] { getImplementationName(), getSourceUrlString() }, e);
@@ -94,21 +95,20 @@ public class CollectionReaderDescription_impl extends ResourceCreationSpecifier_
     // verify the user class implements CollectionReader
     if (!CollectionReader.class.isAssignableFrom(implClass)) {
       throw new ResourceInitializationException(
-              ResourceInitializationException.RESOURCE_DOES_NOT_IMPLEMENT_INTERFACE,
-              new Object[] { getImplementationName(), CollectionReader.class.getName(),
-                  getSourceUrlString() });
+              ResourceInitializationException.RESOURCE_DOES_NOT_IMPLEMENT_INTERFACE, new Object[] {
+                  getImplementationName(), CollectionReader.class.getName(), getSourceUrlString() });
     }
     // try to create a CAS
-    ArrayList<ProcessingResourceMetaData> metadata = new ArrayList<>();
+    ArrayList<ProcessingResourceMetaData> metadata = new ArrayList<ProcessingResourceMetaData>();
     metadata.add(getCollectionReaderMetaData());
-    CasCreationUtils.createCas(metadata, UIMAFramework.getDefaultPerformanceTuningProperties(),
-            aResourceManager);
+    CasCreationUtils.createCas(metadata, 
+        UIMAFramework.getDefaultPerformanceTuningProperties(),
+        aResourceManager);
   }
 
   /**
    * Overridden to set default operational properties if they are not specified in descriptor.
    */
-  @Override
   public void buildFromXMLElement(Element aElement, XMLParser aParser, ParsingOptions aOptions)
           throws InvalidXMLException {
     super.buildFromXMLElement(aElement, aParser, aOptions);
@@ -122,15 +122,15 @@ public class CollectionReaderDescription_impl extends ResourceCreationSpecifier_
     }
   }
 
-  @Override
   protected XmlizationInfo getXmlizationInfo() {
     return XMLIZATION_INFO;
   }
 
-  private static final XmlizationInfo XMLIZATION_INFO = new XmlizationInfo(
-          "collectionReaderDescription",
-          new PropertyXmlInfo[] { new PropertyXmlInfo("frameworkImplementation"),
+  static final private XmlizationInfo XMLIZATION_INFO = new XmlizationInfo(
+          "collectionReaderDescription", new PropertyXmlInfo[] {
+              new PropertyXmlInfo("frameworkImplementation"),
               new PropertyXmlInfo("implementationName"), new PropertyXmlInfo("metaData", null),
               new PropertyXmlInfo("externalResourceDependencies"),
               new PropertyXmlInfo("resourceManagerConfiguration", null) });
+
 }
