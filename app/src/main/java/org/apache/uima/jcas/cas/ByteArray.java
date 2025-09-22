@@ -19,32 +19,19 @@
 
 package org.apache.uima.jcas.cas;
 
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-
-import org.apache.uima.cas.CAS;
-import org.apache.uima.cas.CommonArrayFS;
-import org.apache.uima.cas.impl.ByteArrayFSImpl;
-import org.apache.uima.cas.impl.CASImpl;
-import org.apache.uima.cas.impl.TypeImpl;
+import org.apache.uima.cas.ByteArrayFS;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
 
 /** JCas class model for ByteArray */
-public final class ByteArray extends TOP
-        implements CommonPrimitiveArray<Byte>, ByteArrayFSImpl, Iterable<Byte> {
-
-  /* public static string for use where constants are needed, e.g. in some Java Annotations */
-  public static final String _TypeName = CAS.TYPE_NAME_BYTE_ARRAY;
-
+public final class ByteArray extends TOP implements ByteArrayFS {
   /**
    * Each cover class when loaded sets an index. Used in the JCas typeArray to go from the cover
    * class or class instance to the corresponding instance of the _Type class
    */
-  public static final int typeIndexID = JCasRegistry.register(ByteArray.class);
+  public final static int typeIndexID = JCasRegistry.register(ByteArray.class);
 
-  public static final int type = typeIndexID;
+  public final static int type = typeIndexID;
 
   /**
    * used to obtain reference to the _Type instance
@@ -52,201 +39,105 @@ public final class ByteArray extends TOP
    * @return the type array index
    */
   // can't be factored - refs locally defined field
-  @Override
   public int getTypeIndexID() {
     return typeIndexID;
   }
 
-  private final byte[] theArray;
-
   // never called. Here to disable default constructor
-  @SuppressWarnings("unused")
   private ByteArray() {
-    theArray = null;
+  }
+
+ /* Internal - Constructor used by generator */
+  public ByteArray(int addr, TOP_Type type) {
+    super(addr, type);
   }
 
   /**
    * Make a new ByteArray of given size
-   * 
-   * @param jcas
-   *          the JCas
-   * @param length
-   *          the length of the array in bytes
+   * @param jcas the JCas
+   * @param length the length of the array in bytes
    */
   public ByteArray(JCas jcas, int length) {
-    super(jcas);
-    theArray = new byte[length];
-    if (CASImpl.traceFSs) { // tracing done after array setting, skipped in super class
-      _casView.traceFSCreate(this);
-    }
-    if (_casView.isId2Fs()) {
-      _casView.adjustLastFsV2size_nonHeapStoredArrays();
-    }
+    this(jcas.getLowLevelCas().ll_createByteArray(length), jcas.getType(typeIndexID));
   }
 
   /**
-   * used by generator Make a new ByteArray of given size
-   * 
-   * @param c
-   *          -
-   * @param t
-   *          -
-   * @param length
-   *          the length of the array in bytes
+   * @see ByteArrayFS#get(int)
    */
-  public ByteArray(TypeImpl t, CASImpl c, int length) {
-    super(t, c);
-    theArray = new byte[length];
-    if (CASImpl.traceFSs) { // tracing done after array setting, skipped in super class
-      _casView.traceFSCreate(this);
-    }
-    if (_casView.isId2Fs()) {
-      _casView.adjustLastFsV2size_nonHeapStoredArrays();
-    }
-  }
-
-  /**
-   * @see org.apache.uima.cas.ByteArrayFS#get(int)
-   */
-  @Override
   public byte get(int i) {
-    return theArray[i];
+    jcasType.casImpl.checkArrayBounds(addr, i);
+    return jcasType.ll_cas.ll_getByteArrayValue(addr, i);
   }
 
   /**
-   * @see org.apache.uima.cas.ByteArrayFS#set(int , byte)
+   * @see ByteArrayFS#set(int , byte)
    */
-  @Override
   public void set(int i, byte v) {
-    theArray[i] = v;
-    _casView.maybeLogArrayUpdate(this, null, i);
+    jcasType.casImpl.checkArrayBounds(addr, i);
+    jcasType.ll_cas.ll_setByteArrayValue(addr, i, v);
   }
 
   /**
-   * @see org.apache.uima.cas.ByteArrayFS#copyFromArray(byte[], int, int, int)
+   * @see ByteArrayFS#copyFromArray(byte[], int, int, int)
    */
-  @Override
-  public void copyFromArray(byte[] src, int srcPos, int destPos, int length) {
-    System.arraycopy(src, srcPos, theArray, destPos, length);
-    _casView.maybeLogArrayUpdates(this, destPos, length);
+  public void copyFromArray(byte[] src, int srcOffset, int destOffset, int length) {
+    jcasType.casImpl.checkArrayBounds(addr, destOffset, length);
+    for (int i = 0; i < length; i++) {
+      jcasType.ll_cas.ll_setByteArrayValue(addr, i + destOffset, src[i + srcOffset]);
+    }
   }
 
   /**
-   * @see org.apache.uima.cas.ByteArrayFS#copyToArray(int, byte[], int, int)
+   * @see ByteArrayFS#copyToArray(int, byte[], int, int)
    */
-  @Override
-  public void copyToArray(int srcPos, byte[] dest, int destPos, int length) {
-    System.arraycopy(theArray, srcPos, dest, destPos, length);
+  public void copyToArray(int srcOffset, byte[] dest, int destOffset, int length) {
+    jcasType.casImpl.checkArrayBounds(addr, srcOffset, length);
+    for (int i = 0; i < length; i++) {
+      dest[i + destOffset] = jcasType.ll_cas.ll_getByteArrayValue(addr, i + srcOffset);
+    }
   }
 
   /**
-   * @see org.apache.uima.cas.ByteArrayFS#toArray()
+   * @see ByteArrayFS#toArray()
    */
-  @Override
   public byte[] toArray() {
-    return Arrays.copyOf(theArray, theArray.length);
+    final int size = size();
+    byte[] outArray = new byte[size];
+    copyToArray(0, outArray, 0, size);
+    return outArray;
   }
 
   /** return the size of the array */
-  @Override
   public int size() {
-    return theArray.length;
+    return jcasType.casImpl.ll_getArraySize(addr);
   }
 
   /**
-   * @see org.apache.uima.cas.ByteArrayFS#copyToArray(int, String[], int, int)
+   * @see ByteArrayFS#copyToArray(int, String[], int, int)
    */
-  @Override
-  public void copyToArray(int srcPos, String[] dest, int destPos, int length) {
-    _casView.checkArrayBounds(theArray.length, srcPos, length);
+  public void copyToArray(int srcOffset, String[] dest, int destOffset, int length) {
+    jcasType.casImpl.checkArrayBounds(addr, srcOffset, length);
     for (int i = 0; i < length; i++) {
-      dest[i + destPos] = Byte.toString(theArray[i + srcPos]);
+      dest[i + destOffset] = Byte.toString(jcasType.ll_cas
+              .ll_getByteArrayValue(addr, i + srcOffset));
     }
   }
 
   /**
-   * @see org.apache.uima.cas.ByteArrayFS#copyFromArray(String[], int, int, int)
+   * @see ByteArrayFS#copyFromArray(String[], int, int, int)
    */
-  @Override
-  public void copyFromArray(String[] src, int srcPos, int destPos, int length) {
-    _casView.checkArrayBounds(theArray.length, destPos, length);
+  public void copyFromArray(String[] src, int srcOffset, int destOffset, int length) {
+    jcasType.casImpl.checkArrayBounds(addr, destOffset, length);
     for (int i = 0; i < length; i++) {
-      theArray[i + destPos] = Byte.parseByte(src[i + srcPos]);
+      jcasType.ll_cas
+              .ll_setByteArrayValue(addr, i + destOffset, Byte.parseByte(src[i + srcOffset]));
     }
-    _casView.maybeLogArrayUpdates(this, destPos, length);
   }
 
-  // internal use
-  public byte[] _getTheArray() {
-    return theArray;
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.apache.uima.jcas.cas.CommonArray#copyValuesFrom(org.apache.uima.jcas.cas.CommonArray)
-   */
-  @Override
-  public void copyValuesFrom(CommonArrayFS<Byte> v) {
-    ByteArray bv = (ByteArray) v;
-    System.arraycopy(bv.theArray, 0, theArray, 0, theArray.length);
-    _casView.maybeLogArrayUpdates(this, 0, size());
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.apache.uima.jcas.cas.CommonPrimitiveArray#setArrayValueFromString(int,
-   * java.lang.String)
-   */
-  @Override
-  public void setArrayValueFromString(int i, String v) {
-    set(i, Byte.parseByte(v));
-  }
-
-  @Override
-  public Iterator<Byte> iterator() {
-    return new Iterator<Byte>() {
-      int i = 0;
-
-      @Override
-      public boolean hasNext() {
-        return i < size();
-      }
-
-      @Override
-      public Byte next() {
-        if (!hasNext())
-          throw new NoSuchElementException();
-        return get(i++);
-      }
-    };
-  }
-
-  /**
-   * @param jcas
-   *          Which CAS to create the array in
-   * @param a
-   *          the source for the array's initial values
-   * @return a newly created and populated array
-   */
-  public static ByteArray create(JCas jcas, byte[] a) {
-    ByteArray byteArray = new ByteArray(jcas, a.length);
-    byteArray.copyFromArray(a, 0, 0, a.length);
-    return byteArray;
-  }
-
-  /**
-   * @param item
-   *          the item to see if is in the array
-   * @return true if the item is in the array
-   */
-  public boolean contains(byte item) {
-    for (byte b : theArray) {
-      if (b == item) {
-        return true;
-      }
-    }
-    return false;
+  public String[] toStringArray() {
+    final int size = size();
+    String[] strArray = new String[size];
+    copyToArray(0, strArray, 0, size);
+    return strArray;
   }
 }

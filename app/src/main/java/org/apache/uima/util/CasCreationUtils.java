@@ -53,7 +53,6 @@ import org.apache.uima.cas.admin.FSIndexRepositoryMgr;
 import org.apache.uima.cas.admin.LinearTypeOrderBuilder;
 import org.apache.uima.cas.admin.TypeSystemMgr;
 import org.apache.uima.cas.impl.CASImpl;
-import org.apache.uima.cas.impl.TypeSystemImpl;
 import org.apache.uima.cas_data.CasData;
 import org.apache.uima.cas_data.FeatureStructure;
 import org.apache.uima.cas_data.PrimitiveValue;
@@ -87,38 +86,22 @@ import org.apache.uima.resource.metadata.impl.ProcessingResourceMetaData_impl;
  */
 public class CasCreationUtils {
 
-  private static final AllowedValue[] EMPTY_ALLOWED_VALUE_ARRAY = new AllowedValue[0];
-
-  private static final FeatureDescription[] EMPTY_FEAT_DESC_ARRAY = new FeatureDescription[0];
-
-  /**
-   * Creates a new CAS instance.
-   * 
-   * @return a new CAS instance
-   * 
-   * @throws ResourceInitializationException
-   *           if CAS creation fails
-   */
-  public static CAS createCas() throws ResourceInitializationException {
-    return createCas((TypeSystemDescription) null, null, null);
-  }
-
   /**
    * Creates a new CAS instance. Note this method does not work for Aggregate Analysis Engine
    * descriptors -- use {@link #createCas(AnalysisEngineDescription)} instead.
    * 
    * @param aMetaData
-   *          metadata for the analysis engine that will process this CAS. This is used to set up
-   *          the CAS's type system and indexes.
+   *                metadata for the analysis engine that will process this CAS. This is used to set
+   *                up the CAS's type system and indexes.
    * 
    * @return a new CAS instance
    * 
    * @throws ResourceInitializationException
-   *           if CAS creation fails
+   *                 if CAS creation fails
    */
   public static CAS createCas(AnalysisEngineMetaData aMetaData)
-          throws ResourceInitializationException {
-    List<AnalysisEngineMetaData> list = new ArrayList<>();
+      throws ResourceInitializationException {
+    List<AnalysisEngineMetaData> list = new ArrayList<AnalysisEngineMetaData>();
     list.add(aMetaData);
     return createCas(list);
   }
@@ -127,17 +110,17 @@ public class CasCreationUtils {
    * Creates a new CAS instance.
    * 
    * @param aMetaData
-   *          metadata for the resource that will process this CAS. This is used to set up the CAS's
-   *          type system and indexes.
+   *                metadata for the resource that will process this CAS. This is used to set up the
+   *                CAS's type system and indexes.
    * 
    * @return a new CAS instance
    * 
    * @throws ResourceInitializationException
-   *           if CAS creation fails
+   *                 if CAS creation fails
    */
   public static CAS createCas(ProcessingResourceMetaData aMetaData)
-          throws ResourceInitializationException {
-    List<ProcessingResourceMetaData> list = new ArrayList<>();
+      throws ResourceInitializationException {
+    List<ProcessingResourceMetaData> list = new ArrayList<ProcessingResourceMetaData>();
     list.add(aMetaData);
     return createCas(list);
   }
@@ -147,16 +130,16 @@ public class CasCreationUtils {
    * analysis engines.
    * 
    * @param aDescription
-   *          description of the analysis engine that will process this CAS. This is used to set up
-   *          the CAS's type system and indexes.
+   *                description of the analysis engine that will process this CAS. This is used to
+   *                set up the CAS's type system and indexes.
    * 
    * @return a new CAS instance
    * 
    * @throws ResourceInitializationException
-   *           if CAS creation fails
+   *                 if CAS creation fails
    */
   public static CAS createCas(AnalysisEngineDescription aDescription)
-          throws ResourceInitializationException {
+      throws ResourceInitializationException {
     return createCas(aDescription, UIMAFramework.getDefaultPerformanceTuningProperties());
   }
 
@@ -165,20 +148,20 @@ public class CasCreationUtils {
    * analysis engines.
    * 
    * @param aDescription
-   *          description of the analysis engine that will process this CAS. This is used to set up
-   *          the CAS's type system and indexes.
+   *                description of the analysis engine that will process this CAS. This is used to
+   *                set up the CAS's type system and indexes.
    * @param aPerformanceTuningSettings
-   *          Properties object containing framework performance tuning settings using key names
-   *          defined on {@link UIMAFramework} interface
+   *                Properties object containing framework performance tuning settings using key
+   *                names defined on {@link UIMAFramework} interface
    * 
    * @return a new CAS instance
    * 
    * @throws ResourceInitializationException
-   *           if CAS creation fails
+   *                 if CAS creation fails
    */
   public static CAS createCas(AnalysisEngineDescription aDescription,
-          Properties aPerformanceTuningSettings) throws ResourceInitializationException {
-    List<AnalysisEngineDescription> list = new ArrayList<>();
+      Properties aPerformanceTuningSettings) throws ResourceInitializationException {
+    List<AnalysisEngineDescription> list = new ArrayList<AnalysisEngineDescription>();
     list.add(aDescription);
     return createCas(list, aPerformanceTuningSettings);
   }
@@ -198,19 +181,19 @@ public class CasCreationUtils {
    * be opened.
    * 
    * @param aComponentDescriptionsOrMetaData
-   *          a collection of {@link ResourceSpecifier}, {@link ProcessingResourceMetaData},
-   *          {@link TypeSystemDescription}, {@link FsIndexCollection}, or {@link TypePriorities}
-   *          objects.
+   *                a collection of {@link ResourceSpecifier}, {@link ProcessingResourceMetaData},
+   *                {@link TypeSystemDescription}, {@link FsIndexCollection}, or
+   *                {@link TypePriorities} objects.
    * 
    * @return a new CAS instance
    * 
    * @throws ResourceInitializationException
-   *           if CAS creation fails
+   *                 if CAS creation fails
    */
   public static CAS createCas(Collection<? extends MetaDataObject> aComponentDescriptionsOrMetaData)
-          throws ResourceInitializationException {
-    return createCas(aComponentDescriptionsOrMetaData,
-            UIMAFramework.getDefaultPerformanceTuningProperties());
+      throws ResourceInitializationException {
+    return createCas(aComponentDescriptionsOrMetaData, UIMAFramework
+        .getDefaultPerformanceTuningProperties());
   }
 
   /**
@@ -228,22 +211,22 @@ public class CasCreationUtils {
    * be opened.
    * 
    * @param aComponentDescriptionsOrMetaData
-   *          a collection of {@link ResourceSpecifier}, {@link ProcessingResourceMetaData},
-   *          {@link TypeSystemDescription}, {@link FsIndexCollection}, or {@link TypePriorities}
-   *          objects.
+   *                a collection of {@link ResourceSpecifier}, {@link ProcessingResourceMetaData},
+   *                {@link TypeSystemDescription}, {@link FsIndexCollection}, or
+   *                {@link TypePriorities} objects.
    * @param aPerformanceTuningSettings
-   *          Properties object containing framework performance tuning settings using key names
-   *          defined on {@link UIMAFramework} interface
+   *                Properties object containing framework performance tuning settings using key
+   *                names defined on {@link UIMAFramework} interface
    * 
    * @return a new CAS instance
    * 
    * @throws ResourceInitializationException
-   *           if CAS creation fails
+   *                 if CAS creation fails
    */
   public static CAS createCas(Collection<? extends MetaDataObject> aComponentDescriptionsOrMetaData,
-          Properties aPerformanceTuningSettings) throws ResourceInitializationException {
-    return createCas(aComponentDescriptionsOrMetaData, aPerformanceTuningSettings,
-            UIMAFramework.newDefaultResourceManager());
+      Properties aPerformanceTuningSettings) throws ResourceInitializationException {
+    return createCas(aComponentDescriptionsOrMetaData, aPerformanceTuningSettings, UIMAFramework
+        .newDefaultResourceManager());
   }
 
   /**
@@ -261,31 +244,30 @@ public class CasCreationUtils {
    * be opened.
    * 
    * @param aComponentDescriptionsOrMetaData
-   *          a collection of {@link ResourceSpecifier}, {@link ProcessingResourceMetaData},
-   *          {@link TypeSystemDescription}, {@link FsIndexCollection}, or {@link TypePriorities}
-   *          objects.
+   *                a collection of {@link ResourceSpecifier}, {@link ProcessingResourceMetaData},
+   *                {@link TypeSystemDescription}, {@link FsIndexCollection}, or
+   *                {@link TypePriorities} objects.
    * @param aPerformanceTuningSettings
-   *          Properties object containing framework performance tuning settings using key names
-   *          defined on {@link UIMAFramework} interface
+   *                Properties object containing framework performance tuning settings using key
+   *                names defined on {@link UIMAFramework} interface
    * @param aResourceManager
-   *          the resource manager to use to resolve import declarations within the metadata
+   *                the resource manager to use to resolve import declarations within the metadata
    * 
    * @return a new CAS instance
    * 
    * @throws ResourceInitializationException
-   *           if CAS creation fails
+   *                 if CAS creation fails
    */
   public static CAS createCas(Collection<? extends MetaDataObject> aComponentDescriptionsOrMetaData,
-          Properties aPerformanceTuningSettings, ResourceManager aResourceManager)
-          throws ResourceInitializationException {
+      Properties aPerformanceTuningSettings, ResourceManager aResourceManager)
+      throws ResourceInitializationException {
     // build a list of metadata objects
-    List<ProcessingResourceMetaData> mdList = getMetaDataList(aComponentDescriptionsOrMetaData,
-            aResourceManager);
+    List<ProcessingResourceMetaData> mdList = getMetaDataList(aComponentDescriptionsOrMetaData, aResourceManager);
 
     // extract TypeSystems, TypePriorities, and FsIndexes from metadata
-    List<TypeSystemDescription> typeSystems = new ArrayList<>();
-    List<TypePriorities> typePriorities = new ArrayList<>();
-    List<FsIndexCollection> fsIndexes = new ArrayList<>();
+    List<TypeSystemDescription> typeSystems = new ArrayList<TypeSystemDescription>();
+    List<TypePriorities> typePriorities = new ArrayList<TypePriorities>();
+    List<FsIndexCollection> fsIndexes = new ArrayList<FsIndexCollection>();
     Iterator<ProcessingResourceMetaData> it = mdList.iterator();
     while (it.hasNext()) {
       ProcessingResourceMetaData md = it.next();
@@ -302,56 +284,27 @@ public class CasCreationUtils {
     TypePriorities aggTypePriorities = mergeTypePriorities(typePriorities, aResourceManager);
     FsIndexCollection aggIndexColl = mergeFsIndexes(fsIndexes, aResourceManager);
 
-    // ===== 在这里加最终兜底修复 =====
-    normalizeAllTypes(aggTypeDesc);
-
     return doCreateCas(null, aggTypeDesc, aggTypePriorities, aggIndexColl.getFsIndexes(),
-            aPerformanceTuningSettings, aResourceManager);
+        aPerformanceTuningSettings, aResourceManager);
   }
 
-  /*设计的兜底修复方法，防止非法路径'\'进入*/
-  private static void normalizeAllTypes(TypeSystemDescription tsd) {
-    if (tsd != null && tsd.getTypes() != null) {
-      for (TypeDescription td : tsd.getTypes()) {
-        if (td == null) continue;
-
-        if (td.getName() != null) {
-          String oldName = td.getName();
-          String newName = normalizeTypeName(oldName);
-          if (!oldName.equals(newName)) {
-            System.out.println("⚠ [FINAL-NORM] Fixed typeName: " + oldName + " → " + newName);
-          }
-          td.setName(newName);
-        }
-
-        if (td.getSupertypeName() != null) {
-          String oldSuper = td.getSupertypeName();
-          String newSuper = normalizeTypeName(oldSuper);
-          if (!oldSuper.equals(newSuper)) {
-            System.out.println("⚠ [FINAL-NORM] Fixed superTypeName: " + oldSuper + " → " + newSuper);
-          }
-          td.setSupertypeName(newSuper);
-        }
-      }
-    }
-  }
   /**
    * Creates a new CAS instance.
    * 
    * @param aTypeSystem
-   *          type system to install in the CAS
+   *                type system to install in the CAS
    * @param aTypePriorities
-   *          type priorities to install in the CAS
+   *                type priorities to install in the CAS
    * @param aFsIndexes
-   *          indexes to install in the CAS
+   *                indexes to install in the CAS
    * 
    * @return a new CAS instance
    * 
    * @throws ResourceInitializationException
-   *           if CAS creation fails
+   *                 if CAS creation fails
    */
   public static CAS createCas(TypeSystemDescription aTypeSystem, TypePriorities aTypePriorities,
-          FsIndexDescription[] aFsIndexes) throws ResourceInitializationException {
+      FsIndexDescription[] aFsIndexes) throws ResourceInitializationException {
     return createCas(aTypeSystem, aTypePriorities, aFsIndexes, null, null);
   }
 
@@ -359,23 +312,23 @@ public class CasCreationUtils {
    * Creates a new CAS instance.
    * 
    * @param aTypeSystem
-   *          type system to install in the CAS
+   *                type system to install in the CAS
    * @param aTypePriorities
-   *          type priorities to install in the CAS
+   *                type priorities to install in the CAS
    * @param aFsIndexes
-   *          indexes to install in the CAS
+   *                indexes to install in the CAS
    * @param aPerformanceTuningSettings
-   *          Properties object containing framework performance tuning settings using key names
-   *          defined on {@link UIMAFramework} interface
+   *                Properties object containing framework performance tuning settings using key
+   *                names defined on {@link UIMAFramework} interface
    * 
    * @return a new CAS instance
    * 
    * @throws ResourceInitializationException
-   *           if CAS creation fails
+   *                 if CAS creation fails
    */
   public static CAS createCas(TypeSystemDescription aTypeSystem, TypePriorities aTypePriorities,
-          FsIndexDescription[] aFsIndexes, Properties aPerformanceTuningSettings)
-          throws ResourceInitializationException {
+      FsIndexDescription[] aFsIndexes, Properties aPerformanceTuningSettings)
+      throws ResourceInitializationException {
     return createCas(aTypeSystem, aTypePriorities, aFsIndexes, aPerformanceTuningSettings, null);
   }
 
@@ -383,26 +336,26 @@ public class CasCreationUtils {
    * Creates a new CAS instance.
    * 
    * @param aTypeSystem
-   *          type system to install in the CAS
+   *                type system to install in the CAS
    * @param aTypePriorities
-   *          type priorities to install in the CAS
+   *                type priorities to install in the CAS
    * @param aFsIndexes
-   *          indexes to install in the CAS
+   *                indexes to install in the CAS
    * @param aPerformanceTuningSettings
-   *          Properties object containing framework performance tuning settings using key names
-   *          defined on {@link UIMAFramework} interface
-   * @param aResourceManager
-   *          the resource manager
+   *                Properties object containing framework performance tuning settings using key
+   *                names defined on {@link UIMAFramework} interface
+   * @param aResourceManager 
+   *                the resource manager
    * @return a new CAS instance
    * 
    * @throws ResourceInitializationException
-   *           if CAS creation fails
+   *                 if CAS creation fails
    */
   public static CAS createCas(TypeSystemDescription aTypeSystem, TypePriorities aTypePriorities,
-          FsIndexDescription[] aFsIndexes, Properties aPerformanceTuningSettings,
-          ResourceManager aResourceManager) throws ResourceInitializationException {
+      FsIndexDescription[] aFsIndexes, Properties aPerformanceTuningSettings,
+      ResourceManager aResourceManager) throws ResourceInitializationException {
     return doCreateCas(null, aTypeSystem, aTypePriorities, aFsIndexes, aPerformanceTuningSettings,
-            aResourceManager);
+        aResourceManager);
   }
 
   /**
@@ -421,25 +374,24 @@ public class CasCreationUtils {
    * be opened.
    * 
    * @param aComponentDescriptionsOrMetaData
-   *          a collection of {@link ResourceSpecifier}, {@link ProcessingResourceMetaData},
-   *          {@link TypeSystemDescription}, {@link FsIndexCollection}, or {@link TypePriorities}
-   *          objects.
+   *                a collection of {@link ResourceSpecifier}, {@link ProcessingResourceMetaData},
+   *                {@link TypeSystemDescription}, {@link FsIndexCollection}, or
+   *                {@link TypePriorities} objects.
    * @param aTypeSystem
-   *          type system to install in the CAS, null if none
+   *                type system to install in the CAS, null if none
    * @param aPerformanceTuningSettings
-   *          Properties object containing framework performance tuning settings using key names
-   *          defined on {@link UIMAFramework} interface
+   *                Properties object containing framework performance tuning settings using key
+   *                names defined on {@link UIMAFramework} interface
    * 
    * @return a new CAS instance
    * 
    * @throws ResourceInitializationException
-   *           if CAS creation fails
+   *                 if CAS creation fails
    */
-  public static CAS createCas(Collection<? extends MetaDataObject> aComponentDescriptionsOrMetaData,
-          TypeSystem aTypeSystem, Properties aPerformanceTuningSettings)
-          throws ResourceInitializationException {
+  public static CAS createCas(Collection<? extends MetaDataObject> aComponentDescriptionsOrMetaData, TypeSystem aTypeSystem,
+      Properties aPerformanceTuningSettings) throws ResourceInitializationException {
     return createCas(aComponentDescriptionsOrMetaData, aTypeSystem, aPerformanceTuningSettings,
-            UIMAFramework.newDefaultResourceManager());
+        UIMAFramework.newDefaultResourceManager());
   }
 
   /**
@@ -458,34 +410,33 @@ public class CasCreationUtils {
    * be opened.
    * 
    * @param aComponentDescriptionsOrMetaData
-   *          a collection of {@link ResourceSpecifier}, {@link ProcessingResourceMetaData},
-   *          {@link TypeSystemDescription}, {@link FsIndexCollection}, or {@link TypePriorities}
-   *          objects.
+   *                a collection of {@link ResourceSpecifier}, {@link ProcessingResourceMetaData},
+   *                {@link TypeSystemDescription}, {@link FsIndexCollection}, or
+   *                {@link TypePriorities} objects.
    * @param aTypeSystem
-   *          type system to install in the CAS, null if none
+   *                type system to install in the CAS, null if none
    * @param aPerformanceTuningSettings
-   *          Properties object containing framework performance tuning settings using key names
-   *          defined on {@link UIMAFramework} interface
+   *                Properties object containing framework performance tuning settings using key
+   *                names defined on {@link UIMAFramework} interface
    * @param aResourceManager
-   *          the resource manager to use to resolve import declarations within the metadata, and
-   *          also to set the JCas ClassLoader for the new CAS
+   *                the resource manager to use to resolve import declarations within the metadata,
+   *                and also to set the JCas ClassLoader for the new CAS
    * 
    * @return a new CAS instance
    * 
    * @throws ResourceInitializationException
-   *           if CAS creation fails
+   *                 if CAS creation fails
    */
-  public static CAS createCas(Collection<? extends MetaDataObject> aComponentDescriptionsOrMetaData,
-          TypeSystem aTypeSystem, Properties aPerformanceTuningSettings,
-          ResourceManager aResourceManager) throws ResourceInitializationException {
+  public static CAS createCas(Collection<? extends MetaDataObject> aComponentDescriptionsOrMetaData, TypeSystem aTypeSystem,
+      Properties aPerformanceTuningSettings, ResourceManager aResourceManager)
+      throws ResourceInitializationException {
     // build a list of metadata objects
-    List<ProcessingResourceMetaData> mdList = getMetaDataList(aComponentDescriptionsOrMetaData,
-            aResourceManager);
+    List<ProcessingResourceMetaData> mdList = getMetaDataList(aComponentDescriptionsOrMetaData, aResourceManager);
 
     // extract TypeSystems, TypePriorities, and FsIndexes from metadata
-    List<TypeSystemDescription> typeSystems = new ArrayList<>();
-    List<TypePriorities> typePriorities = new ArrayList<>();
-    List<FsIndexCollection> fsIndexes = new ArrayList<>();
+    List<TypeSystemDescription> typeSystems = new ArrayList<TypeSystemDescription>();
+    List<TypePriorities> typePriorities = new ArrayList<TypePriorities>();
+    List<FsIndexCollection> fsIndexes = new ArrayList<FsIndexCollection>();
     Iterator<ProcessingResourceMetaData> it = mdList.iterator();
     while (it.hasNext()) {
       ProcessingResourceMetaData md = it.next();
@@ -504,12 +455,12 @@ public class CasCreationUtils {
     if (aTypeSystem != null) // existing type system object was specified; use that
     {
       return doCreateCas(aTypeSystem, null, aggTypePriorities, aggIndexColl.getFsIndexes(),
-              aPerformanceTuningSettings, aResourceManager);
+          aPerformanceTuningSettings, aResourceManager);
     } else {
       // no type system object specified; merge type system descriptions in metadata
       TypeSystemDescription aggTypeDesc = mergeTypeSystems(typeSystems);
       return doCreateCas(null, aggTypeDesc, aggTypePriorities, aggIndexColl.getFsIndexes(),
-              aPerformanceTuningSettings, aResourceManager);
+          aPerformanceTuningSettings, aResourceManager);
     }
   }
 
@@ -518,21 +469,21 @@ public class CasCreationUtils {
    * several CASes to all share the exact same type system object.
    * 
    * @param aTypeSystem
-   *          type system to install in the CAS
+   *                type system to install in the CAS
    * @param aTypePriorities
-   *          type priorities to install in the CAS
+   *                type priorities to install in the CAS
    * @param aFsIndexes
-   *          indexes to install in the CAS
+   *                indexes to install in the CAS
    * @param aPerformanceTuningSettings
-   *          the settings for performance tuning
+   *                the settings for performance tuning
    * @return a new CAS instance
    * 
    * @throws ResourceInitializationException
-   *           if CAS creation fails
+   *                 if CAS creation fails
    */
   public static CAS createCas(TypeSystem aTypeSystem, TypePriorities aTypePriorities,
-          FsIndexDescription[] aFsIndexes, Properties aPerformanceTuningSettings)
-          throws ResourceInitializationException {
+      FsIndexDescription[] aFsIndexes, Properties aPerformanceTuningSettings)
+      throws ResourceInitializationException {
     return createCas(aTypeSystem, aTypePriorities, aFsIndexes, aPerformanceTuningSettings, null);
   }
 
@@ -541,26 +492,26 @@ public class CasCreationUtils {
    * several CASes to all share the exact same type system object.
    * 
    * @param aTypeSystem
-   *          type system to install in the CAS
+   *                type system to install in the CAS
    * @param aTypePriorities
-   *          type priorities to install in the CAS
+   *                type priorities to install in the CAS
    * @param aFsIndexes
-   *          indexes to install in the CAS
+   *                indexes to install in the CAS
    * @param aPerformanceTuningSettings
-   *          the settings for performance tuning
+   *                the settings for performance tuning
    * @param aResourceManager
-   *          resource manager, which is used to set the JCas ClassLoader for the new CAS
+   *                resource manager, which is used to set the JCas ClassLoader for the new CAS
    * 
    * @return a new CAS instance
    * 
    * @throws ResourceInitializationException
-   *           if CAS creation fails
+   *                 if CAS creation fails
    */
   public static CAS createCas(TypeSystem aTypeSystem, TypePriorities aTypePriorities,
-          FsIndexDescription[] aFsIndexes, Properties aPerformanceTuningSettings,
-          ResourceManager aResourceManager) throws ResourceInitializationException {
+      FsIndexDescription[] aFsIndexes, Properties aPerformanceTuningSettings,
+      ResourceManager aResourceManager) throws ResourceInitializationException {
     return doCreateCas(aTypeSystem, null, aTypePriorities, aFsIndexes, aPerformanceTuningSettings,
-            aResourceManager);
+        aResourceManager);
   }
 
   /**
@@ -569,27 +520,27 @@ public class CasCreationUtils {
    * more than one place.
    * 
    * @param aTypeSystem
-   *          an existing type system to reuse in this CAS, null if none.
+   *                an existing type system to reuse in this CAS, null if none.
    * @param aTypeSystemDescription
-   *          description of type system to use for this CAS. This is only used if aTypeSystem is
-   *          null.
+   *                description of type system to use for this CAS. This is only used if aTypeSystem
+   *                is null.
    * @param aTypePriorities
-   *          type priorities to install in the CAS
+   *                type priorities to install in the CAS
    * @param aFsIndexes
-   *          indexes to install in the CAS
+   *                indexes to install in the CAS
    * @param aPerformanceTuningSettings
-   *          Properties object containing framework performance tuning settings using key names
-   *          defined on {@link UIMAFramework} interface
+   *                Properties object containing framework performance tuning settings using key
+   *                names defined on {@link UIMAFramework} interface
    * 
    * @return a new CAS instance
    * 
    * @throws ResourceInitializationException
-   *           if CAS creation fails
+   *                 if CAS creation fails
    */
   private static CAS doCreateCas(TypeSystem aTypeSystem, TypeSystemDescription aTypeSystemDesc,
-          TypePriorities aTypePriorities, FsIndexDescription[] aFsIndexes,
-          Properties aPerformanceTuningSettings, ResourceManager aResourceManager)
-          throws ResourceInitializationException {
+      TypePriorities aTypePriorities, FsIndexDescription[] aFsIndexes,
+      Properties aPerformanceTuningSettings, ResourceManager aResourceManager)
+      throws ResourceInitializationException {
     if (aResourceManager == null) {
       aResourceManager = UIMAFramework.newDefaultResourceManager();
     }
@@ -598,14 +549,11 @@ public class CasCreationUtils {
     try {
       if (aTypeSystemDesc != null) {
         aTypeSystemDesc.resolveImports(aResourceManager);
-        // even though there's only one Type System, we still need to do a merge, to handle the
-        // case where this TypeSystem defines the same type more than once (or has imports that do)
-        List<TypeSystemDescription> tsList = new ArrayList<>();
+        //even though there's only one Type System, we still need to do a merge, to handle the
+        //case where this TypeSystem defines the same type more than once (or has imports that do)
+        List<TypeSystemDescription> tsList = new ArrayList<TypeSystemDescription>();
         tsList.add(aTypeSystemDesc);
-        aTypeSystemDesc = mergeTypeSystems(tsList, aResourceManager, null);
-
-        // ✅ 这里加兜底
-        normalizeAllTypes(aTypeSystemDesc);
+        aTypeSystemDesc = mergeTypeSystems(tsList, aResourceManager, null);        
       }
       if (aTypePriorities != null) {
         aTypePriorities.resolveImports(aResourceManager);
@@ -618,18 +566,14 @@ public class CasCreationUtils {
     String initialHeapSizeStr = null;
     if (aPerformanceTuningSettings != null) {
       initialHeapSizeStr = aPerformanceTuningSettings
-              .getProperty(UIMAFramework.CAS_INITIAL_HEAP_SIZE);
+          .getProperty(UIMAFramework.CAS_INITIAL_HEAP_SIZE);
     }
-
-    int initialHeapSize = (null == initialHeapSizeStr) ? CASImpl.DEFAULT_INITIAL_HEAP_SIZE
-            : Integer.parseInt(initialHeapSizeStr);
-
-    // Check Jcas cache performance setting. Defaults to true.
-    // in v3, JCasCache is ignored
+    
+    // Check Jcas cache performance setting.  Defaults to true.
     boolean useJcasCache = true;
     if (aPerformanceTuningSettings != null) {
-      String useJcasCacheString = aPerformanceTuningSettings
-              .getProperty(UIMAFramework.JCAS_CACHE_ENABLED, "true");
+      String useJcasCacheString = aPerformanceTuningSettings.getProperty(
+          UIMAFramework.JCAS_CACHE_ENABLED, "true");
       if ("false".equalsIgnoreCase(useJcasCacheString)) {
         useJcasCache = false;
       }
@@ -638,32 +582,22 @@ public class CasCreationUtils {
     // create CAS using either aTypeSystem or aTypeSystemDesc
     CASMgr casMgr;
     if (aTypeSystem != null) {
-      casMgr = CASFactory.createCAS(initialHeapSize, aTypeSystem, useJcasCache);
-
-      // Set JCas ClassLoader - before setupTypeSystem
-      if (aResourceManager.getExtensionClassLoader() != null) {
-        casMgr.setJCasClassLoader(aResourceManager.getExtensionClassLoader());
+      if (initialHeapSizeStr != null) {
+        casMgr = CASFactory.createCAS(Integer.parseInt(initialHeapSizeStr), aTypeSystem, useJcasCache);
+      } else {
+        casMgr = CASFactory.createCAS(aTypeSystem, useJcasCache);
       }
-
     } else // no TypeSystem to reuse - create a new one
     {
-      boolean skip_loading_user_jcas = false;
-      if (aPerformanceTuningSettings != null) {
-        String v = aPerformanceTuningSettings.getProperty(UIMAFramework.SKIP_USER_JCAS_LOADING,
-                "false");
-        skip_loading_user_jcas = "true".equalsIgnoreCase(v);
+      if (initialHeapSizeStr != null) {
+        casMgr = CASFactory.createCAS(Integer.parseInt(initialHeapSizeStr), useJcasCache);
+      } else {
+        casMgr = CASFactory.createCAS(CASImpl.DEFAULT_INITIAL_HEAP_SIZE, useJcasCache);
       }
-
-      casMgr = CASFactory.createCAS();//@@@@@@@问题点@@@@@走无参create跳过了兜底
-
-      if (aResourceManager.getExtensionClassLoader() != null) {
-        casMgr.setJCasClassLoader(aResourceManager.getExtensionClassLoader());
-      }
-
       // install type system
       setupTypeSystem(casMgr, aTypeSystemDesc);
       // Commit the type system
-      ((CASImpl) casMgr).commitTypeSystem(skip_loading_user_jcas);
+      ((CASImpl) casMgr).commitTypeSystem();
     }
 
     try {
@@ -682,81 +616,68 @@ public class CasCreationUtils {
     // Commit the index repository
     casMgr.getIndexRepositoryMgr().commit();
 
+    // Set JCas ClassLoader
+    if (aResourceManager.getExtensionClassLoader() != null) {
+      casMgr.setJCasClassLoader(aResourceManager.getExtensionClassLoader());
+    }
+
     return casMgr.getCAS().getView(CAS.NAME_DEFAULT_SOFA);
   }
 
   /**
    * Create a CAS from a CAS Definition.
    * 
-   * In V3, creating the type system is expensive (due to loading and setting up of JCas classes),
-   * so we do the type system creation once per CasDefinition and store it with the CAS definition
-   * 
    * @param casDef
-   *          completely describes the CAS to be created
+   *                completely describes the CAS to be created
    * @param performanceTuningSettings
-   *          Properties object containing framework performance tuning settings using key names
-   *          defined on {@link UIMAFramework} interface
+   *                Properties object containing framework performance tuning settings using key
+   *                names defined on {@link UIMAFramework} interface
    * 
    * @return a new CAS matching the given CasDefinition
    * @throws ResourceInitializationException
-   *           if CAS creation fails
-   * 
+   *                 if CAS creation fails
+
    */
   public static CAS createCas(CasDefinition casDef, Properties performanceTuningSettings)
-          throws ResourceInitializationException {
-    TypeSystemImpl tsi = casDef.getTypeSystemImpl();
-    CAS cas;
-    if (null == tsi) {
-      synchronized (casDef) {
-        if (null == tsi) { // retest under sync lock
-          cas = createCas(casDef.getTypeSystemDescription(), casDef.getTypePriorities(),
-                  casDef.getFsIndexDescriptions(), performanceTuningSettings,
-                  casDef.getResourceManager());
-          casDef.setTypeSystemImpl((TypeSystemImpl) cas.getTypeSystem());
-          return cas;
-        }
-      }
-    }
-
-    return doCreateCas(tsi, casDef.getTypeSystemDescription(), casDef.getTypePriorities(),
-            casDef.getFsIndexDescriptions(), performanceTuningSettings,
-            casDef.getResourceManager());
+      throws ResourceInitializationException {
+    return createCas(casDef.getTypeSystemDescription(), casDef.getTypePriorities(), casDef
+        .getFsIndexDescriptions(), performanceTuningSettings, casDef.getResourceManager());
   }
 
   /**
    * Create a CAS from a CAS Definition, but reuse the provided TypeSystem object.
    * 
    * @param casDef
-   *          completely describes the CAS to be created
+   *                completely describes the CAS to be created
    * @param performanceTuningSettings
-   *          Properties object containing framework performance tuning settings using key names
-   *          defined on {@link UIMAFramework} interface
+   *                Properties object containing framework performance tuning settings using key
+   *                names defined on {@link UIMAFramework} interface
    * @param typeSystem
-   *          type system object to reuse
+   *                type system object to reuse
    * 
    * @return a new CAS matching the given CasDefinition
    * @throws ResourceInitializationException
-   *           if CAS creation fails
+   *                 if CAS creation fails
    */
   public static CAS createCas(CasDefinition casDef, Properties performanceTuningSettings,
-          TypeSystem typeSystem) throws ResourceInitializationException {
+      TypeSystem typeSystem) throws ResourceInitializationException {
     return createCas(typeSystem, casDef.getTypePriorities(), casDef.getFsIndexDescriptions(),
-            performanceTuningSettings, casDef.getResourceManager());
+        performanceTuningSettings, casDef.getResourceManager());
   }
 
   /**
    * Installs a TypeSystem in a CAS.
    * 
    * @param aCASMgr
-   *          the <code>CASMgr</code> object whose type system is to be modified.
+   *                the <code>CASMgr</code> object whose type system is to be modified.
    * @param aTypeSystem
-   *          description of type system to install
+   *                description of type system to install
    * 
    * @throws ResourceInitializationException
-   *           if an error occurs during modification of the type system
+   *                 if an error occurs during modification of the type system
    */
   public static void setupTypeSystem(CASMgr aCASMgr, TypeSystemDescription aTypeSystem)
-          throws ResourceInitializationException {
+      throws ResourceInitializationException {
     TypeSystemMgr typeSystemMgr = aCASMgr.getTypeSystemMgr();
     if (aTypeSystem != null) {
       TypeDescription[] types = aTypeSystem.getTypes();
@@ -769,11 +690,11 @@ public class CasCreationUtils {
         // over this, adding types to the CAS and removing them from the linked
         // list. We continue until the list is empty or we cannot make any
         // progress.
-        LinkedList<TypeDescription> typeList = new LinkedList<>();
+        LinkedList<TypeDescription> typeList = new LinkedList<TypeDescription>();
         typeList.addAll(Arrays.asList(types));
         int numTypes = typeList.size();
         int lastNumTypes;
-        List<TypeDescription> typesInOrderOfCreation = new LinkedList<>();
+        List<TypeDescription> typesInOrderOfCreation = new LinkedList<TypeDescription>();
         do {
           lastNumTypes = numTypes;
           Iterator<TypeDescription> it = typeList.iterator();
@@ -782,29 +703,19 @@ public class CasCreationUtils {
             String typeName = curTypeDesc.getName();
             // type does not exist - add it under the appropriate supertype
             String superTypeName = curTypeDesc.getSupertypeName();
-            //添加的强制传入TOP逻辑
-            if ("uima.cas.TOP".equals(typeName)) {
-              if (typeSystemMgr.getType("uima.cas.TOP") == null) {
-                typeSystemMgr.addType("uima.cas.TOP", typeSystemMgr.getTopType());
-              }
-              it.remove();
-              typesInOrderOfCreation.add(curTypeDesc);
-              continue;
-            }
-
             if (superTypeName == null) {
               throw new ResourceInitializationException(
-                      ResourceInitializationException.NO_SUPERTYPE,
-                      new Object[] { typeName, curTypeDesc.getSourceUrlString() });
+                  ResourceInitializationException.NO_SUPERTYPE, new Object[] { typeName,
+                      curTypeDesc.getSourceUrlString() });
             }
             // Check if it's a built-in type: must not change supertype!
             Type builtIn = typeSystemMgr.getType(typeName);
             if (builtIn != null) {
               if (!superTypeName.equals(typeSystemMgr.getParent(builtIn).getName())) {
                 throw new ResourceInitializationException(
-                        ResourceInitializationException.REDEFINING_BUILTIN_TYPE,
-                        new Object[] { typeSystemMgr.getParent(builtIn), typeName, superTypeName,
-                            curTypeDesc.getSourceUrlString() });
+                    ResourceInitializationException.REDEFINING_BUILTIN_TYPE, new Object[] {
+                        typeSystemMgr.getParent(builtIn), typeName, superTypeName,
+                        curTypeDesc.getSourceUrlString() });
               }
             }
             Type supertype = typeSystemMgr.getType(superTypeName);
@@ -815,8 +726,8 @@ public class CasCreationUtils {
                 AllowedValue[] vals = curTypeDesc.getAllowedValues();
                 if (vals == null) {
                   throw new ResourceInitializationException(
-                          ResourceInitializationException.MISSING_ALLOWED_VALUES,
-                          new Object[] { typeName, curTypeDesc.getSourceUrlString() });
+                      ResourceInitializationException.MISSING_ALLOWED_VALUES, new Object[] {
+                          typeName, curTypeDesc.getSourceUrlString() });
                 }
                 String[] valStrs = new String[vals.length];
                 for (int i = 0; i < valStrs.length; i++) {
@@ -827,10 +738,10 @@ public class CasCreationUtils {
               {
                 // make sure that allowed values are NOT specified for non-string subtypes
                 if (curTypeDesc.getAllowedValues() != null
-                        && curTypeDesc.getAllowedValues().length > 0) {
+                    && curTypeDesc.getAllowedValues().length > 0) {
                   throw new ResourceInitializationException(
-                          ResourceInitializationException.ALLOWED_VALUES_ON_NON_STRING_TYPE,
-                          new Object[] { typeName, curTypeDesc.getSourceUrlString() });
+                      ResourceInitializationException.ALLOWED_VALUES_ON_NON_STRING_TYPE,
+                      new Object[] { typeName, curTypeDesc.getSourceUrlString() });
                 }
                 typeSystemMgr.addType(typeName, supertype);
               }
@@ -864,8 +775,8 @@ public class CasCreationUtils {
           }
           if (!foundSuperType) {
             throw new ResourceInitializationException(
-                    ResourceInitializationException.UNDEFINED_SUPERTYPE, new Object[] {
-                        td_i.getSupertypeName(), td_i.getName(), td_i.getSourceUrlString() });
+                ResourceInitializationException.UNDEFINED_SUPERTYPE, new Object[] {
+                    td_i.getSupertypeName(), td_i.getName(), td_i.getSourceUrlString() });
           }
         }
 
@@ -874,9 +785,9 @@ public class CasCreationUtils {
           // type definition, or there was a cycle.
           TypeDescription firstFailed = typeList.getFirst();
           throw new ResourceInitializationException(
-                  ResourceInitializationException.UNDEFINED_SUPERTYPE,
-                  new Object[] { firstFailed.getSupertypeName(), firstFailed.getName(),
-                      firstFailed.getSourceUrlString() });
+              ResourceInitializationException.UNDEFINED_SUPERTYPE, new Object[] {
+                  firstFailed.getSupertypeName(), firstFailed.getName(),
+                  firstFailed.getSourceUrlString() });
         }
 
         // now for each type, add its features. We add features to supertypes before subtypes. This
@@ -900,9 +811,9 @@ public class CasCreationUtils {
               Type rangeType = typeSystemMgr.getType(rangeTypeName);
               if (rangeType == null) {
                 throw new ResourceInitializationException(
-                        ResourceInitializationException.UNDEFINED_RANGE_TYPE,
-                        new Object[] { rangeTypeName, featName, typeDesc.getName(),
-                            features[j].getSourceUrlString() });
+                    ResourceInitializationException.UNDEFINED_RANGE_TYPE, new Object[] {
+                        rangeTypeName, featName, typeDesc.getName(),
+                        features[j].getSourceUrlString() });
               }
               if (rangeType.isArray()) // TODO: also List?
               {
@@ -913,9 +824,9 @@ public class CasCreationUtils {
                   Type elementType = typeSystemMgr.getType(elementTypeName);
                   if (elementType == null) {
                     throw new ResourceInitializationException(
-                            ResourceInitializationException.UNDEFINED_RANGE_TYPE,
-                            new Object[] { elementTypeName, featName, typeDesc.getName(),
-                                features[j].getSourceUrlString() });
+                        ResourceInitializationException.UNDEFINED_RANGE_TYPE, new Object[] {
+                            elementTypeName, featName, typeDesc.getName(),
+                            features[j].getSourceUrlString() });
                   }
                   rangeType = typeSystemMgr.getArrayType(elementType);
                 }
@@ -924,7 +835,7 @@ public class CasCreationUtils {
               if (multiRefAllowed == null) {
                 multiRefAllowed = Boolean.FALSE; // default to false if unspecified
               }
-              typeSystemMgr.addFeature(featName, type, rangeType, multiRefAllowed);
+              typeSystemMgr.addFeature(featName, type, rangeType, multiRefAllowed.booleanValue());
             }
           }
         }
@@ -936,18 +847,18 @@ public class CasCreationUtils {
    * Adds TypePriorities to a CAS.
    * 
    * @param aCASMgr
-   *          the <code>CASMgr</code> object to be modified
+   *                the <code>CASMgr</code> object to be modified
    * @param aTypePriorities
-   *          description of the type priorities to add
+   *                description of the type priorities to add
    * 
    * @throws ResourceInitializationException
-   *           if an error occurs during type priority setup
+   *                 if an error occurs during type priority setup
    */
   public static void setupTypePriorities(CASMgr aCASMgr, TypePriorities aTypePriorities)
-          throws ResourceInitializationException {
+      throws ResourceInitializationException {
     if (aTypePriorities != null) {
       LinearTypeOrderBuilder typeOrderBuilder = aCASMgr.getIndexRepositoryMgr()
-              .getDefaultOrderBuilder();
+          .getDefaultOrderBuilder();
       TypePriorityList[] priorityLists = aTypePriorities.getPriorityLists();
       for (int i = 0; i < priorityLists.length; i++) {
         // check that all types exist. This error would be caught in
@@ -957,8 +868,8 @@ public class CasCreationUtils {
         for (int j = 0; j < typeList.length; j++) {
           if (aCASMgr.getTypeSystemMgr().getType(typeList[j]) == null) {
             throw new ResourceInitializationException(
-                    ResourceInitializationException.UNDEFINED_TYPE_FOR_PRIORITY_LIST,
-                    new Object[] { typeList[j], priorityLists[i].getSourceUrlString() });
+                ResourceInitializationException.UNDEFINED_TYPE_FOR_PRIORITY_LIST, new Object[] {
+                    typeList[j], priorityLists[i].getSourceUrlString() });
           }
         }
         try {
@@ -967,8 +878,8 @@ public class CasCreationUtils {
           // typically caused by a cycle in the priorities - the caused-by message
           // will clarify.
           throw new ResourceInitializationException(
-                  ResourceInitializationException.INVALID_TYPE_PRIORITIES,
-                  new Object[] { priorityLists[i].getSourceUrlString() }, e);
+              ResourceInitializationException.INVALID_TYPE_PRIORITIES,
+              new Object[] { priorityLists[i].getSourceUrlString() }, e);
         }
       }
     }
@@ -978,15 +889,15 @@ public class CasCreationUtils {
    * Adds FeatureStructure indexes to a CAS.
    * 
    * @param aCASMgr
-   *          the <code>CASMgr</code> object to be modified
+   *                the <code>CASMgr</code> object to be modified
    * @param aIndexes
-   *          descriptions of the indexes to add
+   *                descriptions of the indexes to add
    * 
    * @throws ResourceInitializationException
-   *           if an error occurs during index creation
+   *                 if an error occurs during index creation
    */
   public static void setupIndexes(CASMgr aCASMgr, FsIndexDescription[] aIndexes)
-          throws ResourceInitializationException {
+      throws ResourceInitializationException {
     if (aIndexes != null) {
       TypeSystemMgr tsm = aCASMgr.getTypeSystemMgr();
       FSIndexRepositoryMgr irm = aCASMgr.getIndexRepositoryMgr();
@@ -1006,9 +917,9 @@ public class CasCreationUtils {
         Type type = tsm.getType(aIndexes[i].getTypeName());
         if (type == null) {
           throw new ResourceInitializationException(
-                  ResourceInitializationException.UNDEFINED_TYPE_FOR_INDEX,
-                  new Object[] { aIndexes[i].getTypeName(), aIndexes[i].getLabel(),
-                      aIndexes[i].getSourceUrlString() });
+              ResourceInitializationException.UNDEFINED_TYPE_FOR_INDEX, new Object[] {
+                  aIndexes[i].getTypeName(), aIndexes[i].getLabel(),
+                  aIndexes[i].getSourceUrlString() });
         }
         FSIndexComparator comparator = irm.createComparator();
         comparator.setType(type);
@@ -1022,9 +933,9 @@ public class CasCreationUtils {
               Feature feature = type.getFeatureByBaseName(keys[j].getFeatureName());
               if (feature == null) {
                 throw new ResourceInitializationException(
-                        ResourceInitializationException.INDEX_KEY_FEATURE_NOT_FOUND,
-                        new Object[] { keys[j].getFeatureName(), aIndexes[i].getLabel(),
-                            aIndexes[i].getSourceUrlString() });
+                    ResourceInitializationException.INDEX_KEY_FEATURE_NOT_FOUND, new Object[] {
+                        keys[j].getFeatureName(), aIndexes[i].getLabel(),
+                        aIndexes[i].getSourceUrlString() });
               }
               comparator.addKey(feature, keys[j].getComparator());
             }
@@ -1040,15 +951,15 @@ public class CasCreationUtils {
    * Extracts a TypeSystem definition from a CasData.
    * 
    * @param aCasData
-   *          the CAS Data from which to extract the type system
+   *                the CAS Data from which to extract the type system
    * 
    * @return a description of a TypeSystem to which the CAS Data conforms
    */
   public static TypeSystemDescription convertData2TypeSystem(CasData aCasData) {
     TypeSystemDescription result = UIMAFramework.getResourceSpecifierFactory()
-            .createTypeSystemDescription();
+        .createTypeSystemDescription();
     Iterator<FeatureStructure> iter = aCasData.getFeatureStructures();
-    List<TypeDescription> typesArr = new ArrayList<>();
+    List<TypeDescription> typesArr = new ArrayList<TypeDescription>();
     while (iter.hasNext()) {
       FeatureStructure casFS = iter.next();
       TypeDescription newType = UIMAFramework.getResourceSpecifierFactory().createTypeDescription();
@@ -1085,18 +996,16 @@ public class CasCreationUtils {
    * TypeSystemDescription objects.
    * 
    * @param aTypeSystems
-   *          a collection of TypeSystems to be merged
+   *                a collection of TypeSystems to be merged
    * 
    * @return a new TypeSystemDescription that is the result of merging all of the type systems
    *         together
    * 
    * @throws ResourceInitializationException
-   *           if an incompatibility exists or if an import could not be resolved
+   *                 if an incompatibility exists or if an import could not be resolved
    */
-  public static TypeSystemDescription mergeTypeSystems(
-
-          Collection<? extends TypeSystemDescription> aTypeSystems)
-          throws ResourceInitializationException {
+  public static TypeSystemDescription mergeTypeSystems(Collection<? extends TypeSystemDescription> aTypeSystems)
+      throws ResourceInitializationException {
     return mergeTypeSystems(aTypeSystems, UIMAFramework.newDefaultResourceManager());
   }
 
@@ -1105,139 +1014,19 @@ public class CasCreationUtils {
    * TypeSystemDescription objects.
    * 
    * @param aTypeSystems
-   *          a collection of TypeSystems to be merged
+   *                a collection of TypeSystems to be merged
    * @param aResourceManager
-   *          Resource Manager to use to locate type systems imported by name
+   *                Resource Manager to use to locate type systems imported by name
    * 
    * @return a new TypeSystemDescription that is the result of merging all of the type systems
    *         together
    * 
    * @throws ResourceInitializationException
-   *           if an incompatibility exists or if an import could not be resolved
+   *                 if an incompatibility exists or if an import could not be resolved
    */
-  public static TypeSystemDescription mergeTypeSystems(
-          Collection<? extends TypeSystemDescription> aTypeSystems,
-          ResourceManager aResourceManager) throws ResourceInitializationException {
-
-    // ========= 第一步：确保基础类型系统插到最前面 =========
-    if (!(aTypeSystems instanceof java.util.List)) {
-      aTypeSystems = new java.util.ArrayList<>(aTypeSystems);
-    }
-    @SuppressWarnings("unchecked")
-    java.util.List<TypeSystemDescription> tsList = (java.util.List<TypeSystemDescription>) aTypeSystems;
-
-    tsList.add(0, com.example.heideltime_android.UimaTypeSystemHelper.createBaseUimaTypeSystem());
-
-    // ========= 第二步：清理 null TypeDescription，归一化名字，补父类 =========
-    for (TypeSystemDescription tsd : tsList) {
-      if (tsd.getTypes() != null) {
-        List<TypeDescription> cleaned = new ArrayList<>();
-        for (TypeDescription td : tsd.getTypes()) {
-          if (td != null) {
-            td.setName(normalizeTypeName(td.getName()));
-            td.setSupertypeName(normalizeTypeName(td.getSupertypeName()));
-
-            // 如果父类为空，且不是 TOP，则补成 uima.cas.TOP
-            String tn = td.getName();
-            if (td.getSupertypeName() == null) {
-              if (!"uima.cas.TOP".equals(tn)) {
-                td.setSupertypeName("uima.cas.TOP");
-              }
-            }
-            cleaned.add(td);
-          }
-        }
-        tsd.setTypes(cleaned.toArray(new TypeDescription[0]));
-      }
-    }
-
-    // ========= Debug 打印 =========
-    System.out.println("===== DEBUG mergeTypeSystems() 收到的 TypeSystem 列表 =====");
-    int idx = 0;
-    for (TypeSystemDescription tsd : tsList) {
-      System.out.println("[" + (idx++) + "] 来源: " + tsd.getSourceUrlString());
-      if (tsd.getTypes() == null) {
-        System.out.println("   [WARN] getTypes() == null");
-        continue;
-      }
-      for (TypeDescription td : tsd.getTypes()) {
-        System.out.println("   type: " + td.getName()
-                + " super: " + td.getSupertypeName());
-      }
-    }
-    System.out.println("===== DEBUG mergeTypeSystems() 打印完毕 =====");
-   // debugPrintAllTypes(aTypeSystems);
-    // ========= 执行真正的 merge 逻辑 =========
-    return mergeTypeSystems(tsList, aResourceManager, null);
-  }
-
-  // ================= 辅助方法：名字归一化 =================
-  private static String normalizeTypeName(String name) {
-    if (name == null) return null;
-    // 1) 替换路径分隔符
-    String n = name.replace('/', '.');
-    // 2) 归一化 org.apache.uima.cas.* 为 uima.cas.*
-    if (n.startsWith("org.apache.uima.cas.")) {
-      n = n.replace("org.apache.uima.cas.", "uima.cas.");
-    } else if (n.startsWith("org.apache.uima.tcas.")) {
-      n = n.replace("org.apache.uima.tcas.", "uima.tcas.");
-    }
-    return n;
-  }
-  /**
-   * 打印 TypeSystem 集合 或 TypeDescription 列表的详细信息
-   * 支持两种模式：
-   *  1. 打印原始 aTypeSystems 数组，按 TS 文件来源分组
-   *  2. 打印构造后的 typeList 列表（LinkedList<TypeDescription>）
-   */
-  private static void debugPrintAllTypes(String stage,
-                                         Collection<? extends TypeSystemDescription> aTypeSystems,
-                                         List<TypeDescription> typeList) {
-
-    System.out.println("========== [DEBUG] " + stage + " ==========");
-
-    // 模式 1：打印 TypeSystemDescription 列表
-    if (aTypeSystems != null) {
-      int tsIndex = 0;
-      for (TypeSystemDescription tsd : aTypeSystems) {
-        System.out.println("=== [TS" + tsIndex + "] 来源: " + tsd.getSourceUrlString() + " ===");
-
-        TypeDescription[] types = tsd.getTypes();
-        if (types == null) {
-          System.out.println("   [WARN] getTypes() == null");
-          tsIndex++;
-          continue;
-        }
-
-        for (int i = 0; i < types.length; i++) {
-          TypeDescription td = types[i];
-          if (td == null) {
-            System.out.println("   [NULL] index=" + i);
-          } else {
-            System.out.println("   [" + i + "] name=" + td.getName()
-                    + " super=" + td.getSupertypeName());
-          }
-        }
-        tsIndex++;
-      }
-    }
-
-    // 模式 2：打印 typeList 当前状态
-    if (typeList != null) {
-      System.out.println("--- 当前 typeList.size=" + typeList.size() + " ---");
-      int idx = 0;
-      for (TypeDescription td : typeList) {
-        if (td == null) {
-          System.out.println("   [NULL] remainIndex=" + idx);
-        } else {
-          System.out.println("   [" + idx + "] name=" + td.getName()
-                  + " super=" + td.getSupertypeName());
-        }
-        idx++;
-      }
-    }
-
-    System.out.println("========== [DEBUG] 结束 ==========");
+  public static TypeSystemDescription mergeTypeSystems(Collection<? extends TypeSystemDescription> aTypeSystems,
+      ResourceManager aResourceManager) throws ResourceInitializationException {
+    return mergeTypeSystems(aTypeSystems, aResourceManager, null);
   }
 
   /**
@@ -1251,35 +1040,40 @@ public class CasCreationUtils {
    * different (but compatible) supertypes.
    * 
    * @param aTypeSystems
-   *          a collection of TypeSystems to be merged
+   *                a collection of TypeSystems to be merged
    * @param aResourceManager
-   *          Resource Manager to use to locate type systems imported by name
+   *                Resource Manager to use to locate type systems imported by name
    * @param aOutputMergedTypes
-   *          A Map that this method will populate with information about the set of types whose
-   *          definitions were merged from multiple non-identical sources. The keys in the Map will
-   *          be the type names (Strings) and the values will be {link Set}s containing Descriptor
-   *          URLs (Strings) where those types are declared. You may pass null if you are not
-   *          interested in this information.
+   *                A Map that this method will populate with information about the set of types
+   *                whose definitions were merged from multiple non-identical sources. The keys in
+   *                the Map will be the type names (Strings) and the values will be {link Set}s
+   *                containing Descriptor URLs (Strings) where those types are declared. You may
+   *                pass null if you are not interested in this information.
    * 
    * @return a new TypeSystemDescription that is the result of merging all of the type systems
    *         together
    * 
    * @throws ResourceInitializationException
-   *           if an incompatibility exists or if an import could not be resolved
+   *                 if an incompatibility exists or if an import could not be resolved
    */
-  public static TypeSystemDescription mergeTypeSystems(
-          Collection<? extends TypeSystemDescription> aTypeSystems,
-          ResourceManager aResourceManager,
-          Map<String, Set<String>> aOutputMergedTypes)
-          throws ResourceInitializationException {
+  public static TypeSystemDescription mergeTypeSystems(Collection<? extends TypeSystemDescription> aTypeSystems,
+      ResourceManager aResourceManager, Map<String, Set<String>> aOutputMergedTypes)
+      throws ResourceInitializationException {
+    // also build a Map from Type names to Types.  Use a TreeMap so we get a consistent ordering of types.
+    Map<String, TypeDescription> typeNameMap = new TreeMap<String,TypeDescription>();
 
-    // 已定义的类型映射
-    Map<String, TypeDescription> typeNameMap = new TreeMap<>();
-
-    // 待处理类型列表
-    LinkedList<TypeDescription> typeList = new LinkedList<>();
-
-    // ===== 解析阶段 =====
+    // Iterate through all type systems and add types to the merged TypeSystem.
+    // If a type is defined more than once, we need to check if the superType
+    // declarations are compatible (one inherits from another), and merge the
+    // features.
+    
+    // In order to properly handle the supertype merging, we need to make sure
+    // that we process the supertype definitions before the subtypes. To do this,
+    // we build a linked list of type descriptions, and make multiple passes
+    // over this, adding types to the merged type system when their supertypes
+    // become defined.  We continue until the list is empty or we cannot make any
+    // progress.
+    LinkedList<TypeDescription> typeList = new LinkedList<TypeDescription>();
     Iterator<? extends TypeSystemDescription> it = aTypeSystems.iterator();
     while (it.hasNext()) {
       TypeSystemDescription ts = it.next();
@@ -1290,129 +1084,44 @@ public class CasCreationUtils {
           throw new ResourceInitializationException(e);
         }
         TypeDescription[] types = ts.getTypes();
-        if (types != null) {
-          for (int i = 0; i < types.length; i++) {
-            TypeDescription td = types[i];
-
-            if (td == null) {
-              System.out.println("[DEBUG] 解析阶段发现 NULL type: 来源="
-                      + ts.getSourceUrlString() + " index=" + i);
-              typeList.add(null); // 保留 null，占位，后面处理
-              continue;
-            }
-
-            // === 二次归一化（防止 resolveImports 返回的名字带 / 或 org.apache.uima.cas 前缀）===
-            if (td.getName() != null) {
-              td.setName(normalizeTypeName(td.getName()));
-            }
-            if (td.getSupertypeName() != null) {
-              td.setSupertypeName(normalizeTypeName(td.getSupertypeName()));
-            }
-
-            // Debug 检查非法名字
-            if (td.getName() != null && td.getName().contains("/")) {
-              System.out.println("⚠ [BAD TYPE NAME AFTER RESOLVE] " + td.getName()
-                      + " 来源=" + ts.getSourceUrlString());
-            }
-            if (td.getSupertypeName() != null && td.getSupertypeName().contains("/")) {
-              System.out.println("⚠ [BAD SUPERTYPE NAME AFTER RESOLVE] " + td.getSupertypeName()
-                      + " 来源=" + ts.getSourceUrlString());
-            }
-
-            typeList.add(td);
-          }
-        } else {
-          System.out.println("[WARN] getTypes() == null 来源=" + ts.getSourceUrlString());
-        }
+        typeList.addAll(Arrays.asList(types));
       }
     }
-
-    // 初始阶段 Debug
-    debugPrintAllTypes("初始解析完成", aTypeSystems, typeList);
-
-    // ===== 第一轮合并 =====
     int lastNumTypes;
     do {
       lastNumTypes = typeList.size();
       Iterator<TypeDescription> typeIter = typeList.iterator();
       while (typeIter.hasNext()) {
         TypeDescription type = typeIter.next();
-
-        if (type == null || type.getName() == null) {
-          System.out.println("[DEBUG] 第一轮发现 NULL type, 跳过损坏的 TypeDescription: " + type);
-          typeIter.remove();
-          continue;
-        }
-
         String supertypeName = type.getSupertypeName();
-
-        // 父类已经在合并结果里 或者是 uima.cas / uima.tcas 系列（核心类型）
-        boolean isTopType = "uima.cas.TOP".equals(type.getName());
-        boolean canMerge = isTopType || supertypeName != null &&
-                (supertypeName.startsWith("uima.cas")
-                        || supertypeName.startsWith("uima.tcas")
-                        || typeNameMap.containsKey(supertypeName));
-
-        if (canMerge) {
-          try {
-            addTypeToMergedTypeSystem(aOutputMergedTypes, typeNameMap, type);
-            // ✅ 成功合入才移除
-            typeIter.remove();
-          } catch (Exception e) {
-            System.out.println("[DEBUG][WARN] 第一轮合并失败: "
-                    + type.getName() + " super=" + supertypeName
-                    + " → 父类可能尚未加入，留待下一轮。异常=" + e);
-            // ❌ 不 remove，留给下一轮重试
-          }
+        if (supertypeName.startsWith("uima.cas") || supertypeName.startsWith("uima.tcas") || typeNameMap.containsKey(supertypeName)) {
+          //supertype is defined, ok to proceed
+          //check if type is already defined 
+          addTypeToMergedTypeSystem(aOutputMergedTypes, typeNameMap, type);
+          typeIter.remove();
         }
-        // 如果父类没准备好，也不 remove，留到下一轮
       }
     } while (typeList.size() > 0 && typeList.size() != lastNumTypes);
-
-    // 第一轮结束 Debug
-    try {
-      debugPrintAllTypes("第一轮合并结束", null, typeList);
-    } catch (Exception e) {
-      System.out.println("[DEBUG] debugPrintAllTypes 崩溃: " + e);
-    }
-
-    // ===== 兜底阶段 Debug =====
-    System.out.println("=== [DEBUG] 兜底阶段 size=" + typeList.size() + " ===");
-    int idx = 0;
-    for (TypeDescription td : typeList) {
-      if (td == null || td.getName() == null) {
-        System.out.println("   [NULL] remainIndex=" + idx);
-      } else {
-        System.out.println("   [" + idx + "] name=" + td.getName() +
-                " super=" + td.getSupertypeName());
-      }
-      idx++;
-    }
-
-    // ===== 兜底阶段合并（防止 NPE） =====
-    Iterator<TypeDescription> fallbackIter = typeList.iterator();
-    while (fallbackIter.hasNext()) {
-      TypeDescription type = fallbackIter.next();
-      if (type == null || type.getName() == null) {
-        System.out.println("[DEBUG] 兜底阶段发现 NULL type, 跳过");
-        continue;
-      }
+      
+    //At this point, if the typeList is not empty, then we either have a type with an undefined supertype, or a cycle.
+    //We go ahead and merge the type definitions anyway - these problems will be caught at CAS creation time. Undefined supertypes 
+    //may be OK at this stage - this type system will have to be further merged before it can be used.
+    Iterator<TypeDescription> typeIter = typeList.iterator();
+    while (typeIter.hasNext()) {
+      TypeDescription type = typeIter.next();
       addTypeToMergedTypeSystem(aOutputMergedTypes, typeNameMap, type);
-    }
+    }    
 
-    // 创建合并后的 TypeSystemDescription
+    // create the type system and populate from the typeNamesMap
     TypeSystemDescription result = UIMAFramework.getResourceSpecifierFactory()
-            .createTypeSystemDescription();
+        .createTypeSystemDescription();
     TypeDescription[] types = new TypeDescription[typeNameMap.values().size()];
     typeNameMap.values().toArray(types);
     result.setTypes(types);
-
     return result;
   }
 
-  private static void addTypeToMergedTypeSystem(Map<String, Set<String>> aOutputMergedTypes,
-          Map<String, TypeDescription> typeNameMap, TypeDescription type)
-          throws ResourceInitializationException {
+  private static void addTypeToMergedTypeSystem(Map<String, Set<String>> aOutputMergedTypes, Map<String,TypeDescription> typeNameMap, TypeDescription type) throws ResourceInitializationException {
     String typeName = type.getName();
     String supertypeName = type.getSupertypeName();
     TypeDescription existingType = typeNameMap.get(typeName);
@@ -1447,8 +1156,9 @@ public class CasCreationUtils {
         } else {
           // error
           throw new ResourceInitializationException(
-                  ResourceInitializationException.INCOMPATIBLE_SUPERTYPES, new Object[] { typeName,
-                      supertypeName, existingSupertypeName, type.getSourceUrlString() });
+              ResourceInitializationException.INCOMPATIBLE_SUPERTYPES, new Object[] {
+                  typeName, supertypeName, existingSupertypeName,
+                  type.getSourceUrlString() });
         }
       }
       // merge features or check string allowed values are the same
@@ -1457,8 +1167,9 @@ public class CasCreationUtils {
         AllowedValue[] av2 = getAllowedValues(existingType);
         if (!isAllowedValuesMatch(av1, av2)) {
           throw new ResourceInitializationException(
-                  ResourceInitializationException.ALLOWED_VALUES_NOT_IDENTICAL, new Object[] {
-                      typeName, avAsString(av1), avAsString(av2), type.getSourceUrlString() });
+              ResourceInitializationException.ALLOWED_VALUES_NOT_IDENTICAL, new Object[] {
+                  typeName, avAsString(av1), avAsString(av2), 
+                  type.getSourceUrlString() });
         }
       } else {
         int prevNumFeatures = existingType.getFeatures().length;
@@ -1479,21 +1190,22 @@ public class CasCreationUtils {
     if (av1.length != av2.length) {
       return false;
     }
-
-    Set<String> s1 = new HashSet<>(av1.length);
-    Set<String> s2 = new HashSet<>(av1.length);
-
+    
+    Set<String> s1 = new HashSet<String>(av1.length);
+    Set<String> s2 = new HashSet<String>(av1.length);
+    
     for (AllowedValue av : av1) {
       s1.add(av.getString());
     }
-
+    
     for (AllowedValue av : av2) {
       s2.add(av.getString());
     }
-
+    
     return s1.equals(s2);
   }
-
+  
+  
   private static String avAsString(AllowedValue[] av) {
     StringBuilder sb = new StringBuilder("{");
     for (int i = 0; i < av.length; i++) {
@@ -1506,28 +1218,32 @@ public class CasCreationUtils {
     return sb.toString();
   }
 
+
   private static AllowedValue[] getAllowedValues(TypeDescription type) {
     AllowedValue[] r = type.getAllowedValues();
     if (r == null) {
-      return EMPTY_ALLOWED_VALUE_ARRAY;
+      return new AllowedValue[0];
     }
     return r;
   }
 
   /**
-     * Utility method for populating the aOutputMergedTypes argument in the mergeTypeSystems method.
-     *
-     * @param aOutputMergedTypes Map to populate
-     * @param currentType        TypeDescription currently being processed
-     * @param existingType       TypeDescription that already existed for the same name
-     */
-  private static void reportMerge(Map<String, Set<String>> aOutputMergedTypes,
-          TypeDescription currentType, TypeDescription existingType) {
+   * Utility method for populating the aOutputMergedTypes argument in the mergeTypeSystems method.
+   * 
+   * @param aOutputMergedTypes
+   *                Map to populate
+   * @param currentType
+   *                TypeDescription currently being processed
+   * @param existingType
+   *                TypeDescription that already existed for the same name
+   */
+  private static void reportMerge(Map<String, Set<String>> aOutputMergedTypes, TypeDescription currentType,
+      TypeDescription existingType) {
     if (aOutputMergedTypes != null) {
       String typeName = currentType.getName();
       Set<String> descriptorUrls = aOutputMergedTypes.get(typeName);
       if (descriptorUrls == null) {
-        descriptorUrls = new TreeSet<>();
+        descriptorUrls = new TreeSet<String>();
         descriptorUrls.add(existingType.getSourceUrlString());
         descriptorUrls.add(currentType.getSourceUrlString());
         aOutputMergedTypes.put(typeName, descriptorUrls);
@@ -1538,73 +1254,87 @@ public class CasCreationUtils {
   }
 
   /**
-     * Merges the Type Systems of each component within an aggregate Analysis Engine, producing a
-     * single combined Type System.
-     *
-     * @param aAggregateDescription an aggregate Analysis Engine description
-     * @return a new TypeSystemDescription that is the result of merging all of the delegate AE type
-     * systems together
-     * @throws ResourceInitializationException if an incompatibility exists or if an import could not be resolved
-     */
+   * Merges the Type Systems of each component within an aggregate Analysis Engine, producing a
+   * single combined Type System.
+   * 
+   * @param aAggregateDescription
+   *                an aggregate Analysis Engine description
+   * 
+   * @return a new TypeSystemDescription that is the result of merging all of the delegate AE type
+   *         systems together
+   * 
+   * @throws ResourceInitializationException
+   *                 if an incompatibility exists or if an import could not be resolved
+   */
   public static TypeSystemDescription mergeDelegateAnalysisEngineTypeSystems(
-          AnalysisEngineDescription aAggregateDescription) throws ResourceInitializationException {
-    return mergeDelegateAnalysisEngineTypeSystems(aAggregateDescription,
-            UIMAFramework.newDefaultResourceManager());
+      AnalysisEngineDescription aAggregateDescription) throws ResourceInitializationException {
+    return mergeDelegateAnalysisEngineTypeSystems(aAggregateDescription, UIMAFramework
+        .newDefaultResourceManager());
   }
 
   /**
-     * Merges the Type Systems of each component within an aggregate Analysis Engine, producing a
-     * single combined Type System.
-     * <p>
-     * This version of this method takes an argument <code>aOutputMergedTypeNames</code>, to which
-     * this method will add the names of any types whose definitions have been merged from multiple
-     * non-identical sources. That is, types that are declared more than once, with different (but
-     * compatible) sets of features in each declaration, or with different (but compatible)
-     * supertypes.
-     *
-     * @param aAggregateDescription an aggregate Analysis Engine description
-     * @param aResourceManager      ResourceManager instance used to resolve imports
-     * @return a new TypeSystemDescription that is the result of merging all of the delegate AE type
-     * systems together
-     * @throws ResourceInitializationException if an incompatibility exists or if an import could not be resolved
-     */
+   * Merges the Type Systems of each component within an aggregate Analysis Engine, producing a
+   * single combined Type System.
+   * <p>
+   * This version of this method takes an argument <code>aOutputMergedTypeNames</code>, to which
+   * this method will add the names of any types whose definitions have been merged from multiple
+   * non-identical sources. That is, types that are declared more than once, with different (but
+   * compatible) sets of features in each declaration, or with different (but compatible)
+   * supertypes.
+   * 
+   * @param aAggregateDescription
+   *                an aggregate Analysis Engine description
+   * @param aResourceManager
+   *                ResourceManager instance used to resolve imports
+   * 
+   * @return a new TypeSystemDescription that is the result of merging all of the delegate AE type
+   *         systems together
+   * 
+   * @throws ResourceInitializationException
+   *                 if an incompatibility exists or if an import could not be resolved
+   */
   public static TypeSystemDescription mergeDelegateAnalysisEngineTypeSystems(
-          AnalysisEngineDescription aAggregateDescription, ResourceManager aResourceManager)
-          throws ResourceInitializationException {
+      AnalysisEngineDescription aAggregateDescription, ResourceManager aResourceManager)
+      throws ResourceInitializationException {
     return mergeDelegateAnalysisEngineTypeSystems(aAggregateDescription, aResourceManager, null);
   }
 
   /**
-     * Merges the Type Systems of each component within an aggregate Analysis Engine, producing a
-     * single combined Type System.
-     * <p>
-     * This version of this method takes an argument <code>aOutputMergedTypes</code>, which this
-     * method will populate with the names and descriptor locations of any types whose definitions
-     * have been merged from multiple non-identical sources. That is, types that are declared more
-     * than once, with different (but compatible) sets of features in each declaration, or with
-     * different (but compatible) supertypes.
-     *
-     * @param aAggregateDescription an aggregate Analysis Engine description
-     * @param aResourceManager      ResourceManager instance used to resolve imports
-     * @param aOutputMergedTypes    A Map that this method will populate with information about the set of types whose
-     *                              definitions were merged from multiple non-identical sources. The keys in the Map will
-     *                              be the type names (Strings) and the values will be {link Set}s containing Descriptor
-     *                              URLs (Strings) where those types are declared. You may pass null if you are not
-     *                              interested in this information. *
-     * @return a new TypeSystemDescription that is the result of merging all of the delegate AE type
-     * systems together
-     * @throws ResourceInitializationException if an incompatibility exists or if an import could not be resolved
-     */
+   * Merges the Type Systems of each component within an aggregate Analysis Engine, producing a
+   * single combined Type System.
+   * <p>
+   * This version of this method takes an argument <code>aOutputMergedTypes</code>, which this
+   * method will populate with the names and descriptor locations of any types whose definitions
+   * have been merged from multiple non-identical sources. That is, types that are declared more
+   * than once, with different (but compatible) sets of features in each declaration, or with
+   * different (but compatible) supertypes.
+   * 
+   * @param aAggregateDescription
+   *                an aggregate Analysis Engine description
+   * @param aResourceManager
+   *                ResourceManager instance used to resolve imports
+   * @param aOutputMergedTypes
+   *                A Map that this method will populate with information about the set of types
+   *                whose definitions were merged from multiple non-identical sources. The keys in
+   *                the Map will be the type names (Strings) and the values will be {link Set}s
+   *                containing Descriptor URLs (Strings) where those types are declared. You may
+   *                pass null if you are not interested in this information. *
+   * @return a new TypeSystemDescription that is the result of merging all of the delegate AE type
+   *         systems together
+   * 
+   * @throws ResourceInitializationException
+   *                 if an incompatibility exists or if an import could not be resolved
+   */
   public static TypeSystemDescription mergeDelegateAnalysisEngineTypeSystems(
-          AnalysisEngineDescription aAggregateDescription, ResourceManager aResourceManager,
-          Map<String, Set<String>> aOutputMergedTypes) throws ResourceInitializationException {
+      AnalysisEngineDescription aAggregateDescription, ResourceManager aResourceManager,
+      Map<String, Set<String>> aOutputMergedTypes) throws ResourceInitializationException {
     // expand the aggregate AE description into the individual delegates
-    List<AnalysisEngineDescription> l = new ArrayList<>();
+    List<AnalysisEngineDescription> l = new ArrayList<AnalysisEngineDescription>();
     l.add(aAggregateDescription);
     List<ProcessingResourceMetaData> mdList = getMetaDataList(l, aResourceManager);
 
     // extract type systems and merge
-    List<TypeSystemDescription> typeSystems = new ArrayList<>();
+    List<TypeSystemDescription> typeSystems = new ArrayList<TypeSystemDescription>();
     Iterator<ProcessingResourceMetaData> it = mdList.iterator();
     while (it.hasNext()) {
       ProcessingResourceMetaData md = it.next();
@@ -1615,17 +1345,20 @@ public class CasCreationUtils {
   }
 
   /**
-     * Merges a List of FsIndexCollections into a single FsIndexCollection object.
-     *
-     * @param aFsIndexCollections list of FsIndexCollection objects
-     * @param aResourceManager    ResourceManager instance to use to resolve imports
-     * @return a merged FsIndexCollection object
-     * @throws ResourceInitializationException if an incompatibility exists or if an import could not be resolved
-     */
-  public static FsIndexCollection mergeFsIndexes(
-          List<? extends FsIndexCollection> aFsIndexCollections, ResourceManager aResourceManager)
-          throws ResourceInitializationException {
-    Map<String, FsIndexDescription> aggIndexes = new HashMap<>();
+   * Merges a List of FsIndexCollections into a single FsIndexCollection object.
+   * 
+   * @param aFsIndexCollections
+   *                list of FsIndexCollection objects
+   * @param aResourceManager
+   *                ResourceManager instance to use to resolve imports
+   * 
+   * @return a merged FsIndexCollection object
+   * @throws ResourceInitializationException
+   *                 if an incompatibility exists or if an import could not be resolved
+   */
+  public static FsIndexCollection mergeFsIndexes(List<? extends FsIndexCollection> aFsIndexCollections,
+      ResourceManager aResourceManager) throws ResourceInitializationException {
+    Map<String, FsIndexDescription> aggIndexes = new HashMap<String, FsIndexDescription>();
     Iterator<? extends FsIndexCollection> it = aFsIndexCollections.iterator();
     while (it.hasNext()) {
       FsIndexCollection indexColl = it.next();
@@ -1639,16 +1372,17 @@ public class CasCreationUtils {
         FsIndexDescription[] indexes = indexColl.getFsIndexes();
         for (int i = 0; i < indexes.length; i++) {
           // does an index with this label already exist?
-          FsIndexDescription duplicateIndex = aggIndexes.get(indexes[i].getLabel());
+          FsIndexDescription duplicateIndex = aggIndexes.get(indexes[i]
+              .getLabel());
           if (duplicateIndex == null) {
             // no, so add it
             aggIndexes.put(indexes[i].getLabel(), indexes[i]);
           } else if (!duplicateIndex.equals(indexes[i])) {
             // index with same label exists, they better be equal!
             throw new ResourceInitializationException(
-                    ResourceInitializationException.DUPLICATE_INDEX_NAME,
-                    new Object[] { duplicateIndex.getLabel(), duplicateIndex.getSourceUrlString(),
-                        indexes[i].getSourceUrlString() });
+                ResourceInitializationException.DUPLICATE_INDEX_NAME, new Object[] {
+                    duplicateIndex.getLabel(), duplicateIndex.getSourceUrlString(),
+                    indexes[i].getSourceUrlString() });
           }
         }
       }
@@ -1656,50 +1390,58 @@ public class CasCreationUtils {
 
     // convert index map to FsIndexCollection
     FsIndexCollection aggIndexColl = UIMAFramework.getResourceSpecifierFactory()
-            .createFsIndexCollection();
-    if (aggIndexColl != null) {
-      FsIndexDescription[] indexArray = aggIndexes.values()
-              .toArray(new FsIndexDescription[0]);
-      aggIndexColl.setFsIndexes(indexArray);
-    }
+        .createFsIndexCollection();
+    Collection<FsIndexDescription> indexes = aggIndexes.values();
+    FsIndexDescription[] indexArray = new FsIndexDescription[indexes.size()];
+    indexes.toArray(indexArray);
+    aggIndexColl.setFsIndexes(indexArray);
     return aggIndexColl;
   }
 
   /**
-     * Merges the FS Index Collections of each component within an aggregate Analysis Engine,
-     * producing a single combined FS Index Collection.
-     *
-     * @param aAggregateDescription an aggregate Analysis Engine description
-     * @return a new FsIndexCollection that is the result of merging all of the delegate AE
-     * FsIndexCollections together
-     * @throws ResourceInitializationException if an incompatibility exists or if an import could not be resolved
-     */
+   * Merges the FS Index Collections of each component within an aggregate Analysis Engine,
+   * producing a single combined FS Index Collection.
+   * 
+   * @param aAggregateDescription
+   *                an aggregate Analysis Engine description
+   * 
+   * @return a new FsIndexCollection that is the result of merging all of the delegate AE
+   *         FsIndexCollections together
+   * 
+   * @throws ResourceInitializationException
+   *                 if an incompatibility exists or if an import could not be resolved
+   */
   public static FsIndexCollection mergeDelegateAnalysisEngineFsIndexCollections(
-          AnalysisEngineDescription aAggregateDescription) throws ResourceInitializationException {
-    return mergeDelegateAnalysisEngineFsIndexCollections(aAggregateDescription,
-            UIMAFramework.newDefaultResourceManager());
+      AnalysisEngineDescription aAggregateDescription) throws ResourceInitializationException {
+    return mergeDelegateAnalysisEngineFsIndexCollections(aAggregateDescription, UIMAFramework
+        .newDefaultResourceManager());
   }
 
   /**
-     * Merges the FS Index Collections of each component within an aggregate Analysis Engine,
-     * producing a single combined FS Index Collection.
-     *
-     * @param aAggregateDescription an aggregate Analysis Engine description
-     * @param aResourceManager      ResourceManager instance used to resolve imports
-     * @return a new FsIndexCollection that is the result of merging all of the delegate AE
-     * FsIndexCollections together
-     * @throws ResourceInitializationException if an incompatibility exists or if an import could not be resolved
-     */
+   * Merges the FS Index Collections of each component within an aggregate Analysis Engine,
+   * producing a single combined FS Index Collection.
+   * 
+   * @param aAggregateDescription
+   *                an aggregate Analysis Engine description
+   * @param aResourceManager
+   *                ResourceManager instance used to resolve imports
+   * 
+   * @return a new FsIndexCollection that is the result of merging all of the delegate AE
+   *         FsIndexCollections together
+   * 
+   * @throws ResourceInitializationException
+   *                 if an incompatibility exists or if an import could not be resolved
+   */
   public static FsIndexCollection mergeDelegateAnalysisEngineFsIndexCollections(
-          AnalysisEngineDescription aAggregateDescription, ResourceManager aResourceManager)
-          throws ResourceInitializationException {
+      AnalysisEngineDescription aAggregateDescription, ResourceManager aResourceManager)
+      throws ResourceInitializationException {
     // expand the aggregate AE description into the individual delegates
-    List<AnalysisEngineDescription> l = new ArrayList<>();
+    List<AnalysisEngineDescription> l = new ArrayList<AnalysisEngineDescription>();
     l.add(aAggregateDescription);
     List<ProcessingResourceMetaData> mdList = getMetaDataList(l, aResourceManager);
 
     // extract FsIndexCollections and merge
-    List<FsIndexCollection> fsIndexes = new ArrayList<>();
+    List<FsIndexCollection> fsIndexes = new ArrayList<FsIndexCollection>();
     Iterator<ProcessingResourceMetaData> it = mdList.iterator();
     while (it.hasNext()) {
       ProcessingResourceMetaData md = it.next();
@@ -1710,17 +1452,21 @@ public class CasCreationUtils {
   }
 
   /**
-     * Merges a List of TypePriorities into a single TypePriorities object.
-     *
-     * @param aTypePriorities  list of TypePriorities objects
-     * @param aResourceManager ResourceManager instance to use to resolve imports
-     * @return a merged TypePriorities object
-     * @throws ResourceInitializationException if an import could not be resolved
-     */
+   * Merges a List of TypePriorities into a single TypePriorities object.
+   * 
+   * @param aTypePriorities
+   *                list of TypePriorities objects
+   * @param aResourceManager
+   *                ResourceManager instance to use to resolve imports
+   * 
+   * @return a merged TypePriorities object
+   * @throws ResourceInitializationException
+   *                 if an import could not be resolved
+   */
   public static TypePriorities mergeTypePriorities(List<? extends TypePriorities> aTypePriorities,
-          ResourceManager aResourceManager) throws ResourceInitializationException {
+      ResourceManager aResourceManager) throws ResourceInitializationException {
     TypePriorities aggTypePriorities = UIMAFramework.getResourceSpecifierFactory()
-            .createTypePriorities();
+        .createTypePriorities();
     Iterator<? extends TypePriorities> it = aTypePriorities.iterator();
     while (it.hasNext()) {
       TypePriorities tp = it.next();
@@ -1740,40 +1486,49 @@ public class CasCreationUtils {
   }
 
   /**
-     * Merges the Type Priorities of each component within an aggregate Analysis Engine, producing a
-     * single combined TypePriorities object.
-     *
-     * @param aAggregateDescription an aggregate Analysis Engine description
-     * @return a new TypePriorities object that is the result of merging all of the delegate AE
-     * TypePriorities together
-     * @throws ResourceInitializationException if an incompatibility exists
-     */
+   * Merges the Type Priorities of each component within an aggregate Analysis Engine, producing a
+   * single combined TypePriorities object.
+   * 
+   * @param aAggregateDescription
+   *                an aggregate Analysis Engine description
+   * 
+   * @return a new TypePriorities object that is the result of merging all of the delegate AE
+   *         TypePriorities together
+   * 
+   * @throws ResourceInitializationException
+   *                 if an incompatibility exists
+   */
   public static TypePriorities mergeDelegateAnalysisEngineTypePriorities(
-          AnalysisEngineDescription aAggregateDescription) throws ResourceInitializationException {
-    return mergeDelegateAnalysisEngineTypePriorities(aAggregateDescription,
-            UIMAFramework.newDefaultResourceManager());
+      AnalysisEngineDescription aAggregateDescription) throws ResourceInitializationException {
+    return mergeDelegateAnalysisEngineTypePriorities(aAggregateDescription, UIMAFramework
+        .newDefaultResourceManager());
   }
 
   /**
-     * Merges the Type Priorities of each component within an aggregate Analysis Engine, producing a
-     * single combined TypePriorities object.
-     *
-     * @param aAggregateDescription an aggregate Analysis Engine description
-     * @param aResourceManager      ResourceManager instance used to resolve imports
-     * @return a new TypePriorities object that is the result of merging all of the delegate AE
-     * TypePriorities together
-     * @throws ResourceInitializationException if an incompatibility exists
-     */
+   * Merges the Type Priorities of each component within an aggregate Analysis Engine, producing a
+   * single combined TypePriorities object.
+   * 
+   * @param aAggregateDescription
+   *                an aggregate Analysis Engine description
+   * @param aResourceManager
+   *                ResourceManager instance used to resolve imports
+   * 
+   * @return a new TypePriorities object that is the result of merging all of the delegate AE
+   *         TypePriorities together
+   * 
+   * @throws ResourceInitializationException
+   *                 if an incompatibility exists
+   */
   public static TypePriorities mergeDelegateAnalysisEngineTypePriorities(
-          AnalysisEngineDescription aAggregateDescription, ResourceManager aResourceManager)
-          throws ResourceInitializationException {
+      AnalysisEngineDescription aAggregateDescription, ResourceManager aResourceManager)
+      throws ResourceInitializationException {
     // expand the aggregate AE description into the individual delegates
-    ArrayList<AnalysisEngineDescription> l = new ArrayList<>();
+    ArrayList<AnalysisEngineDescription> l = new ArrayList<AnalysisEngineDescription>();
     l.add(aAggregateDescription);
     List<ProcessingResourceMetaData> mdList = getMetaDataList(l, aResourceManager);
 
     // extract TypePriorities and merge
-    List<TypePriorities> typePriorities = new ArrayList<>();
+    List<TypePriorities> typePriorities = new ArrayList<TypePriorities>();
     Iterator<ProcessingResourceMetaData> it = mdList.iterator();
     while (it.hasNext()) {
       ProcessingResourceMetaData md = it.next();
@@ -1784,48 +1539,52 @@ public class CasCreationUtils {
   }
 
   /**
-     * Merges the Type Systems, Type Priorities, and FS Indexes of each component within an aggregate
-     * Analysis Engine.
-     * <p>
-     * This version of this method takes an argument <code>aOutputMergedTypes</code>, which this
-     * method will populate with the names and descriptor locations of any types whose definitions
-     * have been merged from multiple non-identical sources. That is, types that are declared more
-     * than once, with different (but compatible) sets of features in each declaration, or with
-     * different (but compatible) supertypes.
-     *
-     * @param aAggregateDescription an aggregate Analysis Engine description
-     * @param aResourceManager      ResourceManager instance used to resolve imports
-     * @param aOutputMergedTypes    A Map that this method will populate with information about the set of types whose
-     *                              definitions were merged from multiple non-identical sources. That is, types that are
-     *                              declared more than once, with different (but compatible) sets of features in each
-     *                              declaration, or with different (but compatible) supertypes. The keys in the Map will
-     *                              be the type names (Strings) and the values will be {link Set}s containing Descriptor
-     *                              URLs (Strings) where those types are declared. You may pass null if you are not
-     *                              interested in this information.
-     * @param aOutputFailedRemotes  If this parameter is non-null, and if a remote AE could not be contacted, then an
-     *                              entry will be added to this map. The key will be the context name (e.g.,
-     *                              /myDelegate1/nestedRemoteDelegate) of the failed remote, and the value will be the
-     *                              Exception that occurred. If this parameter is null, an exception will be thrown if a
-     *                              remote AE could not be contacted.
-     * @return an object containing the merged TypeSystem, TypePriorities, and FS Index definitions.
-     * @throws ResourceInitializationException if an incompatibility exists or if an import could not be resolved
-     */
+   * Merges the Type Systems, Type Priorities, and FS Indexes of each component within an aggregate
+   * Analysis Engine.
+   * <p>
+   * This version of this method takes an argument <code>aOutputMergedTypes</code>, which this
+   * method will populate with the names and descriptor locations of any types whose definitions
+   * have been merged from multiple non-identical sources. That is, types that are declared more
+   * than once, with different (but compatible) sets of features in each declaration, or with
+   * different (but compatible) supertypes.
+   * 
+   * @param aAggregateDescription
+   *                an aggregate Analysis Engine description
+   * @param aResourceManager
+   *                ResourceManager instance used to resolve imports
+   * @param aOutputMergedTypes
+   *                A Map that this method will populate with information about the set of types
+   *                whose definitions were merged from multiple non-identical sources. That is,
+   *                types that are declared more than once, with different (but compatible) sets of
+   *                features in each declaration, or with different (but compatible) supertypes. The
+   *                keys in the Map will be the type names (Strings) and the values will be {link
+   *                Set}s containing Descriptor URLs (Strings) where those types are declared. You
+   *                may pass null if you are not interested in this information.
+   * @param aOutputFailedRemotes
+   *                If this parameter is non-null, and if a remote AE could not be contacted, then an
+   *                entry will be added to this map. The key will be the context name (e.g.,
+   *                /myDelegate1/nestedRemoteDelegate) of the failed remote, and the value will be
+   *                the Exception that occurred. If this parameter is null, an exception will be
+   *                thrown if a remote AE could not be contacted.
+   * 
+   * @return an object containing the merged TypeSystem, TypePriorities, and FS Index definitions.
+   * 
+   * @throws ResourceInitializationException
+   *                 if an incompatibility exists or if an import could not be resolved
+   */
   public static ProcessingResourceMetaData mergeDelegateAnalysisEngineMetaData(
-          AnalysisEngineDescription aAggregateDescription, ResourceManager aResourceManager,
-          Map<String, Set<String>> aOutputMergedTypes,
-          Map<String, ? super Exception> aOutputFailedRemotes)
-          throws ResourceInitializationException {
+      AnalysisEngineDescription aAggregateDescription, ResourceManager aResourceManager,
+      Map<String, Set<String>> aOutputMergedTypes, Map<String, ? super Exception> aOutputFailedRemotes) throws ResourceInitializationException {
     // expand the aggregate AE description into the individual delegates
-    ArrayList<AnalysisEngineDescription> l = new ArrayList<>();
+    ArrayList<AnalysisEngineDescription> l = new ArrayList<AnalysisEngineDescription>();
     l.add(aAggregateDescription);
-    List<ProcessingResourceMetaData> mdList = getMetaDataList(l, aResourceManager,
-            aOutputFailedRemotes);
+    List<ProcessingResourceMetaData> mdList = getMetaDataList(l, aResourceManager, aOutputFailedRemotes);
 
     ProcessingResourceMetaData result = UIMAFramework.getResourceSpecifierFactory()
-            .createProcessingResourceMetaData();
+        .createProcessingResourceMetaData();
 
     // extract type systems and merge
-    List<TypeSystemDescription> typeSystems = new ArrayList<>();
+    List<TypeSystemDescription> typeSystems = new ArrayList<TypeSystemDescription>();
     Iterator<ProcessingResourceMetaData> it = mdList.iterator();
     while (it.hasNext()) {
       ProcessingResourceMetaData md = it.next();
@@ -1835,7 +1594,7 @@ public class CasCreationUtils {
     result.setTypeSystem(mergeTypeSystems(typeSystems, aResourceManager, aOutputMergedTypes));
 
     // extract TypePriorities and merge
-    List<TypePriorities> typePriorities = new ArrayList<>();
+    List<TypePriorities> typePriorities = new ArrayList<TypePriorities>();
     it = mdList.iterator();
     while (it.hasNext()) {
       ProcessingResourceMetaData md = it.next();
@@ -1845,7 +1604,7 @@ public class CasCreationUtils {
     result.setTypePriorities(mergeTypePriorities(typePriorities, aResourceManager));
 
     // extract FsIndexCollections and merge
-    List<FsIndexCollection> fsIndexes = new ArrayList<>();
+    List<FsIndexCollection> fsIndexes = new ArrayList<FsIndexCollection>();
     it = mdList.iterator();
     while (it.hasNext()) {
       ProcessingResourceMetaData md = it.next();
@@ -1858,17 +1617,20 @@ public class CasCreationUtils {
   }
 
   /**
-     * Determines whether one type subsumes another.
-     *
-     * @param aType1Name name of first type
-     * @param aType2Name name of second type
-     * @param aNameMap   Map from type names to TypeDescriptions
-     * @return true if and only if the type named <code>aType1Name</code> subsumes the type named
-     * <code>aType2Name</code> according to the information given in the
-     * <code>aNameMap</code>.
-     */
-  protected static boolean subsumes(String aType1Name, String aType2Name,
-          Map<String, ? extends TypeDescription> aNameMap) {
+   * Determines whether one type subsumes another.
+   * 
+   * @param aType1Name
+   *                name of first type
+   * @param aType2Name
+   *                name of second type
+   * @param aNameMap
+   *                Map from type names to TypeDescriptions
+   * 
+   * @return true if and only if the type named <code>aType1Name</code> subsumes the type named
+   *         <code>aType2Name</code> according to the information given in the
+   *         <code>aNameMap</code>.
+   */
+  protected static boolean subsumes(String aType1Name, String aType2Name, Map<String, ? extends TypeDescription> aNameMap) {
     // Top type subsumes everything
     if (CAS.TYPE_NAME_TOP.equals(aType1Name)) {
       return true;
@@ -1888,17 +1650,21 @@ public class CasCreationUtils {
   }
 
   /**
-     * Merges features into a TypeDescription.
-     *
-     * @param aType     TypeDescription into which to merge the features
-     * @param aFeatures array of features to merge
-     * @throws ResourceInitializationException if an incompatibility exists
-     */
+   * Merges features into a TypeDescription.
+   * 
+   * @param aType
+   *                TypeDescription into which to merge the features
+   * @param aFeatures
+   *                array of features to merge
+   * 
+   * @throws ResourceInitializationException
+   *                 if an incompatibility exists
+   */
   protected static void mergeFeatures(TypeDescription aType, FeatureDescription[] aFeatures)
-          throws ResourceInitializationException {
+      throws ResourceInitializationException {
     FeatureDescription[] existingFeatures = aType.getFeatures();
     if (existingFeatures == null) {
-      existingFeatures = EMPTY_FEAT_DESC_ARRAY;
+      existingFeatures = new FeatureDescription[0];
     }
 
     for (int i = 0; i < aFeatures.length; i++) {
@@ -1919,15 +1685,15 @@ public class CasCreationUtils {
       if (feat == null) {
         // doesn't exist; add it
         FeatureDescription featDesc = aType.addFeature(featName, aFeatures[i].getDescription(),
-                rangeTypeName, elementTypeName, multiRefsAllowed);
+            rangeTypeName, elementTypeName, multiRefsAllowed);
         featDesc.setSourceUrl(aFeatures[i].getSourceUrl());
       } else {// feature does exist
         // check that the range types match
         if (!feat.getRangeTypeName().equals(rangeTypeName)) {
           throw new ResourceInitializationException(
-                  ResourceInitializationException.INCOMPATIBLE_RANGE_TYPES,
-                  new Object[] { aType.getName() + ":" + feat.getName(), rangeTypeName,
-                      feat.getRangeTypeName(), aType.getSourceUrlString() });
+              ResourceInitializationException.INCOMPATIBLE_RANGE_TYPES, new Object[] {
+                  aType.getName() + ":" + feat.getName(), rangeTypeName, feat.getRangeTypeName(),
+                  aType.getSourceUrlString() });
         }
         Boolean mra1 = feat.getMultipleReferencesAllowed();
         Boolean mra2 = multiRefsAllowed;
@@ -1939,37 +1705,36 @@ public class CasCreationUtils {
         // not ok otherwise
 
         if (!(((mra1 == null) && (mra2 == null)) || ((mra1 != null) && mra1.equals(mra2))
-                || ((mra1 == null) && !mra2) || ((mra2 == null) && !mra1))) {
+            || ((mra1 == null) && !mra2.booleanValue()) || ((mra2 == null) && !mra1.booleanValue()))) {
           throw new ResourceInitializationException(
-                  ResourceInitializationException.INCOMPATIBLE_MULTI_REFS, new Object[] {
-                      aType.getName() + ":" + feat.getName(), aType.getSourceUrlString() });
+              ResourceInitializationException.INCOMPATIBLE_MULTI_REFS, new Object[] {
+                  aType.getName() + ":" + feat.getName(), aType.getSourceUrlString() });
         }
 
         if (!elementTypesCompatible(feat.getElementType(), elementTypeName)) {
           throw new ResourceInitializationException(
-                  ResourceInitializationException.INCOMPATIBLE_ELEMENT_RANGE_TYPES,
-                  new Object[] { aType.getName() + TypeSystem.FEATURE_SEPARATOR + feat.getName(),
-                      elementTypeName, feat.getElementType(), aType.getSourceUrlString() });
+              ResourceInitializationException.INCOMPATIBLE_ELEMENT_RANGE_TYPES, new Object[] {
+                  aType.getName() + TypeSystem.FEATURE_SEPARATOR + feat.getName(), elementTypeName,
+                  feat.getElementType(), aType.getSourceUrlString() });
         }
       }
     }
   }
 
   /**
-     * Compare element type names for array-like features
-     *
-     * @param o1 name of first element type
-     * @param o2 name of second element type
-     * @return true if elements are compatible for merging features
-     */
+   * Compare element type names for array-like features
+   * @param o1 name of first element type
+   * @param o2 name of second element type
+   * @return true if elements are compatible for merging features
+   */
   private static boolean elementTypesCompatible(String o1, String o2) {
     return ((null == o1) && (null == o2)) || ((null != o1) && o1.equals(o2)) ||
-    // allow missing types to be equal to TOP
-            (o1 != null && o1.equals(CAS.TYPE_NAME_TOP) && o2 == null)
-            || (o2 != null && o2.equals(CAS.TYPE_NAME_TOP) && o1 == null);
+      // allow missing types to be equal to TOP
+      (o1 != null && o1.equals(CAS.TYPE_NAME_TOP) && o2 == null) ||
+      (o2 != null && o2.equals(CAS.TYPE_NAME_TOP) && o1 == null)
+    ;
   }
 
-//@formatter:off
   /*************************************************************************************************
    * Caching of getMeta info that requires producing the resource                                  *
    *   - done because producing the resource can be very expensive                                 *                        
@@ -1980,24 +1745,23 @@ public class CasCreationUtils {
    *   Both the DataPath and the uima extension class loader are used as part of the key           *
    *   because differences in these could cause different metadata to be loaded                    *
    *************************************************************************************************/
-//@formatter:on
+  
   private static class MetaDataCacheKey {
     final ResourceSpecifier resourceSpecifier;
     final ClassLoader rmClassLoader;
     final String rmDataPath;
-
+    
     MetaDataCacheKey(ResourceSpecifier resourceSpecifier, ResourceManager resourceManager) {
       this.resourceSpecifier = resourceSpecifier;
-      rmClassLoader = (null == resourceManager) ? null : resourceManager.getExtensionClassLoader(); // can
-                                                                                                    // be
-                                                                                                    // null
-      rmDataPath = (null == resourceManager) ? null : resourceManager.getDataPath();
+      this.rmClassLoader = (null == resourceManager) ? null : resourceManager.getExtensionClassLoader(); // can be null
+      this.rmDataPath = (null == resourceManager) ? null : resourceManager.getDataPath();
     }
 
     @Override
     public int hashCode() {
-      return ((rmClassLoader == null) ? 0 : rmClassLoader.hashCode())
-              + ((rmDataPath == null) ? 0 : rmDataPath.hashCode()) + resourceSpecifier.hashCode();
+      return ((rmClassLoader == null) ? 0 : rmClassLoader.hashCode()) 
+             + ((rmDataPath == null)  ? 0 : rmDataPath.hashCode()) 
+             + resourceSpecifier.hashCode();
     }
 
     @Override
@@ -2010,58 +1774,58 @@ public class CasCreationUtils {
         if (k.rmDataPath != null) {
           return false;
         }
-        return resourceSpecifier.equals(k.resourceSpecifier) && rmClassLoader == k.rmClassLoader;
+        return resourceSpecifier.equals(k.resourceSpecifier) && 
+               rmClassLoader == k.rmClassLoader;
       }
-      return resourceSpecifier.equals(k.resourceSpecifier) && rmClassLoader == k.rmClassLoader
-              && rmDataPath.equals(k.rmDataPath);
+      return resourceSpecifier.equals(k.resourceSpecifier) && 
+             rmClassLoader == k.rmClassLoader &&
+             rmDataPath.equals(k.rmDataPath);
     }
 
     @Override
     public String toString() {
-      return this.getClass().getSimpleName() + " [resourceSpecifier=" + resourceSpecifier
-              + ", rmClassLoader=" + rmClassLoader + ", rmDataPath=" + rmDataPath + "]";
+      return "MetaDataCacheKey [resourceSpecifier=" + resourceSpecifier + ", rmClassLoader="
+          + rmClassLoader + ", rmDataPath=" + rmDataPath + "]";
     }
   }
-
+  
   private static final boolean cacheDebug = false; // set true for debugging info
-  private static final int HOLD_TIME = 30000; // keep cache for 30 seconds, approx., in case a
-                                              // remote resource changes state
-
+  private static final int HOLD_TIME = 30000;  // keep cache for 30 seconds, approx., in case a remote resource changes state
+  
   /**
-   * This is the cache. All references to it are synchronized, using it as the object.
+   * This is the cache.
+   * All references to it are synchronized, using it as the object.
    */
-  private static final transient Map<MetaDataCacheKey, MetaDataCacheEntry> metaDataCache = new HashMap<>();
+  private static final transient Map<MetaDataCacheKey, MetaDataCacheEntry> metaDataCache = new HashMap<MetaDataCacheKey, MetaDataCacheEntry>();
 
-  /**
-   * This holds an instance of a Timer object This object is nulled out and gets gc'd when it's
-   * timertask finishes, when the cache is empty.
+  /** This holds an instance of a Timer object
+   * This object is nulled out and gets gc'd when it's timertask finishes, when the
+   * cache is empty.  
    * 
    * All references to it are synchronized under the metaDataCache.
    */
   private static Timer cleanupTimer = null;
 
   /**
-   * This class holds the processing Resource Metadata, or null if there is none, and a timestamp
-   * when the metadata was obtained.
+   * This class holds the processing Resource Metadata, or null if there is none, and
+   * a timestamp when the metadata was obtained.
    */
   private static class MetaDataCacheEntry {
     ProcessingResourceMetaData processingResourceMetaData;
     long creationTime;
-
+    
     MetaDataCacheEntry(ResourceMetaData resourceMetaData) {
-      processingResourceMetaData = (resourceMetaData instanceof ProcessingResourceMetaData)
-              ? (ProcessingResourceMetaData) resourceMetaData
-              : null;
-      creationTime = System.currentTimeMillis();
+      processingResourceMetaData = (resourceMetaData instanceof ProcessingResourceMetaData) ? (ProcessingResourceMetaData) resourceMetaData : null;
+      creationTime = System.currentTimeMillis(); 
       if (null == cleanupTimer) {
         if (cacheDebug) {
           System.err.format("GetMetaDataCache: Scheduling new cleanup task%n");
         }
 
-        cleanupTimer = new Timer("metaDataCacheCleanup", true); // run as daemon
-        // create a new instance of the timer task, because a previous one may
+        cleanupTimer = new Timer("metaDataCacheCleanup", true);  // run as daemon
+        // create a new instance of the timer task, because a previous one may 
         // still be running
-        TimerTask metaDataCacheCleanupTask = new TimerTask() {
+        TimerTask metaDataCacheCleanupTask = new TimerTask() {   
           @Override
           public void run() {
             synchronized (metaDataCache) {
@@ -2069,13 +1833,11 @@ public class CasCreationUtils {
               if (cacheDebug) {
                 System.err.format("GetMetaDataCache: cleanup task running%n");
               }
-              for (Iterator<Entry<MetaDataCacheKey, MetaDataCacheEntry>> it = metaDataCache
-                      .entrySet().iterator(); it.hasNext();) {
+              for (Iterator<Entry<MetaDataCacheKey, MetaDataCacheEntry>> it = metaDataCache.entrySet().iterator(); it.hasNext();) {
                 Entry<MetaDataCacheKey, MetaDataCacheEntry> e = it.next();
                 if (e.getValue().creationTime + HOLD_TIME < now) {
                   if (cacheDebug) {
-                    System.err.format("GetMetaDataCache: cleanup task removing entry %s%n",
-                            e.getKey().toString());
+                    System.err.format("GetMetaDataCache: cleanup task removing entry %s%n", e.getKey().toString() );
                   }
                   it.remove();
                 }
@@ -2085,7 +1847,7 @@ public class CasCreationUtils {
                   System.err.format("GetMetaDataCache: cleanup task terminating, cache empty%n");
                 }
                 cancel();
-                cleanupTimer.cancel(); // probably not needed, but for safety ...
+                cleanupTimer.cancel();  // probably not needed, but for safety ...
                 cleanupTimer = null;
               }
               if (cacheDebug) {
@@ -2098,7 +1860,8 @@ public class CasCreationUtils {
       }
     }
   }
-
+   
+  
   /**
    * Gets a list of ProcessingResourceMetadata objects from a list containing either
    * ResourceSpecifiers, ProcessingResourceMetadata objects, or subparts of
@@ -2117,45 +1880,43 @@ public class CasCreationUtils {
    * be opened.
    * 
    * Note that this last kind of lookup may be expensive (calling produceResource, which in turn may
-   * query remote connections etc.). Because of this, a cache is maintained for these, (because some
-   * scenarios end up requesting the same metadata multiple times, in rapid succession).
+   * query remote connections etc.).  Because of this, a cache is maintained for these, 
+   * (because some scenarios end up requesting the same metadata multiple times, in rapid succession).
    * 
-   * Because remote resource may become available, the cache entries are removed 30 seconds after
-   * they are created. This also reclaims space from the cache.
-   * 
+   * Because remote resource may become available, the cache entries are removed 30 seconds
+   * after they are created.  This also reclaims space from the cache.
+   *  
    * @param aComponentDescriptionOrMetaData
-   *          a collection of {@link ResourceSpecifier}, {@link ProcessingResourceMetaData},
-   *          {@link TypeSystemDescription}, {@link FsIndexCollection}, or {@link TypePriorities}
-   *          objects.
+   *                a collection of {@link ResourceSpecifier}, {@link ProcessingResourceMetaData},
+   *                {@link TypeSystemDescription}, {@link FsIndexCollection}, or
+   *                {@link TypePriorities} objects.
    * @param aResourceManager
-   *          used to resolve delegate analysis engine imports
+   *                used to resolve delegate analysis engine imports
    * @param aOutputFailedRemotes
-   *          If this parameter is non-null, and if a remote AE could not be contacted, then the
-   *          context name (e.g. /myDelegate1/nestedRemoteDelegate) of the failed remote will be
-   *          added to this collection. If this parameter is null, an exception will be thrown if a
-   *          remote AE could not be contacted.
+   *                If this parameter is non-null, and if a remote AE could not be contacted, then
+   *                the context name (e.g. /myDelegate1/nestedRemoteDelegate) of the failed remote
+   *                will be added to this collection. If this parameter is null, an exception will
+   *                be thrown if a remote AE could not be contacted.
    * 
    * @return a List containing the ProcessingResourceMetaData objects containing all of the
    *         information in all of the objects in <code>aComponentDescriptionOrMetaData</code>
    *         (including all components of aggregate AnalysisEngines)
    * 
    * @throws ResourceInitializationException
-   *           if a failure occurs because an import could not be resolved
+   *                 if a failure occurs because an import could not be resolved
    */
-  public static List<ProcessingResourceMetaData> getMetaDataList(
-          Collection<? extends MetaDataObject> aComponentDescriptionOrMetaData,
-          ResourceManager aResourceManager, Map<String, ? super Exception> aOutputFailedRemotes)
-          throws ResourceInitializationException {
+  public static List<ProcessingResourceMetaData> getMetaDataList(Collection<? extends MetaDataObject> aComponentDescriptionOrMetaData,
+      ResourceManager aResourceManager, Map<String, ? super Exception> aOutputFailedRemotes)
+      throws ResourceInitializationException {
     return getMetaDataList(aComponentDescriptionOrMetaData, aResourceManager, aOutputFailedRemotes,
-            "");
+        "");
   }
 
-  private static List<ProcessingResourceMetaData> getMetaDataList(
-          Collection<? extends MetaDataObject> aComponentDescriptionOrMetaData,
-          ResourceManager aResourceManager, Map<String, ? super Exception> aOutputFailedRemotes,
-          String aContextName) throws ResourceInitializationException {
+  private static List<ProcessingResourceMetaData> getMetaDataList(Collection<? extends MetaDataObject> aComponentDescriptionOrMetaData,
+      ResourceManager aResourceManager, Map<String, ? super Exception> aOutputFailedRemotes, String aContextName)
+      throws ResourceInitializationException {
 
-    List<ProcessingResourceMetaData> mdList = new ArrayList<>();
+    List<ProcessingResourceMetaData> mdList = new ArrayList<ProcessingResourceMetaData>();
     if (null == aComponentDescriptionOrMetaData) {
       return mdList;
     }
@@ -2175,28 +1936,23 @@ public class CasCreationUtils {
           } catch (InvalidXMLException e) {
             throw new ResourceInitializationException(e);
           }
-          Iterator<Entry<String, ResourceSpecifier>> delIter = delegateMap.entrySet()
-                  .iterator();
+          Iterator<Entry<String, ResourceSpecifier>> delIter = delegateMap.entrySet().iterator();
           while (delIter.hasNext()) {
             Entry<String, ResourceSpecifier> delEntry = delIter.next();
-            List<ResourceSpecifier> tempList = new ArrayList<>();
+            List<ResourceSpecifier> tempList = new ArrayList<ResourceSpecifier>();
             tempList.add(delEntry.getValue());
             mdList.addAll(getMetaDataList(tempList, aResourceManager, aOutputFailedRemotes,
-                    aContextName + "/" + delEntry.getKey()));
+                aContextName + "/" + delEntry.getKey()));
           }
         }
       } else if (current instanceof CollectionReaderDescription) {
-        mdList.add((ProcessingResourceMetaData) ((CollectionReaderDescription) current)
-                .getCollectionReaderMetaData().clone());
+        mdList.add((ProcessingResourceMetaData) ((CollectionReaderDescription) current).getCollectionReaderMetaData().clone());
       } else if (current instanceof CasInitializerDescription) {
-        mdList.add((ProcessingResourceMetaData) ((CasInitializerDescription) current)
-                .getCasInitializerMetaData().clone());
+        mdList.add((ProcessingResourceMetaData) ((CasInitializerDescription) current).getCasInitializerMetaData().clone());
       } else if (current instanceof CasConsumerDescription) {
-        mdList.add((ProcessingResourceMetaData) ((CasConsumerDescription) current)
-                .getCasConsumerMetaData().clone());
+        mdList.add((ProcessingResourceMetaData) ((CasConsumerDescription) current).getCasConsumerMetaData().clone());
       } else if (current instanceof FlowControllerDescription) {
-        mdList.add((ProcessingResourceMetaData) ((FlowControllerDescription) current)
-                .getFlowControllerMetaData().clone());
+        mdList.add((ProcessingResourceMetaData) ((FlowControllerDescription) current).getFlowControllerMetaData().clone());
       } else if (current instanceof TypeSystemDescription) {
         ProcessingResourceMetaData md = new ProcessingResourceMetaData_impl();
         md.setTypeSystem((TypeSystemDescription) current);
@@ -2210,11 +1966,10 @@ public class CasCreationUtils {
         md.setTypePriorities((TypePriorities) current);
         mdList.add(md);
       } else if (current instanceof ResourceSpecifier) {
-
+                
         // first try the cache
-        MetaDataCacheKey metaDataCacheKey = new MetaDataCacheKey((ResourceSpecifier) current,
-                aResourceManager);
-        synchronized (metaDataCache) {
+        MetaDataCacheKey metaDataCacheKey = new MetaDataCacheKey((ResourceSpecifier)current, aResourceManager);
+        synchronized(metaDataCache) {
           MetaDataCacheEntry metaData = metaDataCache.get(metaDataCacheKey);
           if (null != metaData) {
             if (cacheDebug) {
@@ -2224,21 +1979,20 @@ public class CasCreationUtils {
               mdList.add(metaData.processingResourceMetaData);
             }
             continue;
-          }
+          } 
         }
-
+        
         // try to instantiate the resource
-
+        
         Resource resource = null;
-        Map<String, Object> prParams = new HashMap<>();
+        Map<String, Object> prParams = new HashMap<String, Object>();
         if (aResourceManager != null) {
           prParams.put(Resource.PARAM_RESOURCE_MANAGER, aResourceManager);
         }
         prParams.put(AnalysisEngineImplBase.PARAM_VERIFICATION_MODE, Boolean.TRUE);
         try {
           resource = UIMAFramework.produceResource((ResourceSpecifier) current, prParams);
-          // (null == aResourceManager) ? Collections.<String, Object>emptyMap() :
-          // resourceMgrInMap);
+//              (null == aResourceManager) ? Collections.<String, Object>emptyMap() : resourceMgrInMap);
         } catch (Exception e) {
           // record failure, so we don't ask for this again, for a while
           synchronized (metaDataCache) {
@@ -2277,8 +2031,8 @@ public class CasCreationUtils {
         }
       } else {
         throw new ResourceInitializationException(
-                ResourceInitializationException.UNSUPPORTED_OBJECT_TYPE_IN_CREATE_CAS,
-                new Object[] { current.getClass().getName() });
+            ResourceInitializationException.UNSUPPORTED_OBJECT_TYPE_IN_CREATE_CAS,
+            new Object[] { current.getClass().getName() });
       }
     }
 
@@ -2303,22 +2057,21 @@ public class CasCreationUtils {
    * be opened.
    * 
    * @param aComponentDescriptionOrMetaData
-   *          a collection of {@link ResourceSpecifier}, {@link ProcessingResourceMetaData},
-   *          {@link TypeSystemDescription}, {@link FsIndexCollection}, or {@link TypePriorities}
-   *          objects.
+   *                a collection of {@link ResourceSpecifier}, {@link ProcessingResourceMetaData},
+   *                {@link TypeSystemDescription}, {@link FsIndexCollection}, or
+   *                {@link TypePriorities} objects.
    * @param aResourceManager
-   *          used to resolve delegate analysis engine imports
+   *                used to resolve delegate analysis engine imports
    * 
    * @return a List containing the ProcessingResourceMetaData objects containing all of the
    *         information in all of the objects in <code>aComponentDescriptionOrMetaData</code>
    *         (including all components of aggregate AnalysisEngines)
    * 
    * @throws ResourceInitializationException
-   *           if a failure occurs because an import could not be resolved
+   *                 if a failure occurs because an import could not be resolved
    */
-  public static List<ProcessingResourceMetaData> getMetaDataList(
-          Collection<? extends MetaDataObject> aComponentDescriptionOrMetaData,
-          ResourceManager aResourceManager) throws ResourceInitializationException {
+  public static List<ProcessingResourceMetaData> getMetaDataList(Collection<? extends MetaDataObject> aComponentDescriptionOrMetaData,
+      ResourceManager aResourceManager) throws ResourceInitializationException {
     return getMetaDataList(aComponentDescriptionOrMetaData, aResourceManager, null);
   }
 

@@ -29,15 +29,16 @@ import org.apache.uima.resource.metadata.impl.XmlizationInfo;
 /**
  * Reference implementation of {@link AnalysisEngineDescription}. Note that this class has a
  * slightly nonstandard XML representation because the "key" property is represented in XML by an
- * attribute rather than a child element.
+ * attribute rather than a child element. 
  * 
- * 9/2013: toXML and buildFromXMLElement not overridden... Therefore, we override the toXML() method
- * and the buildFromXMLElement(Element,XMLParser) method.
+ * 9/2013: toXML and buildFromXMLElement not overridden...
+ * Therefore, we override the toXML() method and the
+ * buildFromXMLElement(Element,XMLParser) method.
  * 
  * 
  */
-public class ExternalResourceDescription_impl extends MetaDataObject_impl
-        implements ExternalResourceDescription {
+public class ExternalResourceDescription_impl extends MetaDataObject_impl implements
+        ExternalResourceDescription {
 
   static final long serialVersionUID = -6995615796561255268L;
 
@@ -52,7 +53,6 @@ public class ExternalResourceDescription_impl extends MetaDataObject_impl
   /**
    * @see ExternalResourceDescription#getName()
    */
-  @Override
   public String getName() {
     return mName;
   }
@@ -60,7 +60,6 @@ public class ExternalResourceDescription_impl extends MetaDataObject_impl
   /**
    * @see ExternalResourceDescription#getResourceSpecifier()
    */
-  @Override
   public ResourceSpecifier getResourceSpecifier() {
     return mResourceSpecifier;
   }
@@ -68,7 +67,6 @@ public class ExternalResourceDescription_impl extends MetaDataObject_impl
   /**
    * @see ExternalResourceDescription#getImplementationName()
    */
-  @Override
   public String getImplementationName() {
     return mImplementationName;
   }
@@ -76,7 +74,6 @@ public class ExternalResourceDescription_impl extends MetaDataObject_impl
   /**
    * @see ExternalResourceDescription#setName(String)
    */
-  @Override
   public void setName(String aName) {
     mName = aName;
   }
@@ -84,7 +81,6 @@ public class ExternalResourceDescription_impl extends MetaDataObject_impl
   /**
    * @see ExternalResourceDescription#setResourceSpecifier(ResourceSpecifier)
    */
-  @Override
   public void setResourceSpecifier(ResourceSpecifier aSpecifier) {
     mResourceSpecifier = aSpecifier;
   }
@@ -92,7 +88,6 @@ public class ExternalResourceDescription_impl extends MetaDataObject_impl
   /**
    * @see ExternalResourceDescription#setImplementationName(String)
    */
-  @Override
   public void setImplementationName(String aName) {
     mImplementationName = aName;
   }
@@ -100,7 +95,6 @@ public class ExternalResourceDescription_impl extends MetaDataObject_impl
   /**
    * @see ExternalResourceDescription#getDescription()
    */
-  @Override
   public String getDescription() {
     return mDescription;
   }
@@ -108,17 +102,15 @@ public class ExternalResourceDescription_impl extends MetaDataObject_impl
   /**
    * @see ExternalResourceDescription#setDescription(String)
    */
-  @Override
   public void setDescription(String aDescription) {
     mDescription = aDescription;
   }
 
-  @Override
   protected XmlizationInfo getXmlizationInfo() {
     return XMLIZATION_INFO;
   }
 
-  private static final XmlizationInfo XMLIZATION_INFO = new XmlizationInfo("externalResource",
+  static final private XmlizationInfo XMLIZATION_INFO = new XmlizationInfo("externalResource",
           new PropertyXmlInfo[] { new PropertyXmlInfo("name"),
               new PropertyXmlInfo("description", false),
               new PropertyXmlInfo("resourceSpecifier", null),

@@ -42,8 +42,8 @@ import org.xml.sax.helpers.AttributesImpl;
 /**
  * Declares which FlowController is used by the Aggregate Analysis Engine.
  */
-public class FlowControllerDeclaration_impl extends MetaDataObject_impl
-        implements FlowControllerDeclaration {
+public class FlowControllerDeclaration_impl extends MetaDataObject_impl implements
+        FlowControllerDeclaration {
   private static final long serialVersionUID = 1526130202197517743L;
 
   private String mKey;
@@ -52,51 +52,79 @@ public class FlowControllerDeclaration_impl extends MetaDataObject_impl
 
   private ResourceSpecifier mSpecifier;
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.analysis_engine.metadata.FlowControllerDeclaration#getKey()
+   */
   public String getKey() {
     return mKey;
   }
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.analysis_engine.metadata.FlowControllerDeclaration#setKey(java.lang.String)
+   */
   public void setKey(String aKey) {
     mKey = aKey;
   }
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see FlowControllerDeclaration#getImport()
+   */
   public Import getImport() {
     return mImport;
   }
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see FlowControllerDeclaration#setImport(org.apache.uima.resource.metadata.Import)
+   */
   public void setImport(Import aImport) {
     mImport = aImport;
   }
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see FlowControllerDeclaration#getSpecifier()
+   */
   public ResourceSpecifier getSpecifier() {
     return mSpecifier;
   }
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see FlowControllerDeclaration#setSpecifier(org.apache.uima.resource.ResourceSpecifier)
+   */
   public void setSpecifier(ResourceSpecifier aSpecifier) {
     mSpecifier = aSpecifier;
   }
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see FlowControllerDeclaration#resolveImports()
+   */
   public void resolveImports() throws InvalidXMLException {
     if (getImport() != null) {
-      resolveImports(UIMAFramework.newDefaultResourceManager());
+      resolveImports(UIMAFramework.newDefaultResourceManager());      
     }
   }
 
   /*
+   * (non-Javadoc)
+   * 
    * @see FlowControllerDeclaration#resolveImports(org.apache.uima.resource.ResourceManager)
-   * Synchronized to support parallel initialization calls on primitive AEs, sharing a common
-   * Resource Manager, and perhaps common UIMA Contexts
+   * Synchronized to support parallel initialization calls on primitive AEs, sharing
+   * a common Resource Manager, and perhaps common UIMA Contexts
    */
-  @Override
-  public synchronized void resolveImports(ResourceManager aResourceManager)
-          throws InvalidXMLException {
+  public synchronized void resolveImports(ResourceManager aResourceManager) throws InvalidXMLException {
     Import theImport = getImport();
     if (theImport != null) {
       URL url = theImport.findAbsoluteUrl(aResourceManager);
@@ -121,7 +149,12 @@ public class FlowControllerDeclaration_impl extends MetaDataObject_impl
     }
   }
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.resource.metadata.impl.MetaDataObject_impl#buildFromXMLElement(org.w3c.dom.Element,
+   *      org.apache.uima.util.XMLParser, org.apache.uima.util.XMLParser.ParsingOptions)
+   */
   public void buildFromXMLElement(Element aElement, XMLParser aParser, ParsingOptions aOptions)
           throws InvalidXMLException {
     super.buildFromXMLElement(aElement, aParser, aOptions);
@@ -129,7 +162,11 @@ public class FlowControllerDeclaration_impl extends MetaDataObject_impl
     mKey = aElement.getAttribute("key");
   }
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.resource.metadata.impl.MetaDataObject_impl#getXMLAttributes()
+   */
   protected AttributesImpl getXMLAttributes() {
     // write key as attribute
     AttributesImpl attrs = new AttributesImpl();
@@ -139,12 +176,11 @@ public class FlowControllerDeclaration_impl extends MetaDataObject_impl
     return attrs;
   }
 
-  @Override
   protected XmlizationInfo getXmlizationInfo() {
     return XMLIZATION_INFO;
   }
 
-  private static final XmlizationInfo XMLIZATION_INFO = new XmlizationInfo("flowController",
+  static final private XmlizationInfo XMLIZATION_INFO = new XmlizationInfo("flowController",
           new PropertyXmlInfo[] { new PropertyXmlInfo("import", null),
               new PropertyXmlInfo("specifier", null) });
 }

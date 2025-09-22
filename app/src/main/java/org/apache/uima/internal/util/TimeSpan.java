@@ -25,9 +25,9 @@ package org.apache.uima.internal.util;
  * etc.
  * <p>
  * 
- * Note that the largest value you can represent with this class is 9223372036854775807
- * (<code>Long.MAX_VALUE</code>), or equivalently, 292471208 yrs 247 days 7 hrs 12 min 55.807 sec.
- * Overflow is not handled gracefully by this class.
+ * Note that the largest value you can represent with this class is 9223372036854775807 (<code>Long.MAX_VALUE</code>),
+ * or equivalently, 292471208 yrs 247 days 7 hrs 12 min 55.807 sec. Overflow is not handled
+ * gracefully by this class.
  * <p>
  * 
  * Also note that for the purposes of this class, a year has 365 days. I.e., a year corresponds to
@@ -81,6 +81,7 @@ public class TimeSpan {
    * Create an uninstantiated <code>TimeSpan</code>.
    */
   public TimeSpan() {
+    super();
   }
 
   /**
@@ -88,12 +89,13 @@ public class TimeSpan {
    * 
    * @param milliseconds
    *          The interval in ms. If <code>milliseconds
-   &lt; 0</code>, an uninstantiated <code>TimeSpan</code> is created.
+   &lt; 0</code>, an uninstantiated
+   *          <code>TimeSpan</code> is created.
    */
   public TimeSpan(long milliseconds) {
     if (milliseconds >= 0) {
-      all = milliseconds;
-      knowsMS = true;
+      this.all = milliseconds;
+      this.knowsMS = true;
     }
   }
 
@@ -102,7 +104,7 @@ public class TimeSpan {
    *         <code>false</code>, else.
    */
   public boolean isInstantiated() {
-    return (knowsMS || knowsFull);
+    return (this.knowsMS || this.knowsFull);
   }
 
   /**
@@ -117,8 +119,8 @@ public class TimeSpan {
       return false;
     }
     this.years = years;
-    knowsFull = true;
-    knowsMS = false;
+    this.knowsFull = true;
+    this.knowsMS = false;
     return true;
   }
 
@@ -134,8 +136,8 @@ public class TimeSpan {
       return false;
     }
     this.days = days;
-    knowsFull = true;
-    knowsMS = false;
+    this.knowsFull = true;
+    this.knowsMS = false;
     return true;
   }
 
@@ -151,8 +153,8 @@ public class TimeSpan {
       return false;
     }
     this.hours = hours;
-    knowsFull = true;
-    knowsMS = false;
+    this.knowsFull = true;
+    this.knowsMS = false;
     return true;
   }
 
@@ -168,8 +170,8 @@ public class TimeSpan {
       return false;
     }
     this.minutes = minutes;
-    knowsFull = true;
-    knowsMS = false;
+    this.knowsFull = true;
+    this.knowsMS = false;
     return true;
   }
 
@@ -185,8 +187,8 @@ public class TimeSpan {
       return false;
     }
     this.seconds = seconds;
-    knowsFull = true;
-    knowsMS = false;
+    this.knowsFull = true;
+    this.knowsMS = false;
     return true;
   }
 
@@ -195,15 +197,16 @@ public class TimeSpan {
    * 
    * @param milliseconds
    *          The number of milliseconds.
-   * @return <code>false</code>, if <code>milliseconds &lt; 0</code>; <code>true</code>, else.
+   * @return <code>false</code>, if <code>milliseconds &lt; 0</code>; <code>true</code>,
+   *         else.
    */
   public boolean setMilliseconds(int milliseconds) {
     if (milliseconds < 0) {
       return false;
     }
     this.milliseconds = milliseconds;
-    knowsFull = true;
-    knowsMS = false;
+    this.knowsFull = true;
+    this.knowsMS = false;
     return true;
   }
 
@@ -212,15 +215,16 @@ public class TimeSpan {
    * 
    * @param milliseconds
    *          The number of milliseconds.
-   * @return <code>false</code>, if <code>milliseconds &lt; 0</code>; <code>true</code>, else.
+   * @return <code>false</code>, if <code>milliseconds &lt; 0</code>; <code>true</code>,
+   *         else.
    */
   public boolean setFullMilliseconds(long milliseconds) {
     if (milliseconds < 0) {
       return false;
     }
-    all = milliseconds;
-    knowsMS = true;
-    knowsFull = false;
+    this.all = milliseconds;
+    this.knowsMS = true;
+    this.knowsFull = false;
     return true;
   }
 
@@ -232,10 +236,10 @@ public class TimeSpan {
    */
   public long getFullMilliseconds() {
     ensureAll();
-    if (!knowsMS) {
+    if (!this.knowsMS) {
       return -1;
     }
-    return all;
+    return this.all;
   }
 
   /**
@@ -245,7 +249,7 @@ public class TimeSpan {
    */
   public int getYears() {
     ensureFull();
-    return isInstantiated() ? years : -1;
+    return this.isInstantiated() ? this.years : -1;
   }
 
   /**
@@ -255,7 +259,7 @@ public class TimeSpan {
    */
   public int getDays() {
     ensureFull();
-    return isInstantiated() ? days : -1;
+    return this.isInstantiated() ? this.days : -1;
   }
 
   /**
@@ -265,7 +269,7 @@ public class TimeSpan {
    */
   public int getHours() {
     ensureFull();
-    return isInstantiated() ? hours : -1;
+    return this.isInstantiated() ? this.hours : -1;
   }
 
   /**
@@ -275,7 +279,7 @@ public class TimeSpan {
    */
   public int getMinutes() {
     ensureFull();
-    return isInstantiated() ? minutes : -1;
+    return this.isInstantiated() ? this.minutes : -1;
   }
 
   /**
@@ -285,7 +289,7 @@ public class TimeSpan {
    */
   public int getSeconds() {
     ensureFull();
-    return isInstantiated() ? seconds : -1;
+    return this.isInstantiated() ? this.seconds : -1;
   }
 
   /**
@@ -295,73 +299,72 @@ public class TimeSpan {
    */
   public int getMilliseconds() {
     ensureFull();
-    return isInstantiated() ? milliseconds : -1;
+    return this.isInstantiated() ? this.milliseconds : -1;
   }
 
   /**
    * @return String representation of object. See class comments.
    */
-  @Override
   public String toString() {
     ensureFull();
-    if (!knowsFull) {
+    if (!this.knowsFull) {
       return unknownTime;
     }
     StringBuffer buf = new StringBuffer();
     boolean started = false;
-    if (years > 0) {
-      buf.append(years);
+    if (this.years > 0) {
+      buf.append(this.years);
       buf.append(' ');
       buf.append(yearsString);
       started = true;
     }
-    if (started || days > 0) {
+    if (started || this.days > 0) {
       if (started) {
         buf.append(' ');
       }
-      buf.append(days);
+      buf.append(this.days);
       buf.append(' ');
       buf.append(daysString);
       started = true;
     }
-    if (started || hours > 0) {
+    if (started || this.hours > 0) {
       if (started) {
         buf.append(' ');
       }
-      buf.append(hours);
+      buf.append(this.hours);
       buf.append(' ');
       buf.append(hoursString);
       started = true;
     }
-    if (started || minutes > 0) {
+    if (started || this.minutes > 0) {
       if (started) {
         buf.append(' ');
       }
-      buf.append(minutes);
+      buf.append(this.minutes);
       buf.append(' ');
       buf.append(minutesString);
       started = true;
     }
-    if (started || seconds > 0) {
+    if (started || this.seconds > 0) {
       if (started) {
         buf.append(' ');
       }
-      buf.append(seconds);
+      buf.append(this.seconds);
       started = true;
     }
     if (started) {
       buf.append('.');
-      if (milliseconds < 100) {
+      if (this.milliseconds < 100) {
         buf.append('0');
-        if (milliseconds < 10) {
+        if (this.milliseconds < 10) {
           buf.append('0');
         }
       }
-      buf.append(milliseconds);
+      buf.append(this.milliseconds);
       buf.append(' ');
       buf.append(secondsString);
     } else {
-      buf.append(milliseconds);
+      buf.append(this.milliseconds);
       buf.append(' ');
       buf.append(msString);
     }
@@ -369,36 +372,36 @@ public class TimeSpan {
   }
 
   private void ensureAll() {
-    if (knowsMS || !knowsFull) {
+    if (this.knowsMS || !this.knowsFull) {
       return;
     }
-    all = 0;
-    all += years * msYear;
-    all += days * msDay;
-    all += hours * msHour;
-    all += minutes * msMinute;
-    all += seconds * msSecond;
-    all += milliseconds;
-    knowsMS = true;
+    this.all = 0;
+    this.all += this.years * msYear;
+    this.all += this.days * msDay;
+    this.all += this.hours * msHour;
+    this.all += this.minutes * msMinute;
+    this.all += this.seconds * msSecond;
+    this.all += this.milliseconds;
+    this.knowsMS = true;
   }
 
   private void ensureFull() {
-    if (knowsFull || !knowsMS) {
+    if (this.knowsFull || !this.knowsMS) {
       return;
     }
-    long t = all;
-    years = (int) (t / msYear);
+    long t = this.all;
+    this.years = (int) (t / msYear);
     t %= msYear;
-    days = (int) (t / msDay);
+    this.days = (int) (t / msDay);
     t %= msDay;
-    hours = (int) (t / msHour);
+    this.hours = (int) (t / msHour);
     t %= msHour;
-    minutes = (int) (t / msMinute);
+    this.minutes = (int) (t / msMinute);
     t %= msMinute;
-    seconds = (int) (t / msSecond);
+    this.seconds = (int) (t / msSecond);
     t %= msSecond;
-    milliseconds = (int) t;
-    knowsFull = true;
+    this.milliseconds = (int) t;
+    this.knowsFull = true;
   }
 
 }

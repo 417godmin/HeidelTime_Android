@@ -83,23 +83,17 @@ public class DebugNameValuePair {
     mValue = aValue;
   }
 
-  @Override
   public String toString() {
     Object v = getValue();
-    String className = v.getClass().getSimpleName();
-    if (v instanceof StringArrayFS) {
-      StringArrayFS stringArrayFS = (StringArrayFS) v;
-      v = className + "[" + stringArrayFS.size() + "]";
-    } else if (v instanceof FloatArrayFS) {
-      FloatArrayFS floatArrayFS = (FloatArrayFS) v;
-      v = className + "[" + floatArrayFS.size() + "]";
-    } else if (v instanceof IntArrayFS) {
-      IntArrayFS intArrayFS = (IntArrayFS) v;
-      v = className + "[" + intArrayFS.size() + "]";
-    } else if (v instanceof ArrayFS) {
-      ArrayFS arrayFS = (ArrayFS) v;
-      v = className + "[" + arrayFS.size() + "]";
-    }
+    if (v instanceof StringArrayFS)
+      v = "StringArrayFS[" + ((StringArrayFS) v).size() + "]";
+    else if (v instanceof FloatArrayFS)
+      v = "FloatArrayFS[" + ((FloatArrayFS) v).size() + "]";
+    else if (v instanceof IntArrayFS)
+      v = "IntArrayFS[" + ((IntArrayFS) v).size() + "]";
+    else if (v instanceof ArrayFS)
+      v = "ArrayFS[" + ((ArrayFS) v).size() + "]";
     return getName() + ": " + v;
   }
+
 }

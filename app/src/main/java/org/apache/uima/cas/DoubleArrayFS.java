@@ -25,13 +25,11 @@ package org.apache.uima.cas;
  * 
  * 
  */
-public interface DoubleArrayFS extends CommonArrayFS<Double> {
+public interface DoubleArrayFS extends CommonArrayFS {
 
   /**
    * Get the i-th element from the array.
-   * 
-   * @param i
-   *          the index
+   * @param i the index
    * @return The i-th element.
    * @exception ArrayIndexOutOfBoundsException
    *              If the index is out of bounds.
@@ -58,8 +56,8 @@ public interface DoubleArrayFS extends CommonArrayFS<Double> {
   double[] toArray();
 
   /**
-   * Copy the contents of the array from <code>start</code> to <code>end</code> to the destination
-   * <code>destArray</code> with destination offset <code>destOffset</code>.
+   * Copy the contents of the array from <code>start</code> to <code>end</code> to the
+   * destination <code>destArray</code> with destination offset <code>destOffset</code>.
    * 
    * @param srcOffset
    *          The index of the first element to copy.

@@ -16,19 +16,18 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.uima.analysis_engine.annotator;
 
 import org.apache.uima.analysis_engine.ResultSpecification;
 import org.apache.uima.jcas.JCas;
 
 /**
- * Interface for JCas annotators in UIMA SDK v1.x. As of v2.0, JCAS annotators should extend
+ * Interface for JCAS annotators in UIMA SDK v1.x. As of v2.0, JCAS annotators should extend
  * {@link org.apache.uima.analysis_component.JCasAnnotator_ImplBase}.
- * 
  * @deprecated As of release 2.3.0, use JCasAnnotator_ImplBase instead
- * @forRemoval 4.0.0
  */
-@Deprecated(since = "2.3.0")
+@Deprecated
 public interface JTextAnnotator extends BaseAnnotator {
   /**
    * Invokes this annotator's analysis logic. Prior to calling this method, the caller must ensure
@@ -52,5 +51,5 @@ public interface JTextAnnotator extends BaseAnnotator {
    * @throws AnnotatorProcessException
    *           if a failure occurs during processing.
    */
-  void process(JCas aJCas, ResultSpecification aResultSpec) throws AnnotatorProcessException;
+  public void process(JCas aJCas, ResultSpecification aResultSpec) throws AnnotatorProcessException;
 }

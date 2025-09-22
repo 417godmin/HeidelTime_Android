@@ -31,30 +31,30 @@ public interface BaseStatusCallbackListener {
   /**
    * Called when the Collection Processing Manager's initialization has completed.
    */
-  void initializationComplete();
+  public void initializationComplete();
 
   /**
    * Called when the processing of a batch has completed.
    */
-  void batchProcessComplete();
+  public void batchProcessComplete();
 
   /**
    * Called when the processing of an entire collection has completed.
    */
-  void collectionProcessComplete();
+  public void collectionProcessComplete();
 
   /**
    * Called when the processing has been paused.
    */
-  void paused();
+  public void paused();
 
   /**
    * Called when the processing has been resumed (after it had been previously paused).
    */
-  void resumed();
+  public void resumed();
 
   /**
    * Called when the processing has been aborted.
    */
-  void aborted();
+  public void aborted();
 }

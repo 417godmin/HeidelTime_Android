@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.uima.analysis_engine.annotator;
 
 import org.apache.uima.cas.TypeSystem;
@@ -24,11 +25,9 @@ import org.apache.uima.cas.TypeSystem;
  * Base class for annotators in UIMA SDK v1.x. As of v2.0, annotators should extend
  * {@link org.apache.uima.analysis_component.CasAnnotator_ImplBase} or
  * {@link org.apache.uima.analysis_component.JCasAnnotator_ImplBase}.
- * 
  * @deprecated As of release 2.3.0, use CasAnnotator_ImplBase or JCasAnnotator_ImplBase instead
- * @forRemoval 4.0.0
  */
-@Deprecated(since = "2.3.0")
+@Deprecated
 public abstract class Annotator_ImplBase implements BaseAnnotator {
 
   /**
@@ -47,9 +46,8 @@ public abstract class Annotator_ImplBase implements BaseAnnotator {
    * 
    * @see BaseAnnotator#initialize(AnnotatorContext)
    */
-  @Override
-  public void initialize(AnnotatorContext aContext)
-          throws AnnotatorInitializationException, AnnotatorConfigurationException {
+  public void initialize(AnnotatorContext aContext) throws AnnotatorInitializationException,
+          AnnotatorConfigurationException {
     mContext = aContext;
   }
 
@@ -61,9 +59,8 @@ public abstract class Annotator_ImplBase implements BaseAnnotator {
    * 
    * @see BaseAnnotator#typeSystemInit(TypeSystem)
    */
-  @Override
-  public void typeSystemInit(TypeSystem aTypeSystem)
-          throws AnnotatorInitializationException, AnnotatorConfigurationException {
+  public void typeSystemInit(TypeSystem aTypeSystem) throws AnnotatorInitializationException,
+          AnnotatorConfigurationException {
     mTypeSystem = aTypeSystem;
   }
 
@@ -72,7 +69,6 @@ public abstract class Annotator_ImplBase implements BaseAnnotator {
    * 
    * @see BaseAnnotator#destroy()
    */
-  @Override
   public void destroy() {
     // no default behavior
   }
@@ -84,9 +80,8 @@ public abstract class Annotator_ImplBase implements BaseAnnotator {
    * 
    * @see BaseAnnotator#reconfigure()
    */
-  @Override
-  public void reconfigure()
-          throws AnnotatorConfigurationException, AnnotatorInitializationException {
+  public void reconfigure() throws AnnotatorConfigurationException,
+          AnnotatorInitializationException {
     destroy();
     initialize(getContext());
     if (mTypeSystem != null) {
@@ -121,7 +116,6 @@ public abstract class Annotator_ImplBase implements BaseAnnotator {
    * 
    * @see java.lang.Object#finalize()
    */
-  @Override
   protected void finalize() throws Throwable {
     destroy();
   }

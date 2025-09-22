@@ -29,8 +29,8 @@ import org.apache.uima.resource.metadata.impl.XmlizationInfo;
  * 
  * 
  */
-public class FileResourceSpecifier_impl extends MetaDataObject_impl
-        implements FileResourceSpecifier {
+public class FileResourceSpecifier_impl extends MetaDataObject_impl implements
+        FileResourceSpecifier {
 
   static final long serialVersionUID = -4595981135298755811L;
 
@@ -47,27 +47,15 @@ public class FileResourceSpecifier_impl extends MetaDataObject_impl
   }
 
   /**
-   * UIMA-5274 Expand any references to external overrides when name and location are fetched. Cache
-   * the value if the evaluation succeeds (later fetches may not have the settings defined!) Leave
-   * value unmodified if any settings are undefined and log a warning message.
-   * 
    * @see FileResourceSpecifier#getFileUrl()
    */
-  @Override
   public String getFileUrl() {
-    if (mFileUrl != null && mFileUrl.contains("${")) {
-      String value = resolveSettings(mFileUrl);
-      if (value != null) {
-        mFileUrl = value;
-      }
-    }
     return mFileUrl;
   }
 
   /**
    * @see FileResourceSpecifier#setFileUrl(String)
    */
-  @Override
   public void setFileUrl(String aUrl) {
     mFileUrl = aUrl;
   }
@@ -75,7 +63,6 @@ public class FileResourceSpecifier_impl extends MetaDataObject_impl
   /**
    * @see FileResourceSpecifier#getLocalCache()
    */
-  @Override
   public String getLocalCache() {
     return mLocalCache;
   }
@@ -83,17 +70,15 @@ public class FileResourceSpecifier_impl extends MetaDataObject_impl
   /**
    * @see FileResourceSpecifier#setLocalCache(String)
    */
-  @Override
   public void setLocalCache(String aFileName) {
     mLocalCache = aFileName;
   }
 
-  @Override
   protected XmlizationInfo getXmlizationInfo() {
     return XMLIZATION_INFO;
   }
 
-  private static final XmlizationInfo XMLIZATION_INFO = new XmlizationInfo("fileResourceSpecifier",
+  static final private XmlizationInfo XMLIZATION_INFO = new XmlizationInfo("fileResourceSpecifier",
           new PropertyXmlInfo[] { new PropertyXmlInfo("fileUrl"),
               new PropertyXmlInfo("localCache"), });
 }

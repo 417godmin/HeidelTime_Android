@@ -37,21 +37,22 @@ import org.apache.uima.util.InvalidXMLException;
  * deserialized from XML. To resolve the imports, call the {@link #resolveImports()} method. Import
  * resolution is done automatically when a CAS is created using a TypeSystemDescription.
  * <p>
- * Type systems can optionally be assigned a {@link #getName() name}, {@link #getDescription()
- * description}, {@link #getVendor() vendor}, and {@link #getVersion() version}. It is recommended
- * that these properties be set on any type system that is meant to be shared by (imported by)
- * multiple components.
+ * Type systems can optionally be assigned a {@link #getName() name},
+ * {@link #getDescription() description}, {@link #getVendor() vendor}, and
+ * {@link #getVersion() version}. It is recommended that these properties be set on any type system
+ * that is meant to be shared by (imported by) multiple components.
+ * 
+ * 
  */
 public interface TypeSystemDescription extends MetaDataObject {
 
-  TypeSystemDescription[] EMPTY_TYPE_SYSTEM_DESCRIPTIONS = new TypeSystemDescription[0];
-
+  public final static TypeSystemDescription[] EMPTY_TYPE_SYSTEM_DESCRIPTIONS = new TypeSystemDescription[0];
   /**
    * Gets the name of this Type System.
    * 
    * @return the name of this Type System, null if none has been specified.
    */
-  String getName();
+  public String getName();
 
   /**
    * Sets the name of this Type System.
@@ -62,14 +63,14 @@ public interface TypeSystemDescription extends MetaDataObject {
    * @throws UIMA_UnsupportedOperationException
    *           if this object is not modifiable
    */
-  void setName(String aName);
+  public void setName(String aName);
 
   /**
    * Gets the version number of this Type System.
    * 
    * @return the version number of this Type System, as a String, null if none has been specified.
    */
-  String getVersion();
+  public String getVersion();
 
   /**
    * Sets the version number of this Type System.
@@ -80,14 +81,14 @@ public interface TypeSystemDescription extends MetaDataObject {
    * @throws UIMA_UnsupportedOperationException
    *           if this object is not modifiable
    */
-  void setVersion(String aVersion);
+  public void setVersion(String aVersion);
 
   /**
    * Gets the description of this Type System.
    * 
    * @return the description of this Type System, null if none has been specified.
    */
-  String getDescription();
+  public String getDescription();
 
   /**
    * Sets the description of this Type System.
@@ -98,14 +99,14 @@ public interface TypeSystemDescription extends MetaDataObject {
    * @throws UIMA_UnsupportedOperationException
    *           if this object is not modifiable
    */
-  void setDescription(String aDescription);
+  public void setDescription(String aDescription);
 
   /**
    * Gets the vendor of this Type System.
    * 
    * @return the vendor of this Type System, as a String
    */
-  String getVendor();
+  public String getVendor();
 
   /**
    * Sets the vendor of this Type System.
@@ -116,14 +117,14 @@ public interface TypeSystemDescription extends MetaDataObject {
    * @throws UIMA_UnsupportedOperationException
    *           if this object is not modifiable
    */
-  void setVendor(String aVendor);
+  public void setVendor(String aVendor);
 
   /**
    * Gets the imports declared by this Type System.
    * 
    * @return an array of imports declared by this type system.
    */
-  Import[] getImports();
+  public Import[] getImports();
 
   /**
    * Sets the imports declared by this Type System.
@@ -131,14 +132,14 @@ public interface TypeSystemDescription extends MetaDataObject {
    * @param aImports
    *          an array of imports declared by this type system.
    */
-  void setImports(Import... aImports);
+  public void setImports(Import[] aImports);
 
   /**
    * Gets descriptions of all Types in this TypeSystem fragment.
    * 
    * @return descriptions of all Types in this TypeSystem fragment
    */
-  TypeDescription[] getTypes();
+  public TypeDescription[] getTypes();
 
   /**
    * Sets the descriptions of all Types in this TypeSystem fragment.
@@ -146,7 +147,7 @@ public interface TypeSystemDescription extends MetaDataObject {
    * @param aTypes
    *          descriptions of all Types in this TypeSystem fragment
    */
-  void setTypes(TypeDescription... aTypes);
+  public void setTypes(TypeDescription[] aTypes);
 
   /**
    * Adds a Type to this TypeSystem fragment.
@@ -160,7 +161,7 @@ public interface TypeSystemDescription extends MetaDataObject {
    * 
    * @return description of the new Type
    */
-  TypeDescription addType(String aTypeName, String aDescription, String aSupertypeName);
+  public TypeDescription addType(String aTypeName, String aDescription, String aSupertypeName);
 
   /**
    * Retrieves a Type from this TypeSystem fragment.
@@ -170,7 +171,7 @@ public interface TypeSystemDescription extends MetaDataObject {
    * 
    * @return the type with the specified name, <code>null</code> if no such type exists
    */
-  TypeDescription getType(String aTypeName);
+  public TypeDescription getType(String aTypeName);
 
   /**
    * Resolves any import declarations in this type system, adding the imported types directly onto
@@ -181,7 +182,7 @@ public interface TypeSystemDescription extends MetaDataObject {
    * @throws InvalidXMLException
    *           if either the import target does not exist or is invalid
    */
-  void resolveImports() throws InvalidXMLException;
+  public void resolveImports() throws InvalidXMLException;
 
   /**
    * Resolves any import declarations in this type system, adding the imported types directly onto
@@ -192,12 +193,12 @@ public interface TypeSystemDescription extends MetaDataObject {
    * @param aResourceManager
    *          the Resource Manager used to locate type systems imported by name. For example, the
    *          path in which to locate these type systems can be set via the
-   *          {@link ResourceManager#setDataPathElements} method.
+   *          {@link ResourceManager#setDataPath(String)} method.
    * 
    * @throws InvalidXMLException
    *           if either the import target does not exist or is invalid
    */
-  void resolveImports(ResourceManager aResourceManager) throws InvalidXMLException;
+  public void resolveImports(ResourceManager aResourceManager) throws InvalidXMLException;
 
   /**
    * Resolves any import declarations in this type system, adding the imported types directly onto
@@ -216,10 +217,7 @@ public interface TypeSystemDescription extends MetaDataObject {
    * 
    * @throws InvalidXMLException
    *           if either the import target does not exist or is invalid
-   * @deprecated Method is deprecated because it should only be used internally. Scheduled for
-   *             removal in UIMA 4.0.
    */
-  @Deprecated
-  void resolveImports(Collection<String> aAlreadyImportedTypeSystemURLs,
+  public void resolveImports(Collection<String> aAlreadyImportedTypeSystemURLs,
           ResourceManager aResourceManager) throws InvalidXMLException;
 }

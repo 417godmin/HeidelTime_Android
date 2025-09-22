@@ -26,30 +26,37 @@ import org.apache.uima.analysis_engine.metadata.FixedFlow;
 import org.apache.uima.resource.metadata.impl.MetaDataObject_impl;
 import org.apache.uima.resource.metadata.impl.PropertyXmlInfo;
 import org.apache.uima.resource.metadata.impl.XmlizationInfo;
-import org.apache.uima.util.impl.Constants;
 
 /**
  * Reference implementation of {@link FixedFlow}.
+ * 
+ * 
  */
 public class FixedFlow_impl extends MetaDataObject_impl implements FixedFlow {
 
   static final long serialVersionUID = -3582926806264514233L;
 
   /** Array of AnalysisEngine identifiers indicating the fixed flow. */
-  private String[] mFixedFlow = Constants.EMPTY_STRING_ARRAY;
+  private String[] mFixedFlow = new String[0];
 
-  @Override
+  /**
+   * @see FixedFlow#getFlowConstraintsType()
+   */
   public String getFlowConstraintsType() {
     return FLOW_CONSTRAINTS_TYPE;
   }
 
-  @Override
+  /**
+   * @see FixedFlow#getFixedFlow()
+   */
   public String[] getFixedFlow() {
     return mFixedFlow;
   }
 
-  @Override
-  public void setFixedFlow(String... aFlow) {
+  /**
+   * @see FixedFlow#setFixedFlow(String[])
+   */
+  public void setFixedFlow(String[] aFlow) {
     if (aFlow == null) {
       throw new UIMA_IllegalArgumentException(UIMA_IllegalArgumentException.ILLEGAL_ARGUMENT,
               new Object[] { "null", "aFlow", "setFixedFlow" });
@@ -57,7 +64,9 @@ public class FixedFlow_impl extends MetaDataObject_impl implements FixedFlow {
     mFixedFlow = aFlow;
   }
 
-  @Override
+  /**
+   * @see org.apache.uima.analysis_engine.metadata.FlowConstraints#remapIDs(Map)
+   */
   public void remapIDs(Map<String, String> aIDMap) {
     // Can't just overwrite existing array because cloned FixedFlow_impl objects
     // share the same array. Needs more thought.
@@ -76,11 +85,11 @@ public class FixedFlow_impl extends MetaDataObject_impl implements FixedFlow {
     setFixedFlow(newFlow);
   }
 
-  @Override
   protected XmlizationInfo getXmlizationInfo() {
     return XMLIZATION_INFO;
   }
 
-  private static final XmlizationInfo XMLIZATION_INFO = new XmlizationInfo("fixedFlow",
+  static final private XmlizationInfo XMLIZATION_INFO = new XmlizationInfo("fixedFlow",
           new PropertyXmlInfo[] { new PropertyXmlInfo("fixedFlow", null, true, "node") });
+
 }

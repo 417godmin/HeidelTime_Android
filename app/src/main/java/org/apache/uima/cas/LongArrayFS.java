@@ -21,16 +21,15 @@ package org.apache.uima.cas;
 
 /**
  * Long array interface. To create a long array object, use
- * {@link CAS#createLongArrayFS CAS.createLongArrayFS(int)} or new
- * LongArray(aJCas, length)
+ * {@link CAS#createLongArrayFS CAS.createLongArrayFS()}.
+ * 
+ * 
  */
-public interface LongArrayFS extends CommonArrayFS<Long> {
+public interface LongArrayFS extends CommonArrayFS {
 
   /**
    * Get the i-th element from the array.
-   * 
-   * @param i
-   *          the index
+   * @param i the index
    * @return The i-th element.
    * @exception ArrayIndexOutOfBoundsException
    *              If the index is out of bounds.
@@ -50,8 +49,8 @@ public interface LongArrayFS extends CommonArrayFS<Long> {
   void set(int i, long b) throws ArrayIndexOutOfBoundsException;
 
   /**
-   * Copy the contents of the array from <code>start</code> to <code>end</code> to the destination
-   * <code>destArray</code> with destination offset <code>destOffset</code>.
+   * Copy the contents of the array from <code>start</code> to <code>end</code> to the
+   * destination <code>destArray</code> with destination offset <code>destOffset</code>.
    * 
    * @param srcOffset
    *          The index of the first element to copy.

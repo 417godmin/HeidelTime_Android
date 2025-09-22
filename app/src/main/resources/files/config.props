@@ -1,0 +1,48 @@
+################################
+##           MAIN             ##
+################################
+considerDate = true
+considerDuration = true
+considerSet = true
+considerTime = true
+considerTemponym = false
+
+###################################
+# Path to TreeTagger home directory
+###################################
+# 如果你没有打包 TreeTagger，可禁用语言功能，或者放入 base + /treetagger
+treeTaggerHome =
+chineseTokenizerPath =
+
+##################################
+# paths to JVnTextPro model paths:
+##################################
+sent_model_path =
+word_model_path =
+pos_model_path =
+
+#####################################################
+# paths to Stanford POS Tagger model or config files:
+#####################################################
+model_path =
+config_path =
+
+########################################
+## paths to hunpos and its tagger files:
+########################################
+hunpos_path =
+hunpos_model_name =
+
+################################
+# Relative path of type system in HeidelTime home directory
+################################
+typeSystemHome = /data/data/com.example.heideltime_android/files/desc/type/HeidelTime_TypeSystem.xml
+typeSystemHome_DKPro =
+
+uimaVarDate = Date
+uimaVarDuration = Duration
+uimaVarLanguage = Language
+uimaVarSet = Set
+uimaVarTime = Time
+uimaVarTemponym = Temponym
+uimaVarTypeToProcess = Type

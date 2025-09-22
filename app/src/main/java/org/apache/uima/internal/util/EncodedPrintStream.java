@@ -27,8 +27,8 @@ import java.io.UnsupportedEncodingException;
  * Allow a <code>PrintStream</code> to specify an encoding.
  * 
  * <p>
- * This functionality is provided out of the box by the Java 1.4 version of
- * <code>PrintStream</code>. This class is strictly for backwards compatibility.
+ * This functionality is provided out of the box by the Java 1.4 version of <code>PrintStream</code>.
+ * This class is strictly for backwards compatibility.
  * 
  */
 public class EncodedPrintStream extends PrintStream {
@@ -72,48 +72,42 @@ public class EncodedPrintStream extends PrintStream {
     "test".getBytes(encoding);
   }
 
-  @Override
-  public final void writeBytes(byte[] bytes) {
+  // 改方法名，避免与父类冲突
+  private final void writeBytesInternal(byte[] bytes) {
     super.write(bytes, 0, bytes.length);
   }
 
-  @Override
   public void print(char c) {
     try {
-      writeBytes((new String(new char[] { c })).getBytes(encoding));
+      writeBytesInternal((new String(new char[] { c })).getBytes(encoding));
     } catch (UnsupportedEncodingException e) {
     }
   }
 
-  @Override
   public void print(char[] s) {
     try {
-      writeBytes((new String(s)).getBytes(encoding));
+      writeBytesInternal((new String(s)).getBytes(encoding));
     } catch (UnsupportedEncodingException e) {
     }
   }
 
-  @Override
   public void print(String s) {
     try {
-      writeBytes(s.getBytes(encoding));
+      writeBytesInternal(s.getBytes(encoding));
     } catch (UnsupportedEncodingException e) {
     }
   }
 
-  @Override
   public void println(char x) {
     print(x);
     println();
   }
 
-  @Override
   public void println(char[] x) {
     print(x);
     println();
   }
 
-  @Override
   public void println(String x) {
     print(x);
     println();

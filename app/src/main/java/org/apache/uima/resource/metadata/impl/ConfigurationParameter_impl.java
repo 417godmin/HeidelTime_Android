@@ -27,16 +27,18 @@ import org.apache.uima.internal.util.XMLUtils;
 import org.apache.uima.resource.metadata.ConfigurationParameter;
 import org.apache.uima.util.InvalidXMLException;
 import org.apache.uima.util.XMLParser;
-import org.apache.uima.util.impl.Constants;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
  * Reference implementation of {@link ConfigurationParameter}.
+ * 
+ * 
  */
-public class ConfigurationParameter_impl extends MetaDataObject_impl
-        implements ConfigurationParameter {
+
+public class ConfigurationParameter_impl extends MetaDataObject_impl implements
+        ConfigurationParameter {
 
   static final long serialVersionUID = 4234432343384779535L;
 
@@ -62,70 +64,94 @@ public class ConfigurationParameter_impl extends MetaDataObject_impl
    * The parameters that this Configuration Parameter overrides. Elements of this array are of the
    * form componentName/parameterName.
    */
-  private String[] mOverrides = Constants.EMPTY_STRING_ARRAY;
+  private String[] mOverrides = new String[0];
 
-  @Override
+  /**
+   * @see ConfigurationParameter#getName()
+   */
   public String getName() {
     return mName;
   }
 
-  @Override
+  /**
+   * @see ConfigurationParameter#setName(String)
+   */
   public void setName(String aName) {
     mName = aName;
   }
 
-  @Override
+  /**
+   * @see ConfigurationParameter#getExternalOverrideName()
+   */
   public String getExternalOverrideName() {
     return mExternalOverrideName;
   }
 
-  @Override
+  /**
+   * @see ConfigurationParameter#setExternalOverrideName(String)
+   */
   public void setExternalOverrideName(String aExternalOverrideName) {
     mExternalOverrideName = aExternalOverrideName;
   }
 
-  @Override
+  /**
+   * @see ConfigurationParameter#getDescription()
+   */
   public String getDescription() {
     return mDescription;
   }
 
-  @Override
+  /**
+   * @see ConfigurationParameter#setDescription(String)
+   */
   public void setDescription(String aDescription) {
     mDescription = aDescription;
   }
 
-  @Override
+  /**
+   * @see ConfigurationParameter#getType()
+   */
   public String getType() {
     return mType;
   }
 
-  @Override
+  /**
+   * @see ConfigurationParameter#setType(String)
+   */
   public void setType(String aType) throws UIMA_IllegalArgumentException {
     // check to make sure value is legal
     if (!isValidDataTypeName(aType)) {
       throw new UIMA_IllegalArgumentException(
-              UIMA_IllegalArgumentException.METADATA_ATTRIBUTE_TYPE_MISMATCH,
-              new Object[] { aType, "type" });
+              UIMA_IllegalArgumentException.METADATA_ATTRIBUTE_TYPE_MISMATCH, new Object[] { aType,
+                  "type" });
     }
     mType = aType;
   }
 
-  @Override
+  /**
+   * @see ConfigurationParameter#isMultiValued()
+   */
   public boolean isMultiValued() {
     return mMultiValued;
   }
 
-  @Override
+  /**
+   * @see ConfigurationParameter#setMultiValued(boolean)
+   */
   public void setMultiValued(boolean aMultiValued) {
     mMultiValued = aMultiValued;
   }
 
-  @Override
+  /**
+   * @see ConfigurationParameter#isMandatory()
+   */
   public boolean isMandatory() {
     return mMandatory;
   }
 
-  @Override
+  /**
+   * @see ConfigurationParameter#setMandatory(boolean)
+   */
   public void setMandatory(boolean aMandatory) {
     mMandatory = aMandatory;
   }
@@ -143,21 +169,32 @@ public class ConfigurationParameter_impl extends MetaDataObject_impl
    * public void setPublished(boolean aPublished) { mPublished = aPublished; }
    */
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.resource.metadata.ConfigurationParameter#getOverrides()
+   */
   public String[] getOverrides() {
     return mOverrides.clone();
   }
 
-  @Override
-  public void setOverrides(String... aOverrides) {
-    if (aOverrides == null) {
-      mOverrides = Constants.EMPTY_STRING_ARRAY;
-    } else {
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.resource.metadata.ConfigurationParameter#setOverrides(java.lang.String[])
+   */
+  public void setOverrides(String[] aOverrides) {
+    if (aOverrides == null)
+      mOverrides = new String[0];
+    else
       mOverrides = aOverrides.clone();
-    }
   }
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.resource.metadata.ConfigurationParameter#addOverride(java.lang.String)
+   */
   public void addOverride(String aOverride) {
     String[] current = getOverrides();
     String[] newArr = new String[current.length + 1];
@@ -166,7 +203,11 @@ public class ConfigurationParameter_impl extends MetaDataObject_impl
     setOverrides(newArr);
   }
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.resource.metadata.ConfigurationParameter#removeOverride(java.lang.String)
+   */
   public void removeOverride(String aOverride) {
     String[] current = getOverrides();
     for (int i = 0; i < current.length; i++) {
@@ -194,47 +235,36 @@ public class ConfigurationParameter_impl extends MetaDataObject_impl
    *          true if and only if the configuration parameter is multi-valued. If true,
    *          <code>aClass</code> is expected to be an array.
    * 
-   * @return true if and only if an object of class <code>aClass</code> can be legally assigned to a
-   *         parameter described by <code>aTypeName</code> and <code>aMultiValued</code>.
+   * @return true if and only if an object of class <code>aClass</code> can be legally assigned to
+   *         a parameter described by <code>aTypeName</code> and <code>aMultiValued</code>.
    */
   public static boolean typeMatch(Class aClass, String aTypeName, boolean aMultiValued) {
-    if (aTypeName == null) {
-      throw new IllegalArgumentException("Parameter type cannot be null");
-    }
-
     if (aMultiValued) {
       // aClass must be an array
-      if (!aClass.isArray()) {
+      if (!aClass.isArray())
         return false;
-      }
 
       // Component Type of the array must match
       return typeMatch(aClass.getComponentType(), aTypeName, false);
-    }
-
-    // not multi-valued
-    switch (aTypeName) {
-      case TYPE_STRING:
+    } else // not multi-valued
+    {
+      if (aTypeName.equals(TYPE_STRING))
         return aClass == String.class;
-      case TYPE_BOOLEAN:
+      else if (aTypeName.equals(TYPE_BOOLEAN))
         return aClass == Boolean.class;
-      case TYPE_INTEGER:
+      else if (aTypeName.equals(TYPE_INTEGER))
         return aClass == Integer.class;
-      case TYPE_LONG:
-        return aClass == Long.class;
-      case TYPE_FLOAT:
+      else if (aTypeName.equals(TYPE_FLOAT))
         return aClass == Float.class;
-      case TYPE_DOUBLE:
-        return aClass == Double.class;
-      default:
-        throw new IllegalArgumentException("Unsupported parameter type [" + aTypeName + "]");
+      else
+        return false;
     }
   }
 
   /**
    * Determines whether the given String is a valid name for a data type. Valid data type names are
-   * legal arguments to the {@link #setType(String)} method, and are defined by the TYPE constants
-   * on the {@link ConfigurationParameter} interface.
+   * legal arguments to the {@link #setType(String)} method, and are defined by the TYPE constants on
+   * the {@link ConfigurationParameter} interface.
    * 
    * @param aTypeName
    *          an Object to test
@@ -243,14 +273,8 @@ public class ConfigurationParameter_impl extends MetaDataObject_impl
    *         data type name.
    */
   protected static boolean isValidDataTypeName(Object aTypeName) {
-    if (!(aTypeName instanceof String)) {
-      return false;
-    }
-
-    return switch ((String) aTypeName) {
-      case TYPE_STRING, TYPE_BOOLEAN, TYPE_INTEGER, TYPE_LONG, TYPE_FLOAT, TYPE_DOUBLE -> true;
-      default -> false;
-    };
+    return TYPE_STRING.equals(aTypeName) || TYPE_BOOLEAN.equals(aTypeName)
+            || TYPE_INTEGER.equals(aTypeName) || TYPE_FLOAT.equals(aTypeName);
   }
 
   /**
@@ -268,7 +292,6 @@ public class ConfigurationParameter_impl extends MetaDataObject_impl
    * @param aOptions
    *          option settings
    */
-  @Override
   protected void readArrayPropertyValueFromXMLElement(PropertyXmlInfo aPropXmlInfo,
           Class aPropClass, Element aElement, XMLParser aParser, XMLParser.ParsingOptions aOptions)
           throws InvalidXMLException {
@@ -279,41 +302,41 @@ public class ConfigurationParameter_impl extends MetaDataObject_impl
 
       // iterate through children, and for each element construct a value,
       // adding it to a list
-      List<String> valueList = new ArrayList<>();
+      List<String> valueList = new ArrayList<String>();
       for (int i = 0; i < numChildren; i++) {
         Node curNode = elems.item(i);
-        if (curNode instanceof Element curElem) {
+        if (curNode instanceof Element) {
+          Element curElem = (Element) curNode;
+
           // does the PropertyXmlInfo specify the expected tag name?
           if ("parameter".equals(curElem.getTagName()) || "param".equals(curElem.getTagName())) {
             // get text of element
             String elemText = XMLUtils.getText(curElem, aOptions.expandEnvVarRefs);
             valueList.add(elemText);
-          } else {
+          } else
             // element type does not match
-            throw new InvalidXMLException(InvalidXMLException.INVALID_ELEMENT_TYPE,
-                    new Object[] { aPropXmlInfo.arrayElementTagName, curElem.getTagName() });
-          }
+            throw new InvalidXMLException(InvalidXMLException.INVALID_ELEMENT_TYPE, new Object[] {
+                aPropXmlInfo.arrayElementTagName, curElem.getTagName() });
         }
       }
       // set property
       String[] overridesArray = new String[valueList.size()];
       valueList.toArray(overridesArray);
-      setOverrides(overridesArray);
+      this.setOverrides(overridesArray);
     } else {
       super.readArrayPropertyValueFromXMLElement(aPropXmlInfo, aPropClass, aElement, aParser,
               aOptions);
     }
   }
 
-  @Override
   protected XmlizationInfo getXmlizationInfo() {
     return XMLIZATION_INFO;
   }
 
-  private static final XmlizationInfo XMLIZATION_INFO = new XmlizationInfo("configurationParameter",
-          new PropertyXmlInfo[] { new PropertyXmlInfo("name"),
-              new PropertyXmlInfo("externalOverrideName"), new PropertyXmlInfo("description"),
-              new PropertyXmlInfo("type"), new PropertyXmlInfo("multiValued"),
-              new PropertyXmlInfo("mandatory"),
+  static final private XmlizationInfo XMLIZATION_INFO = new XmlizationInfo(
+          "configurationParameter", new PropertyXmlInfo[] { new PropertyXmlInfo("name"),
+              new PropertyXmlInfo("externalOverrideName"),
+              new PropertyXmlInfo("description"), new PropertyXmlInfo("type"),
+              new PropertyXmlInfo("multiValued"), new PropertyXmlInfo("mandatory"),
               new PropertyXmlInfo("overrides", "overrides", true, "parameter"), });
 }

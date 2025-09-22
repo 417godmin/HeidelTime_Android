@@ -27,8 +27,8 @@ import org.apache.uima.util.InvalidXMLException;
 
 /**
  * Description of a collection of CAS feature structure indexes. This implements
- * <code>MetaDataObject</code>, which implements {@link org.apache.uima.util.XMLizable}, so it can
- * be serialized to and deserialized from an XML element.
+ * <code>MetaDataObject</code>, which implements {@link org.apache.uima.util.XMLizable}, so it
+ * can be serialized to and deserialized from an XML element.
  * <p>
  * FS Index Collections can declare that they {@link #getImports() import} other FS Index
  * Collections. At runtime, these imports will be resolved to create a single logical FS Index
@@ -39,16 +39,20 @@ import org.apache.uima.util.InvalidXMLException;
  * automatically when a CAS is created using a FsIndexCollection.
  * <p>
  * FS Index Collections can optionally be assigned a {@link #getName() name},
- * {@link #getDescription() description}, {@link #getVendor() vendor}, and {@link #getVersion()
- * version}. It is recommended that these properties be set on any FS Index Collection that is meant
- * to be shared by (imported by) multiple components.
+ * {@link #getDescription() description}, {@link #getVendor() vendor}, and
+ * {@link #getVersion() version}. It is recommended that these properties be set on any FS Index
+ * Collection that is meant to be shared by (imported by) multiple components.
+ * 
+ * 
  */
 public interface FsIndexCollection extends MetaDataObject {
 
   /**
+   * Gets the name of this FS Index Collection.
+   * 
    * @return the name of this FS Index Collection, null if none has been specified.
    */
-  String getName();
+  public String getName();
 
   /**
    * Sets the name of this FS Index Collection.
@@ -59,13 +63,15 @@ public interface FsIndexCollection extends MetaDataObject {
    * @throws UIMA_UnsupportedOperationException
    *           if this object is not modifiable
    */
-  void setName(String aName);
+  public void setName(String aName);
 
   /**
+   * Gets the version number of this FS Index Collection.
+   * 
    * @return the version number of this FS Index Collection, as a String, null if none has been
    *         specified.
    */
-  String getVersion();
+  public String getVersion();
 
   /**
    * Sets the version number of this FS Index Collection.
@@ -76,14 +82,14 @@ public interface FsIndexCollection extends MetaDataObject {
    * @throws UIMA_UnsupportedOperationException
    *           if this object is not modifiable
    */
-  void setVersion(String aVersion);
+  public void setVersion(String aVersion);
 
   /**
    * Gets the description of this FS Index Collection.
    * 
    * @return the description of this FS Index Collection, null if none has been specified.
    */
-  String getDescription();
+  public String getDescription();
 
   /**
    * Sets the description of this FS Index Collection.
@@ -94,14 +100,14 @@ public interface FsIndexCollection extends MetaDataObject {
    * @throws UIMA_UnsupportedOperationException
    *           if this object is not modifiable
    */
-  void setDescription(String aDescription);
+  public void setDescription(String aDescription);
 
   /**
    * Gets the vendor of this FS Index Collection.
    * 
    * @return the vendor of this FS Index Collection, as a String
    */
-  String getVendor();
+  public String getVendor();
 
   /**
    * Sets the vendor of this FS Index Collection.
@@ -112,14 +118,14 @@ public interface FsIndexCollection extends MetaDataObject {
    * @throws UIMA_UnsupportedOperationException
    *           if this object is not modifiable
    */
-  void setVendor(String aVendor);
+  public void setVendor(String aVendor);
 
   /**
    * Gets the imports declared by this FS Index Collection.
    * 
    * @return an array of imports declared by this FS Index Collection.
    */
-  Import[] getImports();
+  public Import[] getImports();
 
   /**
    * Sets the imports declared by this FS Index Collection.
@@ -130,7 +136,7 @@ public interface FsIndexCollection extends MetaDataObject {
    * @throws UIMA_UnsupportedOperationException
    *           if this object is not modifiable
    */
-  void setImports(Import... aImports);
+  public void setImports(Import[] aImports);
 
   /**
    * Retrieves the FS Index descriptions that are part of this collection. These define the indexes
@@ -138,7 +144,7 @@ public interface FsIndexCollection extends MetaDataObject {
    * 
    * @return a description of the FS Indexes that comprise this FS Index Collection
    */
-  FsIndexDescription[] getFsIndexes();
+  public FsIndexDescription[] getFsIndexes();
 
   /**
    * Retrieves the FS Index descriptions that are part of this collection. These define the indexes
@@ -150,7 +156,7 @@ public interface FsIndexCollection extends MetaDataObject {
    * @throws UIMA_UnsupportedOperationException
    *           if this object is not modifiable
    */
-  void setFsIndexes(FsIndexDescription... aFSIndexes);
+  public void setFsIndexes(FsIndexDescription[] aFSIndexes);
 
   /**
    * Adds an FS Index description to this collection.
@@ -161,7 +167,7 @@ public interface FsIndexCollection extends MetaDataObject {
    * @throws UIMA_UnsupportedOperationException
    *           if this object is not modifiable
    */
-  void addFsIndex(FsIndexDescription aFsIndexDescription);
+  public void addFsIndex(FsIndexDescription aFsIndexDescription);
 
   /**
    * Removes an FS Index description from this collection.
@@ -173,7 +179,7 @@ public interface FsIndexCollection extends MetaDataObject {
    * @throws UIMA_UnsupportedOperationException
    *           if this object is not modifiable
    */
-  void removeFsIndex(FsIndexDescription aFsIndexDescription);
+  public void removeFsIndex(FsIndexDescription aFsIndexDescription);
 
   /**
    * Resolves any import declarations in this FS Index Collection, adding the imported
@@ -184,7 +190,7 @@ public interface FsIndexCollection extends MetaDataObject {
    * @throws InvalidXMLException
    *           if either the import target does not exist or is invalid
    */
-  void resolveImports() throws InvalidXMLException;
+  public void resolveImports() throws InvalidXMLException;
 
   /**
    * Resolves any import declarations in this FS Index Collection, adding the imported
@@ -200,7 +206,7 @@ public interface FsIndexCollection extends MetaDataObject {
    * @throws InvalidXMLException
    *           if either the import target does not exist or is invalid
    */
-  void resolveImports(ResourceManager aResourceManager) throws InvalidXMLException;
+  public void resolveImports(ResourceManager aResourceManager) throws InvalidXMLException;
 
   /**
    * Resolves any import declarations in this FS Index Collection, adding the imported
@@ -219,10 +225,7 @@ public interface FsIndexCollection extends MetaDataObject {
    * 
    * @throws InvalidXMLException
    *           if either the import target does not exist or is invalid
-   * @deprecated Method is deprecated because it should only be used internally. Scheduled for
-   *             removal in UIMA 4.0.
    */
-  @Deprecated
-  void resolveImports(Collection<String> aAlreadyImportedFsIndexCollectionURLs,
+  public void resolveImports(Collection<String> aAlreadyImportedFsIndexCollectionURLs,
           ResourceManager aResourceManager) throws InvalidXMLException;
 }

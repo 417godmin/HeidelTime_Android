@@ -24,7 +24,6 @@ import java.util.Collection;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.resource.ResourceConfigurationException;
 import org.apache.uima.resource.ResourceInitializationException;
-import org.apache.uima.util.Logger;
 
 /**
  * Implementation base class for FlowControllers. Normally developers do not extend this class
@@ -43,49 +42,66 @@ import org.apache.uima.util.Logger;
 public abstract class FlowController_ImplBase implements FlowController {
   private FlowControllerContext mContext = null;
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.flow.FlowController#initialize(org.apache.uima.flow.FlowControllerContext)
+   */
   public void initialize(FlowControllerContext aContext) throws ResourceInitializationException {
     mContext = aContext;
   }
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.flow.FlowController#reconfigure()
+   */
   public void reconfigure() throws ResourceInitializationException, ResourceConfigurationException {
     destroy();
     initialize(mContext);
   }
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.flow.FlowController#batchProcessComplete()
+   */
   public void batchProcessComplete() throws AnalysisEngineProcessException {
   }
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.flow.FlowController#collectionProcessComplete()
+   */
   public void collectionProcessComplete() throws AnalysisEngineProcessException {
   }
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.flow.FlowController#destroy()
+   */
   public void destroy() {
   }
+  
+  
 
   /**
-   * Does nothing by default. Subclasses may override this to support adding new AnalysisEngines to
-   * the flow.
-   * 
+   * Does nothing by default.  Subclasses may override this to support adding new
+   * AnalysisEngines to the flow.
    * @see FlowController#addAnalysisEngines(Collection)
    */
-  @Override
   public void addAnalysisEngines(Collection<String> aKeys) {
-    // does nothing by default
+    //does nothing by default
   }
 
   /**
-   * Throws an AnalysisEngineProcessException by default. Subclasses may override this to support
-   * removing AnalysisEngines from the flow.
-   * 
+   * Throws an AnalysisEngineProcessException by default.  Subclasses may override
+   * this to support removing AnalysisEngines from the flow.
    * @see FlowController#removeAnalysisEngines(Collection)
    */
-  @Override
-  public void removeAnalysisEngines(Collection<String> aKeys)
-          throws AnalysisEngineProcessException {
+  public void removeAnalysisEngines(Collection<String> aKeys) throws AnalysisEngineProcessException {
     throw new AnalysisEngineProcessException(
             AnalysisEngineProcessException.REMOVE_AE_FROM_FLOW_NOT_SUPPORTED,
             new Object[] { getClass().getName() });
@@ -100,14 +116,5 @@ public abstract class FlowController_ImplBase implements FlowController {
    */
   protected FlowControllerContext getContext() {
     return mContext;
-  }
-
-  /**
-   * Gets the logger for this FlowController
-   * 
-   * @return the logger for this FlowController
-   */
-  protected Logger getLogger() { // https://issues.apache.org/jira/projects/UIMA/issues/UIMA-5565
-    return getContext().getLogger();
   }
 }

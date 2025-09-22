@@ -26,6 +26,8 @@ package org.apache.uima.resource;
  * The {@link #getDataResource(String[])} takes an array of string parameters and returns a
  * {@link DataResource} object that can be used to access the data that is appropriate for those
  * parameter values.
+ * 
+ * 
  */
 public interface ParameterizedDataResource extends Resource {
 
@@ -41,5 +43,5 @@ public interface ParameterizedDataResource extends Resource {
    * @throws ResourceInitializationException
    *           if no <code>DataResource</code> could be initialized from the specified parameters
    */
-  DataResource getDataResource(String... aParams) throws ResourceInitializationException;
+  public DataResource getDataResource(String[] aParams) throws ResourceInitializationException;
 }

@@ -19,10 +19,9 @@
 
 package org.apache.uima.internal.util.rb_trees;
 
-import org.apache.uima.util.impl.Constants;
 
 /**
- * map&lt;int, int%gt; uses separate objects (IntRBTNode) as nodes
+ * map&lt;int, int%gt; uses separate objects (IntRBTNode) as nodes  
  * 
  * See the {@link RedBlackTree RedBlackTree} class. This is a
  * specialized instance with ints as elements.
@@ -46,10 +45,11 @@ public class IntRedBlackTree {
 
   /** Default constructor, does nothing. */
   public IntRedBlackTree() {
+    super();
   }
 
   public final int size() {
-    return size;
+    return this.size;
   }
 
   // ////////////////////////////////////////////////////////////////
@@ -57,16 +57,16 @@ public class IntRedBlackTree {
   // ////////////////////////////////////////////////////////////////
 
   public final void clear() {
-    root = null;
-    size = 0;
+    this.root = null;
+    this.size = 0;
   }
 
   public final boolean containsKey(int key) {
-    return (IntRBTNode.find(root, key) == null) ? false : true;
+    return (IntRBTNode.find(this.root, key) == null) ? false : true;
   }
 
   public final boolean containsValue(int o) {
-    IntRBTIterator it = iterator();
+    IntRBTIterator it = this.iterator();
     while (it.hasNext()) {
       if (o == it.next()) {
         return true;
@@ -82,12 +82,13 @@ public class IntRedBlackTree {
    *          The key under which the int is to be inserted.
    * @param el
    *          The int to be inserted.
-   * @return <code>true</code>, if the key was not in the tree; <code>false</code>, if an element
-   *         with that key was already in the tree. The old element is overwritten with the new one.
+   * @return <code>true</code>, if the key was not in the tree; <code>false</code>, if an
+   *         element with that key was already in the tree. The old element is overwritten with the
+   *         new one.
    */
   public final boolean put(int key, int el) {
     if (put(new IntRBTNode(key, el))) {
-      size++;
+      this.size++;
       return true;
     }
     return false;
@@ -101,11 +102,11 @@ public class IntRedBlackTree {
    * @return -
    */
   public final int remove(int key) throws java.util.NoSuchElementException {
-    IntRBTNode node = IntRBTNode.find(root, key);
+    IntRBTNode node = IntRBTNode.find(this.root, key);
     int ret;
     if (node != null) {
       ret = node.element;
-      size--;
+      this.size--;
       IntRBTNode.delete(this, node);
     } else {
       throw new java.util.NoSuchElementException();
@@ -114,10 +115,10 @@ public class IntRedBlackTree {
   }
 
   public final int get(int key) throws java.util.NoSuchElementException {
-    if (root == null) {
+    if (this.root == null) {
       throw new java.util.NoSuchElementException();
     }
-    IntRBTNode node = IntRBTNode.find(root, key);
+    IntRBTNode node = IntRBTNode.find(this.root, key);
     if (node == null) {
       throw new java.util.NoSuchElementException();
     }
@@ -125,13 +126,13 @@ public class IntRedBlackTree {
   }
 
   public final boolean isEmpty() {
-    return (root == null);
+    return (this.root == null);
   }
 
   public final int[] keySet() {
-    int[] set = new int[size];
-    if (root != null) {
-      root.keys(0, set);
+    int[] set = new int[this.size];
+    if (this.root != null) {
+      this.root.keys(0, set);
     }
     return set;
   }
@@ -142,14 +143,14 @@ public class IntRedBlackTree {
   }
 
   public final int getFirst() {
-    return getFirstNode().element;
+    return this.getFirstNode().element;
   }
 
   private final IntRBTNode getFirstNode() {
-    if (root == null) {
+    if (this.root == null) {
       return null;
     }
-    IntRBTNode x = root;
+    IntRBTNode x = this.root;
     while (x.left != null) {
       x = x.left;
     }
@@ -165,19 +166,19 @@ public class IntRedBlackTree {
     IntRBTNode current;
 
     IntRBTIterator(IntRedBlackTree tree) {
-      current = tree.getFirstNode();
+      this.current = tree.getFirstNode();
     }
 
     public boolean hasNext() {
-      return (current != null);
+      return (this.current != null);
     }
 
     public int next() {
-      if (current == null) {
+      if (this.current == null) {
         throw new java.util.NoSuchElementException();
       }
-      int ret = current.element;
-      current = current.successor();
+      int ret = this.current.element;
+      this.current = this.current.successor();
       return ret;
     }
 
@@ -188,10 +189,10 @@ public class IntRedBlackTree {
 
   /** Debugging aid. */
   public void printKeys() {
-    if (root != null) {
-      root.printKeys(0);
+    if (this.root != null) {
+      this.root.printKeys(0);
     }
-    System.out.println("Size: " + size);
+    System.out.println("Size: " + this.size);
   }
 
   /**
@@ -204,15 +205,15 @@ public class IntRedBlackTree {
    * @param offset
    *          An offset for internal addressing. If <code>offset &gt; 0</code>, the addresses
    *          generated for right daughters in two-daughter nodes are shifted to the right. This is
-   *          useful if the resulting array will be copied to a certain <code>offset</code> position
-   *          in a different array.
+   *          useful if the resulting array will be copied to a certain <code>offset</code>
+   *          position in a different array.
    * @return The resulting array representation.
    */
   public int[] toArray(int offset) {
-    if (root == null) {
-      return Constants.EMPTY_INT_ARRAY;
+    if (this.root == null) {
+      return new int[0];
     }
-    return root.toArray(offset);
+    return this.root.toArray(offset);
   }
 
   public IntRedBlackTree copy() {
@@ -222,4 +223,5 @@ public class IntRedBlackTree {
     return c;
   }
 
+  
 }

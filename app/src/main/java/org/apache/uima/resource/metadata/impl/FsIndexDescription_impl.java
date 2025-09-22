@@ -23,11 +23,13 @@ import org.apache.uima.UIMA_IllegalArgumentException;
 import org.apache.uima.resource.metadata.FsIndexDescription;
 import org.apache.uima.resource.metadata.FsIndexKeyDescription;
 
+/**
+ * 
+ * 
+ */
 public class FsIndexDescription_impl extends MetaDataObject_impl implements FsIndexDescription {
 
   static final long serialVersionUID = 8939000196947456114L;
-
-  static final FsIndexKeyDescription[] EMPTY_FS_INDEX_KEY_DESCRIPTION_ARRAY = new FsIndexKeyDescription[0];
 
   private String mLabel;
 
@@ -35,50 +37,66 @@ public class FsIndexDescription_impl extends MetaDataObject_impl implements FsIn
 
   private String mKind;
 
-  private FsIndexKeyDescription[] mKeys = EMPTY_FS_INDEX_KEY_DESCRIPTION_ARRAY;
+  private FsIndexKeyDescription[] mKeys = new FsIndexKeyDescription[0];
 
   /* Doesn't override a super method */
   protected String getXMLElementTagName() {
     return "fsIndexDescription";
   }
 
-  @Override
+  /**
+   * @see FsIndexDescription#getLabel()
+   */
   public String getLabel() {
     return mLabel;
   }
 
-  @Override
+  /**
+   * @see FsIndexDescription#setLabel(String)
+   */
   public void setLabel(String aLabel) {
     mLabel = aLabel;
   }
 
-  @Override
+  /**
+   * @see FsIndexDescription#getTypeName()
+   */
   public String getTypeName() {
     return mTypeName;
   }
 
-  @Override
+  /**
+   * @see FsIndexDescription#setTypeName(String)
+   */
   public void setTypeName(String aTypeName) {
     mTypeName = aTypeName;
   }
 
-  @Override
+  /**
+   * @see FsIndexDescription#getKind
+   */
   public String getKind() {
     return mKind;
   }
 
-  @Override
+  /**
+   * @see FsIndexDescription#setKind(String)
+   */
   public void setKind(String aKind) {
     mKind = aKind;
   }
 
-  @Override
+  /**
+   * @see FsIndexDescription#getKeys()
+   */
   public FsIndexKeyDescription[] getKeys() {
     return mKeys;
   }
 
-  @Override
-  public void setKeys(FsIndexKeyDescription... aKeys) {
+  /**
+   * @see FsIndexDescription#setKeys(FsIndexKeyDescription[])
+   */
+  public void setKeys(FsIndexKeyDescription[] aKeys) {
     if (aKeys == null) {
       throw new UIMA_IllegalArgumentException(UIMA_IllegalArgumentException.ILLEGAL_ARGUMENT,
               new Object[] { "null", "aKeys", "setKeys" });
@@ -86,12 +104,11 @@ public class FsIndexDescription_impl extends MetaDataObject_impl implements FsIn
     mKeys = aKeys;
   }
 
-  @Override
   protected XmlizationInfo getXmlizationInfo() {
     return XMLIZATION_INFO;
   }
 
-  private static final XmlizationInfo XMLIZATION_INFO = new XmlizationInfo("fsIndexDescription",
+  static final private XmlizationInfo XMLIZATION_INFO = new XmlizationInfo("fsIndexDescription",
           new PropertyXmlInfo[] { new PropertyXmlInfo("label"), new PropertyXmlInfo("typeName"),
               new PropertyXmlInfo("kind"), new PropertyXmlInfo("keys", true)
 

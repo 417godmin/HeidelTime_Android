@@ -48,7 +48,7 @@ public class AnalysisEngineUtils {
    */
   public static FSMatchConstraint createOutputFilter(AnalysisEngineMetaData aMetaData) {
     // get a list of the AE's output type names
-    Set<String> outputTypes = new TreeSet<>();
+    Set<String> outputTypes = new TreeSet<String>();
     // outputTypes.add("Document"); //always output the document
     Capability[] capabilities = aMetaData.getCapabilities();
     for (int i = 0; i < capabilities.length; i++) {
@@ -62,7 +62,7 @@ public class AnalysisEngineUtils {
 
     FSTypeConstraint constraint = ConstraintFactory.instance().createTypeConstraint();
 
-    for (String typeName : outputTypes) {
+    for (String typeName  : outputTypes) {
       // add type to constraint
       constraint.add(typeName);
     }

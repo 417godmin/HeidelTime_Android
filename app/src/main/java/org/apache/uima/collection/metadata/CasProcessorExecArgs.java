@@ -31,37 +31,36 @@ public interface CasProcessorExecArgs extends Serializable// extends MetaDataObj
   /**
    * Adds new {@link CasProcessorExecArg} instance to the list.
    * 
-   * @param aArg
-   *          - new argument
+   * @param aArg -
+   *          new argument
    */
-  void add(CasProcessorExecArg aArg);
+  public void add(CasProcessorExecArg aArg);
 
   /**
    * Returns an {@link CasProcessorExecArg} instance located
    * with provided index.
    * 
-   * @param aIndex
-   *          - position of argument in the list
+   * @param aIndex -
+   *          position of argument in the list
    * 
    * @return - {@link CasProcessorExecArg} instance
-   * @throws CpeDescriptorException
-   *           tbd
+   * @throws CpeDescriptorException tbd
    */
-  CasProcessorExecArg get(int aIndex) throws CpeDescriptorException;
+  public CasProcessorExecArg get(int aIndex) throws CpeDescriptorException;
 
   /**
    * Returns ALL {@link CasProcessorExecArg} instances.
    * 
    * @return array of {@link CasProcessorExecArg}
    */
-  CasProcessorExecArg[] getAll();
+  public CasProcessorExecArg[] getAll();
 
   /**
    * Removes {@link CasProcessorExecArg} instance found in the
    * list in a given position.
    * 
-   * @param aIndex
-   *          - position of argument to remove.
+   * @param aIndex -
+   *          position of argument to remove.
    */
-  void remove(int aIndex);
+  public void remove(int aIndex);
 }

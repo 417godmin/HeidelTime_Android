@@ -41,10 +41,10 @@ public class SymbolTable {
   // The actual starting point
   private int start;
 
-  private final HashMap<String, Integer> symbol2intMap; // String -> Integer
+  final private HashMap<String, Integer> symbol2intMap; // String -> Integer
 
-  private final ArrayList<String> int2symbolMap; // switch from Vector to avoid sync contention
-
+  final private ArrayList<String> int2symbolMap; // switch from Vector to avoid sync contention 
+  
   /**
    * Use this constructor if you need your symbol numbering to start at a different point than 0.
    * 
@@ -53,8 +53,8 @@ public class SymbolTable {
    *          larger code points.
    */
   public SymbolTable(int start) {
-    symbol2intMap = new HashMap<>();
-    int2symbolMap = new ArrayList<>();
+    this.symbol2intMap = new HashMap<String, Integer>();
+    this.int2symbolMap = new ArrayList<String>();
     this.start = start;
   }
 
@@ -74,12 +74,12 @@ public class SymbolTable {
     // Start numbering at 0.
     this(0);
     for (int i = 0; i < names.length; i++) {
-      set(names[i]);
+      this.set(names[i]);
     }
   }
 
   public boolean contains(String symbol) {
-    return (getStart() <= get(symbol));
+    return (this.getStart() <= this.get(symbol));
   }
 
   /**
@@ -88,7 +88,7 @@ public class SymbolTable {
    * @return The start of the table.
    */
   public int getStart() {
-    return start;
+    return this.start;
   }
 
   /**
@@ -98,10 +98,10 @@ public class SymbolTable {
    */
   public SymbolTable copy() {
     // not efficient, but no internal callers Feb 2914 scan
-    SymbolTable copy = new SymbolTable(start);
-    int max = int2symbolMap.size();
+    SymbolTable copy = new SymbolTable(this.start);
+    int max = this.int2symbolMap.size();
     for (int i = 0; i < max; i++) {
-      copy.set(int2symbolMap.get(i));
+      copy.set(this.int2symbolMap.get(i));
     }
     return copy;
   }
@@ -109,13 +109,13 @@ public class SymbolTable {
   // Utility function to convert from relative addressing (external)
   // to absolute addressing (internal).
   private final int rel2abs(int i) {
-    return (i - start);
+    return (i - this.start);
   }
 
   // Utility function to convert from absolute addressing (internal)
   // to relative addressing (external).
   private final int abs2rel(int i) {
-    return (i + start);
+    return (i + this.start);
   }
 
   /**
@@ -127,17 +127,17 @@ public class SymbolTable {
    * @return the symbol's number.
    */
   public int set(String symbol) {
-    if (symbol2intMap.containsKey(symbol)) {
-      return symbol2intMap.get(symbol);
+    if (this.symbol2intMap.containsKey(symbol)) {
+      return this.symbol2intMap.get(symbol).intValue();
     }
     int rel;
     int abs;
     synchronized (this) { // synchronize write access to internal data
       // structures
-      abs = symbol2intMap.size();
+      abs = this.symbol2intMap.size();
       rel = abs2rel(abs);
       // System.out.println("Adding symbol " + symbol + " at pos: " + i);
-      symbol2intMap.put(symbol, rel);
+      this.symbol2intMap.put(symbol, Integer.valueOf(rel));
       int2symbolMap.add(symbol);
     }
     return rel;
@@ -165,7 +165,7 @@ public class SymbolTable {
    */
   public String getSymbol(int i) {
     int abs = rel2abs(i);
-    if (abs < 0 || abs >= int2symbolMap.size()) {
+    if (abs < 0 || abs >= this.int2symbolMap.size()) {
       // System.out.println("Out of bounds error in SymbolTable object");
       return null;
     }
@@ -178,7 +178,7 @@ public class SymbolTable {
    * @return The number of symbols in the table.
    */
   public int size() {
-    return int2symbolMap.size();
+    return this.int2symbolMap.size();
   }
 
   /**
@@ -186,7 +186,6 @@ public class SymbolTable {
    * 
    * @return A string representing the symbol table.
    */
-  @Override
   public String toString() {
     StringBuffer buf = new StringBuffer();
     buf.append("{ ");

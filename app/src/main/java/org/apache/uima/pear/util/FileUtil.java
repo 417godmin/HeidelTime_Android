@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.uima.pear.util;
 
 import java.io.BufferedInputStream;
@@ -38,10 +39,6 @@ import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.charset.Charset;
-import java.nio.file.CopyOption;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -58,22 +55,11 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import org.apache.uima.util.impl.Constants;
-
 /**
  * The <code>FileUtil</code> class provides utility methods for working with general files.
  */
+
 public class FileUtil {
-  private static final char DOT = '.';
-  private static final String UTF8_ENCODING = "UTF-8";
-  private static final String ASCII_ENCODING = "ASCII";
-  private static final String XML_EXTENSION = DOT + "xml";
-  private static final String BACKUP_EXTENSION = DOT + "bak";
-  private static final String ZIP_EXTENSION = DOT + "zip";
-  private static final char UNIX_SEPARATOR_CHAR = '/';
-  private static final char WINDOWS_SEPARATOR_CHAR = '\\';
-  private static final String UNIX_SEPARATOR = String.valueOf(UNIX_SEPARATOR_CHAR);
-  private static final String WINDOWS_SEPARATOR = String.valueOf(WINDOWS_SEPARATOR_CHAR);
 
   /**
    * The <code>FileTimeComparator</code> class allows comparing 'last modified' time in 2 given
@@ -87,7 +73,6 @@ public class FileUtil {
      *           if the arguments' types prevent them from being compared by this
      *           <code>Comparator</code>.
      */
-    @Override
     public int compare(File o1, File o2) throws ClassCastException {
       long t1 = o1.lastModified();
       long t2 = o2.lastModified();
@@ -98,9 +83,9 @@ public class FileUtil {
      * @param obj
      *          The reference object with which to compare.
      * @return <code>true</code> only if the specified object is also a
-     *         <code>FileTimeComparator</code>, and it imposes the same ordering as this comparator.
+     *         <code>FileTimeComparator</code>, and it imposes the same ordering as this
+     *         comparator.
      */
-    @Override
     public boolean equals(Object obj) {
       return (obj instanceof FileTimeComparator);
     }
@@ -125,28 +110,25 @@ public class FileUtil {
      *          The given file extension.
      */
     public DirFileFilter(String dirPath, String fileExt) {
-      _dirPath = (dirPath != null) ? dirPath.replace(WINDOWS_SEPARATOR_CHAR, UNIX_SEPARATOR_CHAR)
-              : null;
-      if (fileExt != null) {
+      _dirPath = (dirPath != null) ? dirPath.replace('\\', '/') : null;
+      if (fileExt != null)
         _fileExt = fileExt.startsWith(".") ? fileExt.toLowerCase() : "." + fileExt.toLowerCase();
-      } else {
+      else
         _fileExt = null;
-      }
     }
 
     /**
      * @param file
      *          The given file to be tested.
-     * @return <code>true</code> if the given file should be accepted, <code>false</code> otherwise.
+     * @return <code>true</code> if the given file should be accepted, <code>false</code>
+     *         otherwise.
      */
-    @Override
     public boolean accept(File file) {
       boolean dirAccepted = true;
       boolean extAccepted = true;
       if (_dirPath != null) {
         String parentDir = file.getParent();
-        dirAccepted = parentDir != null && parentDir
-                .replace(WINDOWS_SEPARATOR_CHAR, UNIX_SEPARATOR_CHAR).startsWith(_dirPath);
+        dirAccepted = parentDir != null && parentDir.replace('\\', '/').startsWith(_dirPath);
       }
       if (_fileExt != null) {
         extAccepted = file.getPath().toLowerCase().endsWith(_fileExt);
@@ -157,6 +139,7 @@ public class FileUtil {
 
   /**
    * The <code>NameFileFilter</code> class allows to filter files based on specified file name.
+   * 
    */
   public static class NameFileFilter implements FileFilter {
     // attributes
@@ -169,26 +152,24 @@ public class FileUtil {
      *          The given file name for filtering.
      */
     public NameFileFilter(String fileName) {
-      _fileName = fileName.replace(WINDOWS_SEPARATOR_CHAR, UNIX_SEPARATOR_CHAR);
+      _fileName = fileName.replace('\\', '/');
     }
 
     /**
      * @param file
      *          The given file to be tested.
-     * @return <code>true</code> if the given file should be accepted, <code>false</code> otherwise.
+     * @return <code>true</code> if the given file should be accepted, <code>false</code>
+     *         otherwise.
      */
-    @Override
     public boolean accept(File file) {
-      String filePath = file.getAbsolutePath().replace(WINDOWS_SEPARATOR_CHAR, UNIX_SEPARATOR_CHAR);
+      String filePath = file.getAbsolutePath().replace('\\', '/');
       if (filePath.endsWith(_fileName)) {
         if (filePath.length() > _fileName.length()) {
           char prevChar = filePath.charAt(filePath.length() - _fileName.length() - 1);
-          if (prevChar == ':' || prevChar == UNIX_SEPARATOR_CHAR) {
+          if (prevChar == ':' || prevChar == '/')
             return true;
-          }
-        } else {
+        } else
           return true;
-        }
       }
       return false;
     }
@@ -218,8 +199,8 @@ public class FileUtil {
     }
 
     /**
-     * Create instance of the <code>ExtFileFilter</code> class for a given filename extension. If a
-     * given <code>boolean</code> flag is <code>true</code>, this filename filter is case
+     * Create instance of the <code>ExtFileFilter</code> class for a given filename extension. If
+     * a given <code>boolean</code> flag is <code>true</code>, this filename filter is case
      * insensitive, otherwise it's case sensitive. If the given filename extension does not start
      * from the '.' character, adds this character at the beginning.
      * 
@@ -231,9 +212,8 @@ public class FileUtil {
     public ExtFilenameFilter(String fileExt, boolean ignoreCase) {
       _fileExt = fileExt.startsWith(".") ? fileExt : "." + fileExt;
       _ignoreCase = ignoreCase;
-      if (ignoreCase) {
+      if (ignoreCase)
         _fileExt = _fileExt.toLowerCase();
-      }
     }
 
     /**
@@ -246,7 +226,6 @@ public class FileUtil {
      * @return <code>true</code>, if the given file should be included in the list,
      *         <code>false</code> otherwise.
      */
-    @Override
     public boolean accept(File dir, String name) {
       String fileName = _ignoreCase ? name.toLowerCase() : name;
       return fileName.endsWith(_fileExt);
@@ -255,8 +234,8 @@ public class FileUtil {
 
   /**
    * Deletes all files and subdirectories in a given directory. In case of unsuccessful deletion,
-   * calls the <code>deleteOnExit()</code> method to request that files and subdirs are deleted when
-   * the JVM terminates.
+   * calls the <code>deleteOnExit()</code> method to request that files and subdirs are deleted
+   * when the JVM terminates.
    * 
    * @param directory
    *          The given directory to be cleaned-up.
@@ -272,17 +251,15 @@ public class FileUtil {
         File aFile = allDirFiles[i];
         if (aFile.isDirectory()) {
           counter += cleanUpDirectoryContent(aFile);
-          if (aFile.delete()) {
+          if (aFile.delete())
             counter++;
-          } else {
+          else
             aFile.deleteOnExit();
-          }
         } else if (aFile.isFile()) {
-          if (aFile.delete()) {
+          if (aFile.delete())
             counter++;
-          } else {
+          else
             aFile.deleteOnExit();
-          }
         }
       }
     }
@@ -306,11 +283,10 @@ public class FileUtil {
       for (int i = 0; i < allDirFiles.length; i++) {
         File aFile = allDirFiles[i];
         if (aFile.isFile()) {
-          if (aFile.delete()) {
+          if (aFile.delete())
             counter++;
-          } else {
+          else
             aFile.deleteOnExit();
-          }
         }
       }
     }
@@ -341,23 +317,14 @@ public class FileUtil {
         File file = list.next();
         no++;
         if (no > maxLimit) {
-          if (file.delete()) {
+          if (file.delete())
             counter++;
-          } else {
+          else
             file.deleteOnExit();
-          }
         }
       }
     }
     return counter;
-  }
-
-  private static String normalizeToUnix(String aPath) {
-    if (aPath == null) {
-      return null;
-    }
-
-    return aPath.replace(WINDOWS_SEPARATOR_CHAR, UNIX_SEPARATOR_CHAR);
   }
 
   /**
@@ -376,26 +343,25 @@ public class FileUtil {
    */
   public static String computeRelativePath(File referenceDir, File file) throws IOException {
     // get canonical path expressions
-    String refPath = normalizeToUnix(referenceDir.getCanonicalPath());
-    String filePath = normalizeToUnix(file.getCanonicalPath());
+    String refPath = referenceDir.getCanonicalPath().replace('\\', '/');
+    String filePath = file.getCanonicalPath().replace('\\', '/');
     // compute relative path from reference dir to file dir-tree
     StringBuffer relBuffer = new StringBuffer();
     while (refPath != null && !filePath.startsWith(refPath)) {
       relBuffer.append("../");
-      refPath = normalizeToUnix((new File(refPath)).getParent());
+      refPath = (new File(refPath)).getParent();
+      if (refPath != null)
+        refPath = refPath.replace('\\', '/');
     }
-
     if (refPath != null) {
       // construct relative path
       String subPath = filePath.substring(refPath.length());
-      if (relBuffer.length() == 0) {
+      if (relBuffer.length() == 0)
         relBuffer.append("./");
-      }
-      if (subPath.startsWith("/")) {
+      if (subPath.startsWith("/"))
         relBuffer.append(subPath.substring(1));
-      } else {
+      else
         relBuffer.append(subPath);
-      }
       return relBuffer.toString();
     }
     // relative path does not exist
@@ -413,20 +379,37 @@ public class FileUtil {
    *         otherwise.
    * @throws IOException
    *           If any I/O exception occurred.
-   * @deprecated use Java 7 for this see {@link Files#copy(Path, Path, CopyOption...)}
    */
-  @Deprecated
   public static boolean copyFile(File source, File destination) throws IOException {
-    try (BufferedInputStream iStream = new BufferedInputStream(new FileInputStream(source));
-            BufferedOutputStream oStream = new BufferedOutputStream(
-                    new FileOutputStream(destination))) {
+    boolean completed = false;
+    BufferedInputStream iStream = null;
+    BufferedOutputStream oStream = null;
+    try {
+      iStream = new BufferedInputStream(new FileInputStream(source));
+      oStream = new BufferedOutputStream(new FileOutputStream(destination));
       byte[] block = new byte[4096];
       int bCount = 0;
       while ((bCount = iStream.read(block)) > 0) {
         oStream.write(block, 0, bCount);
       }
+      iStream.close();
+      oStream.close();
+      completed = true;
+    } finally {
+      if (iStream != null) {
+        try {
+          iStream.close();
+        } catch (Exception e) {
+        }
+      }
+      if (oStream != null) {
+        try {
+          oStream.close();
+        } catch (Exception e) {
+        }
+      }
     }
-    return true;
+    return completed;
   }
 
   /**
@@ -440,21 +423,37 @@ public class FileUtil {
    *         otherwise.
    * @throws IOException
    *           If any I/O exception occurred.
-   * @deprecated use Java 7 for this see
-   *             {@link Files#copy(InputStream, Path, CopyOption...)}
    */
-  @Deprecated
   public static boolean copyFile(URL sourceUrl, File destination) throws IOException {
-    try (BufferedInputStream iStream = new BufferedInputStream(sourceUrl.openStream());
-            BufferedOutputStream oStream = new BufferedOutputStream(
-                    new FileOutputStream(destination))) {
+    boolean completed = false;
+    BufferedInputStream iStream = null;
+    BufferedOutputStream oStream = null;
+    try {
+      iStream = new BufferedInputStream(sourceUrl.openStream());
+      oStream = new BufferedOutputStream(new FileOutputStream(destination));
       byte[] block = new byte[4096];
       int bCount = 0;
       while ((bCount = iStream.read(block)) > 0) {
         oStream.write(block, 0, bCount);
       }
+      iStream.close();
+      oStream.close();
+      completed = true;
+    } finally {
+      if (iStream != null) {
+        try {
+          iStream.close();
+        } catch (Exception e) {
+        }
+      }
+      if (oStream != null) {
+        try {
+          oStream.close();
+        } catch (Exception e) {
+        }
+      }
     }
-    return true;
+    return completed;
   }
 
   /**
@@ -462,8 +461,8 @@ public class FileUtil {
    * 
    * @param rootDir
    *          The given root directory.
-   * @return <code>Collection</code> of <code>File</code> objects, representing subdirectories in
-   *         the given root directory and all its subdirectories.
+   * @return <code>Collection</code> of <code>File</code> objects, representing subdirectories
+   *         in the given root directory and all its subdirectories.
    * 
    * @throws IOException
    *           If any I/O exception occurs.
@@ -473,12 +472,12 @@ public class FileUtil {
   }
 
   /**
-   * Creates list of subdirectories in a given root directory. If a given <code>boolean</code> flag
-   * is <code>true</code>, all the subdirectories of the given root directory are also scanned,
-   * otherwise only subdirectories in the given root directory are included.
+   * Creates list of subdirectories in a given root directory. If a given <code>boolean</code>
+   * flag is <code>true</code>, all the subdirectories of the given root directory are also
+   * scanned, otherwise only subdirectories in the given root directory are included.
    * 
-   * @return <code>Collection</code> of <code>File</code> objects, representing subdirectories in
-   *         the given root directory.
+   * @return <code>Collection</code> of <code>File</code> objects, representing subdirectories
+   *         in the given root directory.
    * @param rootDir
    *          The given root directory.
    * @param includeSubdirs
@@ -489,20 +488,17 @@ public class FileUtil {
    * @exception IOException
    *              If any I/O exception occurs.
    */
-  public static Collection<File> createDirList(File rootDir, boolean includeSubdirs)
-          throws IOException {
-    ArrayList<File> listOfDirs = new ArrayList<>();
+  public static Collection<File> createDirList(File rootDir, boolean includeSubdirs) throws IOException {
+    ArrayList<File> listOfDirs = new ArrayList<File>();
     File[] allDirFiles = rootDir.listFiles();
-    if (allDirFiles == null) {
+    if (allDirFiles == null)
       throw new FileNotFoundException("invalid directory specified");
-    }
     for (int i = 0; i < allDirFiles.length; i++) {
       File aFile = allDirFiles[i];
       if (aFile.isDirectory()) {
         listOfDirs.add(aFile);
-        if (includeSubdirs) {
+        if (includeSubdirs)
           listOfDirs.addAll(createDirList(aFile, includeSubdirs));
-        }
       }
     }
     return listOfDirs;
@@ -515,15 +511,15 @@ public class FileUtil {
    * 
    * @param archive
    *          The input archive (JAR) file.
-   * @return <code>Collection</code> of <code>File</code> objects, representing directories in the
-   *         given archive file.
+   * @return <code>Collection</code> of <code>File</code> objects, representing directories in
+   *         the given archive file.
    * @throws IOException
    *           If any I/O exception occurs.
    */
   public static Collection<File> createDirList(JarFile archive) throws IOException {
-    ArrayList<File> listOfDirs = new ArrayList<>();
+    ArrayList<File> listOfDirs = new ArrayList<File>();
     // set root_dir_path = archive_file_path (w/o file name extension)
-    int nameEndIndex = archive.getName().lastIndexOf(DOT);
+    int nameEndIndex = archive.getName().lastIndexOf('.');
     String rootDirPath = (nameEndIndex > 0) ? archive.getName().substring(0, nameEndIndex)
             : archive.getName();
     File rootDir = new File(rootDirPath);
@@ -532,15 +528,14 @@ public class FileUtil {
     while (entries.hasMoreElements()) {
       JarEntry entry = entries.nextElement();
       File file = new File(rootDir, entry.getName());
-      if (entry.isDirectory()) {
+      if (entry.isDirectory())
         listOfDirs.add(file);
-      } else {
+      else {
         // make sure the parent dir is added
         File parentDir = file.getParentFile();
         while (!parentDir.equals(rootDir)) {
-          if (!listOfDirs.contains(parentDir)) {
+          if (!listOfDirs.contains(parentDir))
             listOfDirs.add(parentDir);
-          }
           parentDir = parentDir.getParentFile();
         }
       }
@@ -551,8 +546,8 @@ public class FileUtil {
   /**
    * Creates list of files in a given directory, including all its subdirectories.
    * 
-   * @return <code>Collection</code> of <code>File</code> objects in the given directory, including
-   *         all its subdirectories.
+   * @return <code>Collection</code> of <code>File</code> objects in the given directory,
+   *         including all its subdirectories.
    * @param filesDir
    *          The given directory.
    * 
@@ -565,8 +560,8 @@ public class FileUtil {
 
   /**
    * Creates list of files in a given directory. If a given <code>boolean</code> flag is
-   * <code>true</code>, all the sub-directories of the given directory are also scanned, otherwise
-   * only files in the given directory are included.
+   * <code>true</code>, all the sub-directories of the given directory are also scanned,
+   * otherwise only files in the given directory are included.
    * 
    * @return <code>Collection</code> of <code>File</code> objects in the given directory.
    * @param filesDir
@@ -579,20 +574,17 @@ public class FileUtil {
    * @exception IOException
    *              If any I/O exception occurs.
    */
-  public static Collection<File> createFileList(File filesDir, boolean includeSubdirs)
-          throws IOException {
-    ArrayList<File> listOfFiles = new ArrayList<>();
+  public static Collection<File> createFileList(File filesDir, boolean includeSubdirs) throws IOException {
+    ArrayList<File> listOfFiles = new ArrayList<File>();
     File[] allDirFiles = filesDir.listFiles();
-    if (allDirFiles == null) {
+    if (allDirFiles == null)
       throw new FileNotFoundException("invalid directory specified");
-    }
     for (int i = 0; i < allDirFiles.length; i++) {
       File aFile = allDirFiles[i];
-      if (aFile.isDirectory() && includeSubdirs) {
+      if (aFile.isDirectory() && includeSubdirs)
         listOfFiles.addAll(createFileList(aFile, includeSubdirs));
-      } else if (!aFile.isDirectory()) {
+      else if (!aFile.isDirectory())
         listOfFiles.add(aFile);
-      }
     }
     return listOfFiles;
   }
@@ -603,15 +595,15 @@ public class FileUtil {
    * 
    * @param archive
    *          The input archive (JAR) file.
-   * @return <code>Collection</code> of <code>File</code> objects, representing files in the given
-   *         archive file.
+   * @return <code>Collection</code> of <code>File</code> objects, representing files in the
+   *         given archive file.
    * @throws IOException
    *           If any I/O exception occurs.
    */
   public static Collection<File> createFileList(JarFile archive) throws IOException {
-    ArrayList<File> listOfFiles = new ArrayList<>();
+    ArrayList<File> listOfFiles = new ArrayList<File>();
     // set root_dir_path = archive_file_path (w/o file name extension)
-    int nameEndIndex = archive.getName().lastIndexOf(DOT);
+    int nameEndIndex = archive.getName().lastIndexOf('.');
     String rootDirPath = (nameEndIndex > 0) ? archive.getName().substring(0, nameEndIndex)
             : archive.getName();
     File rootDir = new File(rootDirPath);
@@ -620,9 +612,8 @@ public class FileUtil {
     while (entries.hasMoreElements()) {
       JarEntry entry = entries.nextElement();
       File file = new File(rootDir, entry.getName());
-      if (!entry.isDirectory()) {
+      if (!entry.isDirectory())
         listOfFiles.add(file);
-      }
     }
     return listOfFiles;
   }
@@ -641,30 +632,24 @@ public class FileUtil {
    * @return The <code>File</code> object denoting the newly created file.
    * @throws IOException
    *           If a temporary directory not found or other I/O exception occurred.
-   * @deprecated use Java 7 method for this see
-   *             {@link File#createTempFile(String, String, File)}
    */
-  @Deprecated
   public static File createTempFile(String prefix, String suffix) throws IOException {
     String tempDirPath = System.getProperty("java.io.tmpdir");
-    if (tempDirPath == null) {
+    if (tempDirPath == null)
       tempDirPath = System.getProperty("user.home");
-    }
-    if (tempDirPath == null) {
+    if (tempDirPath == null)
       throw new IOException("could not find temporary directory");
-    }
     File tempDir = new File(tempDirPath);
-    if (!tempDir.isDirectory()) {
+    if (!tempDir.isDirectory())
       throw new IOException("temporary directory not available");
-    }
     return File.createTempFile(prefix, suffix, tempDir);
   }
 
   /**
    * Deletes a given directory, including all its subdirectories and files. Returns
-   * <code>true</code> if the deletion was successful, otherwise returns <code>false</code>. In case
-   * of unsuccessful deletion, calls <code>deleteOnExit()</code> method to request that files and
-   * subdirs be deleted when the virtual machine terminates.
+   * <code>true</code> if the deletion was successful, otherwise returns <code>false</code>. In
+   * case of unsuccessful deletion, calls <code>deleteOnExit()</code> method to request that files
+   * and subdirs be deleted when the virtual machine terminates.
    * 
    * @param dir
    *          The given directory to be deleted.
@@ -679,9 +664,9 @@ public class FileUtil {
     // first, delete plain files and sub-directories (recursive)
     for (int i = 0; i < fileList.length; i++) {
       File entry = fileList[i];
-      if (entry.isDirectory()) {
+      if (entry.isDirectory())
         done = deleteDirectory(entry);
-      } else if (!entry.delete()) {
+      else if (!entry.delete()) {
         entry.deleteOnExit();
         done = false;
       }
@@ -766,41 +751,48 @@ public class FileUtil {
           throws IOException {
     long totalBytes = 0;
     byte[] block = new byte[4096];
-
-    var jarList = jarFile.entries();
+    Enumeration<JarEntry> jarList = jarFile.entries();
     while (jarList.hasMoreElements()) {
-      var jarEntry = jarList.nextElement();
-      // check that file is accepted
-      if (jarEntry.isDirectory()
-              || (filter != null && !filter.accept(new File(jarEntry.getName())))) {
-        continue;
-      }
-
-      // make sure the file directory exists
-      var entryName = jarEntry.getName();
-      var file = new File(targetDir, entryName).toPath().normalize();
-
-      if (!file.startsWith(targetDir.toPath().normalize())) {
-        throw new IOException("Can only write within target folder [" + targetDir.getAbsolutePath()
-                + "]. Please validate ZIP contents.");
-      }
-
-      var dir = file.getParent();
-      if (!Files.exists(dir)) {
-        Files.createDirectories(dir);
-      }
-
-      // extract file
-      try (var iStream = new BufferedInputStream(jarFile.getInputStream(jarEntry));
-              var oStream = Files.newOutputStream(file)) {
-        int bCount = 0;
-        while ((bCount = iStream.read(block)) > 0) {
-          totalBytes += bCount;
-          oStream.write(block, 0, bCount);
+      JarEntry jarEntry = jarList.nextElement();
+      if (!jarEntry.isDirectory()) {
+        // check that file is accepted
+        if (filter != null && !filter.accept(new File(jarEntry.getName())))
+          continue;
+        // extract file
+        File file = new File(targetDir, jarEntry.getName());
+        // make sure the file directory exists
+        File dir = file.getParentFile();
+        if (!dir.exists() && !dir.mkdirs())
+          throw new IOException("could not create directory " + dir.getAbsolutePath());
+        BufferedInputStream iStream = null;
+        BufferedOutputStream oStream = null;
+        try {
+          iStream = new BufferedInputStream(jarFile.getInputStream(jarEntry));
+          oStream = new BufferedOutputStream(new FileOutputStream(file));
+          int bCount = 0;
+          while ((bCount = iStream.read(block)) > 0) {
+            totalBytes += bCount;
+            oStream.write(block, 0, bCount);
+          }
+          iStream.close();
+          oStream.close();
+        } finally {
+          // close streams
+          if (iStream != null) {
+            try {
+              iStream.close();
+            } catch (Exception e) {
+            }
+          }
+          if (oStream != null) {
+            try {
+              oStream.close();
+            } catch (Exception e) {
+            }
+          }
         }
       }
     }
-
     return totalBytes;
   }
 
@@ -828,16 +820,15 @@ public class FileUtil {
    */
   public static String getFileNameExtension(String fileName) {
     StringBuffer buffer = new StringBuffer();
-    int begIndex = fileName.lastIndexOf(DOT);
+    int begIndex = fileName.lastIndexOf('.');
     if (begIndex > 0) {
-      buffer.append(DOT);
+      buffer.append('.');
       for (int i = begIndex + 1; i < fileName.length(); i++) {
         char ch = fileName.charAt(i);
-        if (Character.isLetterOrDigit(ch)) {
+        if (Character.isLetterOrDigit(ch))
           buffer.append(ch);
-        } else {
+        else
           break;
-        }
       }
     }
     return buffer.toString();
@@ -849,16 +840,14 @@ public class FileUtil {
    * @param fileLocation
    *          The given file location - local file path or URL.
    * @return The given file size, if the specified file can be accessed, -1 otherwise.
-   * @deprecated use Java 7 method for this see {@link Files#size(Path)}
    */
-  @Deprecated
   public static long getFileSize(String fileLocation) {
     long fileSize = 0;
     // choose file size method: local FS or HTTP
     File file = new File(fileLocation);
-    if (file.isFile()) {
+    if (file.isFile())
       fileSize = file.length();
-    } else {
+    else {
       try {
         URL fileUrl = new URL(fileLocation);
         URLConnection urlConn = fileUrl.openConnection();
@@ -883,50 +872,46 @@ public class FileUtil {
    * @return The relative path of the given object, located in the given root directory.
    */
   public static String getRelativePath(File rootDir, String absolutePath) {
-    String rootDirPath = normalizeToUnix(rootDir.getAbsolutePath());
-    String objectPath = normalizeToUnix(absolutePath);
-    if (objectPath.startsWith(rootDirPath)) {
+    String rootDirPath = rootDir.getAbsolutePath().replace('\\', '/');
+    String objectPath = absolutePath.replace('\\', '/');
+    if (objectPath.startsWith(rootDirPath))
       objectPath = objectPath.substring(rootDirPath.length());
-    }
-    if (objectPath.startsWith("/")) {
+    if (objectPath.startsWith("/"))
       objectPath = objectPath.substring(1);
-    }
     return objectPath;
   }
 
   /**
    * Makes and attempt to identify possible UTF signature (BOM) in a given sequence of bytes.
-   * Returns the identified UTF signature name or <code>null</code>, if the signature could not be
-   * identified. For more on UTF and its signatures see
-   * <a href="http://www.unicode.org/faq/utf_bom.html" target="_blank"> FAQ - UTF and BOM</a>.
+   * Returns the identified UTF signature name or <code>null</code>, if the signature could not
+   * be identified. For more on UTF and its signatures see <a
+   * href="http://www.unicode.org/faq/utf_bom.html" target="_blank"> FAQ - UTF and BOM</a>.
    * 
    * @param prefix
    *          The given sequence of bytes to analyze.
    * @param length
    *          The length of the given sequence of bytes.
-   * @return The UTF signature name or <code>null</code>, if the signature could not be identified.
+   * @return The UTF signature name or <code>null</code>, if the signature could not be
+   *         identified.
    */
   public static String identifyUtfSignature(int[] prefix, int length) {
     String utfSignature = null;
     if (length == 3) {
       // check for UTF-8 signature
-      if (prefix[0] == 0xEF && prefix[1] == 0xBB && prefix[2] == 0xBF) {
-        utfSignature = UTF8_ENCODING;
-      }
+      if (prefix[0] == 0xEF && prefix[1] == 0xBB && prefix[2] == 0xBF)
+        utfSignature = "UTF-8";
     } else if (length == 2) {
       // check for UTF-16 signature
-      if (prefix[0] == 0xFE && prefix[1] == 0xFF) {
+      if (prefix[0] == 0xFE && prefix[1] == 0xFF)
         utfSignature = "UTF-16BE";
-      } else if (prefix[0] == 0xFF && prefix[1] == 0xFE) {
+      else if (prefix[0] == 0xFF && prefix[1] == 0xFE)
         utfSignature = "UTF-16LE";
-      }
     } else if (length == 4) {
       // check for UTF-32 signature
-      if (prefix[0] == 0x00 && prefix[1] == 0x00 && prefix[2] == 0xFE && prefix[3] == 0xFF) {
+      if (prefix[0] == 0x00 && prefix[1] == 0x00 && prefix[2] == 0xFE && prefix[3] == 0xFF)
         utfSignature = "UTF-32BE";
-      } else if (prefix[0] == 0xFF && prefix[1] == 0xFE && prefix[2] == 0x00 && prefix[3] == 0x00) {
+      else if (prefix[0] == 0xFF && prefix[1] == 0xFE && prefix[2] == 0x00 && prefix[3] == 0x00)
         utfSignature = "UTF-32LE";
-      }
     }
     return utfSignature;
   }
@@ -943,9 +928,23 @@ public class FileUtil {
    *           If an I/O exception occurred.
    */
   public static boolean isAsciiFile(File textFile) throws IOException {
-    try (FileInputStream iStream = new FileInputStream(textFile)) {
-      return isAsciiStream(iStream);
+    boolean isAscii = true;
+    FileInputStream iStream = null;
+    try {
+      iStream = new FileInputStream(textFile);
+      isAscii = isAsciiStream(iStream);
+      iStream.close();
+    } catch (IOException exc) {
+      isAscii = false;
+      throw exc;
+    } finally {
+      if (iStream != null)
+        try {
+          iStream.close();
+        } catch (Exception e) {
+        }
     }
+    return isAscii;
   }
 
   /**
@@ -961,12 +960,17 @@ public class FileUtil {
    */
   public static boolean isAsciiStream(InputStream iStream) throws IOException {
     boolean isAscii = true;
-    int nextByte = 0;
-    while ((nextByte = iStream.read()) >= 0) {
-      if (nextByte > 127) {
-        isAscii = false;
-        break;
+    try {
+      int nextByte = 0;
+      while ((nextByte = iStream.read()) >= 0) {
+        if (nextByte > 127) {
+          isAscii = false;
+          break;
+        }
       }
+    } catch (IOException exc) {
+      isAscii = false;
+      throw exc;
     }
     return isAscii;
   }
@@ -982,19 +986,18 @@ public class FileUtil {
    */
   public static String[] loadListOfStrings(BufferedReader iStream) throws IOException {
     String[] outputArray = null;
-    List<String> outputList = new ArrayList<>();
+    List<String> outputList = new ArrayList<String>();
     String line = null;
     while ((line = iStream.readLine()) != null) {
       String string = line.trim();
-      if (string.length() > 0) {
+      if (string.length() > 0)
         outputList.add(string);
-      }
     }
     if (outputList.size() > 0) {
       outputArray = new String[outputList.size()];
       outputList.toArray(outputArray);
     }
-    return (outputArray != null) ? outputArray : Constants.EMPTY_STRING_ARRAY;
+    return (outputArray != null) ? outputArray : new String[0];
   }
 
   /**
@@ -1006,17 +1009,24 @@ public class FileUtil {
    * @return The array of non-empty strings loaded from the given text file.
    * @throws IOException
    *           If any I/O exception occurred.
-   * @deprecated use Java 7 method for this see
-   *             {@link Files#readAllLines(Path, Charset)}
    */
-  @Deprecated
   public static String[] loadListOfStrings(File textFile) throws IOException {
-    String[] outputArray;
-    try (BufferedReader iStream = new BufferedReader(
-            new InputStreamReader(new FileInputStream(textFile)))) {
+    BufferedReader iStream = null;
+    String[] outputArray = null;
+    try {
+      iStream = new BufferedReader(new InputStreamReader(new FileInputStream(textFile)));
       outputArray = loadListOfStrings(iStream);
+    } catch (IOException exc) {
+      throw exc;
+    } finally {
+      if (iStream != null) {
+        try {
+          iStream.close();
+        } catch (Exception e) {
+        }
+      }
     }
-    return (outputArray != null) ? outputArray : Constants.EMPTY_STRING_ARRAY;
+    return (outputArray != null) ? outputArray : new String[0];
   }
 
   /**
@@ -1032,12 +1042,22 @@ public class FileUtil {
     URLConnection urlConnection = textFileURL.openConnection();
     // See https://issues.apache.org/jira/browse/UIMA-1746
     urlConnection.setUseCaches(false);
-    String[] outputArray;
-    try (BufferedReader iStream = new BufferedReader(
-            new InputStreamReader(urlConnection.getInputStream()))) {
+    BufferedReader iStream = null;
+    String[] outputArray = null;
+    try {
+      iStream = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
       outputArray = loadListOfStrings(iStream);
+    } catch (IOException exc) {
+      throw exc;
+    } finally {
+      if (iStream != null) {
+        try {
+          iStream.close();
+        } catch (Exception e) {
+        }
+      }
     }
-    return (outputArray != null) ? outputArray : Constants.EMPTY_STRING_ARRAY;
+    return (outputArray != null) ? outputArray : new String[0];
   }
 
   /**
@@ -1047,20 +1067,29 @@ public class FileUtil {
    *          The given properties file path in the JAR file.
    * @param jarFile
    *          The given JAR file.
-   * @return <code>Properties</code> object containing loaded properties, or <code>null</code>, if
-   *         the properties file was not found in the given JAR file.
+   * @return <code>Properties</code> object containing loaded properties, or <code>null</code>,
+   *         if the properties file was not found in the given JAR file.
    * @throws IOException
    *           If any I/O exception occurred.
    */
   public static Properties loadPropertiesFromJar(String propFilePath, JarFile jarFile)
           throws IOException {
     Properties properties = null;
-    String name = normalizeToUnix(propFilePath);
+    String name = propFilePath.replace('\\', '/');
     JarEntry jarEntry = jarFile.getJarEntry(name);
     if (jarEntry != null) {
-      try (InputStream iStream = jarFile.getInputStream(jarEntry)) {
+      InputStream iStream = null;
+      try {
+        iStream = jarFile.getInputStream(jarEntry);
         properties = new Properties();
         properties.load(iStream);
+      } finally {
+        if (iStream != null) {
+          try {
+            iStream.close();
+          } catch (Exception e) {
+          }
+        }
       }
     }
     return properties;
@@ -1076,13 +1105,26 @@ public class FileUtil {
    *           If any I/O exception occurs.
    */
   public static String loadTextFile(BufferedReader iStream) throws IOException {
-    try (StringWriter buffer = new StringWriter(); PrintWriter writer = new PrintWriter(buffer);) {
+    StringWriter buffer = null;
+    PrintWriter writer = null;
+    try {
+      buffer = new StringWriter();
+      writer = new PrintWriter(buffer);
       String line = null;
-      while ((line = iStream.readLine()) != null) {
+      while ((line = iStream.readLine()) != null)
         writer.println(line);
+      writer.flush();
+    } catch (IOException exc) {
+      throw exc;
+    } finally {
+      if (writer != null) {
+        try {
+          writer.close();
+        } catch (Exception e) {
+        }
       }
-      return buffer.toString();
     }
+    return buffer.toString();
   }
 
   /**
@@ -1093,15 +1135,24 @@ public class FileUtil {
    *          The given text file.
    * @throws IOException
    *           If any I/O exception occurs.
-   * @deprecated use main file util for this, see
-   *             {@link org.apache.uima.util.FileUtils#file2String(File)} if using the default
-   *             charset is OK
    */
-  @Deprecated
   public static String loadTextFile(File textFile) throws IOException {
-    try (BufferedReader iStream = new BufferedReader(new FileReader(textFile))) {
-      return loadTextFile(iStream);
+    BufferedReader iStream = null;
+    String content = null;
+    try {
+      iStream = new BufferedReader(new FileReader(textFile));
+      content = loadTextFile(iStream);
+    } catch (IOException exc) {
+      throw exc;
+    } finally {
+      if (iStream != null) {
+        try {
+          iStream.close();
+        } catch (Exception e) {
+        }
+      }
     }
+    return content;
   }
 
   /**
@@ -1114,16 +1165,24 @@ public class FileUtil {
    *          The given text file encoding name.
    * @throws IOException
    *           If any I/O exception occurs.
-   * @deprecated use main file util for this, see
-   *             {@link org.apache.uima.util.FileUtils#file2String(File, String)} if using the
-   *             default Charset is OK
    */
-  @Deprecated
   public static String loadTextFile(File textFile, String encoding) throws IOException {
-    try (BufferedReader iStream = new BufferedReader(
-            new InputStreamReader(new FileInputStream(textFile), encoding))) {
-      return loadTextFile(iStream);
+    BufferedReader iStream = null;
+    String content = null;
+    try {
+      iStream = new BufferedReader(new InputStreamReader(new FileInputStream(textFile), encoding));
+      content = loadTextFile(iStream);
+    } catch (IOException exc) {
+      throw exc;
+    } finally {
+      if (iStream != null) {
+        try {
+          iStream.close();
+        } catch (Exception e) {
+        }
+      }
     }
+    return content;
   }
 
   /**
@@ -1138,7 +1197,7 @@ public class FileUtil {
   public static String loadTextFile(URL textFileURL) throws IOException {
     URLConnection urlConnection = textFileURL.openConnection();
     // See https://issues.apache.org/jira/browse/UIMA-1746
-    urlConnection.setUseCaches(false);
+    urlConnection.setUseCaches(false);    
     return loadTextFile(urlConnection);
   }
 
@@ -1152,12 +1211,24 @@ public class FileUtil {
    *           If any I/O exception occurs.
    */
   public static String loadTextFile(URLConnection urlConnection) throws IOException {
+    BufferedReader iStream = null;
+    String content = null;
     // See https://issues.apache.org/jira/browse/UIMA-1746
-    urlConnection.setUseCaches(false);
-    try (BufferedReader iStream = new BufferedReader(
-            new InputStreamReader(urlConnection.getInputStream()))) {
-      return loadTextFile(iStream);
+    urlConnection.setUseCaches(false);    
+    try {
+      iStream = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+      content = loadTextFile(iStream);
+    } catch (IOException exc) {
+      throw exc;
+    } finally {
+      if (iStream != null) {
+        try {
+          iStream.close();
+        } catch (Exception e) {
+        }
+      }
     }
+    return content;
   }
 
   /**
@@ -1167,19 +1238,27 @@ public class FileUtil {
    *          The specified text file path inside the JAR file.
    * @param jarFile
    *          The given JAR file.
-   * @return The content of the text specified file, or <code>null</code>, if the text file was not
-   *         found in the given JAR file.
+   * @return The content of the text specified file, or <code>null</code>, if the text file was
+   *         not found in the given JAR file.
    * @throws IOException
    *           If any I/O exception occurs.
    */
   public static String loadTextFileFromJar(String filePath, JarFile jarFile) throws IOException {
     String content = null;
-    String name = normalizeToUnix(filePath);
+    String name = filePath.replace('\\', '/');
     JarEntry jarEntry = jarFile.getJarEntry(name);
     if (jarEntry != null) {
-      try (BufferedReader iStream = new BufferedReader(
-              new InputStreamReader(jarFile.getInputStream(jarEntry)))) {
+      BufferedReader iStream = null;
+      try {
+        iStream = new BufferedReader(new InputStreamReader(jarFile.getInputStream(jarEntry)));
         content = loadTextFile(iStream);
+      } finally {
+        if (iStream != null) {
+          try {
+            iStream.close();
+          } catch (Exception e) {
+          }
+        }
       }
     }
     return content;
@@ -1195,7 +1274,7 @@ public class FileUtil {
   public static String localPathToFileUrl(String path) {
     // get absolute path
     File file = new File(path);
-    String absPath = normalizeToUnix(file.getAbsolutePath());
+    String absPath = file.getAbsolutePath().replace('\\', '/');
     // construct file URL
     StringBuffer urlBuffer = new StringBuffer("file:///");
     urlBuffer.append(absPath.replace(':', '|'));
@@ -1220,15 +1299,12 @@ public class FileUtil {
    *         otherwise.
    * @throws IOException
    *           If any I/O exception occurred.
-   * @deprecated use Java 7 for this see {@link Files#move(Path, Path, CopyOption...)}
    */
-  @Deprecated
   public static boolean moveFile(File source, File destinationDir) throws IOException {
     boolean completed = false;
     File destination = new File(destinationDir, source.getName());
-    if (destination.exists()) {
+    if (destination.exists())
       destination.delete();
-    }
     if (copyFile(source, destination)) {
       completed = source.delete();
     }
@@ -1236,9 +1312,9 @@ public class FileUtil {
   }
 
   /**
-   * Replaces all occurrences of a given regular expression with a given string in a given text
-   * file. Supports only 1 file encoding - ASCII - for all general text files. Supports 2 encodings
-   * - UTF-8 (ASCII) and UTF-16 for XML files.
+   * Replaces all occurrences of a given regular expression with a given string in a given text file.
+   * Supports only 1 file encoding - ASCII - for all general text files. Supports 2 encodings -
+   * UTF-8 (ASCII) and UTF-16 for XML files.
    * 
    * @param textFile
    *          The given text file.
@@ -1254,22 +1330,23 @@ public class FileUtil {
           throws IOException {
     int counter = 0;
     // for general text file - supporting ASCII encoding only
-    String encoding = ASCII_ENCODING;
+    String encoding = "ASCII";
     // check file extension
-    int extIndex = textFile.getName().lastIndexOf(DOT);
+    int extIndex = textFile.getName().lastIndexOf('.');
     String fileExt = (extIndex > 0) ? textFile.getName().substring(extIndex) : null;
-    if (XML_EXTENSION.equalsIgnoreCase(fileExt)) {
+    if (".xml".equalsIgnoreCase(fileExt)) {
       // for XML file - supporting UTF-8 (ASCII) and UTF-16 encodings
       String xmlEncoding = XMLUtil.detectXmlFileEncoding(textFile);
       if (xmlEncoding != null) {
         encoding = xmlEncoding;
       } else {
-        encoding = UTF8_ENCODING;
+        encoding = "UTF-8";
       }
     }
     // load text file, using supported encoding
     String fileContent = loadTextFile(textFile, encoding);
-
+    BufferedReader sReader = null;
+    PrintStream fStream = null;
     boolean done = false;
     File backupFile = null;
     // get pattern for given regex
@@ -1278,48 +1355,51 @@ public class FileUtil {
     String replaceWith = StringUtil.toRegExpReplacement(replacement);
     try {
       // save backup copy of input file
-      backupFile = new File(textFile.getAbsolutePath() + BACKUP_EXTENSION);
-      if (backupFile.exists()) {
+      backupFile = new File(textFile.getAbsolutePath() + ".bak");
+      if (backupFile.exists())
         backupFile.delete();
-      }
-      if (!textFile.renameTo(backupFile)) {
+      if (!textFile.renameTo(backupFile))
         throw new IOException("can't save backup copy of " + textFile.getAbsolutePath());
+      sReader = new BufferedReader(new StringReader(fileContent));
+      fStream = new PrintStream(new FileOutputStream(textFile), true, encoding);
+      String srcLine = null;
+      while ((srcLine = sReader.readLine()) != null) {
+        // count pattern matches in the source string
+        Matcher matcher = pattern.matcher(srcLine);
+        while (matcher.find())
+          counter++;
+        // replace all pattern matches in the source string
+        String resLine = srcLine.replaceAll(subStringRegex, replaceWith);
+        fStream.println(resLine);
       }
-      try (BufferedReader sReader = new BufferedReader(new StringReader(fileContent));
-              PrintStream fStream = new PrintStream(new FileOutputStream(textFile), true,
-                      encoding);) {
-        String srcLine = null;
-        while ((srcLine = sReader.readLine()) != null) {
-          // count pattern matches in the source string
-          Matcher matcher = pattern.matcher(srcLine);
-          while (matcher.find()) {
-            counter++;
-          }
-          // replace all pattern matches in the source string
-          String resLine = srcLine.replaceAll(subStringRegex, replaceWith);
-          fStream.println(resLine);
-        }
-      }
+      fStream.close();
       done = true;
     } catch (IOException exc) {
       throw exc;
     } catch (Throwable err) {
-      if (err instanceof IOException) {
+      if (err instanceof IOException)
         throw new IOException(err.toString() + " in " + textFile.getAbsolutePath());
-      }
       throw new RuntimeException(err.toString() + " in " + textFile.getAbsolutePath());
     } finally {
+      if (sReader != null) {
+        try {
+          sReader.close();
+        } catch (Exception e) {
+        }
+      }
+      if (fStream != null) {
+        try {
+          fStream.close();
+        } catch (Exception e) {
+        }
+      }
       if (done) {
         // remove backup file
-        if (backupFile != null) {
-          backupFile.delete();
-        }
+        backupFile.delete();
       } else {
         // restore input file
         textFile.delete();
-        if (backupFile != null) {
-          backupFile.renameTo(textFile);
-        }
+        backupFile.renameTo(textFile);
       }
     }
     return counter;
@@ -1333,7 +1413,7 @@ public class FileUtil {
    * @return The list of files sorted by the 'last modified' time in the descending order.
    */
   public static SortedSet<File> sortFileListByTime(Collection<File> fileList) {
-    TreeSet<File> set = new TreeSet<>(new FileTimeComparator());
+    TreeSet<File> set = new TreeSet<File>(new FileTimeComparator());
     set.addAll(fileList);
     return set;
   }
@@ -1350,7 +1430,7 @@ public class FileUtil {
    */
   public static File zipDirectory(File dir2zip) throws IOException {
     // construct zipped file path
-    String zipFileName = dir2zip.getName() + ZIP_EXTENSION;
+    String zipFileName = dir2zip.getName() + ".zip";
     File zipFile = new File(dir2zip, zipFileName);
     return zipDirectory(dir2zip, zipFile);
   }
@@ -1367,12 +1447,21 @@ public class FileUtil {
    *           If any I/O exception occurred.
    */
   public static File zipDirectory(File dir2zip, File zippedFile) throws IOException {
-    try (ZipOutputStream zoStream = new ZipOutputStream(new FileOutputStream(zippedFile))) {
+    ZipOutputStream zoStream = null;
+    try {
       // open compressed output stream
+      zoStream = new ZipOutputStream(new FileOutputStream(zippedFile));
       // add output zip file to exclusions
       File[] excludeFiles = new File[1];
       excludeFiles[0] = zippedFile;
       zipDirectory(dir2zip, zoStream, dir2zip, excludeFiles);
+    } finally {
+      if (zoStream != null) {
+        try {
+          zoStream.close();
+        } catch (Exception e) {
+        }
+      }
     }
     return zippedFile;
   }
@@ -1380,8 +1469,8 @@ public class FileUtil {
   /**
    * Zips the contents of a given directory to a given ZIP output stream. Paths of file entries in
    * the ZIP stream are taken relatively to a given reference directory. If the reference directory
-   * is <code>null</code>, the file paths are taken relatively to the given directory to be zipped.
-   * The method allows to specify the list of files (or dirs) that should not be zipped.
+   * is <code>null</code>, the file paths are taken relatively to the given directory to be
+   * zipped. The method allows to specify the list of files (or dirs) that should not be zipped.
    * 
    * @param dir2zip
    *          The given directory to be zipped.
@@ -1399,43 +1488,48 @@ public class FileUtil {
           File referenceDir, File[] excludeFiles) throws IOException {
     byte[] block = new byte[4096];
     int inBytes = 0;
-
-    // get list of all files/dirs in the given directory
-    File[] dirFileList = dir2zip.listFiles();
-    // compress all files and sub-dirs
-    for (int i = 0; i < dirFileList.length; i++) {
-      File entry = dirFileList[i];
-      // check if this entry is not in the list of exclusions
-      boolean isExcluded = false;
-      for (int n = 0; n < excludeFiles.length; n++) {
-        if (entry.equals(excludeFiles[n])) {
-          isExcluded = true;
-          break;
+    FileInputStream iStream = null;
+    try {
+      // get list of all files/dirs in the given directory
+      File[] dirFileList = dir2zip.listFiles();
+      // compress all files and sub-dirs
+      for (int i = 0; i < dirFileList.length; i++) {
+        File entry = dirFileList[i];
+        // check if this entry is not in the list of exclusions
+        boolean isExcluded = false;
+        for (int n = 0; n < excludeFiles.length; n++) {
+          if (entry.equals(excludeFiles[n])) {
+            isExcluded = true;
+            break;
+          }
         }
-      }
-      if (isExcluded) {
-        continue;
-      }
-      // for each file - add ZipEntry and compress the file
-      if (entry.isFile()) {
-        // open input stream
-        try (FileInputStream iStream = new FileInputStream(entry)) {
+        if (isExcluded)
+          continue;
+        // for each file - add ZipEntry and compress the file
+        if (entry.isFile()) {
+          // open input stream
+          iStream = new FileInputStream(entry);
           // put ZipEntry for the file
-          String zipEntryName = (referenceDir != null)
-                  ? getRelativePath(referenceDir, entry.getAbsolutePath())
-                  : getRelativePath(dir2zip, entry.getAbsolutePath());
+          String zipEntryName = (referenceDir != null) ? getRelativePath(referenceDir, entry
+                  .getAbsolutePath()) : getRelativePath(dir2zip, entry.getAbsolutePath());
           ZipEntry zipEntry = new ZipEntry(zipEntryName);
           zoStream.putNextEntry(zipEntry);
           // read input stream and write to output stream
-          while ((inBytes = iStream.read(block)) > 0) {
+          while ((inBytes = iStream.read(block)) > 0)
             zoStream.write(block, 0, inBytes);
-          }
+          // close input stream
+          iStream.close();
+        } else if (entry.isDirectory()) // zip sub-dir recursively
+          zipDirectory(entry, zoStream, referenceDir, excludeFiles);
+      }
+    } finally {
+      if (iStream != null) {
+        try {
+          iStream.close();
+        } catch (Exception e) {
         }
-      } else if (entry.isDirectory()) { // zip sub-dir recursively
-        zipDirectory(entry, zoStream, referenceDir, excludeFiles);
       }
     }
-
     return zoStream;
   }
 
@@ -1452,9 +1546,9 @@ public class FileUtil {
   public static File zipFile(File file2zip) throws IOException {
     // construct zipped file path
     String zipFileName = file2zip.getName();
-    int extIndex = zipFileName.lastIndexOf(DOT);
-    zipFileName = (extIndex >= 0) ? zipFileName.substring(0, extIndex) + ZIP_EXTENSION
-            : zipFileName + ZIP_EXTENSION;
+    int extIndex = zipFileName.lastIndexOf('.');
+    zipFileName = (extIndex >= 0) ? zipFileName.substring(0, extIndex) + ".zip" : zipFileName
+            + ".zip";
     File zipFile = new File(file2zip.getParentFile(), zipFileName);
     return zipFile(file2zip, zipFile);
   }
@@ -1473,15 +1567,32 @@ public class FileUtil {
   public static File zipFile(File file2zip, File zippedFile) throws IOException {
     byte[] block = new byte[4096];
     int inBytes = 0;
-    try (FileInputStream iStream = new FileInputStream(file2zip);
-            ZipOutputStream oStream = new ZipOutputStream(new FileOutputStream(zippedFile));) {
+    FileInputStream iStream = null;
+    ZipOutputStream oStream = null;
+    try {
+      // open input stream
+      iStream = new FileInputStream(file2zip);
       // create ZipEntry, using input file name
       ZipEntry zipEntry = new ZipEntry(file2zip.getName());
+      // open compressed output stream
+      oStream = new ZipOutputStream(new FileOutputStream(zippedFile));
       // add new ZipEntry
       oStream.putNextEntry(zipEntry);
       // read input stream and write to output stream
-      while ((inBytes = iStream.read(block)) > 0) {
+      while ((inBytes = iStream.read(block)) > 0)
         oStream.write(block, 0, inBytes);
+    } finally {
+      if (iStream != null) {
+        try {
+          iStream.close();
+        } catch (Exception e) {
+        }
+      }
+      if (oStream != null) {
+        try {
+          oStream.close();
+        } catch (Exception e) {
+        }
       }
     }
     return zippedFile;

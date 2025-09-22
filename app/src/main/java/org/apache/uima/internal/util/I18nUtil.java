@@ -26,11 +26,8 @@ import java.util.ResourceBundle;
 /**
  * Internationaliation utilities.
  * 
- * Static methods only
- * 
  */
 public class I18nUtil {
-
   /**
    * Localize a message to the default Locale.
    * 
@@ -103,7 +100,7 @@ public class I18nUtil {
    * @param aArguments
    *          arguments to message (may be null if none)
    * @param aLoader
-   *          ClassLoader to use to load the resource bundle. If null, the ClassLoader that loaded
+   *          ClassLoader to use to load the resource bundle. If null, the ClassLoader that loased
    *          <code>I18nUtil</code> is used.
    * 
    * @return localized message. If an exception occurs, returns "MESSAGE LOCALIZATION FAILED:"
@@ -112,64 +109,29 @@ public class I18nUtil {
   public static String localizeMessage(String aResourceBundleName, Locale aLocale,
           String aMessageKey, Object[] aArguments, ClassLoader aLoader) {
     try {
-      ResourceBundle bundle = resolveResourceBundle(aResourceBundleName, aLocale, aLoader);
-      return localizeMessage(bundle, aLocale, aMessageKey, aArguments);
-    } catch (Exception e) {
-      return "MESSAGE LOCALIZATION FAILED: " + e.getMessage();
-    }
-  }
+      // if aLoader is null, replace with the I18nUtil.class.getClassLoader()
+      if (aLoader == null) {
+        aLoader = MsgLocalizationClassLoader.getMsgLocalizationClassLoader();        
+//        aLoader = I18nUtil.class.getClassLoader();
+//        if (aLoader == null) // bootstrap classLoader; use system classLoader instead
+//        {
+//          aLoader = ClassLoader.getSystemClassLoader();
+//        }
+      }
 
-  /**
-   * Localize a message to a specified Locale.
-   * 
-   * @param aResourceBundle
-   *          the resource bundle to use to resolve message keys
-   * @param aLocale
-   *          locale to which to localize
-   * @param aMessageKey
-   *          key of message to localize
-   * @param aArguments
-   *          arguments to message (may be null if none)
-   * 
-   * @return localized message. If an exception occurs, returns "MESSAGE LOCALIZATION FAILED:"
-   *         followed by the exception message.
-   */
-  public static String localizeMessage(ResourceBundle aResourceBundle, Locale aLocale,
-          String aMessageKey, Object[] aArguments) {
-    try {
-      String message = (aResourceBundle == null)
-              ? ("Null ResourceBundle, key = \"" + aMessageKey + "\"")
-              : aResourceBundle.getString(aMessageKey);
+      // locate the resource bundle for this exception's messages
+      ResourceBundle bundle = ResourceBundle.getBundle(aResourceBundleName, aLocale, aLoader);
+      // retrieve the message from the resource bundle
+      String message = bundle.getString(aMessageKey);
       // if arguments exist, use MessageFormat to include them
-      if (aResourceBundle != null && aArguments != null && aArguments.length > 0) {
+      if (aArguments != null && aArguments.length > 0) {
         MessageFormat fmt = new MessageFormat(message);
         fmt.setLocale(aLocale);
         return fmt.format(aArguments);
       } else
         return message;
     } catch (Exception e) {
-      return "MESSAGE LOCALIZATION FAILED: The key " + aMessageKey
-              + " may be missing in the properties file " + e.getMessage();
+      return "MESSAGE LOCALIZATION FAILED: " + e.getMessage();
     }
   }
-
-  public static ResourceBundle resolveResourceBundle(String aResourceBundleName, Locale aLocale,
-          ClassLoader aLoader) {
-    if (aLoader == null) {
-      aLoader = MsgLocalizationClassLoader.getMsgLocalizationClassLoader();
-    }
-    // locate the resource bundle for this exception's messages
-    return ResourceBundle.getBundle(aResourceBundleName, aLocale, aLoader);
-  }
-
-  public static void setTccl(ClassLoader tccl) {
-    MsgLocalizationClassLoader.CallClimbingClassLoader.original_thread_context_class_loader
-            .set(tccl);
-  }
-
-  public static void removeTccl() {
-    MsgLocalizationClassLoader.CallClimbingClassLoader.original_thread_context_class_loader
-            .remove();
-  }
-
 }

@@ -44,9 +44,11 @@ import org.xml.sax.SAXException;
 
 /**
  * Reference implementation of {@link AnalysisEngineMetaData}.
+ * 
+ * 
  */
-public class AnalysisEngineMetaData_impl extends ResourceMetaData_impl
-        implements AnalysisEngineMetaData {
+public class AnalysisEngineMetaData_impl extends ResourceMetaData_impl implements
+        AnalysisEngineMetaData {
   static final long serialVersionUID = -3030574527767871396L;
 
   private boolean mAsynchronousModeSupported;
@@ -65,12 +67,20 @@ public class AnalysisEngineMetaData_impl extends ResourceMetaData_impl
 
   private OperationalProperties mOperationalProperties;
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.resource.metadata.ProcessingResourceMetaData#resolveImports()
+   */
   public void resolveImports() throws InvalidXMLException {
     resolveImports(UIMAFramework.newDefaultResourceManager());
   }
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.resource.metadata.ProcessingResourceMetaData#resolveImports(org.apache.uima.resource.ResourceManager)
+   */
   public void resolveImports(ResourceManager aResourceManager) throws InvalidXMLException {
     if (getTypeSystem() != null) {
       getTypeSystem().resolveImports(aResourceManager);
@@ -83,13 +93,17 @@ public class AnalysisEngineMetaData_impl extends ResourceMetaData_impl
     }
   }
 
-  @Override
+  /**
+   * @see AnalysisEngineMetaData#getCapabilities()
+   */
   public Capability[] getCapabilities() {
     return mCapabilities;
   }
 
-  @Override
-  public void setCapabilities(Capability... aCapabilities) {
+  /**
+   * @see AnalysisEngineMetaData#setCapabilities(Capability[])
+   */
+  public void setCapabilities(Capability[] aCapabilities) {
     if (aCapabilities == null) {
       throw new UIMA_IllegalArgumentException(UIMA_IllegalArgumentException.ILLEGAL_ARGUMENT,
               new Object[] { "null", "aCapabilities", "setCapabilities" });
@@ -97,62 +111,81 @@ public class AnalysisEngineMetaData_impl extends ResourceMetaData_impl
     mCapabilities = aCapabilities;
   }
 
-  @Override
+  /**
+   * @see AnalysisEngineMetaData#getTypeSystem()
+   */
   public TypeSystemDescription getTypeSystem() {
     return mTypeSystem;
   }
 
-  @Override
+  /**
+   * @see AnalysisEngineMetaData#setTypeSystem(TypeSystemDescription)
+   */
   public void setTypeSystem(TypeSystemDescription aTypeSystem) {
     mTypeSystem = aTypeSystem;
   }
 
-  @Override
+  /**
+   * @see org.apache.uima.resource.metadata.ProcessingResourceMetaData#getTypePriorities()
+   */
   public TypePriorities getTypePriorities() {
     return mTypePriorities;
   }
 
-  @Override
+  /**
+   * @see org.apache.uima.resource.metadata.ProcessingResourceMetaData#setTypePriorities(TypePriorities)
+   */
   public void setTypePriorities(TypePriorities aTypePriorities) {
     mTypePriorities = aTypePriorities;
   }
 
-  @Override
+  /** 
+   * @see org.apache.uima.resource.metadata.ProcessingResourceMetaData#getFsIndexCollection()
+   */
   public FsIndexCollection getFsIndexCollection() {
     return mFsIndexCollection;
   }
 
-  @Override
+  /**
+   * @see org.apache.uima.resource.metadata.ProcessingResourceMetaData#setFsIndexCollection(FsIndexCollection)
+   */
   public void setFsIndexCollection(FsIndexCollection aFsIndexCollection) {
     mFsIndexCollection = aFsIndexCollection;
   }
 
-  @Override
+  /**
+   * @see AnalysisEngineMetaData#getFsIndexes()
+   */
   public FsIndexDescription[] getFsIndexes() {
     return mFsIndexCollection == null ? null : mFsIndexCollection.getFsIndexes();
   }
 
-  @Override
-  public void setFsIndexes(FsIndexDescription... aFsIndexes) {
+  /**
+   * @see AnalysisEngineMetaData#setFsIndexes(FsIndexDescription[])
+   */
+  public void setFsIndexes(FsIndexDescription[] aFsIndexes) {
     if (mFsIndexCollection == null) {
       mFsIndexCollection = new FsIndexCollection_impl();
     }
     mFsIndexCollection.setFsIndexes(aFsIndexes);
   }
 
-  @Override
   public OperationalProperties getOperationalProperties() {
     return mOperationalProperties;
   }
 
-  @Override
   public void setOperationalProperties(OperationalProperties aOperationalProperties) {
     mOperationalProperties = aOperationalProperties;
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.resource.metadata.impl.MetaDataObject_impl#writePropertyAsElement(org.apache.uima.resource.metadata.impl.PropertyXmlInfo,
+   *      java.lang.String, org.xml.sax.ContentHandler)
+   */
   @Override
-  protected void writePropertyAsElement(PropertyXmlInfo aPropInfo, String aNamespace)
-          throws SAXException {
+  protected void writePropertyAsElement(PropertyXmlInfo aPropInfo, String aNamespace) throws SAXException {
     // Prevent the fsIndexes property from being written to XML - it exists only so old-style XML
     // can be read.
     if (!"fsIndexes".equals(aPropInfo.propertyName)) {
@@ -160,7 +193,6 @@ public class AnalysisEngineMetaData_impl extends ResourceMetaData_impl
     }
   }
 
-  @Override
   protected void readPropertyValueFromXMLElement(PropertyXmlInfo aPropXmlInfo, Element aElement,
           XMLParser aParser, ParsingOptions aOptions) throws InvalidXMLException {
     // Catch the case where both fsIndexes and fsIndexCollection are specified
@@ -174,7 +206,6 @@ public class AnalysisEngineMetaData_impl extends ResourceMetaData_impl
     super.readPropertyValueFromXMLElement(aPropXmlInfo, aElement, aParser, aOptions);
   }
 
-  @Override
   protected void readUnknownPropertyValueFromXMLElement(Element aElement, XMLParser aParser,
           ParsingOptions aOptions, List<String> aKnownPropertyNames) throws InvalidXMLException {
     // Catch the case where both fsIndexes and fsIndexCollection are specified
@@ -188,27 +219,37 @@ public class AnalysisEngineMetaData_impl extends ResourceMetaData_impl
     super.readUnknownPropertyValueFromXMLElement(aElement, aParser, aOptions, aKnownPropertyNames);
   }
 
-  @Override
+  /**
+   * @see AnalysisEngineMetaData#isAsynchronousModeSupported()
+   */
   public boolean isAsynchronousModeSupported() {
     return mAsynchronousModeSupported;
   }
 
-  @Override
+  /**
+   * @see AnalysisEngineMetaData#setAsynchronousModeSupported(boolean)
+   */
   public void setAsynchronousModeSupported(boolean aSupported) {
     mAsynchronousModeSupported = aSupported;
   }
 
-  @Override
+  /**
+   * @see AnalysisEngineMetaData#getFlowConstraints()
+   */
   public FlowConstraints getFlowConstraints() {
     return mFlowConstraints;
   }
 
-  @Override
+  /**
+   * @see AnalysisEngineMetaData#setFlowConstraints(FlowConstraints)
+   */
   public void setFlowConstraints(FlowConstraints aFlowConstraints) {
     mFlowConstraints = aFlowConstraints;
   }
 
-  @Override
+  /**
+   * @see AnalysisEngineMetaData#getDelegateAnalysisEngineMetaData()
+   */
   public AnalysisEngineMetaData[] getDelegateAnalysisEngineMetaData() {
     return mDelegateAnalysisEngineMetaData;
   }
@@ -230,7 +271,6 @@ public class AnalysisEngineMetaData_impl extends ResourceMetaData_impl
    * 
    * @return true if this component is sofa-aware, false if it is sofa-unaware.
    */
-  @Override
   public boolean isSofaAware() {
     Capability[] capabilities = getCapabilities();
     if (capabilities != null) {
@@ -244,23 +284,20 @@ public class AnalysisEngineMetaData_impl extends ResourceMetaData_impl
     return false;
   }
 
-  @Override
   protected XmlizationInfo getXmlizationInfo() {
     return XMLIZATION_INFO;
   }
 
   /**
    * Static method to get XmlizationInfo, used by subclasses to set up their own XmlizationInfo.
-   * 
    * @return XmlizationInfo, used by subclasses to set up their own XmlizationInfo.
    */
   protected static XmlizationInfo getXmlizationInfoForClass() {
     return XMLIZATION_INFO;
   }
 
-  // properties assigned below
-  private static final XmlizationInfo XMLIZATION_INFO = new XmlizationInfo("analysisEngineMetaData",
-          null);
+  static final private XmlizationInfo XMLIZATION_INFO = new XmlizationInfo(
+          "analysisEngineMetaData", null); // properties assigned below
 
   static {
     // this class's Xmlization info is derived from that of its superclass
@@ -270,9 +307,12 @@ public class AnalysisEngineMetaData_impl extends ResourceMetaData_impl
 
     PropertyXmlInfo[] newProperties = new PropertyXmlInfo[] {
         new PropertyXmlInfo("flowConstraints"), new PropertyXmlInfo("typeSystem", null),
-        new PropertyXmlInfo("typePriorities", null), new PropertyXmlInfo("fsIndexCollection", null),
-        new PropertyXmlInfo("fsIndexes"), new PropertyXmlInfo("capabilities", false),
-        new PropertyXmlInfo("operationalProperties", null), new PropertyXmlInfo("casInterface") };
+        new PropertyXmlInfo("typePriorities", null),
+        new PropertyXmlInfo("fsIndexCollection", null), 
+        new PropertyXmlInfo("fsIndexes"),
+        new PropertyXmlInfo("capabilities", false),
+        new PropertyXmlInfo("operationalProperties", null), 
+        new PropertyXmlInfo("casInterface") };
 
     XMLIZATION_INFO.propertyInfo = new PropertyXmlInfo[superclassInfo.propertyInfo.length
             + newProperties.length];

@@ -47,8 +47,8 @@ import org.apache.uima.resource.metadata.impl.XmlizationInfo;
  * Reference implementation of {@link ResourceCreationSpecifier}.
  * 
  */
-public class ResourceCreationSpecifier_impl extends MetaDataObject_impl
-        implements ResourceCreationSpecifier {
+public class ResourceCreationSpecifier_impl extends MetaDataObject_impl implements
+        ResourceCreationSpecifier {
 
   private String mImplementationName;
 
@@ -56,7 +56,7 @@ public class ResourceCreationSpecifier_impl extends MetaDataObject_impl
 
   private ResourceMetaData mMetaData;
 
-  private List<ExternalResourceDependency> mExternalResourceDependencies = new ArrayList<>();
+  private List<ExternalResourceDependency> mExternalResourceDependencies = new ArrayList<ExternalResourceDependency>();
 
   private ResourceManagerConfiguration mResourceManagerConfiguration;
 
@@ -65,7 +65,6 @@ public class ResourceCreationSpecifier_impl extends MetaDataObject_impl
   /**
    * @see ResourceCreationSpecifier#getFrameworkImplementation()
    */
-  @Override
   public String getFrameworkImplementation() {
     return mFrameworkImplementation;
   }
@@ -73,7 +72,6 @@ public class ResourceCreationSpecifier_impl extends MetaDataObject_impl
   /**
    * @see ResourceCreationSpecifier#setFrameworkImplementation(String)
    */
-  @Override
   public void setFrameworkImplementation(String aFrameworkImplementation) {
     mFrameworkImplementation = aFrameworkImplementation;
   }
@@ -81,7 +79,6 @@ public class ResourceCreationSpecifier_impl extends MetaDataObject_impl
   /**
    * @see ResourceCreationSpecifier#getImplementationName()
    */
-  @Override
   public String getImplementationName() {
     return mImplementationName;
   }
@@ -89,7 +86,6 @@ public class ResourceCreationSpecifier_impl extends MetaDataObject_impl
   /**
    * @see ResourceCreationSpecifier#setImplementationName(String)
    */
-  @Override
   public void setImplementationName(String aImplementationName) {
     mImplementationName = aImplementationName;
 
@@ -98,7 +94,6 @@ public class ResourceCreationSpecifier_impl extends MetaDataObject_impl
   /**
    * @see ResourceCreationSpecifier#getMetaData()
    */
-  @Override
   public ResourceMetaData getMetaData() {
     return mMetaData;
   }
@@ -111,7 +106,6 @@ public class ResourceCreationSpecifier_impl extends MetaDataObject_impl
    * @param aMetaData
    *          metadata to assign
    */
-  @Override
   public void setMetaData(ResourceMetaData aMetaData) {
     mMetaData = aMetaData;
   }
@@ -119,7 +113,6 @@ public class ResourceCreationSpecifier_impl extends MetaDataObject_impl
   /**
    * @see org.apache.uima.analysis_engine.AnalysisEngineDescription#getExternalResourceDependencies()
    */
-  @Override
   public ExternalResourceDependency[] getExternalResourceDependencies() {
     ExternalResourceDependency[] result = new ExternalResourceDependency[mExternalResourceDependencies
             .size()];
@@ -130,10 +123,9 @@ public class ResourceCreationSpecifier_impl extends MetaDataObject_impl
   /**
    * @see org.apache.uima.analysis_engine.AnalysisEngineDescription#setExternalResourceDependencies(ExternalResourceDependency[])
    */
-  @Override
-  public void setExternalResourceDependencies(ExternalResourceDependency... aDependencies) {
+  public void setExternalResourceDependencies(ExternalResourceDependency[] aDependencies) {
     // can't just clear the ArrayList since that breaks clone(). Create a new list.
-    mExternalResourceDependencies = new ArrayList<>();
+    mExternalResourceDependencies = new ArrayList<ExternalResourceDependency>();
     if (aDependencies != null) {
       for (int i = 0; i < aDependencies.length; i++) {
         mExternalResourceDependencies.add(aDependencies[i]);
@@ -144,12 +136,10 @@ public class ResourceCreationSpecifier_impl extends MetaDataObject_impl
   /**
    * @see org.apache.uima.analysis_engine.AnalysisEngineDescription#getExternalResourceDependency(String)
    */
-  @Override
   public ExternalResourceDependency getExternalResourceDependency(String aKey) {
     for (ExternalResourceDependency dep : mExternalResourceDependencies) {
-      if (aKey.equals(dep.getKey())) {
+      if (aKey.equals(dep.getKey()))
         return dep;
-      }
     }
     return null;
   }
@@ -159,7 +149,6 @@ public class ResourceCreationSpecifier_impl extends MetaDataObject_impl
    * 
    * @see org.apache.uima.resource.ResourceCreationSpecifier#getResourceManagerConfiguration()
    */
-  @Override
   public ResourceManagerConfiguration getResourceManagerConfiguration() {
     return mResourceManagerConfiguration;
   }
@@ -167,11 +156,8 @@ public class ResourceCreationSpecifier_impl extends MetaDataObject_impl
   /*
    * (non-Javadoc)
    * 
-   * @see
-   * org.apache.uima.resource.ResourceCreationSpecifier#setResourceManagerConfiguration(org.apache.
-   * uima.resource.metadata.ResourceManagerConfiguration)
+   * @see org.apache.uima.resource.ResourceCreationSpecifier#setResourceManagerConfiguration(org.apache.uima.resource.metadata.ResourceManagerConfiguration)
    */
-  @Override
   public void setResourceManagerConfiguration(
           ResourceManagerConfiguration aResourceManagerConfiguration) {
     mResourceManagerConfiguration = aResourceManagerConfiguration;
@@ -182,7 +168,6 @@ public class ResourceCreationSpecifier_impl extends MetaDataObject_impl
    * 
    * @see org.apache.uima.resource.ResourceCreationSpecifier#doFullValidation()
    */
-  @Override
   public void doFullValidation() throws ResourceInitializationException {
     doFullValidation(UIMAFramework.newDefaultResourceManager());
   }
@@ -190,17 +175,14 @@ public class ResourceCreationSpecifier_impl extends MetaDataObject_impl
   /*
    * (non-Javadoc)
    * 
-   * @see
-   * org.apache.uima.resource.ResourceCreationSpecifier#doFullValidation(org.apache.uima.resource.
-   * ResourceManager)
+   * @see org.apache.uima.resource.ResourceCreationSpecifier#doFullValidation(org.apache.uima.resource.ResourceManager)
    */
-  @Override
   public void doFullValidation(ResourceManager aResourceManager)
           throws ResourceInitializationException {
     // try to instantiate dummy resource - this checks config params
     // and resources
     DummyResource dummy = new DummyResource();
-    Map<String, Object> params = new HashMap<>();
+    Map<String, Object> params = new HashMap<String, Object>();
     params.put(Resource.PARAM_RESOURCE_MANAGER, aResourceManager);
     dummy.initialize(this, params);
 
@@ -219,23 +201,18 @@ public class ResourceCreationSpecifier_impl extends MetaDataObject_impl
    * @throws ResourceConfigurationException
    *           if the configuration parameter settings in <code>aDesc</code> are invalid
    */
-  @Override
-  public final void validate()
-          throws ResourceInitializationException, ResourceConfigurationException {
+  public final void validate() throws ResourceInitializationException, ResourceConfigurationException {
     validate(UIMAFramework.newDefaultResourceManager());
   }
+  
+  
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.apache.uima.resource.ResourceCreationSpecifier#validate(org.apache.uima.resource.
-   * ResourceManager)
+  /* (non-Javadoc)
+   * @see org.apache.uima.resource.ResourceCreationSpecifier#validate(org.apache.uima.resource.ResourceManager)
    */
-  @Override
-  public void validate(ResourceManager aResourceManager)
-          throws ResourceInitializationException, ResourceConfigurationException {
+  public void validate(ResourceManager aResourceManager) throws ResourceInitializationException, ResourceConfigurationException {
     // Validate configuration parameter declarations (but not settings)
-    validateConfigurationParameters(aResourceManager);
+    validateConfigurationParameters(aResourceManager); 
   }
 
   /**
@@ -247,15 +224,13 @@ public class ResourceCreationSpecifier_impl extends MetaDataObject_impl
    * overrides are valid, and logs a warning for parameters with no overrides. (For primitives,
    * there should be no overrides.)
    * 
-   * @param aResourceManager
-   *          used to resolve import by name. This is necessary to validate configuration parameter
-   *          overrides.
+   * @param aResourceManager used to resolve import by name.  This is necessary to validate
+   *         configuration parameter overrides.
    * 
    * @throws ResourceInitializationException
    *           if the configuration parameters are invalid
    */
-  protected void validateConfigurationParameters(ResourceManager aResourceManager)
-          throws ResourceInitializationException {
+  protected void validateConfigurationParameters(ResourceManager aResourceManager) throws ResourceInitializationException {
     ConfigurationParameterDeclarations cfgParamDecls = getMetaData()
             .getConfigurationParameterDeclarations();
     ConfigurationParameter[] params = cfgParamDecls.getConfigurationParameters();
@@ -266,7 +241,7 @@ public class ResourceCreationSpecifier_impl extends MetaDataObject_impl
     } else {
       ConfigurationParameter[] commonParams = cfgParamDecls.getCommonParameters();
       // check for duplicates in common params
-      Set<String> commonParamNames = new HashSet<>();
+      Set<String> commonParamNames = new HashSet<String>();
       if (commonParams != null) {
         for (int i = 0; i < commonParams.length; i++) {
           if (!commonParamNames.add(commonParams[i].getName())) {
@@ -280,8 +255,7 @@ public class ResourceCreationSpecifier_impl extends MetaDataObject_impl
       // check for duplicates in groups
       ConfigurationGroup[] groups = cfgParamDecls.getConfigurationGroups();
       if (groups != null) {
-        Map<String, Set<String>> groupToParamSetMap = new HashMap<>(); // map from group name to
-                                                                       // HashSet of param names
+        Map<String, Set<String>> groupToParamSetMap = new HashMap<String, Set<String>>(); // map from group name to HashSet of param names
         // in that group
         for (int i = 0; i < groups.length; i++) {
           String[] names = groups[i].getNames();
@@ -289,7 +263,7 @@ public class ResourceCreationSpecifier_impl extends MetaDataObject_impl
             Set<String> paramNamesInGroup = groupToParamSetMap.get(names[j]);
             if (paramNamesInGroup == null) {
               // first time we've seen this group. create an entry and add common params
-              paramNamesInGroup = new HashSet<>(commonParamNames);
+              paramNamesInGroup = new HashSet<String>(commonParamNames);
             }
 
             // check for duplicate parameter names
@@ -325,7 +299,7 @@ public class ResourceCreationSpecifier_impl extends MetaDataObject_impl
    */
   protected void checkForDuplicateParameterNames(ConfigurationParameter[] aParams)
           throws ResourceInitializationException {
-    Set<String> paramNames = new HashSet<>();
+    Set<String> paramNames = new HashSet<String>();
     for (int i = 0; i < aParams.length; i++) {
       if (!paramNames.add(aParams[i].getName())) {
         throw new ResourceInitializationException(
@@ -346,15 +320,13 @@ public class ResourceCreationSpecifier_impl extends MetaDataObject_impl
    *          an array of ConfigurationParameters
    * @param aGroupName
    *          name of groups in which these parameters are contained. Null if no group
-   * @param aResourceManager
-   *          used to resolve imports by name.
-   * 
+   * @param aResourceManager used to resolve imports by name.
+   *          
    * @throws ResourceInitializationException
    *           if there is an invalid parameter override declaration
    */
   protected void checkForInvalidParameterOverrides(ConfigurationParameter[] aParams,
-          String aGroupName, ResourceManager aResourceManager)
-          throws ResourceInitializationException {
+          String aGroupName, ResourceManager aResourceManager) throws ResourceInitializationException {
     for (int i = 0; i < aParams.length; i++) {
       String[] overrides = aParams[i].getOverrides();
       if (overrides.length > 0) {
@@ -366,15 +338,15 @@ public class ResourceCreationSpecifier_impl extends MetaDataObject_impl
     }
   }
 
-  @Override
   protected XmlizationInfo getXmlizationInfo() {
     return XMLIZATION_INFO;
   }
 
-  private static final XmlizationInfo XMLIZATION_INFO = new XmlizationInfo(
-          "resourceCreationSpecifier",
-          new PropertyXmlInfo[] { new PropertyXmlInfo("frameworkImplementation"),
-              new PropertyXmlInfo("implementationName"), new PropertyXmlInfo("metaData", null),
+  static final private XmlizationInfo XMLIZATION_INFO = new XmlizationInfo(
+          "resourceCreationSpecifier", new PropertyXmlInfo[] {
+              new PropertyXmlInfo("frameworkImplementation"),
+              new PropertyXmlInfo("implementationName"), 
+              new PropertyXmlInfo("metaData", null),
               new PropertyXmlInfo("externalResourceDependencies"),
               new PropertyXmlInfo("externalResources"),
               new PropertyXmlInfo("resourceManagerConfiguration", null), });

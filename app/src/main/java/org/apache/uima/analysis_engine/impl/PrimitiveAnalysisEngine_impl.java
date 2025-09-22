@@ -25,8 +25,7 @@ import java.util.Map;
 import org.apache.uima.Constants;
 import org.apache.uima.UIMAFramework;
 import org.apache.uima.UIMA_IllegalStateException;
-import org.apache.uima.UimaContext;
-import org.apache.uima.UimaContextHolder;
+import org.apache.uima.UimaContextAdmin;
 import org.apache.uima.analysis_component.AnalysisComponent;
 import org.apache.uima.analysis_engine.AnalysisEngine;
 import org.apache.uima.analysis_engine.AnalysisEngineDescription;
@@ -59,22 +58,22 @@ import org.apache.uima.util.Logger;
  */
 public class PrimitiveAnalysisEngine_impl extends AnalysisEngineImplBase implements AnalysisEngine {
   /**
-   * UIMA-5043 Set & restore the UimaContextHolder around calls to user code so it can be used to
-   * access the External Settings
+   * current class
    */
-
+  
   private static final Class<PrimitiveAnalysisEngine_impl> CLASS_NAME = PrimitiveAnalysisEngine_impl.class;
-
+ 
   /**
-   * flag for embedders to test to see if they have a version of the framework which supports
-   * multi-threaded produceResource
+   * flag for embedders to test to see if they have a 
+   * version of the framework which supports
+   * multi-threaded produceResource 
    */
   public static final boolean INIT_THREADSAFE = true;
-
+      
   private ResultSpecification mCurrentResultSpecification;
   /**
-   * result specification derived from the output capabilities of this primitive, used in
-   * intersection of languages Recomputed when type system changes
+   * result specification derived from the output capabilities of this primitive, used in intersection of languages
+   * Recomputed when type system changes
    */
   private ResultSpecification rsFromOutputCapabilities;
 
@@ -103,7 +102,6 @@ public class PrimitiveAnalysisEngine_impl extends AnalysisEngineImplBase impleme
   /**
    * @see org.apache.uima.resource.Resource#initialize(ResourceSpecifier, Map)
    */
-  @Override
   public boolean initialize(ResourceSpecifier aSpecifier, Map<String, Object> aAdditionalParams)
           throws ResourceInitializationException {
     try {
@@ -111,10 +109,13 @@ public class PrimitiveAnalysisEngine_impl extends AnalysisEngineImplBase impleme
       // this includes CollectionReader, and CasConsumer descriptors
       // as well as AnalysisEngine descriptors.
 
+      if (!(aSpecifier instanceof ResourceCreationSpecifier)) {
+        return false;
+      }
+
       // BUT, for AnalysisEngineDescriptions, must not be an aggregate
-      if (!(aSpecifier instanceof ResourceCreationSpecifier)
-              || (aSpecifier instanceof AnalysisEngineDescription
-                      && !((AnalysisEngineDescription) aSpecifier).isPrimitive())) {
+      if (aSpecifier instanceof AnalysisEngineDescription
+              && !((AnalysisEngineDescription) aSpecifier).isPrimitive()) {
         return false;
       }
 
@@ -176,8 +177,8 @@ public class PrimitiveAnalysisEngine_impl extends AnalysisEngineImplBase impleme
       return true;
     } catch (ResourceConfigurationException e) {
       throw new ResourceInitializationException(
-              ResourceInitializationException.ERROR_INITIALIZING_FROM_DESCRIPTOR,
-              new Object[] { getMetaData().getName(), aSpecifier.getSourceUrlString() });
+              ResourceInitializationException.ERROR_INITIALIZING_FROM_DESCRIPTOR, new Object[] {
+                  getMetaData().getName(), aSpecifier.getSourceUrlString() });
     }
   }
 
@@ -202,14 +203,30 @@ public class PrimitiveAnalysisEngine_impl extends AnalysisEngineImplBase impleme
     }
 
     // load annotator class
-    Class<?> annotatorClass = loadUserClassOrThrow(annotatorClassName, mDescription);
+    Class<?> annotatorClass = null;
+    try {
+      // get UIMA extension ClassLoader if available
+      final ClassLoader cl = getUimaContextAdmin().getResourceManager().getExtensionClassLoader();
+
+      if (cl != null) {
+        // use UIMA extension ClassLoader to load the class
+        annotatorClass = cl.loadClass(annotatorClassName);
+      } else {
+        // use application ClassLoader to load the class
+        annotatorClass = Class.forName(annotatorClassName);
+      }
+    } catch (ClassNotFoundException e) {
+      throw new ResourceInitializationException(
+              ResourceInitializationException.ANNOTATOR_CLASS_NOT_FOUND, new Object[] {
+                  annotatorClassName, mDescription.getSourceUrlString() }, e);
+    }
 
     // Make sure the specified class can be adapter to an AnalysisComponent.
     if (!(AnalysisComponent.class.isAssignableFrom(annotatorClass))
             && !AnalysisComponentAdapterFactory.isAdaptable(annotatorClass)) {
       throw new ResourceInitializationException(
-              ResourceInitializationException.NOT_AN_ANALYSIS_COMPONENT,
-              new Object[] { annotatorClass.getName(), mDescription.getSourceUrlString() });
+              ResourceInitializationException.NOT_AN_ANALYSIS_COMPONENT, new Object[] {
+                  annotatorClass.getName(), mDescription.getSourceUrlString() });
     }
 
     // if we're in verification mode, stop here and do not try to instantiate the
@@ -229,40 +246,38 @@ public class PrimitiveAnalysisEngine_impl extends AnalysisEngineImplBase impleme
     } catch (ResourceInitializationException e) {
       throw e;
     } catch (Exception e) {
-
       throw new ResourceInitializationException(
-              ResourceInitializationException.COULD_NOT_INSTANTIATE_ANNOTATOR,
-              new Object[] { annotatorClassName, mDescription.getSourceUrlString() }, e);
+              ResourceInitializationException.COULD_NOT_INSTANTIATE_ANNOTATOR, new Object[] {
+                  annotatorClassName, mDescription.getSourceUrlString() }, e);
     }
+
+    // Set Logger, to enable annotator-specific logging
+    UimaContextAdmin uimaContext = getUimaContextAdmin();
+    Logger logger = UIMAFramework.getLogger(annotatorClass);
+    logger.setResourceManager(this.getResourceManager());
+    uimaContext.setLogger(logger);
 
     // initialize AnalysisComponent
-    UimaContext prevContext = setContextHolder(); // for use by POJOs
     try {
-      // Set Logger, to enable annotator-specific logging
-      getUimaContextAdmin().setLogger(UIMAFramework.getLogger(annotatorClass));
-
-      callInitializeMethod(mAnalysisComponent, getUimaContext());
-      // mAnalysisComponent.initialize(getUimaContext());
-      // set up the CAS pool for this AE (this won't do anything if
-      // mAnalysisComponent.getCasInstancesRequired() == 0)
-      getUimaContextAdmin().defineCasPool(mAnalysisComponent.getCasInstancesRequired(),
-              getPerformanceTuningSettings(), mSofaAware);
+      mAnalysisComponent.initialize(getUimaContext());
     } catch (Exception e) {
       throw new ResourceInitializationException(
-              ResourceInitializationException.ANNOTATOR_INITIALIZATION_FAILED,
-              new Object[] { annotatorClassName, mDescription.getSourceUrlString() }, e);
-    } finally {
-      UimaContextHolder.setContext(prevContext);
+              ResourceInitializationException.ANNOTATOR_INITIALIZATION_FAILED, new Object[] {
+                  annotatorClassName, mDescription.getSourceUrlString() }, e);
     }
+
+    // set up the CAS pool for this AE (this won't do anything if
+    // mAnalysisComponent.getCasInstancesRequired() == 0)
+    getUimaContextAdmin().defineCasPool(mAnalysisComponent.getCasInstancesRequired(),
+            getPerformanceTuningSettings(), mSofaAware);
   }
 
   /**
    * @see org.apache.uima.resource.Resource#destroy()
    */
-  @Override
   public void destroy() {
     if (mAnalysisComponent != null) {
-      withContextHolder(() -> mAnalysisComponent.destroy());
+      mAnalysisComponent.destroy();
       getLogger().logrb(Level.CONFIG, CLASS_NAME.getName(), "destroy", LOG_RESOURCE_BUNDLE,
               "UIMA_analysis_engine_destroyed__CONFIG", getMetaData().getName());
     }
@@ -272,10 +287,8 @@ public class PrimitiveAnalysisEngine_impl extends AnalysisEngineImplBase impleme
   /*
    * (non-Javadoc)
    * 
-   * @see org.apache.uima.analysis_engine.AnalysisEngine#setResultSpecification(org.apache.uima.
-   * analysis_engine.ResultSpecification)
+   * @see org.apache.uima.analysis_engine.AnalysisEngine#setResultSpecification(org.apache.uima.analysis_engine.ResultSpecification)
    */
-  @Override
   public void setResultSpecification(ResultSpecification aResultSpec) {
     if (aResultSpec == null) {
       resetResultSpecificationToDefault();
@@ -288,7 +301,6 @@ public class PrimitiveAnalysisEngine_impl extends AnalysisEngineImplBase impleme
   /**
    * @see AnalysisEngine#processAndOutputNewCASes(CAS)
    */
-  @Override
   public CasIterator processAndOutputNewCASes(CAS aCAS) throws AnalysisEngineProcessException {
     enterProcess();
     try {
@@ -303,26 +315,20 @@ public class PrimitiveAnalysisEngine_impl extends AnalysisEngineImplBase impleme
     }
   }
 
-  @Override
   public void batchProcessComplete() throws AnalysisEngineProcessException {
     enterBatchProcessComplete();
-    UimaContext prevContext = setContextHolder(); // for use by POJOs
     try {
       getAnalysisComponent().batchProcessComplete();
     } finally {
-      UimaContextHolder.setContext(prevContext);
       exitBatchProcessComplete();
     }
   }
 
-  @Override
   public void collectionProcessComplete() throws AnalysisEngineProcessException {
     enterCollectionProcessComplete();
-    UimaContext prevContext = setContextHolder(); // for use by POJOs
     try {
       getAnalysisComponent().collectionProcessComplete();
     } finally {
-      UimaContextHolder.setContext(prevContext);
       exitCollectionProcessComplete();
     }
   }
@@ -332,8 +338,7 @@ public class PrimitiveAnalysisEngine_impl extends AnalysisEngineImplBase impleme
    * 
    * @param aCAS
    *          CAS to be processed by annotator
-   * @throws AnalysisEngineProcessException
-   *           -
+   * @throws AnalysisEngineProcessException -         
    */
   protected void callAnalysisComponentProcess(CAS aCAS) throws AnalysisEngineProcessException {
     // logging and instrumentation
@@ -343,7 +348,6 @@ public class PrimitiveAnalysisEngine_impl extends AnalysisEngineImplBase impleme
             "UIMA_analysis_engine_process_begin__FINE", resourceName);
     try {
       CAS view = null;
-      UimaContext prevContext = setContextHolder(); // for use by POJOs
       // call Annotator's process method
       try {
 
@@ -352,8 +356,7 @@ public class PrimitiveAnalysisEngine_impl extends AnalysisEngineImplBase impleme
         view = Util.getStartingView(aCAS, mSofaAware, getUimaContextAdmin().getComponentInfo());
         // now get the right interface(e.g. CAS or JCAS)
         // must precede the switchClassLoader call below UIMA-2211
-        Class<? extends AbstractCas> requiredInterface = mAnalysisComponent
-                .getRequiredCasInterface();
+        Class<? extends AbstractCas> requiredInterface = mAnalysisComponent.getRequiredCasInterface();
         AbstractCas casToPass = getCasManager().getCasInterface(view, requiredInterface);
 
         // check if there was a change in the ResultSpecification or in
@@ -364,45 +367,33 @@ public class PrimitiveAnalysisEngine_impl extends AnalysisEngineImplBase impleme
             mLastTypeSystem = view.getTypeSystem();
             mCurrentResultSpecification.setTypeSystem(mLastTypeSystem);
             rsFromOutputCapabilities = new ResultSpecification_impl(mLastTypeSystem);
-            rsFromOutputCapabilities.addCapabilities(getAnalysisEngineMetaData().getCapabilities());
+            rsFromOutputCapabilities.addCapabilities(this.getAnalysisEngineMetaData().getCapabilities());
           }
           // the actual ResultSpec we send to the component is formed by
           // looking at this primitive AE's declared output types and eliminating
           // any that are not in mCurrentResultSpecification.
-          ResultSpecification analysisComponentResultSpec = ((ResultSpecification_impl) mCurrentResultSpecification)
-                  .intersect((ResultSpecification_impl) rsFromOutputCapabilities);
+          ResultSpecification analysisComponentResultSpec = 
+            ((ResultSpecification_impl)mCurrentResultSpecification).intersect((ResultSpecification_impl)rsFromOutputCapabilities);
           mAnalysisComponent.setResultSpecification(analysisComponentResultSpec);
           mResultSpecChanged = false;
         }
+       
+        // insure view is passed to switch / restore class loader https://issues.apache.org/jira/browse/UIMA-2211
+        ((CASImpl)view).switchClassLoaderLockCasCL(this.getResourceManager().getExtensionClassLoader());
 
-        // insure view is passed to switch / restore class loader
-        // https://issues.apache.org/jira/browse/UIMA-2211
-        ((CASImpl) view).switchClassLoaderLockCasCL(getResourceManager().getExtensionClassLoader());
-
-        callProcessMethod(mAnalysisComponent, casToPass);
-        // // call the process method
-        // MDC.put(MDC_ANNOTATOR_CONTEXT_NAME,
-        // ((UimaContext_ImplBase)getUimaContext()).getQualifiedContextName());
-        // MDC.put(MDC_ANNOTATOR_IMPL_NAME, mAnalysisComponent.getClass().getName());
-        // try {
-        // mAnalysisComponent.process(casToPass);
-        // } finally {
-        // MDC.remove(MDC_ANNOTATOR_CONTEXT_NAME);
-        // MDC.remove(MDC_ANNOTATOR_IMPL_NAME);
-        // }
-        // getMBean().incrementCASesProcessed();
-
-        // note we do not clear the CAS's currentComponentInfo at this time
-        // nor do we unlock the cas and switch it back (class loader-wise). The AnalysisComponents
-        // still
-        // can access the CAS until such time as its hasNext method returns false. Thus is is the
-        // AnalysisComponentCasIterator that knows when it is time to clear the
-        // currentComponentInfo.
+        // call the process method
+        mAnalysisComponent.process(casToPass);
+        getMBean().incrementCASesProcessed();
+        
+        //note we do not clear the CAS's currentComponentInfo at this time
+        // nor do we unlock the cas and switch it back (class loader-wise).  The AnalysisComponents still
+        //can access the CAS until such time as its hasNext method returns false.  Thus is is the
+        //AnalysisComponentCasIterator that knows when it is time to clear the currentComponentInfo.
       } catch (Exception e) {
         // catching Throwable to catch out-of-memory errors too, which are not Exceptions
         if (null != view) {
           view.setCurrentComponentInfo(null);
-          ((CASImpl) view).restoreClassLoaderUnlockCas();
+          ((CASImpl)view).restoreClassLoaderUnlockCas();
         }
         if (e instanceof AnalysisEngineProcessException) {
           throw (AnalysisEngineProcessException) e;
@@ -410,117 +401,113 @@ public class PrimitiveAnalysisEngine_impl extends AnalysisEngineImplBase impleme
           throw new AnalysisEngineProcessException(
                   AnalysisEngineProcessException.ANNOTATOR_EXCEPTION, null, e);
         }
-      } catch (Error e) { // out of memory error, for instance
+      } catch (Error e) {  // out of memory error, for instance
         if (null != view) {
           view.setCurrentComponentInfo(null);
-          ((CASImpl) view).restoreClassLoaderUnlockCas();
+          ((CASImpl)view).restoreClassLoaderUnlockCas();
         }
         throw e;
-      } finally {
-        UimaContextHolder.setContext(prevContext);
       }
 
       // log end of event
       logger.logrb(Level.FINE, CLASS_NAME.getName(), "process", LOG_RESOURCE_BUNDLE,
               "UIMA_analysis_engine_process_end__FINE", resourceName);
-    } catch (AnalysisEngineProcessException e) {
-      throw e;
     } catch (Exception e) {
-      throw new AnalysisEngineProcessException(e);
+      // log and rethrow exception
+      logger.log(Level.SEVERE, "", e);
+      if (e instanceof AnalysisEngineProcessException)
+        throw (AnalysisEngineProcessException) e;
+      else
+        throw new AnalysisEngineProcessException(e);
     }
   }
 
-  // /**
-  // * Creates the ResultSpecification to be passed to the AnalysisComponent. This is derived from
-  // the
-  // * ResultSpec that is input to this AE (via its setResultSpecification method) by intersecting
-  // * with the declared outputs of this AE, so that we never ask an AnalysisComponent to produce a
-  // * result type that it does not declare in its outputs.
-  // *
-  // * For each type or feature, the intersection includes intersecting the languages:
-  // * if either has x-unspecified, then the intersection is the languages of the other side.
-  // * else do a bit-intersection of the languages (this will produce too few results)
-  // * and then iterate over the smaller of the two sources:
-  // * for each non-base lang, if not in the other source already, see if the base lang
-  // * is in the other source, and if so, and the non-base lang.
-  // *
-  // * @param currentResultSpecification
-  // * the result spec passed to this AE's setResultSpecification method
-  // * @param capabilities
-  // * the capabilities of this AE
-  // *
-  // * @return a ResultSpecifciation to pass to the AnalysisComponent
-  // */
-  // protected ResultSpecification computeAnalysisComponentResultSpec(
-  // ResultSpecification inputResultSpec, Capability[] capabilities) {
-  // ResultSpecification newResultSpec = new
-  // ResultSpecification_impl(inputResultSpec.getTypeSystem());
-  // List<String> languagesToAdd = new ArrayList<String>();
-  //
-  // for (Capability capability : capabilities) {
-  // TypeOrFeature[] outputs = capability.getOutputs();
-  // String[] languages = capability.getLanguagesSupported();
-  // if (null == languages || languages.length == 0) {
-  // languages = X_UNSPECIFIED;
-  // }
-  //
-  // for (TypeOrFeature tof : outputs) {
-  // String tofName = tof.getName();
-  // languagesToAdd.clear();
-  // for (String language : languages) {
-  // if ((tof.isType() && inputResultSpec.containsType(tofName, language)) ||
-  // (!tof.isType() && inputResultSpec.containsFeature(tofName, language))) {
-  // languagesToAdd.add(language);
-  // }
-  // }
-  // if (0 < languagesToAdd.size()) {
-  // if (tof.isType()) {
-  // newResultSpec.addResultType(tofName, tof.isAllAnnotatorFeatures(),
-  // languagesToAdd.toArray(EMPTY_STRING_ARRAY));
-  // } else {
-  // newResultSpec.addResultFeature(tofName, languagesToAdd.toArray(EMPTY_STRING_ARRAY));
-  // }
-  // }
-  // }
-  // }
-  // return newResultSpec;
-  // }
-
-  // for (int i = 0; i < capabilities.length; i++) {
-  // Capability cap = capabilities[i];
-  // TypeOrFeature[] outputs = cap.getOutputs();
-  // String[] languages = cap.getLanguagesSupported();
-  // if (languages.length == 0) {
-  // languages = X_UNSPECIFIED;
-  // }
-  // for (int j = 0; j < outputs.length; j++) {
-  // for (int k = 0; k < languages.length; k++) {
-  // if (outputs[j].isType()
-  // && inputResultSpec.containsType(outputs[j].getName(), languages[k])) {
-  // newResultSpec.addResultType(outputs[j].getName(), outputs[j].isAllAnnotatorFeatures(),
-  // new String[] { languages[k] });
-  // } else if (!outputs[j].isType()
-  // && inputResultSpec.containsFeature(outputs[j].getName(), languages[k])) {
-  // newResultSpec.addResultFeature(outputs[j].getName(), new String[] { languages[k] });
-  // }
-  // }
-  // }
-  // }
-  // return newResultSpec;
-  // }
+//  /**
+//   * Creates the ResultSpecification to be passed to the AnalysisComponent. This is derived from the
+//   * ResultSpec that is input to this AE (via its setResultSpecification method) by intersecting
+//   * with the declared outputs of this AE, so that we never ask an AnalysisComponent to produce a
+//   * result type that it does not declare in its outputs.
+//   * 
+//   * For each type or feature, the intersection includes intersecting the languages:
+//   *   if either has x-unspecified, then the intersection is the languages of the other side.
+//   *   else do a bit-intersection of the languages (this will produce too few results)
+//   *     and then iterate over the smaller of the two sources:
+//   *       for each non-base lang, if not in the other source already, see if the base lang
+//   *       is in the other source, and if so, and the non-base lang.
+//   * 
+//   * @param currentResultSpecification
+//   *          the result spec passed to this AE's setResultSpecification method
+//   * @param capabilities
+//   *          the capabilities of this AE
+//   * 
+//   * @return a ResultSpecifciation to pass to the AnalysisComponent
+//   */
+//  protected ResultSpecification computeAnalysisComponentResultSpec(
+//          ResultSpecification inputResultSpec, Capability[] capabilities) {
+//    ResultSpecification newResultSpec = new ResultSpecification_impl(inputResultSpec.getTypeSystem());
+//    List<String> languagesToAdd = new ArrayList<String>();
+// 
+//    for (Capability capability : capabilities) {
+//      TypeOrFeature[] outputs = capability.getOutputs();
+//      String[] languages = capability.getLanguagesSupported();
+//      if (null == languages || languages.length == 0) {
+//        languages = X_UNSPECIFIED;
+//      }
+//      
+//      for (TypeOrFeature tof : outputs) {
+//        String tofName = tof.getName();
+//        languagesToAdd.clear();
+//        for (String language : languages) {
+//          if ((tof.isType() && inputResultSpec.containsType(tofName, language)) ||
+//              (!tof.isType() && inputResultSpec.containsFeature(tofName, language))) {
+//            languagesToAdd.add(language);
+//          }
+//        }
+//        if (0 < languagesToAdd.size()) {
+//          if (tof.isType()) {
+//            newResultSpec.addResultType(tofName, tof.isAllAnnotatorFeatures(), 
+//                languagesToAdd.toArray(EMPTY_STRING_ARRAY));
+//          } else {
+//            newResultSpec.addResultFeature(tofName, languagesToAdd.toArray(EMPTY_STRING_ARRAY));
+//          }  
+//        }
+//      }
+//    }
+//    return newResultSpec;    
+//  }
+    
+//    for (int i = 0; i < capabilities.length; i++) {
+//      Capability cap = capabilities[i];
+//      TypeOrFeature[] outputs = cap.getOutputs();
+//      String[] languages = cap.getLanguagesSupported();
+//      if (languages.length == 0) {
+//        languages = X_UNSPECIFIED;
+//      }
+//      for (int j = 0; j < outputs.length; j++) {
+//        for (int k = 0; k < languages.length; k++) {
+//          if (outputs[j].isType()
+//                  && inputResultSpec.containsType(outputs[j].getName(), languages[k])) {
+//            newResultSpec.addResultType(outputs[j].getName(), outputs[j].isAllAnnotatorFeatures(),
+//                    new String[] { languages[k] });
+//          } else if (!outputs[j].isType()
+//                  && inputResultSpec.containsFeature(outputs[j].getName(), languages[k])) {
+//            newResultSpec.addResultFeature(outputs[j].getName(), new String[] { languages[k] });
+//          }
+//        }
+//      }
+//    }
+//    return newResultSpec;
+//  }
 
   /**
    * Calls the Analysis Component's next() method.
    * 
    * @return CAS returned by the analysis component
-   * @throws AnalysisEngineProcessException
-   *           -
-   * @throws ResultNotSupportedException
-   *           -
+   * @throws AnalysisEngineProcessException -
+   * @throws ResultNotSupportedException -
    */
-  protected CAS callAnalysisComponentNext()
-          throws AnalysisEngineProcessException, ResultNotSupportedException {
-    UimaContext prevContext = setContextHolder(); // for use by POJOs
+  protected CAS callAnalysisComponentNext() throws AnalysisEngineProcessException,
+          ResultNotSupportedException {
     try {
       AbstractCas absCas = mAnalysisComponent.next();
       getMBean().incrementCASesProcessed();
@@ -541,37 +528,30 @@ public class PrimitiveAnalysisEngine_impl extends AnalysisEngineImplBase impleme
       // clear the CAS's component info, since it is no longer
       // being processed by this AnalysisComponent
       casToReturn.setCurrentComponentInfo(null);
-      ((CASImpl) casToReturn).restoreClassLoaderUnlockCas();
+      ((CASImpl)casToReturn).restoreClassLoaderUnlockCas();
       return casToReturn;
     } catch (Exception e) {
       // log and rethrow exception
       getLogger().log(Level.SEVERE, "", e);
-      if (e instanceof AnalysisEngineProcessException) {
+      if (e instanceof AnalysisEngineProcessException)
         throw (AnalysisEngineProcessException) e;
-      } else {
+      else
         throw new AnalysisEngineProcessException(e);
-      }
-    } finally {
-      UimaContextHolder.setContext(prevContext);
     }
   }
 
   /**
    * @see AnalysisEngine#reconfigure()
    */
-  @Override
   public void reconfigure() throws ResourceConfigurationException {
     // do base resource reconfiguration
     super.reconfigure();
 
     // inform the annotator
-    UimaContext prevContext = setContextHolder(); // for use by POJOs
     try {
       mAnalysisComponent.reconfigure();
     } catch (ResourceInitializationException e) {
       throw new ResourceConfigurationException(e);
-    } finally {
-      UimaContextHolder.setContext(prevContext);
     }
   }
 
@@ -598,33 +578,30 @@ public class PrimitiveAnalysisEngine_impl extends AnalysisEngineImplBase impleme
      * 
      * @see org.apache.uima.core.CasIterator#hasNext()
      */
-    @Override
     public boolean hasNext() throws AnalysisEngineProcessException {
       enterProcess();
       if (casAvailable) {
         return true;
       }
-      UimaContext prevContext = setContextHolder(); // for use by POJOs
       try {
         casAvailable = mMyAnalysisComponent.hasNext();
         if (!casAvailable) {
-          // when hasNext returns false, by contract the AnalysisComponent is done processing its
-          // input CAS. Now is the time to clear the currentComponentInfo to indicate that the
-          // CAS is no longer being processed.
+          //when hasNext returns false, by contract the AnalysisComponent is done processing its
+          //input CAS.  Now is the time to clear the currentComponentInfo to indicate that the
+          //CAS is no longer being processed.
           mInputCas.setCurrentComponentInfo(null);
-          ((CASImpl) mInputCas).restoreClassLoaderUnlockCas();
+          ((CASImpl)mInputCas).restoreClassLoaderUnlockCas();
         }
         return casAvailable;
       } catch (Exception e) {
-        ((CASImpl) mInputCas).restoreClassLoaderUnlockCas();
+        ((CASImpl)mInputCas).restoreClassLoaderUnlockCas();
         if (e instanceof AnalysisEngineProcessException) {
           throw (AnalysisEngineProcessException) e;
         }
         throw new AnalysisEngineProcessException(e);
       }
-
+ 
       finally {
-        UimaContextHolder.setContext(prevContext);
         exitProcess();
       }
     }
@@ -634,7 +611,6 @@ public class PrimitiveAnalysisEngine_impl extends AnalysisEngineImplBase impleme
      * 
      * @see org.apache.uima.core.CasIterator#next(java.lang.Class)
      */
-    @Override
     public CAS next() throws AnalysisEngineProcessException {
       enterProcess();
       try {
@@ -651,8 +627,8 @@ public class PrimitiveAnalysisEngine_impl extends AnalysisEngineImplBase impleme
           // cas.setParentID(mOriginalCas.getID());
           return cas;
         } catch (Exception e) {
-          ((CASImpl) mInputCas).restoreClassLoaderUnlockCas();
-
+          ((CASImpl)mInputCas).restoreClassLoaderUnlockCas();
+          
           if (e instanceof AnalysisEngineProcessException) {
             throw (AnalysisEngineProcessException) e;
           }
@@ -668,7 +644,6 @@ public class PrimitiveAnalysisEngine_impl extends AnalysisEngineImplBase impleme
      * 
      * @see org.apache.uima.analysis_engine.CasIterator#release()
      */
-    @Override
     public void release() {
       // nothing to do
     }

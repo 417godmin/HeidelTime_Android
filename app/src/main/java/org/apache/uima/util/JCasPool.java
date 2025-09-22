@@ -30,7 +30,6 @@ import org.apache.uima.cas.CASException;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
 import org.apache.uima.resource.metadata.ProcessingResourceMetaData;
-
 /**
  * Note: This class is not used by the framework itself.
  */
@@ -49,9 +48,9 @@ import org.apache.uima.resource.metadata.ProcessingResourceMetaData;
  */
 public class JCasPool {
 
-  private Vector<JCas> mAllInstances = new Vector<>();
+  private Vector<JCas> mAllInstances = new Vector<JCas>();
 
-  private Vector<JCas> mFreeInstances = new Vector<>();
+  private Vector<JCas> mFreeInstances = new Vector<JCas>();
 
   private int mNumInstances;
 
@@ -212,7 +211,7 @@ public class JCasPool {
   protected void fillPool(ProcessingResourceMetaData aMetaData)
           throws ResourceInitializationException {
     // fill the pool
-    ArrayList<ProcessingResourceMetaData> mdList = new ArrayList<>();
+    ArrayList<ProcessingResourceMetaData> mdList = new ArrayList<ProcessingResourceMetaData>();
     mdList.add(aMetaData);
     for (int i = 0; i < mNumInstances; i++) {
       JCas c;

@@ -25,23 +25,26 @@ import org.apache.uima.UIMA_UnsupportedOperationException;
  * A group of {@link ConfigurationParameter}s. Actually, a single <code>ConfigurationGroup</code>
  * object can have multiple group names, in which case it represents multiple groups that all share
  * the same parameters.
+ * 
+ * 
  */
 public interface ConfigurationGroup extends MetaDataObject {
 
   /**
    * Gets the group names for this <code>ConfigurationGroup</code> object.
    * 
-   * @return an array of group names. Names are not allowed to contain whitespace.
+   * @return an array of group names.  Names are not allowed to contain
+   *   whitespace.
    */
-  String[] getNames();
+  public String[] getNames();
 
   /**
    * Sets the group names for this <code>ConfigurationGroup</code> object.
    * 
-   * @param aNames
-   *          an array of group names. Names are not allowed to contain whitespace.
+   * @param aNames an array of group names.  Names are not allowed to
+   *   contain whitespace.
    */
-  void setNames(String... aNames);
+  public void setNames(String[] aNames);
 
   /**
    * Gets the configuration parameters in this group.
@@ -49,7 +52,7 @@ public interface ConfigurationGroup extends MetaDataObject {
    * @return an array containing {@link ConfigurationParameter} objects, each of which describes a
    *         configuration parameter in this group.
    */
-  ConfigurationParameter[] getConfigurationParameters();
+  public ConfigurationParameter[] getConfigurationParameters();
 
   /**
    * Sets the configuration parameters in this group.
@@ -58,7 +61,7 @@ public interface ConfigurationGroup extends MetaDataObject {
    *          an array containing {@link ConfigurationParameter} objects, each of which describes a
    *          configuration parameter in this group.
    */
-  void setConfigurationParameters(ConfigurationParameter... aParams);
+  public void setConfigurationParameters(ConfigurationParameter[] aParams);
 
   /**
    * Adds a Configuration Parameter to this group.
@@ -69,7 +72,7 @@ public interface ConfigurationGroup extends MetaDataObject {
    * @throws UIMA_UnsupportedOperationException
    *           if this object is not modifiable
    */
-  void addConfigurationParameter(ConfigurationParameter aConfigurationParameter);
+  public void addConfigurationParameter(ConfigurationParameter aConfigurationParameter);
 
   /**
    * Removes an Configuration Parameter from this group.
@@ -81,6 +84,6 @@ public interface ConfigurationGroup extends MetaDataObject {
    * @throws UIMA_UnsupportedOperationException
    *           if this object is not modifiable
    */
-  void removeConfigurationParameter(ConfigurationParameter aConfigurationParameter);
+  public void removeConfigurationParameter(ConfigurationParameter aConfigurationParameter);
 
 }

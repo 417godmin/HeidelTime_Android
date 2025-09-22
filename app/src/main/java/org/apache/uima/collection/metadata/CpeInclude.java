@@ -24,18 +24,22 @@ import org.apache.uima.resource.metadata.MetaDataObject;
 /**
  * An object that holds configuration that is part of the CPE descriptor. Provides the means of
  * defining and obtaining file paths used to discover component descriptors.
+ * 
+ * 
  */
 public interface CpeInclude extends MetaDataObject {
   /**
    * Sets a path to component descriptor
    * 
-   * @param aPath
+   * @param aPath -
    *          descriptor path
    */
-  void set(String aPath);
+  public void set(String aPath);
 
   /**
-   * @return a path to component descriptor
+   * Returns a path to component descriptor
+   * 
+   * @return descriptor path
    */
-  String get();
+  public String get();
 }

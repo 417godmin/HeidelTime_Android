@@ -27,25 +27,27 @@ import org.apache.uima.util.InvalidXMLException;
  * Metadata that describes a "Processing" {@link org.apache.uima.resource.Resource} - that is, one
  * that reads or writes to the {@link org.apache.uima.cas.CAS}.
  * <p>
- * As with all {@link MetaDataObject}s, a <code>ProcessingResourceMetaData</code> may or may not be
- * modifiable. An application can find out by calling the {@link #isModifiable()} method.
+ * As with all {@link MetaDataObject}s, a <code>ProcessingResourceMetaData</code> may or may not
+ * be modifiable. An application can find out by calling the {@link #isModifiable()} method.
+ * 
+ * 
  */
 public interface ProcessingResourceMetaData extends ResourceMetaData {
 
   /**
    * Retrieves the Type System used by this Processing Resource. The Type System contains
-   * {@link TypeDescription}s and {@link FeatureDescription}s that are the inputs and/or outputs of
-   * this Resource. Some Processing Resources, such as aggregate analysis engines, may not contain a
-   * type system and return <code>null</code>.
+   * {@link TypeDescription}s and {@link FeatureDescription}s that are the inputs and/or outputs
+   * of this Resource.  Some Processing Resources, such as aggregate analysis engines, may not
+   * contain a type system and return <code>null</code>.
    * 
    * @return a description of the type system used by this Resource
    */
-  TypeSystemDescription getTypeSystem();
+  public TypeSystemDescription getTypeSystem();
 
   /**
    * Retrieves the Type System used by this Processing Resource. The Type System contains
-   * {@link TypeDescription}s and {@link FeatureDescription}s that are the inputs and/or outputs of
-   * this Resource.
+   * {@link TypeDescription}s and {@link FeatureDescription}s that are the inputs and/or outputs
+   * of this Resource.
    * 
    * @param aTypeSystem
    *          a description of the type system used by this Resource.
@@ -53,7 +55,7 @@ public interface ProcessingResourceMetaData extends ResourceMetaData {
    * @throws UIMA_UnsupportedOperationException
    *           if this <code>MetaDataObject</code> is not modifiable.
    */
-  void setTypeSystem(TypeSystemDescription aTypeSystem);
+  public void setTypeSystem(TypeSystemDescription aTypeSystem);
 
   /**
    * Retrieves the Type Priorites for this Processing Resource. Type Priorities may be used to
@@ -61,7 +63,7 @@ public interface ProcessingResourceMetaData extends ResourceMetaData {
    * 
    * @return the Type Priorities for Resource
    */
-  TypePriorities getTypePriorities();
+  public TypePriorities getTypePriorities();
 
   /**
    * Retrieves the Type Priorites for this Processing Resource. Type Priorities may be used to
@@ -70,7 +72,7 @@ public interface ProcessingResourceMetaData extends ResourceMetaData {
    * @param aTypePriorities
    *          the Type Priorities for this Resource
    */
-  void setTypePriorities(TypePriorities aTypePriorities);
+  public void setTypePriorities(TypePriorities aTypePriorities);
 
   /**
    * Retrieves the FS Index collection used by this Processing Resource. FS Indexes are used to
@@ -78,7 +80,7 @@ public interface ProcessingResourceMetaData extends ResourceMetaData {
    * 
    * @return a description of the Feature Structure indexes used by this Resource.
    */
-  FsIndexCollection getFsIndexCollection();
+  public FsIndexCollection getFsIndexCollection();
 
   /**
    * Sets the Feature Structure Index collection used by this Processing Resource. FS Indexes are
@@ -90,7 +92,7 @@ public interface ProcessingResourceMetaData extends ResourceMetaData {
    * @throws UIMA_UnsupportedOperationException
    *           if this <code>MetaDataObject</code> is not modifiable.
    */
-  void setFsIndexCollection(FsIndexCollection aFsIndexCollection);
+  public void setFsIndexCollection(FsIndexCollection aFsIndexCollection);
 
   /**
    * Retrieves the Feature Structure indexes by this Processing Resource. These are used to iterate
@@ -103,7 +105,7 @@ public interface ProcessingResourceMetaData extends ResourceMetaData {
    * 
    * @return a description of the Feature Structure indexes used by this Resource.
    */
-  FsIndexDescription[] getFsIndexes();
+  public FsIndexDescription[] getFsIndexes();
 
   /**
    * Sets the Feature Structure indexes by this Processing Resource. These are used to iterate over
@@ -120,7 +122,7 @@ public interface ProcessingResourceMetaData extends ResourceMetaData {
    * @throws UIMA_UnsupportedOperationException
    *           if this <code>MetaDataObject</code> is not modifiable.
    */
-  void setFsIndexes(FsIndexDescription... aFSIndexes);
+  public void setFsIndexes(FsIndexDescription[] aFSIndexes);
 
   /**
    * Retrieves this Processing Resource's {@link Capability Capabilities}. Each capability consists
@@ -129,7 +131,7 @@ public interface ProcessingResourceMetaData extends ResourceMetaData {
    * 
    * @return an array of <code>Capabilities</code>.
    */
-  Capability[] getCapabilities();
+  public Capability[] getCapabilities();
 
   /**
    * Sets this Processing Resource's {@link Capability Capabilities}. Each capability consists of a
@@ -142,7 +144,7 @@ public interface ProcessingResourceMetaData extends ResourceMetaData {
    * @throws UIMA_UnsupportedOperationException
    *           if this <code>MetaDataObject</code> is not modifiable.
    */
-  void setCapabilities(Capability... aCapabilities);
+  public void setCapabilities(Capability[] aCapabilities);
 
   /**
    * Gets this Processing Resource's {@link OperationalProperties}. This includes information such
@@ -151,7 +153,7 @@ public interface ProcessingResourceMetaData extends ResourceMetaData {
    * 
    * @return operational properties for this component
    */
-  OperationalProperties getOperationalProperties();
+  public OperationalProperties getOperationalProperties();
 
   /**
    * Sets this Processing Resource's {@link OperationalProperties}. This includes information such
@@ -164,7 +166,7 @@ public interface ProcessingResourceMetaData extends ResourceMetaData {
    * @throws UIMA_UnsupportedOperationException
    *           if this <code>MetaDataObject</code> is not modifiable.
    */
-  void setOperationalProperties(OperationalProperties aOperationalProperties);
+  public void setOperationalProperties(OperationalProperties aOperationalProperties);
 
   /**
    * Resolves any import declarations. This includes imports of type systems, type priorities, and
@@ -175,8 +177,7 @@ public interface ProcessingResourceMetaData extends ResourceMetaData {
    * @throws InvalidXMLException
    *           if either the import target does not exist or is invalid
    */
-  @Override
-  void resolveImports() throws InvalidXMLException;
+  public void resolveImports() throws InvalidXMLException;
 
   /**
    * Resolves any import declarations. This includes imports of type systems, type priorities, and
@@ -187,13 +188,12 @@ public interface ProcessingResourceMetaData extends ResourceMetaData {
    * @param aResourceManager
    *          the Resource Manager used to locate descriptors imported by name. For example, the
    *          path in which to locate these descriptors can be set via the
-   *          {@link ResourceManager#setDataPathElements} method.
+   *          {@link ResourceManager#setDataPath(String)} method.
    * 
    * @throws InvalidXMLException
    *           if either the import target does not exist or is invalid
    */
-  @Override
-  void resolveImports(ResourceManager aResourceManager) throws InvalidXMLException;
+  public void resolveImports(ResourceManager aResourceManager) throws InvalidXMLException;
 
   /**
    * Gets whether this AE is sofa-aware. This is a derived property that cannot be set directly. An
@@ -201,5 +201,5 @@ public interface ProcessingResourceMetaData extends ResourceMetaData {
    * 
    * @return true if this component is sofa-aware, false if it is sofa-unaware.
    */
-  boolean isSofaAware();
+  public boolean isSofaAware();
 }

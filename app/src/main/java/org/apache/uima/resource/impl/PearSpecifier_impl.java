@@ -21,7 +21,6 @@ package org.apache.uima.resource.impl;
 
 import org.apache.uima.resource.Parameter;
 import org.apache.uima.resource.PearSpecifier;
-import org.apache.uima.resource.metadata.NameValuePair;
 import org.apache.uima.resource.metadata.impl.MetaDataObject_impl;
 import org.apache.uima.resource.metadata.impl.PropertyXmlInfo;
 import org.apache.uima.resource.metadata.impl.XmlizationInfo;
@@ -39,7 +38,6 @@ public class PearSpecifier_impl extends MetaDataObject_impl implements PearSpeci
   private String mPearPath;
 
   private Parameter[] mParameters;
-  private NameValuePair[] mPearParameters;
 
   /**
    * Creates a new <code>PearSpecifier_impl</code>.
@@ -47,52 +45,39 @@ public class PearSpecifier_impl extends MetaDataObject_impl implements PearSpeci
   public PearSpecifier_impl() {
   }
 
-  @Override
-  @Deprecated
+  /**
+   * @return Returns the Parameters.
+   */
   public Parameter[] getParameters() {
-    if (mParameters == null) {
-      return new Parameter[0];
-    }
-
-    return mParameters;
+    return this.mParameters;
   }
 
-  @Override
-  public NameValuePair[] getPearParameters() {
-    if (mPearParameters == null) {
-      return new NameValuePair[0];
-    }
-
-    return mPearParameters;
+  /**
+   * @param parameters
+   *          The Parameters to set.
+   */
+  public void setParameters(Parameter[] parameters) {
+    this.mParameters = parameters;
   }
 
-  @Override
-  @Deprecated
-  public void setParameters(Parameter... parameters) {
-    mParameters = parameters;
-  }
-
-  @Override
-  public void setPearParameters(NameValuePair... pearParameters) {
-    mPearParameters = pearParameters;
-  }
-
-  @Override
+  /* (non-Javadoc)
+   * @see org.apache.uima.resource.PearSpecifier#getPearPath()
+   */
   public String getPearPath() {
-    return mPearPath;
+    return this.mPearPath;
   }
 
-  @Override
+  /* (non-Javadoc)
+   * @see org.apache.uima.resource.PearSpecifier#setPearPath(java.lang.String)
+   */
   public void setPearPath(String aPearPath) {
-    mPearPath = aPearPath;
+    this.mPearPath = aPearPath;    
   }
 
-  @Override
   protected XmlizationInfo getXmlizationInfo() {
     return XMLIZATION_INFO;
   }
 
-  private static final XmlizationInfo XMLIZATION_INFO = new XmlizationInfo("pearSpecifier",
-          new PropertyXmlInfo[] { new PropertyXmlInfo("pearPath"),
-              new PropertyXmlInfo("pearParameters"), new PropertyXmlInfo("parameters") });
+  static final private XmlizationInfo XMLIZATION_INFO = new XmlizationInfo("pearSpecifier",
+          new PropertyXmlInfo[] { new PropertyXmlInfo("pearPath"), new PropertyXmlInfo("parameters") });
 }

@@ -21,16 +21,13 @@ package org.apache.uima.internal.util;
 /**
  * static utilities, used by other parts of the UIMA framework
  *
- * @deprecated use Misc instead
- * @forRemoval 4.0.0
  */
-@Deprecated(since = "3.0.0")
 public class Utilities {
 
   public static final int numberOfCores = Runtime.getRuntime().availableProcessors();
-
-  public static int nextHigherPowerOf2(int i) {
-    return (i < 1) ? 1 : Integer.highestOneBit(i) << ((Integer.bitCount(i) == 1 ? 0 : 1));
+  
+  static public int nextHigherPowerOf2(int i) {
+    return (i < 1) ? 1 : Integer.highestOneBit(i) << ( (Integer.bitCount(i) == 1 ? 0 : 1));
   }
-
+  
 }

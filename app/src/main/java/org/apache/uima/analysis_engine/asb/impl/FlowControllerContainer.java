@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.uima.analysis_engine.asb.impl;
 
 import java.util.Collection;
@@ -23,9 +24,7 @@ import java.util.Map;
 
 import org.apache.uima.Constants;
 import org.apache.uima.UIMAFramework;
-import org.apache.uima.UimaContext;
 import org.apache.uima.UimaContextAdmin;
-import org.apache.uima.UimaContextHolder;
 import org.apache.uima.analysis_engine.AnalysisEngine;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.analysis_engine.impl.AnalysisEngineManagementImpl;
@@ -47,7 +46,6 @@ import org.apache.uima.resource.ResourceCreationSpecifier;
 import org.apache.uima.resource.ResourceInitializationException;
 import org.apache.uima.resource.ResourceSpecifier;
 import org.apache.uima.resource.metadata.ProcessingResourceMetaData;
-import org.apache.uima.util.Level;
 import org.apache.uima.util.Logger;
 import org.apache.uima.util.UimaTimer;
 
@@ -63,35 +61,34 @@ public class FlowControllerContainer extends ConfigurableResource_ImplBase {
   private boolean mSofaAware;
 
   private Object mMBeanServer;
-
+  
   private boolean initialized = false;
 
-  private static final String LOG_RESOURCE_BUNDLE = "org.apache.uima.impl.log_messages";
-
   /*
-   * UIMA-5043 Set & restore the UimaContextHolder around calls to user code so it can be used to
-   * access the External Settings
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.resource.Resource_ImplBase#initialize(org.apache.uima.resource.ResourceSpecifier,
+   *      java.util.Map)
    */
-  @Override
   public boolean initialize(ResourceSpecifier aSpecifier, Map<String, Object> aAdditionalParams)
           throws ResourceInitializationException {
-    UimaContext prevContext = setContextHolder(); // Get this early so the restore in correct
     try {
       // specifier must be a FlowControllerDescription. (Eventually, we
       // might support remote specifiers, but not yet)
       if (!(aSpecifier instanceof FlowControllerDescription)) {
         throw new ResourceInitializationException(
-                ResourceInitializationException.NOT_A_FLOW_CONTROLLER_DESCRIPTOR,
-                new Object[] { aSpecifier.getSourceUrlString(), aSpecifier.getClass().getName() });
+                ResourceInitializationException.NOT_A_FLOW_CONTROLLER_DESCRIPTOR, new Object[] {
+                    aSpecifier.getSourceUrlString(), aSpecifier.getClass().getName() });
       }
       ResourceCreationSpecifier desc = (ResourceCreationSpecifier) aSpecifier;
 
       // also framework implementation must start with org.apache.uima.java
       final String fwImpl = desc.getFrameworkImplementation();
-      if (fwImpl == null || !fwImpl.equalsIgnoreCase(Constants.JAVA_FRAMEWORK_NAME)) {
+      if (fwImpl == null
+              || !fwImpl.equalsIgnoreCase(Constants.JAVA_FRAMEWORK_NAME)) {
         throw new ResourceInitializationException(
-                ResourceInitializationException.UNSUPPORTED_FRAMEWORK_IMPLEMENTATION,
-                new Object[] { fwImpl, aSpecifier.getSourceUrlString() });
+                ResourceInitializationException.UNSUPPORTED_FRAMEWORK_IMPLEMENTATION, new Object[] {
+                    fwImpl, aSpecifier.getSourceUrlString() });
       }
 
       super.initialize(aSpecifier, aAdditionalParams);
@@ -112,16 +109,13 @@ public class FlowControllerContainer extends ConfigurableResource_ImplBase {
       // determine if this component is Sofa-aware (based on whether it
       // declares any input or output sofas in its capabilities)
       mSofaAware = getProcessingResourceMetaData().isSofaAware();
-
+      
       // Set Logger, to enable component-specific logging configuration
       UimaContextAdmin uimaContext = getUimaContextAdmin();
       Logger logger = UIMAFramework.getLogger(mFlowController.getClass());
-      uimaContext.setLogger(logger);
-
-      Logger classLogger = getLogger();
-      classLogger.logrb(Level.CONFIG, this.getClass().getName(), "initialize", LOG_RESOURCE_BUNDLE,
-              "UIMA_flow_controller_init_begin__CONFIG", getMetaData().getName());
-
+      logger.setResourceManager(this.getResourceManager());
+      uimaContext.setLogger(logger);      
+      
       // initialize FlowController
       mFlowController.initialize(getFlowControllerContext());
 
@@ -129,7 +123,7 @@ public class FlowControllerContainer extends ConfigurableResource_ImplBase {
       String mbeanNamePrefix = null;
       if (aAdditionalParams != null) {
         mMBeanServer = aAdditionalParams.get(AnalysisEngine.PARAM_MBEAN_SERVER);
-        mbeanNamePrefix = (String) aAdditionalParams.get(AnalysisEngine.PARAM_MBEAN_NAME_PREFIX);
+        mbeanNamePrefix = (String)aAdditionalParams.get(AnalysisEngine.PARAM_MBEAN_NAME_PREFIX);
       }
       // update MBean with the name taken from metadata
       getMBean().setName(getMetaData().getName(), getUimaContextAdmin(), mbeanNamePrefix);
@@ -138,20 +132,18 @@ public class FlowControllerContainer extends ConfigurableResource_ImplBase {
       // (Java 1.5 only)
       JmxMBeanAgent.registerMBean(getMBean(), mMBeanServer);
 
-      classLogger.logrb(Level.CONFIG, this.getClass().getName(), "initialize", LOG_RESOURCE_BUNDLE,
-              "UIMA_flow_controller_init_successful__CONFIG", getMetaData().getName());
-
       initialized = true;
       return true;
     } catch (ResourceConfigurationException e) {
       throw new ResourceInitializationException(e);
-    } finally {
-      UimaContextHolder.setContext(prevContext);
     }
   }
 
-  @Deprecated(since = "3.6.0")
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see java.lang.Object#finalize()
+   */
   protected void finalize() throws Throwable {
     // unregister MBean from MBeanServer when GC occurs
     // NOTE: we don't want to do this in destroy() because all AEs in a CPE are
@@ -161,25 +153,31 @@ public class FlowControllerContainer extends ConfigurableResource_ImplBase {
     super.finalize();
   }
 
+
   private FlowControllerContext getFlowControllerContext() {
     return (FlowControllerContext) getUimaContext();
   }
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.resource.ConfigurableResource_ImplBase#reconfigure()
+   */
   public void reconfigure() throws ResourceConfigurationException {
-    UimaContext prevContext = setContextHolder(); // for use by POJOs
     try {
       mFlowController.reconfigure();
     } catch (ResourceInitializationException e) {
       throw new ResourceConfigurationException(e);
-    } finally {
-      UimaContextHolder.setContext(prevContext);
     }
   }
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.resource.Resource_ImplBase#destroy()
+   */
   public void destroy() {
-    withContextHolder(() -> mFlowController.destroy());
+    mFlowController.destroy();
     super.destroy();
   }
 
@@ -195,50 +193,42 @@ public class FlowControllerContainer extends ConfigurableResource_ImplBase {
    * @throws AnalysisEngineProcessException
    *           if the FlowController failed
    */
-  public FlowContainer computeFlow(final CAS aCAS) throws AnalysisEngineProcessException {
+  public FlowContainer computeFlow(CAS aCAS) throws AnalysisEngineProcessException {
     mTimer.startIt();
     CAS view = null;
-    UimaContext prevContext = setContextHolder(); // for use by POJOs
     try {
-      // throws if _InitialView is mapped to non-existent sofa
-      // https://issues.apache.org/jira/browse/UIMA-5097
       view = Util.getStartingView(aCAS, mSofaAware, getUimaContextAdmin().getComponentInfo());
+
       // now get the right interface(e.g. CAS or JCAS)
       Class<? extends AbstractCas> requiredInterface = mFlowController.getRequiredCasInterface();
-      AbstractCas casToPass = getCasManager().getCasInterface(view, requiredInterface);
-      ((CASImpl) view).switchClassLoaderLockCasCL(getResourceManager().getExtensionClassLoader());
+      AbstractCas casToPass = getCasManager().getCasInterface(view, requiredInterface);    
+      ((CASImpl)view).switchClassLoaderLockCasCL(this.getResourceManager().getExtensionClassLoader());
       Flow flow = mFlowController.computeFlow(casToPass);
       if (flow instanceof CasFlow_ImplBase) {
-        ((CasFlow_ImplBase) flow).setCas(view);
+        ((CasFlow_ImplBase)flow).setCas(view);
       }
       if (flow instanceof JCasFlow_ImplBase) {
-        ((JCasFlow_ImplBase) flow).setJCas(view.getJCas());
+        ((JCasFlow_ImplBase)flow).setJCas(view.getJCas());
       }
       return new FlowContainer(flow, this, aCAS);
     } catch (CASException e) {
       throw new AnalysisEngineProcessException(e);
     } finally {
-      aCAS.setCurrentComponentInfo(null); // https://issues.apache.org/jira/browse/UIMA-5097
       if (view != null) {
-        ((CASImpl) view).restoreClassLoaderUnlockCas();
+        ((CASImpl)view).restoreClassLoaderUnlockCas();
+        view.setCurrentComponentInfo(null);
       }
       mTimer.stopIt();
       getMBean().reportAnalysisTime(mTimer.getDuration());
       getMBean().incrementCASesProcessed();
-      UimaContextHolder.setContext(prevContext);
     }
   }
 
-  /**
-   * @return the required CAS interface of the FlowController
+  /** 
+   * @return  the required CAS interface of the FlowController
    */
   public Class<? extends AbstractCas> getRequiredCasInterface() {
-    // UimaContext prevContext = setContextHolder(); // for use by POJOs
-    // try {
-    return mFlowController.getRequiredCasInterface(); // not likely to have user code
-    // } finally {
-    // UimaContextHolder.setContext(prevContext);
-    // }
+    return mFlowController.getRequiredCasInterface();
   }
 
   public ProcessingResourceMetaData getProcessingResourceMetaData() {
@@ -251,37 +241,26 @@ public class FlowControllerContainer extends ConfigurableResource_ImplBase {
   public AnalysisEngineManagementImpl getMBean() {
     return (AnalysisEngineManagementImpl) getUimaContextAdmin().getManagementInterface();
   }
-
+  
   /**
    * Notifies this FlowController that new Analysis Engines
-   * 
    * @see FlowController#addAnalysisEngines(Collection)
-   * @param aKeys
-   *          the keys for the delegates
+   * @param aKeys the keys for the delegates
    */
   public void addAnalysisEngines(Collection<String> aKeys) {
-    withContextHolder(() -> mFlowController.addAnalysisEngines(aKeys));
+    mFlowController.addAnalysisEngines(aKeys);
   }
 
   /**
-   * Notifies this FlowController that some Analysis Engines are no longer available to route CASes
-   * to.
-   * 
+   * Notifies this FlowController that some Analysis Engines are no longer available to route CASes to.
    * @see FlowController#removeAnalysisEngines(Collection)
-   * @param aKeys
-   *          the keys of the delegates to be removed
-   * @throws AnalysisEngineProcessException
-   *           -
+   * @param aKeys the keys of the delegates to be removed
+   * @throws AnalysisEngineProcessException - 
    */
-  public void removeAnalysisEngines(Collection<String> aKeys)
-          throws AnalysisEngineProcessException {
-    UimaContext prevContext = setContextHolder(); // for use by POJOs
-    try {
-      mFlowController.removeAnalysisEngines(aKeys);
-    } finally {
-      UimaContextHolder.setContext(prevContext);
-    }
+  public void removeAnalysisEngines(Collection<String> aKeys) throws AnalysisEngineProcessException {
+    mFlowController.removeAnalysisEngines(aKeys);
   }
+
 
   /**
    * Instantiates the FlowController class specified in the descriptor.
@@ -297,21 +276,35 @@ public class FlowControllerContainer extends ConfigurableResource_ImplBase {
               new Object[] { aDescriptor.getSourceUrlString() });
     }
     // load FlowController class
-    Class<?> flowControllerClass = loadUserClassOrThrow(flowControllerClassName, aDescriptor);
+    Class<?> flowControllerClass = null;
+    try {
+      // get UIMA extension ClassLoader if available
+      ClassLoader cl = getUimaContextAdmin().getResourceManager().getExtensionClassLoader();
+
+      if (cl != null) {
+        // use UIMA extension ClassLoader to load the class
+        flowControllerClass = cl.loadClass(flowControllerClassName);
+      } else {
+        // use application ClassLoader to load the class
+        flowControllerClass = Class.forName(flowControllerClassName);
+      }
+    } catch (ClassNotFoundException e) {
+      throw new ResourceInitializationException(ResourceInitializationException.CLASS_NOT_FOUND,
+              new Object[] { flowControllerClassName, aDescriptor.getSourceUrlString() }, e);
+    }
 
     Object userObject;
     try {
       userObject = flowControllerClass.newInstance();
     } catch (Exception e) {
       throw new ResourceInitializationException(
-              ResourceInitializationException.COULD_NOT_INSTANTIATE,
-              new Object[] { flowControllerClassName, aDescriptor.getSourceUrlString() }, e);
+              ResourceInitializationException.COULD_NOT_INSTANTIATE, new Object[] {
+                  flowControllerClassName, aDescriptor.getSourceUrlString() }, e);
     }
     if (!(userObject instanceof FlowController)) {
       throw new ResourceInitializationException(
-              ResourceInitializationException.RESOURCE_DOES_NOT_IMPLEMENT_INTERFACE,
-              new Object[] { flowControllerClassName, FlowController.class,
-                  aDescriptor.getSourceUrlString() });
+              ResourceInitializationException.RESOURCE_DOES_NOT_IMPLEMENT_INTERFACE, new Object[] {
+                  flowControllerClassName, FlowController.class, aDescriptor.getSourceUrlString() });
     }
     return (FlowController) userObject;
   }
@@ -319,15 +312,9 @@ public class FlowControllerContainer extends ConfigurableResource_ImplBase {
   boolean isInitialized() {
     return initialized;
   }
-
   public void collectionProcessComplete() throws AnalysisEngineProcessException {
-    if (mFlowController != null) {
-      UimaContext prevContext = setContextHolder(); // for use by POJOs
-      try {
-        mFlowController.collectionProcessComplete();
-      } finally {
-        UimaContextHolder.setContext(prevContext);
-      }
+    if ( mFlowController != null ) {
+      mFlowController.collectionProcessComplete();
     }
   }
 }

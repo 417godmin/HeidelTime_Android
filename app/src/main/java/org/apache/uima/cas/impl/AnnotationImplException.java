@@ -44,9 +44,7 @@ public class AnnotationImplException extends Exception {
    */
   public static final int CANT_ADD_TOP = 0;
 
-  /**
-   * Error parsing types system file "{0}": expected {1} but found "{2}" at line {3}, column {4}.
-   */
+  /** Error parsing types system file "{0}": expected {1} but found "{2}" at line {3}, column {4}. */
   public static final int PARSING_ERROR = 1;
 
   /**
@@ -77,7 +75,7 @@ public class AnnotationImplException extends Exception {
 
   private ResourceBundle resource = null;
 
-  private final String[] arguments = new String[9];
+  private String[] arguments = new String[9];
 
   /**
    * Create a new <code>AnnotationImplException</code>
@@ -96,33 +94,30 @@ public class AnnotationImplException extends Exception {
    *         file. Unfortunately, the error parameters get lost that way.
    */
   public int getError() {
-    return error;
+    return this.error;
   }
 
   /**
    * @return The message of the exception. Useful for including the text in another exception.
    */
-  @Override
   public String getMessage() {
-    if (resource == null) {
+    if (this.resource == null) {
       try {
-        resource = ResourceBundle.getBundle(resource_file);
+        this.resource = ResourceBundle.getBundle(resource_file);
       } catch (MissingResourceException e) {
-        error = MESSAGES_NOT_FOUND;
+        this.error = MESSAGES_NOT_FOUND;
         return missing_resource_error;
       }
     }
     // Retrieve message from resource bundle, format using arguments,
     // and return resulting string.
-    return (new MessageFormat(resource.getString(identifiers[error]))).format(arguments);
+    return (new MessageFormat(this.resource.getString(identifiers[this.error])))
+            .format(this.arguments);
   }
 
-  /**
-   * @return The same as getMessage(), but prefixed with <code>"AnnotationImplException: "</code>.
-   */
-  @Override
+  /** @return The same as getMessage(), but prefixed with <code>"AnnotationImplException: "</code>. */
   public String toString() {
-    return this.getClass().getSimpleName() + ": " + getMessage();
+    return "AnnotationImplException: " + this.getMessage();
   }
 
   /**
@@ -132,16 +127,14 @@ public class AnnotationImplException extends Exception {
    * on). Adding a <code>null String</code> has no effect! So if you don't know the value of an
    * argument, use something like <code>""</code> or <code>"UNKNOWN"</code>, but not
    * <code>null</code>.
-   * 
-   * @param s
-   *          -
+   * @param s -
    * @return true if found a null spot to insert string s into
    */
   public boolean addArgument(String s) {
     int i = 0;
-    while (i < arguments.length) {
-      if (arguments[i] == null) {
-        arguments[i] = s;
+    while (i < this.arguments.length) {
+      if (this.arguments[i] == null) {
+        this.arguments[i] = s;
         return true;
       }
       i++;
@@ -155,7 +148,7 @@ public class AnnotationImplException extends Exception {
    * @return The internal message key.
    */
   public String getMessageCode() {
-    return identifiers[error];
+    return identifiers[this.error];
   }
 
   /**
@@ -164,7 +157,7 @@ public class AnnotationImplException extends Exception {
    * @return The arguments to the exception.
    */
   public String[] getArguments() {
-    return arguments;
+    return this.arguments;
   }
 
   /**
@@ -178,4 +171,5 @@ public class AnnotationImplException extends Exception {
     }
     return resource_file;
   }
+
 }

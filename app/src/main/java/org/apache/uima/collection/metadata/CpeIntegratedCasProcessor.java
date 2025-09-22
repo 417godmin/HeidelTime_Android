@@ -25,6 +25,8 @@ package org.apache.uima.collection.metadata;
  * <p>
  * Its basic functionality is inherited from
  * {@link CpeCasProcessor}
+ * 
+ * 
  */
 public interface CpeIntegratedCasProcessor extends CpeCasProcessor {
 

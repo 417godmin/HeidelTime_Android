@@ -33,16 +33,19 @@ import org.apache.uima.analysis_engine.TypeOrFeature;
  * engine, the most common precondition is a check on the language of the document.</li>
  * </ul>
  * 
- * As with all {@link MetaDataObject}s, a <code>Capability</code> may or may not be modifiable. An
- * application can find out by calling the {@link #isModifiable()} method.
+ * As with all {@link MetaDataObject}s, a <code>Capability</code> may or may not be modifiable.
+ * An application can find out by calling the {@link #isModifiable()} method.
+ * 
+ * 
  */
 public interface Capability extends MetaDataObject {
-  Capability[] EMPTY_CAPABILITIES = new Capability[0];
-
+  public final static Capability[] EMPTY_CAPABILITIES = new Capability[0];
   /**
+   * Gets the description of this Capability.
+   * 
    * @return the description of this Capability.
    */
-  String getDescription();
+  public String getDescription();
 
   /**
    * 
@@ -51,31 +54,35 @@ public interface Capability extends MetaDataObject {
    * @param aDescription
    *          aDescription the description of this Capability.
    */
-  void setDescription(String aDescription);
+  public void setDescription(String aDescription);
 
   /**
-   * @return the inputs of this Capability as an array of references to Types or Features in this
-   *         Resource's Type System.
+   * Gets the inputs of this Capability.
+   * 
+   * @return an array of references to Types or Features in this Resource's Type System.
    */
-  TypeOrFeature[] getInputs();
+  public TypeOrFeature[] getInputs();
 
   /**
-   * @return the outputs of this Capability as an array of references to Types or Features in this
-   *         Resource's TypeSystem.
+   * Gets the outputs of this Capability.
+   * 
+   * @return an array of references to Types or Features in this Resource's TypeSystem.
    */
-  TypeOrFeature[] getOutputs();
+  public TypeOrFeature[] getOutputs();
 
   /**
-   * @return the inputs Sofa names of this Capability as an array of strings representing the
-   *         SofAName
+   * Gets the inputs Sofa names of this Capability.
+   * 
+   * @return an array of strings representing the SofAName
    */
-  String[] getInputSofas();
+  public String[] getInputSofas();
 
   /**
-   * @return the output Sofa names of this Capability as an array of strings representing output
-   *         SofA names
+   * Gets the output Sofa names of this Capability.
+   * 
+   * @return an array of strings representing output SofA names
    */
-  String[] getOutputSofas();
+  public String[] getOutputSofas();
 
   /**
    * Retrieves the preconditions that must be satisfied in order for the Resource to begin
@@ -83,7 +90,7 @@ public interface Capability extends MetaDataObject {
    * 
    * @return an unmodifiable list of {@link Precondition Precondition}s.
    */
-  Precondition[] getPreconditions();
+  public Precondition[] getPreconditions();
 
   /**
    * A convenience method that analyzes the preconditions of this <code>Capability</code> and
@@ -93,7 +100,7 @@ public interface Capability extends MetaDataObject {
    * @return an array of ISO language identifiers. An empty array means that the Resource claims to
    *         be language-independent.
    */
-  String[] getLanguagesSupported();
+  public String[] getLanguagesSupported();
 
   /**
    * A convenience method that analyzes the preconditions of this <code>Capability</code> and
@@ -102,7 +109,7 @@ public interface Capability extends MetaDataObject {
    * @return an array of MIME types. This may be empty if the Resource does not declare MIME type
    *         preconditions.
    */
-  String[] getMimeTypesSupported();
+  public String[] getMimeTypesSupported();
 
   /**
    * Sets the inputs of this Capability.
@@ -110,7 +117,7 @@ public interface Capability extends MetaDataObject {
    * @param aInputs
    *          an array of references to Types or Features in this Resource's TypeSystem.
    */
-  void setInputs(TypeOrFeature... aInputs);
+  public void setInputs(TypeOrFeature[] aInputs);
 
   /**
    * Sets the outputs of this Capability.
@@ -118,7 +125,7 @@ public interface Capability extends MetaDataObject {
    * @param aOutputs
    *          an array of references to Types or Features in this Resource's TypeSystem.
    */
-  void setOutputs(TypeOrFeature... aOutputs);
+  public void setOutputs(TypeOrFeature[] aOutputs);
 
   /**
    * Sets the input Sofa names.
@@ -127,7 +134,7 @@ public interface Capability extends MetaDataObject {
    *          an array of strings containing SofA names
    */
   /* Reserved for future use. */
-  void setInputSofas(String... aInputSofas);
+  public void setInputSofas(String[] aInputSofas);
 
   /**
    * Sets the output Sofa names of this capability
@@ -135,7 +142,7 @@ public interface Capability extends MetaDataObject {
    * @param aOutputSofas
    *          an array of strings containing SoFA name
    */
-  void setOutputSofas(String... aOutputSofas);
+  public void setOutputSofas(String[] aOutputSofas);
 
   /**
    * Sets the <code>Precondition</code>s of this <code>Capability</code>.
@@ -146,7 +153,7 @@ public interface Capability extends MetaDataObject {
    * @throws org.apache.uima.UIMA_UnsupportedOperationException
    *           if this <code>MetaDataObject</code> is not modifiable.
    */
-  void setPreconditions(Precondition... aPreconditions);
+  public void setPreconditions(Precondition[] aPreconditions);
 
   /**
    * A convenience method that sets the languages that this Resource supports. This is only
@@ -160,19 +167,19 @@ public interface Capability extends MetaDataObject {
    *          an array of ISO language identifiers. An empty array means that the Resource claims to
    *          be language-independent.
    */
-  void setLanguagesSupported(String... aLanguageIDs);
+  public void setLanguagesSupported(String[] aLanguageIDs);
 
   /**
    * A convenience method that sets the MIME types that this Resource can take as input.
    * <p>
-   * Calling this method affects the preconditions of this <code>Capability</code>. All other MIME
-   * type preconditions will be removed, but other preconditions will be unaffected.
+   * Calling this method affects the preconditions of this <code>Capability</code>. All other
+   * MIME type preconditions will be removed, but other preconditions will be unaffected.
    * 
    * @param aMimeTypes
    *          an array of MIME types. This may be empty if the Resource does not declare MIME type
    *          preconditions.
    */
-  void setMimeTypesSupported(String... aMimeTypes);
+  public void setMimeTypesSupported(String[] aMimeTypes);
 
   /**
    * A convenience method that adds an input Type to this Capability.
@@ -184,7 +191,7 @@ public interface Capability extends MetaDataObject {
    *          that are specified in the same AnalysisEngine descriptor. If false, features must be
    *          explicitly declared by calling {@link #addInputFeature(String)}.
    */
-  void addInputType(String aTypeName, boolean aAllAnnotatorFeatures);
+  public void addInputType(String aTypeName, boolean aAllAnnotatorFeatures);
 
   /**
    * A convenience method that adds an input Feature to this Capability.
@@ -192,7 +199,7 @@ public interface Capability extends MetaDataObject {
    * @param aFeatureName
    *          the fully qualified feature name
    */
-  void addInputFeature(String aFeatureName);
+  public void addInputFeature(String aFeatureName);
 
   /**
    * A convenience method that adds an output Type to this Capability.
@@ -204,7 +211,7 @@ public interface Capability extends MetaDataObject {
    *          that are specified in the same AnalysisEngine descriptor. If false, features must be
    *          explicitly declared by calling {@link #addOutputFeature(String)}.
    */
-  void addOutputType(String aTypeName, boolean aAllAnnotatorFeatures);
+  public void addOutputType(String aTypeName, boolean aAllAnnotatorFeatures);
 
   /**
    * A convenience method that adds an output Feature to this Capability.
@@ -212,23 +219,21 @@ public interface Capability extends MetaDataObject {
    * @param aFeatureName
    *          the fully qualified feature name
    */
-  void addOutputFeature(String aFeatureName);
+  public void addOutputFeature(String aFeatureName);
 
   /**
    * A convenience method that adds an input Sofa name to this Capability.
    * 
-   * @param aSofaName
-   *          the sofa to add to the inputs
+   * @param aSofaName the sofa to add to the inputs
    */
-  void addInputSofa(String aSofaName);
+  public void addInputSofa(String aSofaName);
 
   /**
    * A convenience method that adds an output Sofa name to this Capability.
    * 
-   * @param aSofaName
-   *          the sofa to add as an output
+   * @param aSofaName the sofa to add as an output 
    */
-  void addOutputSofa(String aSofaName);
+  public void addOutputSofa(String aSofaName);
 
   /**
    * A convenience method that adds a supported language to this Capability.
@@ -236,7 +241,7 @@ public interface Capability extends MetaDataObject {
    * @param aLanguage
    *          the ISO language identifier
    */
-  void addSupportedLanguage(String aLanguage);
+  public void addSupportedLanguage(String aLanguage);
 
   /**
    * A convenience method that removes a supported language from this Capability.
@@ -244,6 +249,6 @@ public interface Capability extends MetaDataObject {
    * @param aLanguage
    *          the ISO language identifier
    */
-  void removeSupportedLanguage(String aLanguage);
+  public void removeSupportedLanguage(String aLanguage);
 
 }

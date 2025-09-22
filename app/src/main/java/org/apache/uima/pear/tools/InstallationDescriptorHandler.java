@@ -26,7 +26,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Properties;
@@ -177,7 +176,7 @@ public class InstallationDescriptorHandler extends DefaultHandler {
     xmlBuffer.append(XML_HEADER);
     xmlBuffer.append('\n');
     xmlBuffer.append(insdObject.toString());
-    byte[] xmlContentBytes = xmlBuffer.toString().getBytes(StandardCharsets.UTF_8);
+    byte[] xmlContentBytes = xmlBuffer.toString().getBytes("UTF-8");
     iStream = new ByteArrayInputStream(xmlContentBytes);
     return iStream;
   }
@@ -345,7 +344,8 @@ public class InstallationDescriptorHandler extends DefaultHandler {
       oWriter.println();
       // 3rd level elements
       String dlgId = dlgList.next();
-      ComponentInfo dlgInfo = dlgTable.get(dlgId);
+      ComponentInfo dlgInfo = dlgTable
+              .get(dlgId);
       XMLUtil.printXMLElement(ID_TAG, dlgId, oWriter, 3);
       oWriter.println();
       XMLUtil.printXMLElement(NAME_TAG, dlgInfo.name, oWriter, 3);
@@ -397,12 +397,20 @@ public class InstallationDescriptorHandler extends DefaultHandler {
    */
   public static void saveInstallationDescriptor(InstallationDescriptor insdObject, File xmlFile)
           throws IOException {
-    try (PrintWriter oWriter = new PrintWriter(
-            new OutputStreamWriter(new FileOutputStream(xmlFile), StandardCharsets.UTF_8))) {
+    PrintWriter oWriter = null;
+    try {
+      oWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(xmlFile), "UTF-8"));
       oWriter.println(XML_HEADER);
       printInstallationDescriptor(insdObject, oWriter);
     } catch (IOException exc) {
       throw exc;
+    } finally {
+      if (oWriter != null) {
+        try {
+          oWriter.close();
+        } catch (Exception e) {
+        }
+      }
     }
   }
 
@@ -418,7 +426,6 @@ public class InstallationDescriptorHandler extends DefaultHandler {
    * @exception SAXException
    *              Any SAX exception, possibly wrapping another exception.
    */
-  @Override
   public void characters(char ch[], int start, int length) throws SAXException {
     _activeBuffer.append(ch, start, length);
   }
@@ -429,7 +436,6 @@ public class InstallationDescriptorHandler extends DefaultHandler {
    * @exception SAXException
    *              Any SAX exception, possibly wrapping another exception.
    */
-  @Override
   public void endDocument() throws SAXException {
     _insdLoaded = true;
   }
@@ -446,7 +452,6 @@ public class InstallationDescriptorHandler extends DefaultHandler {
    * @exception SAXException
    *              Any SAX exception, possibly wrapping another exception.
    */
-  @Override
   public void endElement(String uri, String localName, String qName) throws SAXException {
     String elemValue = _activeBuffer.toString().trim();
     if (OS_TAG.equals(_activeSection)) {
@@ -556,7 +561,6 @@ public class InstallationDescriptorHandler extends DefaultHandler {
   /**
    * XML parser error handler.
    */
-  @Override
   public void error(SAXParseException ex) throws SAXException {
     XMLUtil.printError("Error", ex);
   }
@@ -564,7 +568,6 @@ public class InstallationDescriptorHandler extends DefaultHandler {
   /**
    * XML parser fatal error handler.
    */
-  @Override
   public void fatalError(SAXParseException ex) throws SAXException {
     XMLUtil.printError("Fatal Error", ex);
     throw ex;
@@ -625,8 +628,8 @@ public class InstallationDescriptorHandler extends DefaultHandler {
    * @throws SAXException
    *           Any SAX exception, possibly wrapping another exception.
    */
-  public synchronized void parseInstallationDescriptor(JarFile pearFile)
-          throws IOException, SAXException {
+  public synchronized void parseInstallationDescriptor(JarFile pearFile) throws IOException,
+          SAXException {
     String insdFilePath = InstallationProcessor.INSD_FILE_PATH;
     JarEntry insdJarEntry = pearFile.getJarEntry(insdFilePath);
     if (insdJarEntry != null) {
@@ -654,7 +657,6 @@ public class InstallationDescriptorHandler extends DefaultHandler {
    * @exception SAXException
    *              Any SAX exception, possibly wrapping another exception.
    */
-  @Override
   public void startDocument() throws SAXException {
   }
 
@@ -672,7 +674,6 @@ public class InstallationDescriptorHandler extends DefaultHandler {
    * @exception SAXException
    *              Any SAX exception, possibly wrapping another exception.
    */
-  @Override
   public void startElement(String uri, String localName, String qName, Attributes attributes)
           throws SAXException {
     _mainTag = localName;
@@ -729,7 +730,6 @@ public class InstallationDescriptorHandler extends DefaultHandler {
   /**
    * XML parser warning handler.
    */
-  @Override
   public void warning(SAXParseException ex) throws SAXException {
     XMLUtil.printError("Warning", ex);
   }

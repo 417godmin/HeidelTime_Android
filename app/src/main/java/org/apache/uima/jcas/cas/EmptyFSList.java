@@ -19,23 +19,15 @@
 
 package org.apache.uima.jcas.cas;
 
-import org.apache.uima.cas.CAS;
-import org.apache.uima.cas.impl.CASImpl;
-import org.apache.uima.cas.impl.TypeImpl;
-import org.apache.uima.cas.impl.TypeImpl_list;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
 
-public class EmptyFSList<T extends TOP> extends FSList<T> implements EmptyList {
+public class EmptyFSList extends FSList {
 
-  /* public static string for use where constants are needed, e.g. in some Java Annotations */
-  public static final String _TypeName = CAS.TYPE_NAME_EMPTY_FS_LIST;
+  public final static int typeIndexID = JCasRegistry.register(EmptyFSList.class);
 
-  public static final int typeIndexID = JCasRegistry.register(EmptyFSList.class);
+  public final static int type = typeIndexID;
 
-  public static final int type = typeIndexID;
-
-  @Override
   public int getTypeIndexID() {
     return typeIndexID;
   }
@@ -44,26 +36,13 @@ public class EmptyFSList<T extends TOP> extends FSList<T> implements EmptyList {
   protected EmptyFSList() {
   }
 
-  /* used by type system impl to initialize empty singleton in typeImpl */
-  public EmptyFSList(TypeImpl_list ti) {
-    super(ti, null);
+ /* Internal - Constructor used by generator */
+  public EmptyFSList(int addr, TOP_Type type) {
+    super(addr, type);
   }
 
   public EmptyFSList(JCas jcas) {
     super(jcas);
-  }
-
-  /**
-   * used by generator Make a new AnnotationBase
-   * 
-   * @param c
-   *          -
-   * @param t
-   *          -
-   */
-
-  public EmptyFSList(TypeImpl t, CASImpl c) {
-    super(t, c);
   }
 
 }

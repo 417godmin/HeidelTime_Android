@@ -31,6 +31,8 @@ import org.apache.uima.resource.metadata.ResourceMetaData;
 /**
  * Convenience base class for Resource Service implementations. This class is independent of the
  * deployment technology used to deploy the service.
+ * 
+ * 
  */
 public class ResourceService_impl {
 
@@ -48,11 +50,10 @@ public class ResourceService_impl {
    *          for this service.
    * @param aResourceInitParams
    *          additional parameters to be passed on to the Resource Factory.
-   * @throws ResourceInitializationException
-   *           -
+   * @throws ResourceInitializationException - 
    */
-  public void initialize(ResourceSpecifier aResourceSpecifier,
-          Map<String, Object> aResourceInitParams) throws ResourceInitializationException {
+  public void initialize(ResourceSpecifier aResourceSpecifier, Map<String, Object> aResourceInitParams)
+          throws ResourceInitializationException {
     // create Resource
     mResource = UIMAFramework.produceResource(getResourceClass(), aResourceSpecifier,
             aResourceInitParams);
@@ -60,10 +61,8 @@ public class ResourceService_impl {
 
   /**
    * Gets metadata for this Resource service.
-   * 
    * @return -
-   * @throws ResourceServiceException
-   *           -
+   * @throws ResourceServiceException -
    */
   public ResourceMetaData getMetaData() throws ResourceServiceException {
     return getResource().getMetaData();

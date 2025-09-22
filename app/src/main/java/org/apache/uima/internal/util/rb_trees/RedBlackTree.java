@@ -67,13 +67,14 @@ public class RedBlackTree<T> implements Iterable<T> {
 
   /** Default constructor, does nothing. */
   public RedBlackTree() {
+    super();
   }
 
   /**
    * @return The number of key/value pairs in the tree.
    */
   public final int size() {
-    return size;
+    return this.size;
   }
 
   // //////////////////////////////////////////////////////////////////
@@ -84,8 +85,8 @@ public class RedBlackTree<T> implements Iterable<T> {
    * Remove all elements from the tree.
    */
   public final void clear() {
-    root = null;
-    size = 0;
+    this.root = null;
+    this.size = 0;
   }
 
   /**
@@ -96,7 +97,7 @@ public class RedBlackTree<T> implements Iterable<T> {
    * @return <code>true</code>, if key is defined; <code>false</code>, else.
    */
   public final boolean containsKey(int key) {
-    return (RBTNode.find(root, key) == null) ? false : true;
+    return (RBTNode.find(this.root, key) == null) ? false : true;
   }
 
   /**
@@ -124,12 +125,13 @@ public class RedBlackTree<T> implements Iterable<T> {
    *          The key under which the Object is to be inserted.
    * @param el
    *          The Object to be inserted.
-   * @return <code>true</code>, if the key was not in the tree; <code>false</code>, if an element
-   *         with that key was already in the tree. The old element is overwritten with the new one.
+   * @return <code>true</code>, if the key was not in the tree; <code>false</code>, if an
+   *         element with that key was already in the tree. The old element is overwritten with the
+   *         new one.
    */
   public final boolean put(int key, T el) {
-    if (put(new RBTNode<>(key, el))) {
-      size++;
+    if (put(new RBTNode<T>(key, el))) {
+      this.size++;
       return true;
     }
     return false;
@@ -140,14 +142,14 @@ public class RedBlackTree<T> implements Iterable<T> {
    * 
    * @param key
    *          The key to be deleted.
-   * @return -
+   * @return -         
    */
   public final T remove(int key) {
-    RBTNode<T> node = RBTNode.find(root, key);
+    RBTNode<T> node = RBTNode.find(this.root, key);
     T ret = null;
     if (node != null) {
       ret = node.element;
-      size--;
+      this.size--;
       RBTNode.delete(this, node);
     }
     return ret;
@@ -155,19 +157,19 @@ public class RedBlackTree<T> implements Iterable<T> {
 
   /**
    * Get the object for a key. If the key is not contained in the tree, returns <code>null</code>.
-   * Since <code>null</code> can also be a regular value, use
-   * {@link RedBlackTree#containsKey containsKey()} to check
-   * if a key is defined or not.
+   * Since <code>null</code> can also be a regular value, use {@link
+   * RedBlackTree#containsKey containsKey()} to check if a
+   * key is defined or not.
    * 
    * @param key
    *          The key.
    * @return The corresponding element, or <code>null</code> if key is not defined.
    */
   public final T get(int key) {
-    if (root == null) {
+    if (this.root == null) {
       return null;
     }
-    RBTNode<T> node = RBTNode.find(root, key);
+    RBTNode<T> node = RBTNode.find(this.root, key);
     if (node == null) {
       return null;
     }
@@ -180,7 +182,7 @@ public class RedBlackTree<T> implements Iterable<T> {
    * @return <code>true</code> if map is empty; <code>false</code>, else.
    */
   public final boolean isEmpty() {
-    return (root == null);
+    return (this.root == null);
   }
 
   /**
@@ -189,9 +191,9 @@ public class RedBlackTree<T> implements Iterable<T> {
    * @return A sorted array of the keys.
    */
   public final int[] keySet() {
-    int[] set = new int[size];
-    if (root != null) {
-      root.keys(0, set);
+    int[] set = new int[this.size];
+    if (this.root != null) {
+      this.root.keys(0, set);
     }
     return set;
   }
@@ -202,17 +204,18 @@ public class RedBlackTree<T> implements Iterable<T> {
   }
 
   /**
-   * @return The object associated with the smallest key, or <code>null</code> if the tree is empty.
+   * @return The object associated with the smallest key, or <code>null</code> if the tree is
+   *         empty.
    */
   public final T getFirst() {
     return this.getFirstNode().element;
   }
 
   private final RBTNode<T> getFirstNode() {
-    if (root == null) {
+    if (this.root == null) {
       return null;
     }
-    RBTNode<T> x = root;
+    RBTNode<T> x = this.root;
     while (x.left != null) {
       x = x.left;
     }
@@ -223,9 +226,8 @@ public class RedBlackTree<T> implements Iterable<T> {
    * @return An iterator over the elements in the tree. The elements are returned in ascending order
    *         of the corresponding keys.
    */
-  @Override
   public Iterator<T> iterator() {
-    return new RBTIterator<>(this);
+    return new RBTIterator<T>(this);
   }
 
   // Iterator implementation.
@@ -234,25 +236,22 @@ public class RedBlackTree<T> implements Iterable<T> {
     RBTNode<T> current;
 
     RBTIterator(RedBlackTree<T> tree) {
-      current = tree.getFirstNode();
+      this.current = tree.getFirstNode();
     }
 
-    @Override
     public boolean hasNext() {
-      return (current != null);
+      return (this.current != null);
     }
 
-    @Override
     public T next() {
-      if (current == null) {
+      if (this.current == null) {
         throw new java.util.NoSuchElementException();
       }
-      T ret = current.element;
-      current = current.successor();
+      T ret = this.current.element;
+      this.current = this.current.successor();
       return ret;
     }
 
-    @Override
     public void remove() {
       throw new UnsupportedOperationException();
     }
@@ -260,14 +259,14 @@ public class RedBlackTree<T> implements Iterable<T> {
 
   /**
    * @return a copy of the red-black tree as a BinaryTree. The node values are key-value pairs
-   *         (RBTKeyValuePair).
+   * (RBTKeyValuePair).
    */
   public BinaryTree getBinaryTree() {
-    if (root == null) {
+    if (this.root == null) {
       return null;
     }
     BinaryTree tree = new BinaryTree();
-    root.getBinaryTree(tree);
+    this.root.getBinaryTree(tree);
     return tree;
   }
 
@@ -281,14 +280,14 @@ public class RedBlackTree<T> implements Iterable<T> {
 
   /** Debugging aid. */
   public void printKeys() {
-    if (root != null) {
-      root.printKeys(0);
+    if (this.root != null) {
+      this.root.printKeys(0);
     }
-    System.out.println("Size: " + size);
+    System.out.println("Size: " + this.size);
   }
 
   public static void main(String[] args) {
-    RedBlackTree<String> tree = new RedBlackTree<>();
+    RedBlackTree<String> tree = new RedBlackTree<String>();
     tree.put(1, "a");
     tree.printKeys();
     System.out.println("");

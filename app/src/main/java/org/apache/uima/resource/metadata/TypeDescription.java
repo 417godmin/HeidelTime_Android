@@ -23,17 +23,18 @@ package org.apache.uima.resource.metadata;
  * A description of a CAS Type. This implements <code>MetaDataObject</code>, which implements
  * {@link org.apache.uima.util.XMLizable}, so it can be serialized to and deserialized from an XML
  * element.
+ * 
+ * 
  */
 public interface TypeDescription extends MetaDataObject {
 
-  TypeDescription[] EMPTY_TYPE_DESCRIPTIONS = new TypeDescription[0];
-
+  public final static TypeDescription[] EMPTY_TYPE_DESCRIPTIONS = new TypeDescription[0];
   /**
    * Gets the name of this Type.
    * 
    * @return the name of this Type
    */
-  String getName();
+  public String getName();
 
   /**
    * Sets the name of this Type.
@@ -41,14 +42,14 @@ public interface TypeDescription extends MetaDataObject {
    * @param aName
    *          the name of this Type
    */
-  void setName(String aName);
+  public void setName(String aName);
 
   /**
    * Gets the verbose description of this Type.
    * 
    * @return the description of this Type
    */
-  String getDescription();
+  public String getDescription();
 
   /**
    * Sets the verbose description of this Type.
@@ -56,14 +57,14 @@ public interface TypeDescription extends MetaDataObject {
    * @param aDescription
    *          the description of this Type
    */
-  void setDescription(String aDescription);
+  public void setDescription(String aDescription);
 
   /**
    * Gets the name of the supertype for this Type. This is the Type from which this Type inherits.
    * 
    * @return the name of the supertype for this Type
    */
-  String getSupertypeName();
+  public String getSupertypeName();
 
   /**
    * Sets the name of the supertype for this Type. This is the Type from which this Type inherits.
@@ -71,14 +72,14 @@ public interface TypeDescription extends MetaDataObject {
    * @param aTypeName
    *          the name of the supertype for this Type
    */
-  void setSupertypeName(String aTypeName);
+  public void setSupertypeName(String aTypeName);
 
   /**
    * Gets the descriptions of the features for this Type.
    * 
    * @return the descriptions of the features for this Type.
    */
-  FeatureDescription[] getFeatures();
+  public FeatureDescription[] getFeatures();
 
   /**
    * Sets the descriptions of the features for this Type.
@@ -86,7 +87,7 @@ public interface TypeDescription extends MetaDataObject {
    * @param aFeatures
    *          descriptions of the features for this Type.
    */
-  void setFeatures(FeatureDescription... aFeatures);
+  public void setFeatures(FeatureDescription[] aFeatures);
 
   /**
    * Gets the allowed values for instances of this Type. This is used only for special "enumerated
@@ -96,18 +97,18 @@ public interface TypeDescription extends MetaDataObject {
    * 
    * @return the allowed values for instances of this Type
    */
-  AllowedValue[] getAllowedValues();
+  public AllowedValue[] getAllowedValues();
 
   /**
    * Sets the allowed values for instances of this Type. This is used only for special "enumerated
    * types" that extend the String type and define a specific set of allowed values. For all other
-   * Types this property should be <code>null</code>. Note that if a type has allowed values, it may
-   * not have features.
+   * Types this property should be <code>null</code>. Note that if a type has allowed values, it
+   * may not have features.
    * 
    * @param aAllowedValues
    *          the allowed values for instances of this Type
    */
-  void setAllowedValues(AllowedValue... aAllowedValues);
+  public void setAllowedValues(AllowedValue[] aAllowedValues);
 
   /**
    * Convenience method which adds a FeatureDescription to this TypeDescription.
@@ -121,7 +122,8 @@ public interface TypeDescription extends MetaDataObject {
    * 
    * @return description of the new Feature
    */
-  FeatureDescription addFeature(String aFeatureName, String aDescription, String aRangeTypeName);
+  public FeatureDescription addFeature(String aFeatureName, String aDescription,
+          String aRangeTypeName);
 
   /**
    * Convenience method which adds a FeatureDescription to this TypeDescription. Used for array or
@@ -142,6 +144,6 @@ public interface TypeDescription extends MetaDataObject {
    * 
    * @return description of the new Feature
    */
-  FeatureDescription addFeature(String aFeatureName, String aDescription, String aRangeTypeName,
-          String aElementTypeName, Boolean aMultipleReferencesAllowed);
+  public FeatureDescription addFeature(String aFeatureName, String aDescription,
+          String aRangeTypeName, String aElementTypeName, Boolean aMultipleReferencesAllowed);
 }

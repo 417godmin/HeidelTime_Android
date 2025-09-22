@@ -31,8 +31,7 @@ import org.apache.uima.util.InstrumentationFacility;
 import org.apache.uima.util.Logger;
 import org.apache.uima.util.ProcessTrace;
 import org.apache.uima.util.Settings;
-import org.apache.uima.resource.impl.ConfigurationManager_impl;
-import org.apache.uima.resource.impl.ResourceManager_impl;
+
 /**
  * Implementation of the root {@link UimaContext}. UIMA Contexts are arranged in a tree structure
  * corresponding to the nested structure of the components in a CPE or Aggregate AE. The root
@@ -62,66 +61,57 @@ public class RootUimaContext_impl extends UimaContext_ImplBase {
   /**
    * Instrumentation Facility (wraps ProcessTrace)
    */
-  private final InstrumentationFacility_impl mInstrumentationFacility = new InstrumentationFacility_impl(
+  final private InstrumentationFacility_impl mInstrumentationFacility = new InstrumentationFacility_impl(
           null);
 
   /**
    * Current Session
    * 
-   * Has general setter and getter; marked volatile to allow effect of setting to be seen on another
-   * thread
+   * Has general setter and getter;
+   * marked volatile to allow effect of setting to be seen on another thread
    */
   private volatile Session mSession;
-
+  
   /**
    * External parameter override specifications - held at the root context level
    */
   protected volatile Settings mExternalOverrides;
-
-  @Override
+  
   public Settings getExternalOverrides() {
     return mExternalOverrides;
   }
-
-  @Override
+  
   public void setExternalOverrides(Settings externalOverrides) {
     mExternalOverrides = externalOverrides;
   }
 
   public RootUimaContext_impl() {
-    ResourceManager rmTmp = UIMAFramework.newContextResourceManager.get();
-    if (rmTmp == null) {
-      rmTmp = new ResourceManager_impl(); // 默认实现
-    }
-    mResourceManager = rmTmp;
-
-    ConfigurationManager cmTmp = UIMAFramework.newContextConfigManager.get();
-    if (cmTmp == null) {
-      cmTmp = new ConfigurationManager_impl(); // 默认实现
-    }
-    mConfigurationManager = cmTmp;
+    // ugly trick - passing parameters in thread local of one known caller,
+    // to allow these to be final,
+    // which causes a store memory barrier to be inserted for them
+    // which makes other accesses to them "safe" from other threads
+    //   without further synchronization
+    mResourceManager = UIMAFramework.newContextResourceManager.get();
+    mConfigurationManager = UIMAFramework.newContextConfigManager.get();
   }
-
   /*
    * (non-Javadoc)
    * 
-   * @see
-   * org.apache.uima.UimaContextAdmin#initialize(org.apache.uima.resource.ResourceCreationSpecifier,
-   * org.apache.uima.util.Logger, org.apache.uima.resource.ResourceManager, ConfigurationManager)
+   * @see org.apache.uima.UimaContextAdmin#initialize(org.apache.uima.resource.ResourceCreationSpecifier,
+   *      org.apache.uima.util.Logger, org.apache.uima.resource.ResourceManager,
+   *      ConfigurationManager)
    */
-  @Override
   public void initializeRoot(Logger aLogger, ResourceManager aResourceManager,
           ConfigurationManager aConfigurationManager) {
     mLogger = aLogger;
-    // mResourceManager = aResourceManager;
-    // mConfigurationManager = aConfigurationManager;
-    setSession(new Session_impl());
+//    mResourceManager = aResourceManager;
+//    mConfigurationManager = aConfigurationManager;
+    mSession = new Session_impl();
   }
 
   /**
    * @see org.apache.uima.analysis_engine.annotator.AnnotatorContext#getLogger()
    */
-  @Override
   public Logger getLogger() {
     return mLogger;
   }
@@ -131,9 +121,8 @@ public class RootUimaContext_impl extends UimaContext_ImplBase {
    * 
    * @see org.apache.uima.UimaContextAdmin#setLogger(org.apache.uima.util.Logger)
    */
-  @Override
   public void setLogger(Logger aLogger) {
-    mLogger = maybeThrottleLogger(aLogger);
+    mLogger = aLogger;
   }
 
   /**
@@ -141,7 +130,6 @@ public class RootUimaContext_impl extends UimaContext_ImplBase {
    * 
    * @return the ResourceManager
    */
-  @Override
   public ResourceManager getResourceManager() {
     return mResourceManager;
   }
@@ -151,7 +139,6 @@ public class RootUimaContext_impl extends UimaContext_ImplBase {
    * 
    * @see org.apache.uima.UimaContextAdmin#getConfigurationManager()
    */
-  @Override
   public ConfigurationManager getConfigurationManager() {
     return mConfigurationManager;
   }
@@ -161,7 +148,6 @@ public class RootUimaContext_impl extends UimaContext_ImplBase {
    * 
    * @return the InstrumentationFacility to be used within this AnalysisEngine
    */
-  @Override
   public InstrumentationFacility getInstrumentationFacility() {
     return mInstrumentationFacility;
   }
@@ -173,7 +159,6 @@ public class RootUimaContext_impl extends UimaContext_ImplBase {
    * This method is to be called from the Analysis Engine, not the Annotator, so it is not part of
    * the AnnotatorContext interface.
    */
-  @Override
   public void setProcessTrace(ProcessTrace aProcessTrace) {
     mInstrumentationFacility.setProcessTrace(aProcessTrace);
   }
@@ -183,7 +168,6 @@ public class RootUimaContext_impl extends UimaContext_ImplBase {
    * 
    * @see org.apache.uima.UimaContextAdmin#setSession(org.apache.uima.resource.Session)
    */
-  @Override
   public void setSession(Session aSession) {
     mSession = aSession;
     mConfigurationManager.setSession(mSession);
@@ -195,7 +179,6 @@ public class RootUimaContext_impl extends UimaContext_ImplBase {
    * 
    * @see org.apache.uima.UimaContext#getSession()
    */
-  @Override
   public Session getSession() {
     return mSession;
   }
@@ -205,7 +188,6 @@ public class RootUimaContext_impl extends UimaContext_ImplBase {
    * 
    * @return root context
    */
-  @Override
   public UimaContextAdmin getRootContext() {
     return this;
   }

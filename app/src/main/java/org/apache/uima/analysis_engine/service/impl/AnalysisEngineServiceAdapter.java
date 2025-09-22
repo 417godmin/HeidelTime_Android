@@ -46,12 +46,14 @@ import org.apache.uima.util.UimaTimer;
  * know whether it is calling a local AnalysisEngine or a remote service.
  * <p>
  * Subclasses must provide an implementation of the {@link #initialize(ResourceSpecifier,Map)}
- * method, which must create an {@link AnalysisEngineServiceStub} object that can communicate with
- * the remote service. The stub must be passed to the {@link #setStub(AnalysisEngineServiceStub)}
- * method of this class.
+ * method, which must create an {@link AnalysisEngineServiceStub} object that can communicate with the
+ * remote service. The stub must be passed to the {@link #setStub(AnalysisEngineServiceStub)} method of
+ * this class.
+ * 
+ * 
  */
-public abstract class AnalysisEngineServiceAdapter extends AnalysisEngineImplBase
-        implements TextAnalysisEngine, CasConsumer {
+public abstract class AnalysisEngineServiceAdapter extends AnalysisEngineImplBase implements
+        TextAnalysisEngine, CasConsumer {
 
   /**
    * current class
@@ -97,7 +99,6 @@ public abstract class AnalysisEngineServiceAdapter extends AnalysisEngineImplBas
   /**
    * @see org.apache.uima.resource.Resource#getMetaData()
    */
-  @Override
   public ResourceMetaData getMetaData() {
     try {
       if (mCachedMetaData == null && getStub() != null) {
@@ -112,15 +113,12 @@ public abstract class AnalysisEngineServiceAdapter extends AnalysisEngineImplBas
   /**
    * @see org.apache.uima.resource.Resource#destroy()
    */
-  @Override
   public void destroy() {
-    if (getStub() != null) {
+    if (getStub() != null)
       getStub().destroy();
-    }
     super.destroy();
   }
 
-  @Override
   public CasIterator processAndOutputNewCASes(CAS aCAS) throws AnalysisEngineProcessException {
     // logging and instrumentation
     mTimer.startIt();
@@ -152,7 +150,6 @@ public abstract class AnalysisEngineServiceAdapter extends AnalysisEngineImplBas
   /**
    * @see org.apache.uima.resource.ConfigurableResource#reconfigure()
    */
-  @Override
   public void reconfigure() throws ResourceConfigurationException {
     throw new UIMA_UnsupportedOperationException(
             UIMA_UnsupportedOperationException.SHARED_RESOURCE_NOT_RECONFIGURABLE, new Object[] {});
@@ -162,7 +159,6 @@ public abstract class AnalysisEngineServiceAdapter extends AnalysisEngineImplBas
    * @see org.apache.uima.resource.ConfigurableResource#getConfigParameterValue(String,
    *      String)
    */
-  @Override
   public Object getConfigParameterValue(String aGroupName, String aParamName) {
     return getMetaData().getConfigurationParameterSettings().getParameterValue(aGroupName,
             aParamName);
@@ -171,7 +167,6 @@ public abstract class AnalysisEngineServiceAdapter extends AnalysisEngineImplBas
   /**
    * @see org.apache.uima.resource.ConfigurableResource#getConfigParameterValue(String)
    */
-  @Override
   public Object getConfigParameterValue(String aParamName) {
     return getMetaData().getConfigurationParameterSettings().getParameterValue(aParamName);
   }
@@ -180,7 +175,6 @@ public abstract class AnalysisEngineServiceAdapter extends AnalysisEngineImplBas
    * @see org.apache.uima.resource.ConfigurableResource#setConfigParameterValue(String,
    *      Object)
    */
-  @Override
   public void setConfigParameterValue(String aParamName, Object aValue) {
     throw new UIMA_UnsupportedOperationException(
             UIMA_UnsupportedOperationException.SHARED_RESOURCE_NOT_RECONFIGURABLE, new Object[] {});
@@ -190,13 +184,11 @@ public abstract class AnalysisEngineServiceAdapter extends AnalysisEngineImplBas
    * @see org.apache.uima.resource.ConfigurableResource#setConfigParameterValue(String,
    *      String, Object)
    */
-  @Override
   public void setConfigParameterValue(String aGroupName, String aParamName, Object aValue) {
     throw new UIMA_UnsupportedOperationException(
             UIMA_UnsupportedOperationException.SHARED_RESOURCE_NOT_RECONFIGURABLE, new Object[] {});
   }
 
-  @Override
   public void batchProcessComplete() throws AnalysisEngineProcessException {
     try {
       getStub().callBatchProcessComplete();
@@ -205,7 +197,6 @@ public abstract class AnalysisEngineServiceAdapter extends AnalysisEngineImplBas
     }
   }
 
-  @Override
   public void collectionProcessComplete() throws AnalysisEngineProcessException {
     try {
       getStub().callCollectionProcessComplete();

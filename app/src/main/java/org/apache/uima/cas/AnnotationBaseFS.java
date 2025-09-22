@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.uima.cas;
 
 /**
@@ -27,6 +28,7 @@ package org.apache.uima.cas;
  * 
  * <p>
  * It implements the methods to get the CAS view associated with this sofa.
+ * 
  */
 public interface AnnotationBaseFS extends FeatureStructure {
 
@@ -35,5 +37,6 @@ public interface AnnotationBaseFS extends FeatureStructure {
    * 
    * @return the CAS view associated with the Annotation's Sofa
    */
-  CAS getView();
+  public CAS getView();
+
 }

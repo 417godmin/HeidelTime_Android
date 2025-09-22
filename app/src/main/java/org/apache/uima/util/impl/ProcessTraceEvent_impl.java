@@ -53,7 +53,7 @@ public class ProcessTraceEvent_impl implements ProcessTraceEvent {
   /**
    * Duration of this event in milliseconds.
    */
-  private long mDuration;
+  private int mDuration;
 
   /**
    * Result Message of this event.
@@ -97,14 +97,12 @@ public class ProcessTraceEvent_impl implements ProcessTraceEvent {
   /**
    * @see ProcessTraceEvent#getComponentName()
    */
-  @Override
   public String getComponentName() {
     return mComponentName;
   }
 
   /**
-   * @param aName
-   *          the component name for this event
+   * @param aName the component name for this event
    */
   public void setComponentName(String aName) {
     mComponentName = aName;
@@ -113,14 +111,12 @@ public class ProcessTraceEvent_impl implements ProcessTraceEvent {
   /**
    * @see ProcessTraceEvent#getType()
    */
-  @Override
   public String getType() {
     return mType;
   }
 
   /**
-   * @param aType
-   *          the type of this event
+   * @param aType the type of this event
    */
   public void setType(String aType) {
     mType = aType;
@@ -129,14 +125,12 @@ public class ProcessTraceEvent_impl implements ProcessTraceEvent {
   /**
    * @see ProcessTraceEvent#getDescription()
    */
-  @Override
   public String getDescription() {
     return mDescription;
   }
 
   /**
-   * @param aDescription
-   *          the description for this event
+   * @param aDescription the description for this event
    */
   public void setDescription(String aDescription) {
     mDescription = aDescription;
@@ -145,30 +139,19 @@ public class ProcessTraceEvent_impl implements ProcessTraceEvent {
   /**
    * @see ProcessTraceEvent#getDuration()
    */
-  @Override
   public int getDuration() {
-    if (mDuration > Integer.MAX_VALUE) {
-      return Integer.MAX_VALUE;
-    }
-
-    if (mDuration < Integer.MIN_VALUE) {
-      return Integer.MIN_VALUE;
-    }
-
-    return (int) mDuration;
+    return mDuration;
   }
 
   /**
-   * @param aDuration
-   *          the duration for this event
+   * @param aDuration the duration for this event
    */
   public void setDuration(int aDuration) {
     mDuration = aDuration;
   }
 
   /**
-   * @param aAdditionalDuration
-   *          Adds this to the duration of this event
+   * @param aAdditionalDuration Adds this to the duration of this event
    */
   public void addToDuration(long aAdditionalDuration) {
     mDuration += aAdditionalDuration;
@@ -177,14 +160,12 @@ public class ProcessTraceEvent_impl implements ProcessTraceEvent {
   /**
    * @see ProcessTraceEvent#getResultMessage()
    */
-  @Override
   public String getResultMessage() {
     return mResultMessage;
   }
 
   /**
-   * @param aResultMessage
-   *          the Result Message for this event
+   * @param aResultMessage the Result Message for this event
    */
   public void setResultMessage(String aResultMessage) {
     mResultMessage = aResultMessage;
@@ -193,7 +174,6 @@ public class ProcessTraceEvent_impl implements ProcessTraceEvent {
   /**
    * @see ProcessTraceEvent#getSubEvents()
    */
-  @Override
   public List<ProcessTraceEvent> getSubEvents() {
     if (mSubEvents == null) {
       return Collections.emptyList();
@@ -203,12 +183,11 @@ public class ProcessTraceEvent_impl implements ProcessTraceEvent {
   }
 
   /**
-   * @param aEvent
-   *          Adds this sub-event to this event.
+   * @param aEvent Adds this sub-event to this event.
    */
   public void addSubEvent(ProcessTraceEvent aEvent) {
     if (mSubEvents == null) {
-      mSubEvents = new ArrayList<>();
+      mSubEvents = new ArrayList<ProcessTraceEvent>();
     }
     mSubEvents.add(aEvent);
   }
@@ -216,7 +195,6 @@ public class ProcessTraceEvent_impl implements ProcessTraceEvent {
   /**
    * @see ProcessTraceEvent#toString()
    */
-  @Override
   public String toString() {
     StringBuffer buf = new StringBuffer();
     toString(buf, 0);
@@ -226,7 +204,6 @@ public class ProcessTraceEvent_impl implements ProcessTraceEvent {
   /**
    * @see ProcessTraceEvent#toString(StringBuffer,int)
    */
-  @Override
   public void toString(StringBuffer aBuf, int aIndentLevel) {
     toString(aBuf, aIndentLevel, 0);
   }
@@ -234,7 +211,6 @@ public class ProcessTraceEvent_impl implements ProcessTraceEvent {
   /**
    * @see ProcessTraceEvent#toString(StringBuffer, int, int)
    */
-  @Override
   public void toString(StringBuffer aBuf, int aIndentLevel, int aTotalTime) {
     final DecimalFormat pctFmt = new DecimalFormat("##.##%");
 
@@ -279,7 +255,6 @@ public class ProcessTraceEvent_impl implements ProcessTraceEvent {
   /**
    * @see ProcessTraceEvent#getDurationExcludingSubEvents()
    */
-  @Override
   public int getDurationExcludingSubEvents() {
     int result = getDuration();
     for (ProcessTraceEvent evt : getSubEvents()) {

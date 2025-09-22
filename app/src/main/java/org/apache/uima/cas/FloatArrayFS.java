@@ -21,18 +21,15 @@ package org.apache.uima.cas;
 
 /**
  * Interface for CAS float arrays. To create a float array object, use
- * {@link CAS#createFloatArrayFS CAS.createFloatArrayFS()} or new
- * FloatArray(aJCas, length)
+ * {@link CAS#createFloatArrayFS CAS.createFloatArrayFS()}.
  * 
  * 
  */
-public interface FloatArrayFS extends CommonArrayFS<Float> {
+public interface FloatArrayFS extends CommonArrayFS {
 
   /**
    * Get the element at position <code>index</code>.
-   * 
-   * @param index
-   *          the index
+   * @param index the index
    * @return The element.
    * @exception ArrayIndexOutOfBoundsException
    *              If <code>index</code> is out of bounds.
@@ -90,4 +87,5 @@ public interface FloatArrayFS extends CommonArrayFS<Float> {
    * @return An array copy.
    */
   float[] toArray();
+
 }

@@ -25,8 +25,8 @@ import org.apache.uima.util.XMLizable;
 
 /**
  * An individual item within a {@link IndexBuildSpecification}. Specifies the {@link #getName()}
- * name of a CAS type, a {@link #getIndexRule() index rule}, and an optional {@link #getFilter()
- * filter}.
+ * name of a CAS type, a {@link #getIndexRule() index rule}, and an optional
+ * {@link #getFilter() filter}.
  * <p>
  * This object implements the {@link XMLizable} interface and can be parsed from an XML
  * representation.
@@ -40,7 +40,7 @@ public interface IndexBuildItem extends XMLizable, Serializable {
    * 
    * @return the CAS type name for this build item
    */
-  String getName();
+  public String getName();
 
   /**
    * Sets the name of the CAS type for which this item defines the indexing behavior.
@@ -48,41 +48,41 @@ public interface IndexBuildItem extends XMLizable, Serializable {
    * @param aName
    *          the CAS type name for this build item
    */
-  void setName(String aName);
+  public void setName(String aName);
 
   /**
-   * Gets the <code>IndexRule</code> that defines how annotations matching this build item should be
-   * indexed.
+   * Gets the <code>IndexRule</code> that defines how annotations matching this build item should
+   * be indexed.
    * 
    * @return the indexing rule for this build item
    */
-  IndexRule getIndexRule();
+  public IndexRule getIndexRule();
 
   /**
-   * Sets the <code>IndexRule</code> that defines how annotations matching this build item should be
-   * indexed.
+   * Sets the <code>IndexRule</code> that defines how annotations matching this build item should
+   * be indexed.
    * 
    * @param aRule
    *          the indexing rule for this build item
    */
-  void setIndexRule(IndexRule aRule);
+  public void setIndexRule(IndexRule aRule);
 
   /**
-   * Gets the <code>Filter</code> that identifies which instances of the named CAS type are governed
-   * by the index rule for this item. Filters are optional; if none is specified then this rule
-   * applies to all instances of the named CAS type.
+   * Gets the <code>Filter</code> that identifies which instances of the named CAS type are
+   * governed by the index rule for this item. Filters are optional; if none is specified then this
+   * rule applies to all instances of the named CAS type.
    * 
    * @return the Filter for this build item, null if none
    */
-  Filter getFilter();
+  public Filter getFilter();
 
   /**
-   * Sets the <code>Filter</code> that identifies which instances of the named CAS type are governed
-   * by the index rule for this item. Filters are optional; if none is specified then this rule
-   * applies to all instances of the named CAS type.
+   * Sets the <code>Filter</code> that identifies which instances of the named CAS type are
+   * governed by the index rule for this item. Filters are optional; if none is specified then this
+   * rule applies to all instances of the named CAS type.
    * 
    * @param aFilter
    *          the Filter for this build item, null if none
    */
-  void setFilter(Filter aFilter);
+  public void setFilter(Filter aFilter);
 }

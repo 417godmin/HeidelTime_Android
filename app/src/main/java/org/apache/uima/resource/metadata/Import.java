@@ -28,10 +28,12 @@ import org.apache.uima.util.InvalidXMLException;
  * An import declaration. These are currently used to import type systems, indexes, and type
  * priorities. Imports may be by location (relative URL) or name (a Java-style compound name, looked
  * up in the classpath), but not both.
+ * 
+ * 
  */
 public interface Import extends MetaDataObject {
 
-  Import[] EMPTY_IMPORTS = new Import[0];
+ public static final Import[] EMPTY_IMPORTS = new Import[0];
 
   /**
    * Gets the name of this import's target.
@@ -39,7 +41,7 @@ public interface Import extends MetaDataObject {
    * @return a Java-style compound name which specifies the target of this import. This will be
    *         located by appending ".xml" to the name and searching the classpath.
    */
-  String getName();
+  public String getName();
 
   /**
    * Sets the name of this import's target.
@@ -48,14 +50,14 @@ public interface Import extends MetaDataObject {
    *          a Java-style compound name which specifies the target of this import. This will be
    *          located by appending ".xml" to the name and searching the classpath.
    */
-  void setName(String aName);
+  public void setName(String aName);
 
   /**
    * Gets the location of this import's target.
    * 
    * @return a URI specifying the location of this import's target.
    */
-  String getLocation();
+  public String getLocation();
 
   /**
    * Sets the location of this import's target.
@@ -63,7 +65,7 @@ public interface Import extends MetaDataObject {
    * @param aUri
    *          a URI specifying the location of this import's target.
    */
-  void setLocation(String aUri);
+  public void setLocation(String aUri);
 
   /**
    * Computes the absolute URL for this import, using the relative location or name, whichever is
@@ -77,6 +79,6 @@ public interface Import extends MetaDataObject {
    * @throws InvalidXMLException
    *           if the import could not be resolved
    */
-  URL findAbsoluteUrl(ResourceManager aResourceManager) throws InvalidXMLException;
+  public URL findAbsoluteUrl(ResourceManager aResourceManager) throws InvalidXMLException;
 
 }

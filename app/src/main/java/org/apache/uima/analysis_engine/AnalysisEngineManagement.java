@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.uima.analysis_engine;
 
 import java.util.Map;
@@ -28,15 +29,13 @@ import org.apache.uima.resource.ManagementObject;
  * of this object by calling {@link AnalysisEngine#getManagementInterface()}.
  * <p>
  * In this implementation, objects implementing this interface will always be JMX-compatible MBeans
- * that you can register with an MBeanServer. For information on JMX see
- * <a href="http://java.sun.com/j2se/1.5.0/docs/api/javax/management/package-summary.html">
+ * that you can register with an MBeanServer. For information on JMX see <a
+ * href="http://java.sun.com/j2se/1.5.0/docs/api/javax/management/package-summary.html">
  * http://java.sun.com/j2se/1.5.0/docs/api/javax/management/package-summary.html</a>
  */
 public interface AnalysisEngineManagement extends ManagementObject {
-  public enum State {
-    Unavailable, Initializing, Ready
-  }
-
+	public static enum State {Unavailable,Initializing, Ready};
+	
   /**
    * Gets a name for this AnalysisEngineManagement object, which will be unique among all of its
    * siblings (i.e. the objects returned from its parent's {@link #getComponents()} method.
@@ -111,26 +110,25 @@ public interface AnalysisEngineManagement extends ManagementObject {
    * the statistics for all the components of the aggregate.
    */
   void resetStats();
-
+  
   /**
-   * Gets the current state of an AnalysisEngine. The AE should either be in Initializing or Ready
-   * state.
-   * 
+   * Gets the current state of an AnalysisEngine. The AE should either be in Initializing or Ready state.
    * @return the state of the analysis engine, from the State enum above
    */
   String getState();
-
+  
   /**
    * Gets an id of a thread that was used to initialize AE instance
    * 
    * @return - thread id
    */
-  long getThreadId();
-
+  public long getThreadId();
+  
   /**
    * Total time it took AnalysisEngine to initialize
    * 
    * @return - initialization time
    */
-  long getInitializationTime();
+  public long getInitializationTime();
+
 }

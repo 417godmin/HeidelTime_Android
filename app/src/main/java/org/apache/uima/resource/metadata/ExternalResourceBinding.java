@@ -30,8 +30,7 @@ package org.apache.uima.resource.metadata;
  */
 public interface ExternalResourceBinding extends MetaDataObject {
 
-  ExternalResourceBinding[] EMPTY_RESOURCE_BINDINGS = new ExternalResourceBinding[0];
-
+  public final static ExternalResourceBinding[] EMPTY_RESOURCE_BINDINGS = new ExternalResourceBinding[0];
   /**
    * Retrieves the key that identifies the
    * {@link org.apache.uima.resource.ExternalResourceDependency} being bound. If this binding is
@@ -41,12 +40,12 @@ public interface ExternalResourceBinding extends MetaDataObject {
    * Within an aggregate, a slash-separated name is used to identify which component the binding
    * applies to. For example, if an Aggregate AE contains an annotator with key
    * <code>annotator1</code> which declares a resource dependency <code>myResource</code>, that
-   * Aggregate AE could bind that resource dependency by using the key
+   * Aggregate AE could binding that resource dependency by using the key
    * <code>annotator1/myResource</code>.
    * 
    * @return the key for this resource binding.
    */
-  String getKey();
+  public String getKey();
 
   /**
    * Sets the key that identifies the {@link org.apache.uima.resource.ExternalResourceDependency}
@@ -56,13 +55,13 @@ public interface ExternalResourceBinding extends MetaDataObject {
    * Within an aggregate, a slash-separated name is used to identify which component the binding
    * applies to. For example, if an Aggregate AE contains an annotator with key
    * <code>annotator1</code> which declares a resource dependency <code>myResource</code>, that
-   * Aggregate AE could bind that resource dependency by using the key
+   * Aggregate AE could binding that resource dependency by using the key
    * <code>annotator1/myResource</code>.
    * 
    * @param aKey
    *          the key for this resource binding.
    */
-  void setKey(String aKey);
+  public void setKey(String aKey);
 
   /**
    * Retrieves the name of the actual Resource instance that will satisfy this dependency. This name
@@ -72,7 +71,7 @@ public interface ExternalResourceBinding extends MetaDataObject {
    * 
    * @return the name of the resource satisfying this dependency.
    */
-  String getResourceName();
+  public String getResourceName();
 
   /**
    * Sets the name of the actual Resource instance that will satisfy this dependency. This name must
@@ -83,6 +82,6 @@ public interface ExternalResourceBinding extends MetaDataObject {
    * @param aName
    *          the name of the resource satisfying this dependency.
    */
-  void setResourceName(String aName);
+  public void setResourceName(String aName);
 
 }

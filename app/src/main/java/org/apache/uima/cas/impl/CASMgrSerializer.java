@@ -31,11 +31,9 @@ import org.apache.uima.cas.FSIndex;
 import org.apache.uima.cas.Feature;
 import org.apache.uima.cas.FeatureStructure;
 import org.apache.uima.cas.Type;
-import org.apache.uima.cas.admin.CASFactory;
 import org.apache.uima.cas.admin.FSIndexComparator;
 import org.apache.uima.cas.admin.LinearTypeOrder;
 import org.apache.uima.internal.util.IntVector;
-import org.apache.uima.internal.util.Misc;
 import org.apache.uima.internal.util.SymbolTable;
 
 /**
@@ -61,7 +59,7 @@ public class CASMgrSerializer implements Serializable {
   // encoded explicitly. I.e., the fact that tokens are in any index that
   // annotations are in is implicit.
 
-  public int[] typeOrder = null;
+  public int[] typeOrder;
 
   /**
    * The index identifiers. Note that more than one identifier can refer to the same index.
@@ -90,8 +88,9 @@ public class CASMgrSerializer implements Serializable {
   public int[] indexingStrategy;
 
   /**
-   * For each index, where the corresponding comparator starts in the {@link #comparators
-   * comparators} field. <code>comparatorIndex.length == indexTypes.length</code>.
+   * For each index, where the corresponding comparator starts in the
+   * {@link #comparators comparators} field.
+   * <code>comparatorIndex.length == indexTypes.length</code>.
    */
   public int[] comparatorIndex;
 
@@ -100,8 +99,7 @@ public class CASMgrSerializer implements Serializable {
    * the type, then feature/comparison pairs. The feature is encoded with its type system code, and
    * comparison operations are encoded with
    * {@link FSIndexComparator#STANDARD_COMPARE STANDARD_COMPARE} and
-   * {@link FSIndexComparator#REVERSE_STANDARD_COMPARE
-   * REVERSE_STANDARD_COMPARE}.
+   * {@link FSIndexComparator#REVERSE_STANDARD_COMPARE REVERSE_STANDARD_COMPARE}.
    */
   public int[] comparators;
 
@@ -109,9 +107,9 @@ public class CASMgrSerializer implements Serializable {
   // Type system encoding.
 
   /**
-   * A list of type names (symbol table). fs-typed arrays have names XXXX[]. Note: numbering of
-   * types starts at <code>1</code>, and we index the names according to their internal code. That
-   * means that <code>typeNames[0] == null</code>.
+   * A list of type names (symbol table). Note: numbering of types starts at <code>1</code>, and
+   * we index the names according to their internal code. That means that
+   * <code>typeNames[0] == null</code>.
    */
   public String[] typeNames = null;
 
@@ -130,9 +128,9 @@ public class CASMgrSerializer implements Serializable {
   public int[] typeInheritance;
 
   /**
-   * Feature declarations. For each feature code <code>i</code> (which is an integer &ge; 1),
-   * <code>featDecls[(i-1)*3]</code> is the domain type code, <code>featDecls[(i-1)*3+1]</code> is
-   * the range type code, and <code>featDecls[(i-1)*3+2]</code> is the multipleReferencesAllowed
+   * Feature declarations. For each feature code <code>i</code> (which is an integer &ge; 1), 
+   * <code>featDecls[(i-1)*3]</code> is the domain type code, <code>featDecls[(i-1)*3+1]</code> is 
+   * the range type code, and <code>featDecls[(i-1)*3+2]</code> is the multipleReferencesAllowed 
    * flag (0 or 1).
    */
   public int[] featDecls;
@@ -163,8 +161,9 @@ public class CASMgrSerializer implements Serializable {
    * The start positions of the string value subarrays of <code>stringSubtypeValues</code>.
    * <code>stringSubtypeValuePos.length == 
    * stringSubtypes.length</code>. For each <code>i &lt; 
-   * stringSubtypes.length</code>, <code>stringSubtypeValuePos[i]</code> is the start of the string
-   * values for <code>stringSubtypes[i]</code>.
+   * stringSubtypes.length</code>,
+   * <code>stringSubtypeValuePos[i]</code> is the start of the string values for
+   * <code>stringSubtypes[i]</code>.
    */
   public int[] stringSubtypeValuePos;
 
@@ -182,6 +181,7 @@ public class CASMgrSerializer implements Serializable {
    * Constructor for CASMgrSerializer.
    */
   public CASMgrSerializer() {
+    super();
   }
 
   /**
@@ -192,45 +192,44 @@ public class CASMgrSerializer implements Serializable {
    */
   public void addIndexRepository(FSIndexRepositoryImpl ir) {
     // Encode the type order.
-    typeOrder = ir.getDefaultTypeOrder().getOrder();
+    this.typeOrder = ir.getDefaultTypeOrder().getOrder();
     // Collect the index labels in a list, as we don't know how many there
     // are.
-    final List<String> names = new ArrayList<>();
+    final List<String> names = new ArrayList<String>();
     // Create an iterator over the names.
     final Iterator<String> namesIt = ir.getLabels();
     // Add the names to the list, filtering out auto-indexes.
     while (namesIt.hasNext()) {
       String name = namesIt.next();
-      if (ir.getIndex(name).getIndexingStrategy() != FSIndex.DEFAULT_BAG_INDEX) {
+      if (ir.getIndex(name).getIndexingStrategy() != FSIndex.DEFAULT_BAG_INDEX) { 
         names.add(name);
       }
     }
     // Now we know how many labels there are.
     final int numNames = names.size();
     // Create the array for the labels.
-    indexNames = new String[numNames];
+    this.indexNames = new String[numNames];
     String label;
     // Fill the name array.
     for (int i = 0; i < numNames; i++) {
       // Get the next label.
       label = names.get(i);
       // Add the label.
-      indexNames[i] = label;
+      this.indexNames[i] = label;
     }
     // Create a vector of the indexes, and build the name-to-index map.
-    nameToIndexMap = new int[numNames];
-    Vector<FSIndex<FeatureStructure>> indexVector = new Vector<>();
+    this.nameToIndexMap = new int[numNames];
+    Vector<FSIndex<FeatureStructure>> indexVector = new Vector<FSIndex<FeatureStructure>>();
     FSIndex<FeatureStructure> index;
     int pos;
     for (int i = 0; i < numNames; i++) {
-      index = ir.getIndex(indexNames[i]);
+      index = ir.getIndex(this.indexNames[i]);
       pos = indexVector.indexOf(index);
-      if (pos < 0) { // if we haven't yet recorded this index in indexVector
-        indexVector.add(index); // add it to the indexVector
-        pos = indexVector.size() - 1; // set the pos to the entry just added
+      if (pos < 0) {
+        indexVector.add(index);
+        pos = indexVector.size() - 1;
       }
-      nameToIndexMap[i] = pos; // store the position of the index in the indexVector in this
-                               // map
+      this.nameToIndexMap[i] = pos;
     }
     // Now we know how many indexes there are.
     final int numIndexes = indexVector.size();
@@ -242,13 +241,13 @@ public class CASMgrSerializer implements Serializable {
     // ((TypeImpl) ((FSIndex) indexVector.get(i)).getType()).getCode();
     // }
     // Create the array with the indexing strategy.
-    indexingStrategy = new int[numIndexes];
+    this.indexingStrategy = new int[numIndexes];
     for (int i = 0; i < numIndexes; i++) {
-      indexingStrategy[i] = indexVector.get(i).getIndexingStrategy();
+      this.indexingStrategy[i] = indexVector.get(i).getIndexingStrategy();
     }
 
     // Create the array for the comparator index.
-    comparatorIndex = new int[numIndexes];
+    this.comparatorIndex = new int[numIndexes];
     // Put the comparators in an IntVector since we don't know how long it
     // will get.
     IntVector comps = new IntVector();
@@ -260,9 +259,9 @@ public class CASMgrSerializer implements Serializable {
     for (int i = 0; i < numIndexes; i++) {
       // Set the comparator index to the current position in comparator
       // array.
-      comparatorIndex[i] = compPos;
+      this.comparatorIndex[i] = compPos;
       // Get the comparator.
-      comp = ((LowLevelIndex<FeatureStructure>) indexVector.get(i)).getComparatorForIndexSpecs();
+      comp = ((FSIndexImpl) indexVector.get(i)).getComparator();
       // Encode the type of the comparator.
       comps.add(((TypeImpl) comp.getType()).getCode());
       // How many keys in the comparator?
@@ -278,22 +277,23 @@ public class CASMgrSerializer implements Serializable {
             comps.add(0);
             break;
           }
-          default:
-            Misc.internalError();
+          default: {
+            // assert(false);
+            throw new RuntimeException("Internal serialization error.");
+          }
         }
-        // Encode key comparator - which is the boolean standard/reversed flag
+        // Encode key comparator.
         comps.add(comp.getKeyComparator(j));
       }
       // Compute start of next comparator.
       compPos += 1 + (2 * numCompFeats);
     }
     // Set the comparator array.
-    comparators = comps.toArray();
+    this.comparators = comps.toArray();
   }
 
   public void addTypeSystem(TypeSystemImpl ts) {
-    typeNames = ts.types.stream().map(type -> (null == type) ? null : type.getName())
-            .toArray(String[]::new);
+    this.typeNames = symbolTable2StringArray(ts.getTypeNameST());
     encodeTypeInheritance(ts);
     encodeFeatureDecls(ts);
     encodeStringSubtypes(ts);
@@ -302,27 +302,26 @@ public class CASMgrSerializer implements Serializable {
   private void encodeStringSubtypes(TypeSystemImpl ts) {
     Vector<Type> list = getStringSubtypes(ts);
     final int size = list.size();
-    stringSubtypes = new int[size];
-    stringSubtypeValuePos = new int[size];
-    List<String> strVals = new ArrayList<>();
-    TypeImpl_string type;
-    int pos = 0;
-    int typeCode;
+    this.stringSubtypes = new int[size];
+    this.stringSubtypeValuePos = new int[size];
+    List<String> strVals = new ArrayList<String>();
+    StringTypeImpl type;
+    int pos = 0, typeCode;
     String[] stringSet;
     for (int i = 0; i < size; i++) {
-      type = (TypeImpl_string) list.get(i);
+      type = (StringTypeImpl) list.get(i);
       typeCode = type.getCode();
-      stringSubtypes[i] = typeCode;
-      stringSubtypeValuePos[i] = pos;
+      this.stringSubtypes[i] = typeCode;
+      this.stringSubtypeValuePos[i] = pos;
       stringSet = ts.ll_getStringSet(typeCode);
       pos += stringSet.length;
       for (int j = 0; j < stringSet.length; j++) {
         strVals.add(stringSet[j]);
       }
     }
-    stringSubtypeValues = new String[strVals.size()];
+    this.stringSubtypeValues = new String[strVals.size()];
     for (int i = 0; i < strVals.size(); i++) {
-      stringSubtypeValues[i] = strVals.get(i);
+      this.stringSubtypeValues[i] = strVals.get(i);
     }
   }
 
@@ -349,32 +348,33 @@ public class CASMgrSerializer implements Serializable {
 
   private void encodeFeatureDecls(TypeSystemImpl ts) {
     final int max = ts.getSmallestFeature() + ts.getNumberOfFeatures();
-    featureNames = new String[max];
-    featDecls = new int[max * 3];
+    this.featureNames = new String[max];
+    this.featDecls = new int[max * 3];
     Feature f;
     for (int i = ts.getSmallestFeature(); i < max; i++) {
       f = ts.ll_getFeatureForCode(i);
-      featureNames[i] = f.getShortName();
-      featDecls[i * 3] = ((TypeImpl) f.getDomain()).getCode();
-      featDecls[(i * 3) + 1] = ((TypeImpl) f.getRange()).getCode();
-      featDecls[(i * 3) + 2] = f.isMultipleReferencesAllowed() ? 1 : 0;
+      this.featureNames[i] = f.getShortName();
+      this.featDecls[i * 3] = ((TypeImpl) f.getDomain()).getCode();
+      this.featDecls[(i * 3) + 1] = ((TypeImpl) f.getRange()).getCode();
+      this.featDecls[(i * 3) + 2] = f.isMultipleReferencesAllowed() ? 1 : 0;
     }
   }
 
   private void encodeTypeInheritance(TypeSystemImpl ts) {
-    final int tsize = ts.getTypeArraySize();
-    typeInheritance = new int[tsize];
+    final int max = ts.getSmallestType() + ts.getNumberOfTypes();
+    this.typeInheritance = new int[max];
+    TypeImpl parent;
     // The smallest type is top, which doesn't inherit.
-    int i = ts.getSmallestType() + 1;
-    for (TypeImpl t : ts.types.subList(2, tsize)) {
-      typeInheritance[i++] = t.getSuperType().getCode();
+    for (int i = ts.getSmallestType() + 1; i < max; i++) {
+      parent = (TypeImpl) ts.getParent(ts.ll_getTypeForCode(i));
+      this.typeInheritance[i] = parent.getCode();
     }
   }
 
   // Ouch.
   private int isStringSubtype(int type) {
-    for (int i = 0; i < stringSubtypes.length; i++) {
-      if (stringSubtypes[i] == type) {
+    for (int i = 0; i < this.stringSubtypes.length; i++) {
+      if (this.stringSubtypes[i] == type) {
         return i;
       }
     }
@@ -383,154 +383,131 @@ public class CASMgrSerializer implements Serializable {
 
   private String[] getSubarray(String[] array, int from, int to) {
     String[] sub = new String[to - from];
-    System.arraycopy(array, from, sub, 0, to - from);
-    // for (int i = from; i < to; i++) {
-    // sub[i - from] = array[i];
-    // }
+    System.arraycopy(array, from, sub, 0, to-from);
+//    for (int i = from; i < to; i++) {
+//      sub[i - from] = array[i];
+//    }
     return sub;
   }
 
   private String[] getStringArray(int pos) {
     int end;
-    if (pos == stringSubtypes.length - 1) {
+    if (pos == this.stringSubtypes.length - 1) {
       // last entry in list, get all the rest
-      end = stringSubtypeValues.length;
+      end = this.stringSubtypeValues.length;
     } else {
       // else get up to the next entry
-      end = stringSubtypeValuePos[pos + 1];
+      end = this.stringSubtypeValuePos[pos + 1];
     }
-    return getSubarray(stringSubtypeValues, stringSubtypeValuePos[pos], end);
+    return getSubarray(this.stringSubtypeValues, this.stringSubtypeValuePos[pos], end);
   }
 
   public TypeSystemImpl getTypeSystem() {
-    final TypeSystemImpl ts = (TypeSystemImpl) CASFactory.createTypeSystem();
+    final TypeSystemImpl ts = new TypeSystemImpl();
     // First, add the top type.
-    // ts.addTopType(CAS.TYPE_NAME_TOP); // does nothing, top type already there
+//    ts.addTopType(CAS.TYPE_NAME_TOP);  // does nothing, top type already there
     // HashMap nameMap = null;
     // Temporary. The name map will go away completely.
-    // HashMap nameMap = new HashMap();
+//    HashMap nameMap = new HashMap();
     // if (source == SOURCE_TAF) {
     // nameMap = cas.mapTafTypesToCASTypes();
     // }
     String name;
-    // int parent;
+//    int parent;
     // Now add all the other types.
-    // if (this.source == SOURCE_TAF) {
-    // for (int i = 2; i < this.typeNames.length; i++) {
-    // parent = this.typeInheritance[i];
-    // name = CASImpl.mapName(this.typeNames[i], nameMap);
-    // // Check if the type we're adding is a subtype of string, in
-    // // which case
-    // // we need to call a different type system api.
-    // int pos = isStringSubtype(i);
-    // if (pos >= 0) {
-    // ts.addStringSubtype(name, getStringArray(pos));
-    // } else {
-    // ts.addType(name, parent);
-    // }
-    // }
-    // } else {
-    for (int i = 2; i < typeNames.length; i++) {
-      name = typeNames[i];
-      int pos = isStringSubtype(i);
-      if (pos >= 0) {
-        ts.addStringSubtype(name, getStringArray(pos));
-      } else if (TypeSystemImpl.isArrayTypeNameButNotBuiltIn(name)) {
-        ts.getArrayType(ts.getType(TypeSystemImpl.getArrayComponentName(name)));
-      } else {
-        if (ts.getType(name) == null) {
-          ts.addType(name, ts.ll_getTypeForCode(typeInheritance[i]));
+//    if (this.source == SOURCE_TAF) {
+//      for (int i = 2; i < this.typeNames.length; i++) {
+//        parent = this.typeInheritance[i];
+//        name = CASImpl.mapName(this.typeNames[i], nameMap);
+//        // Check if the type we're adding is a subtype of string, in
+//        // which case
+//        // we need to call a different type system api.
+//        int pos = isStringSubtype(i);
+//        if (pos >= 0) {
+//          ts.addStringSubtype(name, getStringArray(pos));
+//        } else {
+//          ts.addType(name, parent);
+//        }
+//      }
+//    } else {
+      for (int i = 2; i < this.typeNames.length; i++) {
+        name = this.typeNames[i];
+        int pos = isStringSubtype(i);
+        if (pos >= 0) {
+          ts.addStringSubtype(name, getStringArray(pos));
+        } else if (TypeSystemImpl.isArrayTypeNameButNotBuiltIn(name)) {
+        	  ts.getArrayType(ts.getType(TypeSystemImpl.getArrayComponentName(name)));
+        } else {
+            ts.addType(name, this.typeInheritance[i]);
         }
       }
-    }
+//    }
 
     // Add feature declarations.
-    final int max = featureNames.length;
+    final int max = this.featureNames.length;
     for (int i = 1; i < max; i++) {
-      // if (this.source == SOURCE_TAF) {
-      // name = CASImpl.mapName(this.featureNames[i], nameMap);
-      // } else {
-      name = featureNames[i];
-      // }
-      ts.addFeature(name, ts.getTypeForCode(featDecls[i * 3]),
-              ts.getTypeForCode(featDecls[(i * 3) + 1]), featDecls[(i * 3) + 2] == 1);
+//      if (this.source == SOURCE_TAF) {
+//        name = CASImpl.mapName(this.featureNames[i], nameMap);
+//      } else {
+        name = this.featureNames[i];
+//      }
+      ts.addFeature(name, this.featDecls[i * 3], this.featDecls[(i * 3) + 1],
+                    this.featDecls[(i * 3) + 2] == 1);
     }
     return ts;
   }
 
-  /**
-   * Deserialize the index specification and type ordering information in this class instance into
-   * the index repository and cas and type system.
-   * 
-   * @param cas
-   *          -
-   * @return -
-   */
   public FSIndexRepositoryImpl getIndexRepository(CASImpl cas) {
-    final FSIndexRepositoryImpl ir = new FSIndexRepositoryImpl(cas); // built-in indexes not added
-                                                                     // yet
-    cas.indexRepository = ir; // must be done before indexes are created, because
-                              // index creation refs via the cas the index repository
+    final FSIndexRepositoryImpl ir = new FSIndexRepositoryImpl(cas);
     // Get the type order.
-    ir.setDefaultTypeOrder(
-            LinearTypeOrderBuilderImpl.createTypeOrder(typeOrder, cas.getTypeSystem()));
+    ir.setDefaultTypeOrder(LinearTypeOrderBuilderImpl.createTypeOrder(this.typeOrder, cas
+            .getTypeSystem()));
     FSIndexComparator comp;
-    final int max = indexNames.length;
+    final int max = this.indexNames.length;
     int pos = 0, next, maxComp;
     Type type;
     Feature feat;
-    if (nameToIndexMap == null) { // if nameToIndexMap is null
-      nameToIndexMap = new int[max]; // create an identity map by default
+    if (this.nameToIndexMap == null) {
+      this.nameToIndexMap = new int[max];
       for (int i = 0; i < max; i++) {
-        nameToIndexMap[i] = i;
+        this.nameToIndexMap[i] = i;
       }
     }
     for (int i = 0; i < max; i++) {
       comp = ir.createComparator();
       // assert(pos == comparatorIndex[i]);
-      pos = comparatorIndex[nameToIndexMap[i]]; // pos jumps by odd numbers, 1: type, 2-3,
-                                                // 4-5 etc are pairs: feature code and
-                                                // direction
-      type = cas.getTypeSystemImpl().ll_getTypeForCode(comparators[pos]);
+      pos = this.comparatorIndex[this.nameToIndexMap[i]];
+      type = cas.getTypeSystemImpl().ll_getTypeForCode(this.comparators[pos]);
       comp.setType(type);
       ++pos;
-
-      // set the end of the feat/dir pairs to the next item or the length of the array if the last
-      // item
-      next = nameToIndexMap[i] + 1;
+      next = this.nameToIndexMap[i] + 1;
       if (next < max) {
-        maxComp = comparatorIndex[next];
+        maxComp = this.comparatorIndex[next];
       } else {
-        maxComp = comparators.length;
+        maxComp = this.comparators.length;
       }
-
       TypeSystemImpl tsi = (TypeSystemImpl) cas.getTypeSystem();
       while (pos < maxComp) {
         // System.out.println("Type system: " +
         // cas.getTypeSystem().toString());
-        if (comparators[pos] > 0) {
-          feat = tsi.ll_getFeatureForCode(comparators[pos]);
+        if (this.comparators[pos] > 0) {
+          feat = tsi.ll_getFeatureForCode(this.comparators[pos]);
           // assert(feat != null);
           // System.out.println("Adding feature: " + feat.getName());
           ++pos;
-          comp.addKey(feat, comparators[pos]);
+          comp.addKey(feat, this.comparators[pos]);
           // assert(rc >= 0);
         } else {
           LinearTypeOrder order = ir.getDefaultTypeOrder();
           ++pos;
-          comp.addKey(order, comparators[pos]); // the direction is always standard, never
-                                                // reverse
+          comp.addKey(order, this.comparators[pos]);
         }
         ++pos;
       }
-
-      ir.createIndex(comp, indexNames[i], indexingStrategy[nameToIndexMap[i]]);
+      ir.createIndex(comp, this.indexNames[i], this.indexingStrategy[this.nameToIndexMap[i]]);
     }
     ir.commit();
     return ir;
   }
 
-  public boolean hasIndexRepository() {
-    return typeOrder != null;
-  }
 }

@@ -19,6 +19,7 @@
 
 package org.apache.uima.resource;
 
+
 public interface MQMessagingSpecifier extends MessagingSpecifier {
 
   /**
@@ -26,14 +27,14 @@ public interface MQMessagingSpecifier extends MessagingSpecifier {
    * 
    * @return String
    */
-  int getHostServerChannelPort();
+  public int getHostServerChannelPort();
 
   /**
    * Returns the target serverChannelPort.
    * 
    * @return String
    */
-  int getTargetServerChannelPort();
+  public int getTargetServerChannelPort();
 
   /**
    * Sets the host serverChannelPort.
@@ -41,7 +42,7 @@ public interface MQMessagingSpecifier extends MessagingSpecifier {
    * @param serverChannelPort
    *          The serverChannelPort to set
    */
-  void setHostServerChannelPort(int serverChannelPort);
+  public void setHostServerChannelPort(int serverChannelPort);
 
   /**
    * Sets the target serverChannelPort.
@@ -49,5 +50,5 @@ public interface MQMessagingSpecifier extends MessagingSpecifier {
    * @param serverChannelPort
    *          The serverChannelPort to set
    */
-  void setTargetServerChannelPort(int serverChannelPort);
+  public void setTargetServerChannelPort(int serverChannelPort);
 }

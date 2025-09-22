@@ -25,16 +25,18 @@ import org.apache.uima.resource.metadata.MetaDataObject;
  * An object to contains configuration specific to error handling applicable to every CasProcossor.
  * It provides the means of configuring max # of restarts for CasProcessor, error thresholds, and
  * max timeout.
+ * 
+ * 
  */
 public interface CasProcessorErrorHandling extends MetaDataObject {
   /**
    * Sets max number of restarts allowed for a CasProcessor and an action to take by the CPE in case
    * the threshold is reached.
    * 
-   * @param aCasPRestarts
-   *          - {@link CasProcessorMaxRestarts} instance
+   * @param aCasPRestarts -
+   *          {@link CasProcessorMaxRestarts} instance
    */
-  void setMaxConsecutiveRestarts(CasProcessorMaxRestarts aCasPRestarts);
+  public void setMaxConsecutiveRestarts(CasProcessorMaxRestarts aCasPRestarts);
 
   /**
    * Returns max number of restarts allowed for a CasProcessor and an action to take by the CPE in
@@ -42,16 +44,16 @@ public interface CasProcessorErrorHandling extends MetaDataObject {
    * 
    * @return {@link CasProcessorMaxRestarts} instance
    */
-  CasProcessorMaxRestarts getMaxConsecutiveRestarts();
+  public CasProcessorMaxRestarts getMaxConsecutiveRestarts();
 
   /**
    * Sets max number of errors allowed for a CasProcessor and an action to take by the CPE in case
    * the threshold is reached.
    * 
-   * @param aCasPErrorThreshold
-   *          - {@link CasProcessorErrorRateThreshold}
+   * @param aCasPErrorThreshold -
+   *          {@link CasProcessorErrorRateThreshold}
    */
-  void setErrorRateThreshold(CasProcessorErrorRateThreshold aCasPErrorThreshold);
+  public void setErrorRateThreshold(CasProcessorErrorRateThreshold aCasPErrorThreshold);
 
   /**
    * Returns max number of restarts allowed for a CasProcessor and an action to take by the CPE in
@@ -59,7 +61,7 @@ public interface CasProcessorErrorHandling extends MetaDataObject {
    * 
    * @return {@link CasProcessorErrorRateThreshold} instance
    */
-  CasProcessorErrorRateThreshold getErrorRateThreshold();
+  public CasProcessorErrorRateThreshold getErrorRateThreshold();
 
   /**
    * Sets the timeout the CPE will wait for a response from CasProcessor.
@@ -67,12 +69,12 @@ public interface CasProcessorErrorHandling extends MetaDataObject {
    * @param aTimeout
    *          {@link CasProcessorTimeout}
    */
-  void setTimeout(CasProcessorTimeout aTimeout);
+  public void setTimeout(CasProcessorTimeout aTimeout);
 
   /**
    * Returns the timeout the CPE will wait for a response from CasProcessor.
    * 
    * @return {@link CasProcessorTimeout} instance
    */
-  CasProcessorTimeout getTimeout();
+  public CasProcessorTimeout getTimeout();
 }

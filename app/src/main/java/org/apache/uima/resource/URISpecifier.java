@@ -20,8 +20,8 @@
 package org.apache.uima.resource;
 
 /**
- * A type of <code>ResourceSpecifier</code> that locates an existing <code>Resource</code> service
- * by its URI.
+ * A type of <code>ResourceSpecifier</code> that locates an existing <code>Resource</code>
+ * service by its URI.
  * 
  * 
  */
@@ -30,12 +30,12 @@ public interface URISpecifier extends ResourceServiceSpecifier {
   /**
    * Value for {@link #getResourceType()} representing an Analysis Engine.
    */
-  String RESOURCE_TYPE_ANALYSIS_ENGINE = "AnalysisEngine";
+  public static final String RESOURCE_TYPE_ANALYSIS_ENGINE = "AnalysisEngine";
 
   /**
    * Value for {@link #getResourceType()} representing a CAS Consumer.
    */
-  String RESOURCE_TYPE_CAS_CONSUMER = "CasConsumer";
+  public static final String RESOURCE_TYPE_CAS_CONSUMER = "CasConsumer";
 
   /**
    * Retrieves the type of Resource (e.g. Analysis Engine, CAS Consumer) that the service at this
@@ -45,7 +45,7 @@ public interface URISpecifier extends ResourceServiceSpecifier {
    * @return the type of Resource. This should be one of the constants on this class, or null if the
    *         resource type is not specified.
    */
-  String getResourceType();
+  public String getResourceType();
 
   /**
    * Sets the type of Resource (e.g. Analysis Engine, CAS Consumer) that the service at this URI is
@@ -56,14 +56,14 @@ public interface URISpecifier extends ResourceServiceSpecifier {
    *          the type of Resource. This should be one of the constants on this class, or null to
    *          indicate that the resource type is not specified.
    */
-  void setResourceType(String aResourceType);
+  public void setResourceType(String aResourceType);
 
   /**
    * Retrieves the URI at which a Resource may be located.
    * 
    * @return a URI string
    */
-  String getUri();
+  public String getUri();
 
   /**
    * Gets the name of the Protocol used to communicate with the service. Protocol names are defined
@@ -71,7 +71,7 @@ public interface URISpecifier extends ResourceServiceSpecifier {
    * 
    * @return the name of the protocol.
    */
-  String getProtocol();
+  public String getProtocol();
 
   /**
    * Gets the timeout period in milliseconds. If a call takes longer than this amount of time, an
@@ -80,7 +80,7 @@ public interface URISpecifier extends ResourceServiceSpecifier {
    * @return the timeout period in milliseconds. A null value indicates that the transport layer's
    *         default value will be used.
    */
-  Integer getTimeout();
+  public Integer getTimeout();
 
   /**
    * Sets the URI at which a Resource may be located.
@@ -88,7 +88,7 @@ public interface URISpecifier extends ResourceServiceSpecifier {
    * @param aUri
    *          a URI string
    */
-  void setUri(String aUri);
+  public void setUri(String aUri);
 
   /**
    * Sets the name of the Protocol used to communicate with the service. Protocol names are defined
@@ -97,7 +97,7 @@ public interface URISpecifier extends ResourceServiceSpecifier {
    * @param aProtocol
    *          the name of the protocol.
    */
-  void setProtocol(String aProtocol);
+  public void setProtocol(String aProtocol);
 
   /**
    * Sets the timeout period in milliseconds. If a call takes longer than this amount of time, an
@@ -107,17 +107,17 @@ public interface URISpecifier extends ResourceServiceSpecifier {
    *          the timeout period in milliseconds. A null value indicates that the transport layer's
    *          default value will be used.
    */
-  void setTimeout(Integer aTimeout);
+  public void setTimeout(Integer aTimeout);
 
   /**
    * @return Returns the Parameters.
    */
-  Parameter[] getParameters();
+  public Parameter[] getParameters();
 
   /**
    * @param parameters
    *          The Parameters to set.
    */
-  void setParameters(Parameter... parameters);
+  public void setParameters(Parameter[] parameters);
 
 }

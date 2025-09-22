@@ -29,17 +29,17 @@ package org.apache.uima.resource.metadata;
  * element.
  * 
  * @see TypePriorities
+ * 
  */
 public interface TypePriorityList extends MetaDataObject {
 
-  TypePriorityList[] EMPTY_TYPE_PRIORITY_LISTS = new TypePriorityList[0];
-
+  public final static TypePriorityList[] EMPTY_TYPE_PRIORITY_LISTS = new TypePriorityList[0];
   /**
    * Gets the type names, in order of their priority.
    * 
    * @return an array of type names, in order of their priority
    */
-  String[] getTypes();
+  public String[] getTypes();
 
   /**
    * Sets the type names, in order of their priority.
@@ -47,7 +47,7 @@ public interface TypePriorityList extends MetaDataObject {
    * @param aTypeNames
    *          an array type names, in order of their priority
    */
-  void setTypes(String... aTypeNames);
+  public void setTypes(String[] aTypeNames);
 
   /**
    * Adds a type at the end of the priority list.
@@ -55,7 +55,7 @@ public interface TypePriorityList extends MetaDataObject {
    * @param aTypeName
    *          the type name to add
    */
-  void addType(String aTypeName);
+  public void addType(String aTypeName);
 
   /**
    * Removes a type from the priority list.
@@ -63,5 +63,5 @@ public interface TypePriorityList extends MetaDataObject {
    * @param aTypeName
    *          the type name to remove
    */
-  void removeType(String aTypeName);
+  public void removeType(String aTypeName);
 }

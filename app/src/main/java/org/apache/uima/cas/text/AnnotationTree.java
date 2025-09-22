@@ -16,10 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.uima.cas.text;
 
 /**
  * Represents an annotation tree.
+ * 
+ * 
  */
 public interface AnnotationTree<T extends AnnotationFS> {
 
@@ -29,4 +32,5 @@ public interface AnnotationTree<T extends AnnotationFS> {
    * @return The root node of the tree.
    */
   AnnotationTreeNode<? extends T> getRoot();
+
 }

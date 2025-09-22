@@ -30,27 +30,21 @@ public class IntStack extends IntVector {
 
   /** Creates an empty stack. */
   public IntStack() {
+    super();
   }
 
-  /**
-   * Creates an empty stack.
-   * 
-   * @param capacity
-   *          -
-   */
+  /** Creates an empty stack.
+   * @param capacity - 
+   * */
   public IntStack(int capacity) {
     super(capacity);
   }
 
   /**
    * Creates an empty stack with specified capacity, growth_factor and multiplication limit
-   * 
-   * @param capacity
-   *          -
-   * @param growth_factor
-   *          -
-   * @param multiplication_limit
-   *          -
+   * @param capacity -
+   * @param growth_factor -
+   * @param multiplication_limit -
    */
   public IntStack(int capacity, int growth_factor, int multiplication_limit) {
     super(capacity, growth_factor, multiplication_limit);
@@ -65,7 +59,7 @@ public class IntStack extends IntVector {
    */
   public int push(int i) {
     this.add(i);
-    return pos - 1;
+    return this.pos - 1;
   }
 
   /**
@@ -74,8 +68,8 @@ public class IntStack extends IntVector {
    * @return The popped element.
    */
   public int pop() {
-    --pos;
-    return get(pos); // this.array[this.pos];
+    --this.pos;
+    return this.array[this.pos];
   }
 
   /**
@@ -84,7 +78,7 @@ public class IntStack extends IntVector {
    * @return The top element.
    */
   public int peek() {
-    return get(pos - 1); // this.array[this.pos - 1];
+    return this.array[this.pos - 1];
   }
 
   /**
@@ -93,14 +87,14 @@ public class IntStack extends IntVector {
    * @return <code>true</code>, if stack is empty; <code>false</code>, else.
    */
   public boolean empty() {
-    return (pos == 0);
+    return (this.pos == 0);
   }
 
   /**
    * Clears the stack. The amount of space reserved for this stack remains unchanged.
    */
   public void clear() {
-    pos = 0;
+    this.pos = 0;
   }
 
 }

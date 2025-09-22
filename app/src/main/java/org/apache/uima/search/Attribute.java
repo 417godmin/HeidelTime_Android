@@ -39,7 +39,7 @@ public interface Attribute extends XMLizable, Serializable {
    * 
    * @return the name of this attribute
    */
-  String getName();
+  public String getName();
 
   /**
    * Sets the name of this attribute.
@@ -47,14 +47,14 @@ public interface Attribute extends XMLizable, Serializable {
    * @param aName
    *          the name of this attribute
    */
-  void setName(String aName);
+  public void setName(String aName);
 
   /**
    * Gets the value of this attribute.
    * 
    * @return the value of this attribute
    */
-  String getValue();
+  public String getValue();
 
   /**
    * Sets the value of this attribute.
@@ -62,5 +62,5 @@ public interface Attribute extends XMLizable, Serializable {
    * @param aValue
    *          the value of this attribute
    */
-  void setValue(String aValue);
+  public void setValue(String aValue);
 }

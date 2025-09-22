@@ -72,33 +72,32 @@ public class UtilError extends RuntimeException {
    *         file. Unfortunately, the error parameters get lost that way.
    */
   public int getError() {
-    return error;
+    return this.error;
   }
 
   /**
    * @return The message of the exception. Useful for including the text in another exception.
    */
-  @Override
   public String getMessage() {
-    if (resource == null) {
+    if (this.resource == null) {
       try {
-        resource = ResourceBundle.getBundle(resource_file);
+        this.resource = ResourceBundle.getBundle(resource_file);
       } catch (MissingResourceException e) {
-        error = MESSAGES_NOT_FOUND;
+        this.error = MESSAGES_NOT_FOUND;
         return missing_resource_error;
       }
     }
     // Retrieve message from resource bundle, format using arguments,
     // and return resulting string.
-    return (new MessageFormat(resource.getString(identifiers[error]))).format(arguments);
+    return (new MessageFormat(this.resource.getString(identifiers[this.error])))
+            .format(this.arguments);
   }
 
   /**
    * @return The same as getMessage(), but prefixed with <code>"UtilError: "</code>.
    */
-  @Override
   public String toString() {
-    return "UtilError: " + getMessage();
+    return "UtilError: " + this.getMessage();
   }
 
   /**
@@ -107,16 +106,14 @@ public class UtilError extends RuntimeException {
    * they are specified in the message catalog (i.e. add %1 first, %2 next, and so on). Adding a
    * <code>null String</code> has no effect! So if you don't know the value of an argument, use
    * something like <code>""</code> or <code>"UNKNOWN"</code>, but not <code>null</code>.
-   * 
-   * @param s
-   *          -
+   * @param s -
    * @return -
    */
   public boolean addArgument(String s) {
     int i = 0;
-    while (i < arguments.length) {
-      if (arguments[i] == null) {
-        arguments[i] = s;
+    while (i < this.arguments.length) {
+      if (this.arguments[i] == null) {
+        this.arguments[i] = s;
         return true;
       }
       i++;

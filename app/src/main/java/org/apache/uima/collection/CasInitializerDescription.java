@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.uima.collection;
 
 import org.apache.uima.resource.ResourceCreationSpecifier;
@@ -28,9 +29,8 @@ import org.apache.uima.resource.metadata.ProcessingResourceMetaData;
  * @deprecated As of v2.0, CAS Initializers are deprecated. A component that performs an operation
  *             like HTML detagging should instead be implemented as a "multi-Sofa" annotator. See
  *             org.apache.uima.examples.XmlDetagger for an example.
- * @forRemoval 4.0.0
  */
-@Deprecated(since = "2.0.0")
+@Deprecated
 public interface CasInitializerDescription extends ResourceCreationSpecifier {
   /**
    * Retrieves the metadata that describes the CasInitializer.
@@ -38,5 +38,5 @@ public interface CasInitializerDescription extends ResourceCreationSpecifier {
    * @return the <code>ProcessingResourceMetaData</code> object containing the CasInitializer's
    *         metadata. This object can be modified.
    */
-  ProcessingResourceMetaData getCasInitializerMetaData();
+  public ProcessingResourceMetaData getCasInitializerMetaData();
 }

@@ -26,13 +26,11 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.uima.UIMAFramework;
-import org.apache.uima.cas.impl.TypeSystemImpl;
 import org.apache.uima.resource.metadata.FsIndexCollection;
 import org.apache.uima.resource.metadata.FsIndexDescription;
 import org.apache.uima.resource.metadata.ProcessingResourceMetaData;
 import org.apache.uima.resource.metadata.TypePriorities;
 import org.apache.uima.resource.metadata.TypeSystemDescription;
-import org.apache.uima.resource.metadata.impl.FsIndexCollection_impl;
 import org.apache.uima.util.CasCreationUtils;
 
 /**
@@ -40,8 +38,6 @@ import org.apache.uima.util.CasCreationUtils;
  */
 public class CasDefinition {
   private TypeSystemDescription typeSystemDescription;
-
-  private TypeSystemImpl typeSystemImpl;
 
   private TypePriorities typePriorities;
 
@@ -52,18 +48,18 @@ public class CasDefinition {
   public CasDefinition(TypeSystemDescription aTypeSystem, TypePriorities aTypePriorities,
           FsIndexDescription[] aFsIndexes, ResourceManager aResourceManager,
           Properties aPerformanceTuningSettings) {
-    typeSystemDescription = aTypeSystem;
-    typePriorities = aTypePriorities;
-    fsIndexDescriptions = aFsIndexes;
-    resourceManager = aResourceManager;
+    this.typeSystemDescription = aTypeSystem;
+    this.typePriorities = aTypePriorities;
+    this.fsIndexDescriptions = aFsIndexes;
+    this.resourceManager = aResourceManager;
   }
 
-  public CasDefinition(Collection<? extends ProcessingResourceMetaData> aMetaDataToMerge,
-          ResourceManager aResourceManager) throws ResourceInitializationException {
+  public CasDefinition(Collection<? extends ProcessingResourceMetaData> aMetaDataToMerge, ResourceManager aResourceManager)
+          throws ResourceInitializationException {
     // extract TypeSystems, TypePriorities, and FsIndexes from metadata
-    List<TypeSystemDescription> typeSystems = new ArrayList<>();
-    List<TypePriorities> typePrioritiesList = new ArrayList<>();
-    List<FsIndexCollection> fsIndexes = new ArrayList<>();
+    List<TypeSystemDescription> typeSystems = new ArrayList<TypeSystemDescription>();
+    List<TypePriorities> typePrioritiesList = new ArrayList<TypePriorities>();
+    List<FsIndexCollection> fsIndexes = new ArrayList<FsIndexCollection>();
     Iterator<? extends ProcessingResourceMetaData> it = aMetaDataToMerge.iterator();
     while (it.hasNext()) {
       ProcessingResourceMetaData md = it.next();
@@ -79,39 +75,13 @@ public class CasDefinition {
     TypePriorities aggTypePriorities = CasCreationUtils.mergeTypePriorities(typePrioritiesList,
             aResourceManager);
     FsIndexCollection aggIndexColl = CasCreationUtils.mergeFsIndexes(fsIndexes, aResourceManager);
-    if (aggIndexColl == null) {
-      System.out.println("[UIMA-FIX][DEBUG] mergeFsIndexes returned null → creating empty FsIndexCollection_impl");
-      aggIndexColl = new FsIndexCollection_impl();
-      aggIndexColl.setFsIndexes(new FsIndexDescription[0]);
-    }
-    fsIndexDescriptions = aggIndexColl.getFsIndexes();
-
-    // 🔍 在这里加调试打印
-    System.out.println("===== DEBUG: 将要 merge 的 TypeSystems =====");
-    for (int i = 0; i < typeSystems.size(); i++) {
-      TypeSystemDescription tsd = typeSystems.get(i);
-      System.out.println("[" + i + "] 来源: " + tsd.getSourceUrlString());
-      if (tsd.getTypes() == null) {
-        System.out.println("   [WARN] getTypes() == null");
-        continue;
-      }
-      for (int j = 0; j < tsd.getTypes().length; j++) {
-        if (tsd.getTypes()[j] == null) {
-          System.out.println("   [WARN] null TypeDescription at index " + j);
-        } else {
-          System.out.println("   type: " + tsd.getTypes()[j].getName() +
-                  " super: " + tsd.getTypes()[j].getSupertypeName());
-        }
-      }
-    }
-    System.out.println("===== DEBUG: 打印完毕 =====");
     TypeSystemDescription aggTypeDesc = CasCreationUtils.mergeTypeSystems(typeSystems,
             aResourceManager);
 
-    typeSystemDescription = aggTypeDesc;
-    typePriorities = aggTypePriorities;
-    fsIndexDescriptions = aggIndexColl.getFsIndexes();
-    resourceManager = aResourceManager;
+    this.typeSystemDescription = aggTypeDesc;
+    this.typePriorities = aggTypePriorities;
+    this.fsIndexDescriptions = aggIndexColl.getFsIndexes();
+    this.resourceManager = aResourceManager;
   }
 
   /**
@@ -180,43 +150,28 @@ public class CasDefinition {
    * @return this CAS Definition's CasManager
    */
   public CasManager getCasManager() {
-    if (resourceManager != null) {
-      return resourceManager.getCasManager();
+    if (this.resourceManager != null) {
+      return this.resourceManager.getCasManager();
     } else {
       return null;
     }
   }
-
+  
   /**
-   * Constructs and returns a <code>ProcessingResourceMetaData</code> object that contains the type
-   * system, indexes, and type priorities definitions for the CAS.
+   * Constructs and returns a <code>ProcessingResourceMetaData</code> object
+   * that contains the type system, indexes, and type priorities definitions
+   * for the CAS.
    * 
-   * @return processing resource metadata object containing the relevant parts of the CAS definition
+   * @return processing resource metadata object containing the 
+   *   relevant parts of the CAS definition
    */
   public ProcessingResourceMetaData getProcessingResourceMetaData() {
-    ProcessingResourceMetaData md = UIMAFramework.getResourceSpecifierFactory()
-            .createProcessingResourceMetaData();
+    ProcessingResourceMetaData md = UIMAFramework.getResourceSpecifierFactory().createProcessingResourceMetaData();
     md.setTypeSystem(getTypeSystemDescription());
     md.setTypePriorities(getTypePriorities());
-    FsIndexCollection indColl = UIMAFramework.getResourceSpecifierFactory()
-            .createFsIndexCollection();
+    FsIndexCollection indColl = UIMAFramework.getResourceSpecifierFactory().createFsIndexCollection();
     indColl.setFsIndexes(getFsIndexDescriptions());
     md.setFsIndexCollection(indColl);
     return md;
-  }
-
-  /**
-   * @return the typeSystemImpl
-   */
-  public TypeSystemImpl getTypeSystemImpl() {
-    return typeSystemImpl;
-  }
-
-  /**
-   * @param typeSystemImpl
-   *          the typeSystemImpl to set
-   */
-  public void setTypeSystemImpl(TypeSystemImpl typeSystemImpl) {
-    this.typeSystemImpl = typeSystemImpl;
   }
 }

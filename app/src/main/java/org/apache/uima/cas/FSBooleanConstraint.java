@@ -17,11 +17,12 @@
  * under the License.
  */
 
+
 package org.apache.uima.cas;
 
 /**
  * Interface for a boolean constraint. A boolean constraint contains a single condition, either true
- * or false. To set the condition, use
+ * or false. To set the condition, use 
  * <p>
  * To use the constraint, invoke its {@link #match(boolean)} method, passing the value to test. You
  * can also embed this test with a path specification, using the
@@ -29,24 +30,20 @@ package org.apache.uima.cas;
  * and use it to test feature structures, or combine it with other tests using the
  * {@link ConstraintFactory#and(FSMatchConstraint, FSMatchConstraint)} and
  * {@link ConstraintFactory#or(FSMatchConstraint, FSMatchConstraint)} methods.
- * 
+
  */
 public interface FSBooleanConstraint extends FSConstraint {
 
   /**
    * Set the constraint.
-   * 
-   * @param condition
-   *          The condition that needs to be matched to satisfy the constraint.
+   * @param condition The condition that needs to be matched to satisfy the constraint.
    */
-  void eq(boolean condition);
-
+  public void eq(boolean condition);
+  
   /**
    * Check the condition.
-   * 
-   * @param condition
-   *          Value to compare with the condition.
+   * @param condition Value to compare with the condition.
    * @return True if value and constraint are equal, false else.
    */
-  boolean match(boolean condition);
+  public boolean match(boolean condition);
 }

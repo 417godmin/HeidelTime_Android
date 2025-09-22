@@ -28,7 +28,7 @@ import org.apache.uima.UIMA_UnsupportedOperationException;
  * <ul>
  * <li>Name</li>
  * <li>Description</li>
- * <li>Type (String, Boolean, Integer, Long, Float or Double)</li>
+ * <li>Type (String, Boolean, Integer, or Float)</li>
  * <li>Is the parameter multi-valued?</li>
  * <li>Is a value mandatory?</li>
  * <li>Overrides (see below)</li>
@@ -46,6 +46,8 @@ import org.apache.uima.UIMA_UnsupportedOperationException;
  * <p>
  * As with all {@link MetaDataObject}s, a <code>ConfigurationParameter</code> may or may not be
  * modifiable. An application can find out by calling the {@link #isModifiable()} method.
+ * 
+ * 
  */
 public interface ConfigurationParameter extends MetaDataObject {
 
@@ -54,7 +56,7 @@ public interface ConfigurationParameter extends MetaDataObject {
    * 
    * @return the name of this configuration parameter.
    */
-  String getName();
+  public String getName();
 
   /**
    * Sets the name of this configuration parameter.
@@ -65,14 +67,14 @@ public interface ConfigurationParameter extends MetaDataObject {
    * @throws UIMA_UnsupportedOperationException
    *           if this object is not modifiable
    */
-  void setName(String aName);
+  public void setName(String aName);
 
   /**
    * Retrieves the external name of this configuration parameter.
    * 
    * @return the external name of this configuration parameter.
    */
-  String getExternalOverrideName();
+  public String getExternalOverrideName();
 
   /**
    * Sets the external name of this configuration parameter.
@@ -83,14 +85,14 @@ public interface ConfigurationParameter extends MetaDataObject {
    * @throws UIMA_UnsupportedOperationException
    *           if this object is not modifiable
    */
-  void setExternalOverrideName(String aExternalOverrideName);
-
+  public void setExternalOverrideName(String aExternalOverrideName);
+  
   /**
    * Retrieves the description of this configuration parameter.
    * 
    * @return the description of this configuration parameter.
    */
-  String getDescription();
+  public String getDescription();
 
   /**
    * Sets the description of this configuration parameter.
@@ -101,7 +103,7 @@ public interface ConfigurationParameter extends MetaDataObject {
    * @throws UIMA_UnsupportedOperationException
    *           if this object is not modifiable
    */
-  void setDescription(String aDescription);
+  public void setDescription(String aDescription);
 
   /**
    * Retrieves the data type of this configuration parameter.
@@ -109,7 +111,7 @@ public interface ConfigurationParameter extends MetaDataObject {
    * @return the data type of this configuration parameter. This will be one of the TYPE constants
    *         defined on this interface.
    */
-  String getType();
+  public String getType();
 
   /**
    * Sets the data type of this configuration parameter.
@@ -124,7 +126,7 @@ public interface ConfigurationParameter extends MetaDataObject {
    * @throws UIMA_UnsupportedOperationException
    *           if this object is not modifiable
    */
-  void setType(String aType);
+  public void setType(String aType);
 
   /**
    * Retrieves whether this parameter is multi-valued. Multi-valued parameters take an array of
@@ -132,7 +134,7 @@ public interface ConfigurationParameter extends MetaDataObject {
    * 
    * @return true if and only if this parameter is multi-valued.
    */
-  boolean isMultiValued();
+  public boolean isMultiValued();
 
   /**
    * Sets whether this parameter is multi-valued. Multi-valued parameters take an array of values,
@@ -144,14 +146,14 @@ public interface ConfigurationParameter extends MetaDataObject {
    * @throws UIMA_UnsupportedOperationException
    *           if this object is not modifiable
    */
-  void setMultiValued(boolean aMultiValued);
+  public void setMultiValued(boolean aMultiValued);
 
   /**
    * Retrieves whether this parameter is mandatory.
    * 
    * @return true if and only if this parameter is mandatory.
    */
-  boolean isMandatory();
+  public boolean isMandatory();
 
   /**
    * Sets whether this parameter is mandatory.
@@ -162,7 +164,7 @@ public interface ConfigurationParameter extends MetaDataObject {
    * @throws UIMA_UnsupportedOperationException
    *           if this object is not modifiable
    */
-  void setMandatory(boolean aMandatory);
+  public void setMandatory(boolean aMandatory);
 
   /**
    * Retrieves whether this parameter is published to clients. A non-published parameter is used
@@ -181,30 +183,27 @@ public interface ConfigurationParameter extends MetaDataObject {
    * @throws UIMA_UnsupportedOperationException
    *           if this object is not modifiable
    */
-
   // public void setPublished(boolean aPublished);
   /**
    * Gets the parameters that are this parameter overrides. This is used for aggregate resources
-   * only. Overrides are expressed as strings of the form
-   * <i>componentName</i><code>/</code><i>parameterName</i>. For example the overrides
-   * <code>annotator1/parameter1</code> would override the parameter named <code>parameter1</code>
-   * within the component named <code>annotator1</code>.
+   * only. Overrides are expressed as strings of the form <i>componentName</i><code>/</code><i>parameterName</i>.
+   * For example the overrides <code>annotator1/parameter1</code> would override the parameter
+   * named <code>parameter1</code> within the component named <code>annotator1</code>.
    * 
    * @return the parameters this this parameter overrides
    */
-  String[] getOverrides();
+  public String[] getOverrides();
 
   /**
    * Sets the parameters that are this parameter overrides. This is used for aggregate resources
-   * only. Overrides are expressed as strings of the form
-   * <i>componentName</i><code>/</code><i>parameterName</i>. For example the overrides
-   * <code>annotator1/parameter1</code> would override the parameter named <code>parameter1</code>
-   * within the component named <code>annotator1</code>.
+   * only. Overrides are expressed as strings of the form <i>componentName</i><code>/</code><i>parameterName</i>.
+   * For example the overrides <code>annotator1/parameter1</code> would override the parameter
+   * named <code>parameter1</code> within the component named <code>annotator1</code>.
    * 
    * @param aOverrides
    *          the parameters this this parameter overrides
    */
-  void setOverrides(String... aOverrides);
+  public void setOverrides(String[] aOverrides);
 
   /**
    * Adds an override to this configuration parameter.
@@ -216,7 +215,7 @@ public interface ConfigurationParameter extends MetaDataObject {
    *           if this object is not modifiable
    * @see #setOverrides(String[])
    */
-  void addOverride(String aOverride);
+  public void addOverride(String aOverride);
 
   /**
    * Removes an override from this configuration parameter.
@@ -229,35 +228,25 @@ public interface ConfigurationParameter extends MetaDataObject {
    *           if this object is not modifiable
    * @see #setOverrides(String[])
    */
-  void removeOverride(String aOverride);
+  public void removeOverride(String aOverride);
 
   /**
    * Identifies the String data type. Values of the parameter will be of type java.lang.String.
    */
-  String TYPE_STRING = "String";
+  public static final String TYPE_STRING = "String";
 
   /**
    * Identifies the Boolean data type. Values of the parameter will be of type java.lang.Boolean.
    */
-  String TYPE_BOOLEAN = "Boolean";
+  public static final String TYPE_BOOLEAN = "Boolean";
 
   /**
    * Identifies the Integer data type. Values of the parameter will be of type java.lang.Integer.
    */
-  String TYPE_INTEGER = "Integer";
-
-  /**
-   * Identifies the Long data type. Values of the parameter will be of type java.lang.Long.
-   */
-  String TYPE_LONG = "Long";
+  public static final String TYPE_INTEGER = "Integer";
 
   /**
    * Identifies the Float data type. Values of the parameter will be of type java.lang.Float.
    */
-  String TYPE_FLOAT = "Float";
-
-  /**
-   * Identifies the Double data type. Values of the parameter will be of type java.lang.Double.
-   */
-  String TYPE_DOUBLE = "Double";
+  public static final String TYPE_FLOAT = "Float";
 }

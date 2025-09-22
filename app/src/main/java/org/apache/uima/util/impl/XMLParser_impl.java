@@ -84,30 +84,32 @@ public class XMLParser_impl implements XMLParser {
   private static final Class<XMLParser_impl> CLASS_NAME = XMLParser_impl.class;
 
   /**
-   * The URL to the Resource Specifier XML Schema file
+   * @return The URL to the Resource Specifier XML Schema file
    */
+  
   private static final URL SCHEMA_URL;
-
-  static {
+  static
+  {
     URL schemaURL = XMLParser_impl.class.getResource(RESOURCE_SPECIFIER_SCHEMA_NAME);
     if (schemaURL == null) {
-      UIMAFramework.getLogger(CLASS_NAME).logrb(Level.WARNING, CLASS_NAME.getName(), "getSchemaURL",
-              LOG_RESOURCE_BUNDLE, "UIMA_resource_specifier_schema_not_found__WARNING");
-    } else {
-      String urlString = schemaURL.toString().replaceAll(" ", "%20");
+      UIMAFramework.getLogger(CLASS_NAME).logrb(Level.WARNING, CLASS_NAME.getName(),
+              "getSchemaURL", LOG_RESOURCE_BUNDLE,
+              "UIMA_resource_specifier_schema_not_found__WARNING");
+    }
+      else {
+        String urlString = schemaURL.toString().replaceAll(" ", "%20");
       try {
         schemaURL = new URL(urlString);
-      } catch (MalformedURLException e) {
+        } catch (MalformedURLException e) { }
       }
-    }
     SCHEMA_URL = schemaURL;
-  }
+    }
 
   /**
    * Map from XML element names to Class objects.
    */
-  protected Map<String, Class<? extends XMLizable>> mElementToClassMap = Collections
-          .synchronizedMap(new HashMap<>());
+  protected Map<String, Class<? extends XMLizable>> mElementToClassMap = Collections.synchronizedMap(
+		  new HashMap<String, Class<? extends XMLizable>>());
 
   /**
    * Whether schema validation is enabled.
@@ -128,7 +130,6 @@ public class XMLParser_impl implements XMLParser {
   /**
    * @see XMLParser#enableSchemaValidation(boolean)
    */
-  @Override
   public void enableSchemaValidation(boolean aEnable) {
     mSchemaValidationEnabled = aEnable;
   }
@@ -150,33 +151,29 @@ public class XMLParser_impl implements XMLParser {
    * @throws InvalidXMLException
    *           if the input XML is not valid or does not specify a valid object
    */
-  @Override
   public XMLizable parse(XMLInputSource aInput, String aNamespaceForSchema, URL aSchemaUrl,
           ParsingOptions aOptions) throws InvalidXMLException {
     URL urlToParse = aInput.getURL();
     try {
-      SAXParserFactory factory = XMLUtils.createSAXParserFactory();
+      SAXParserFactory factory = new org.apache.xerces.jaxp.SAXParserFactoryImpl();
 
       // Turn on namespace support
-      factory.setNamespaceAware(true);
-      SAXParser parser = factory.newSAXParser(); // unless multi-threaded, in the future, if
-                                                 // performance issue, can save this , and reuse
-                                                 // with reset()
-
+      factory.setNamespaceAware(true);        
+      SAXParser parser = factory.newSAXParser();  // unless multi-threaded, in the future, if performance issue, can save this , and reuse with reset()
+        
       XMLReader reader = parser.getXMLReader();
-      reader.setFeature("http://xml.org/sax/features/namespace-prefixes", false);
-      // reader.setFeature("http://xml.org/sax/features/namespaces", true); // Is this needed?
+      reader.setFeature("http://xml.org/sax/features/namespace-prefixes", true);
 
       // enable validation if requested
       if (mSchemaValidationEnabled && aNamespaceForSchema != null && aSchemaUrl != null) {
         try {
           reader.setFeature("http://apache.org/xml/features/validation/schema", true);
           reader.setProperty("http://apache.org/xml/properties/schema/external-schemaLocation",
-                  aNamespaceForSchema + " " + aSchemaUrl);
+                aNamespaceForSchema + " " + aSchemaUrl);
           reader.setFeature("http://xml.org/sax/features/validation", true);
-        } catch (SAXNotRecognizedException e) {
-          UIMAFramework.getLogger().log(Level.INFO,
-                  "The installed XML Parser does not support schema validation.  No validation will occur.");
+        }
+        catch(SAXNotRecognizedException e) {
+          UIMAFramework.getLogger().log(Level.INFO, "The installed XML Parser does not support schema validation.  No validation will occur.");
         }
       }
 
@@ -199,7 +196,7 @@ public class XMLParser_impl implements XMLParser {
       SaxDeserializer deser = new SaxDeserializer_impl(this, aOptions);
       reader.setContentHandler(deser);
       if (aOptions.preserveComments) {
-        reader.setProperty("http://xml.org/sax/properties/lexical-handler", deser);
+        reader.setProperty ("http://xml.org/sax/properties/lexical-handler", deser);
       }
       reader.parse(input);
 
@@ -240,7 +237,6 @@ public class XMLParser_impl implements XMLParser {
    * @throws InvalidXMLException
    *           if the input XML is not valid or does not specify a valid object
    */
-  @Override
   public XMLizable parse(XMLInputSource aInput, String aNamespaceForSchema, URL aSchemaUrl)
           throws InvalidXMLException {
     return parse(aInput, aNamespaceForSchema, aSchemaUrl, DEFAULT_PARSING_OPTIONS);
@@ -257,7 +253,6 @@ public class XMLParser_impl implements XMLParser {
    * @throws InvalidXMLException
    *           if the input XML is not valid or does not specify a valid object
    */
-  @Override
   public XMLizable parse(XMLInputSource aInput) throws InvalidXMLException {
     return parse(aInput, null, null, DEFAULT_PARSING_OPTIONS);
   }
@@ -266,11 +261,9 @@ public class XMLParser_impl implements XMLParser {
    * (non-Javadoc)
    * 
    * @see org.apache.uima.util.XMLParser#parse(org.apache.uima.util.XMLInputSource,
-   * org.apache.uima.util.XMLParser.ParsingOptions)
+   *      org.apache.uima.util.XMLParser.ParsingOptions)
    */
-  @Override
-  public XMLizable parse(XMLInputSource aInput, ParsingOptions aOptions)
-          throws InvalidXMLException {
+  public XMLizable parse(XMLInputSource aInput, ParsingOptions aOptions) throws InvalidXMLException {
     return parse(aInput, null, null, aOptions);
   }
 
@@ -285,7 +278,6 @@ public class XMLParser_impl implements XMLParser {
    * @throws InvalidXMLException
    *           if the XML element does not specify a valid object
    */
-  @Override
   public XMLizable buildObject(Element aElement) throws InvalidXMLException {
     return buildObject(aElement, new ParsingOptions(true));
   }
@@ -301,14 +293,13 @@ public class XMLParser_impl implements XMLParser {
    * @throws InvalidXMLException
    *           if the XML element does not specify a valid object
    */
-  @Override
   public XMLizable buildObject(Element aElement, ParsingOptions aOptions)
           throws InvalidXMLException {
     // attempt to locate a Class that can be built from the element
     Class<? extends XMLizable> cls = mElementToClassMap.get(aElement.getTagName());
     if (cls == null) {
-      throw new InvalidXMLException(InvalidXMLException.UNKNOWN_ELEMENT,
-              new Object[] { aElement.getTagName() });
+      throw new InvalidXMLException(InvalidXMLException.UNKNOWN_ELEMENT, new Object[] { aElement
+              .getTagName() });
     }
 
     // resolve the class name and instantiate the class
@@ -317,23 +308,23 @@ public class XMLParser_impl implements XMLParser {
       object = cls.newInstance();
     } catch (Exception e) {
       throw new UIMA_IllegalStateException(
-              UIMA_IllegalStateException.COULD_NOT_INSTANTIATE_XMLIZABLE,
-              new Object[] { cls.getName() }, e);
+              UIMA_IllegalStateException.COULD_NOT_INSTANTIATE_XMLIZABLE, new Object[] { cls
+                      .getName() }, e);
     }
-
+    
     callBuildFromXMLElement(aElement, object, aOptions);
 
     return object;
   }
-
-  private void callBuildFromXMLElement(Element aElement, XMLizable object, ParsingOptions aOptions)
-          throws InvalidXMLException {
+  
+  private void callBuildFromXMLElement(Element aElement, XMLizable object, ParsingOptions aOptions) 
+                   throws InvalidXMLException {
     if (aOptions.preserveComments && (object instanceof MetaDataObject_impl)) {
-      ((MetaDataObject_impl) object).setInfoset(aElement);
+      ((MetaDataObject_impl)object).setInfoset(aElement);
     }
 
     object.buildFromXMLElement(aElement, this, aOptions);
-
+    
   }
 
   /*
@@ -341,7 +332,6 @@ public class XMLParser_impl implements XMLParser {
    * 
    * @see org.apache.uima.util.XMLParser#buildObjectOrPrimitive(Element, ParsingOptions)
    */
-  @Override
   public Object buildObjectOrPrimitive(Element aElement, ParsingOptions aOptions)
           throws InvalidXMLException {
     // attempt to locate a Class that can be built from the element
@@ -354,8 +344,8 @@ public class XMLParser_impl implements XMLParser {
       }
 
       // unknown element - throw exception
-      throw new InvalidXMLException(InvalidXMLException.UNKNOWN_ELEMENT,
-              new Object[] { aElement.getTagName() });
+      throw new InvalidXMLException(InvalidXMLException.UNKNOWN_ELEMENT, new Object[] { aElement
+              .getTagName() });
     }
 
     // resolve the class name and instantiate the class
@@ -364,8 +354,8 @@ public class XMLParser_impl implements XMLParser {
       object = cls.newInstance();
     } catch (Exception e) {
       throw new UIMA_IllegalStateException(
-              UIMA_IllegalStateException.COULD_NOT_INSTANTIATE_XMLIZABLE,
-              new Object[] { cls.getName() }, e);
+              UIMA_IllegalStateException.COULD_NOT_INSTANTIATE_XMLIZABLE, new Object[] { cls
+                      .getName() }, e);
     }
 
     // construct the XMLizable object from the XML element
@@ -385,9 +375,7 @@ public class XMLParser_impl implements XMLParser {
    * @throws InvalidXMLException
    *           if the input XML is not valid or does not specify a valid ResourceSpecifier
    */
-  @Override
-  public ResourceSpecifier parseResourceSpecifier(XMLInputSource aInput)
-          throws InvalidXMLException {
+  public ResourceSpecifier parseResourceSpecifier(XMLInputSource aInput) throws InvalidXMLException {
     return parseResourceSpecifier(aInput, DEFAULT_PARSING_OPTIONS);
   }
 
@@ -403,7 +391,6 @@ public class XMLParser_impl implements XMLParser {
    * @throws InvalidXMLException
    *           if the input XML is not valid or does not specify a valid ResourceSpecifier
    */
-  @Override
   public ResourceSpecifier parseResourceSpecifier(XMLInputSource aInput, ParsingOptions aOptions)
           throws InvalidXMLException {
     // attempt to locate resource specifier schema
@@ -411,8 +398,8 @@ public class XMLParser_impl implements XMLParser {
     if (object instanceof ResourceSpecifier) {
       return (ResourceSpecifier) object;
     } else {
-      throw new InvalidXMLException(InvalidXMLException.INVALID_CLASS,
-              new Object[] { ResourceSpecifier.class.getName(), object.getClass().getName() });
+      throw new InvalidXMLException(InvalidXMLException.INVALID_CLASS, new Object[] {
+          ResourceSpecifier.class.getName(), object.getClass().getName() });
     }
   }
 
@@ -428,7 +415,6 @@ public class XMLParser_impl implements XMLParser {
    * @throws InvalidXMLException
    *           if the input XML is not valid or does not specify a valid ResourceSpecifier
    */
-  @Override
   public ResourceMetaData parseResourceMetaData(XMLInputSource aInput) throws InvalidXMLException {
     return parseResourceMetaData(aInput, DEFAULT_PARSING_OPTIONS);
   }
@@ -445,7 +431,6 @@ public class XMLParser_impl implements XMLParser {
    * @throws InvalidXMLException
    *           if the input XML is not valid or does not specify a valid ResourceSpecifier
    */
-  @Override
   public ResourceMetaData parseResourceMetaData(XMLInputSource aInput, ParsingOptions aOptions)
           throws InvalidXMLException {
     // attempt to locate resource specifier schema
@@ -454,8 +439,8 @@ public class XMLParser_impl implements XMLParser {
     if (object instanceof ResourceMetaData) {
       return (ResourceMetaData) object;
     } else {
-      throw new InvalidXMLException(InvalidXMLException.INVALID_CLASS,
-              new Object[] { ResourceMetaData.class.getName(), object.getClass().getName() });
+      throw new InvalidXMLException(InvalidXMLException.INVALID_CLASS, new Object[] {
+          ResourceMetaData.class.getName(), object.getClass().getName() });
     }
   }
 
@@ -471,7 +456,6 @@ public class XMLParser_impl implements XMLParser {
    * @throws InvalidXMLException
    *           if the input XML is not valid or does not specify a valid URISpecifier
    */
-  @Override
   public URISpecifier parseURISpecifier(XMLInputSource aInput) throws InvalidXMLException {
     return parseURISpecifier(aInput, DEFAULT_PARSING_OPTIONS);
   }
@@ -488,7 +472,6 @@ public class XMLParser_impl implements XMLParser {
    * @throws InvalidXMLException
    *           if the input XML is not valid or does not specify a valid URISpecifier
    */
-  @Override
   public URISpecifier parseURISpecifier(XMLInputSource aInput, ParsingOptions aOptions)
           throws InvalidXMLException {
     // attempt to locate resource specifier schema
@@ -497,8 +480,8 @@ public class XMLParser_impl implements XMLParser {
     if (object instanceof URISpecifier) {
       return (URISpecifier) object;
     } else {
-      throw new InvalidXMLException(InvalidXMLException.INVALID_CLASS,
-              new Object[] { URISpecifier.class.getName(), object.getClass().getName() });
+      throw new InvalidXMLException(InvalidXMLException.INVALID_CLASS, new Object[] {
+          URISpecifier.class.getName(), object.getClass().getName() });
     }
   }
 
@@ -514,7 +497,6 @@ public class XMLParser_impl implements XMLParser {
    * @throws InvalidXMLException
    *           if the input XML is not valid or does not specify a valid AnalysisEngineDescription
    */
-  @Override
   public AnalysisEngineDescription parseAnalysisEngineDescription(XMLInputSource aInput)
           throws InvalidXMLException {
     return parseAnalysisEngineDescription(aInput, DEFAULT_PARSING_OPTIONS);
@@ -532,7 +514,6 @@ public class XMLParser_impl implements XMLParser {
    * @throws InvalidXMLException
    *           if the input XML is not valid or does not specify a valid AnalysisEngineDescription
    */
-  @Override
   public AnalysisEngineDescription parseAnalysisEngineDescription(XMLInputSource aInput,
           ParsingOptions aOptions) throws InvalidXMLException {
     // attempt to locate resource specifier schema
@@ -559,10 +540,8 @@ public class XMLParser_impl implements XMLParser {
    *           if the input XML is not valid or does not specify a valid TaeDescription
    * 
    * @deprecated since v2.0
-   * @forRemoval 4.0.0
    */
-  @Override
-  @Deprecated(since = "2.0.0")
+  @Deprecated
   public TaeDescription parseTaeDescription(XMLInputSource aInput) throws InvalidXMLException {
     return parseTaeDescription(aInput, DEFAULT_PARSING_OPTIONS);
   }
@@ -580,10 +559,8 @@ public class XMLParser_impl implements XMLParser {
    *           if the input XML is not valid or does not specify a valid TaeDescription
    * 
    * @deprecated since v2.0
-   * @forRemoval 4.0.0
    */
-  @Override
-  @Deprecated(since = "2.0.0")
+  @Deprecated
   public TaeDescription parseTaeDescription(XMLInputSource aInput, ParsingOptions aOptions)
           throws InvalidXMLException {
     // attempt to locate resource specifier schema
@@ -592,15 +569,14 @@ public class XMLParser_impl implements XMLParser {
     if (object instanceof TaeDescription) {
       return (TaeDescription) object;
     } else {
-      throw new InvalidXMLException(InvalidXMLException.INVALID_CLASS,
-              new Object[] { TaeDescription.class.getName(), object.getClass().getName() });
+      throw new InvalidXMLException(InvalidXMLException.INVALID_CLASS, new Object[] {
+          TaeDescription.class.getName(), object.getClass().getName() });
     }
   }
 
   /**
    * @see XMLParser#parseResultSpecification(XMLInputSource)
    */
-  @Override
   public ResultSpecification parseResultSpecification(XMLInputSource aInput)
           throws InvalidXMLException {
     return parseResultSpecification(aInput, DEFAULT_PARSING_OPTIONS);
@@ -609,23 +585,21 @@ public class XMLParser_impl implements XMLParser {
   /**
    * @see XMLParser#parseResultSpecification(XMLInputSource)
    */
-  @Override
-  public ResultSpecification parseResultSpecification(XMLInputSource aInput,
-          ParsingOptions aOptions) throws InvalidXMLException {
+  public ResultSpecification parseResultSpecification(XMLInputSource aInput, ParsingOptions aOptions)
+          throws InvalidXMLException {
     XMLizable object = parse(aInput, RESOURCE_SPECIFIER_NAMESPACE, null, aOptions);
 
     if (object instanceof ResultSpecification) {
       return (ResultSpecification) object;
     } else {
-      throw new InvalidXMLException(InvalidXMLException.INVALID_CLASS,
-              new Object[] { ResultSpecification.class.getName(), object.getClass().getName() });
+      throw new InvalidXMLException(InvalidXMLException.INVALID_CLASS, new Object[] {
+          ResultSpecification.class.getName(), object.getClass().getName() });
     }
   }
 
   /**
    * @see XMLParser#parseCasConsumerDescription(XMLInputSource)
    */
-  @Override
   public CasConsumerDescription parseCasConsumerDescription(XMLInputSource aInput)
           throws InvalidXMLException {
     return parseCasConsumerDescription(aInput, DEFAULT_PARSING_OPTIONS);
@@ -634,7 +608,6 @@ public class XMLParser_impl implements XMLParser {
   /**
    * @see XMLParser#parseCasConsumerDescription(XMLInputSource)
    */
-  @Override
   public CasConsumerDescription parseCasConsumerDescription(XMLInputSource aInput,
           ParsingOptions aOptions) throws InvalidXMLException {
     // attempt to locate resource specifier schema
@@ -643,216 +616,269 @@ public class XMLParser_impl implements XMLParser {
     if (object instanceof CasConsumerDescription) {
       return (CasConsumerDescription) object;
     } else {
-      throw new InvalidXMLException(InvalidXMLException.INVALID_CLASS,
-              new Object[] { CasConsumerDescription.class.getName(), object.getClass().getName() });
+      throw new InvalidXMLException(InvalidXMLException.INVALID_CLASS, new Object[] {
+          CasConsumerDescription.class.getName(), object.getClass().getName() });
     }
   }
 
-  @Override
+  /**
+   * @deprecated
+   */
   @Deprecated
-  public CasInitializerDescription parseCasInitializerDescription(XMLInputSource aInput)
+public CasInitializerDescription parseCasInitializerDescription(XMLInputSource aInput)
           throws InvalidXMLException {
     return parseCasInitializerDescription(aInput, DEFAULT_PARSING_OPTIONS);
   }
 
-  @Override
-  @Deprecated(since = "3.6.0")
-  public CasInitializerDescription parseCasInitializerDescription(XMLInputSource aInput,
+  /**
+   * @deprecated
+   */
+  @Deprecated
+public CasInitializerDescription parseCasInitializerDescription(XMLInputSource aInput,
           ParsingOptions aOptions) throws InvalidXMLException {
     // attempt to locate resource specifier schema
-    var object = parse(aInput, RESOURCE_SPECIFIER_NAMESPACE, SCHEMA_URL, aOptions);
+    XMLizable object = parse(aInput, RESOURCE_SPECIFIER_NAMESPACE, SCHEMA_URL, aOptions);
 
-    if (object instanceof CasInitializerDescription casInitializerDescription) {
-      return casInitializerDescription;
+    if (object instanceof CasInitializerDescription) {
+      return (CasInitializerDescription) object;
     } else {
       throw new InvalidXMLException(InvalidXMLException.INVALID_CLASS, new Object[] {
           CasInitializerDescription.class.getName(), object.getClass().getName() });
     }
   }
 
-  @Override
   public CollectionReaderDescription parseCollectionReaderDescription(XMLInputSource aInput)
           throws InvalidXMLException {
     return parseCollectionReaderDescription(aInput, DEFAULT_PARSING_OPTIONS);
   }
 
-  @Override
   public CollectionReaderDescription parseCollectionReaderDescription(XMLInputSource aInput,
           ParsingOptions aOptions) throws InvalidXMLException {
     // attempt to locate resource specifier schema
     XMLizable object = parse(aInput, RESOURCE_SPECIFIER_NAMESPACE, SCHEMA_URL, aOptions);
 
-    if (object instanceof CollectionReaderDescription collectionReaderDescription) {
-      return collectionReaderDescription;
+    if (object instanceof CollectionReaderDescription) {
+      return (CollectionReaderDescription) object;
     } else {
       throw new InvalidXMLException(InvalidXMLException.INVALID_CLASS, new Object[] {
           CollectionReaderDescription.class.getName(), object.getClass().getName() });
     }
   }
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.util.XMLParser#parseCpeDescription(org.apache.uima.util.XMLInputSource)
+   */
   public CpeDescription parseCpeDescription(XMLInputSource aInput) throws InvalidXMLException {
     XMLizable object = parse(aInput);
 
-    if (object instanceof CpeDescription cpeDescription) {
-      return cpeDescription;
+    if (object instanceof CpeDescription) {
+      return (CpeDescription) object;
     } else {
-      throw new InvalidXMLException(InvalidXMLException.INVALID_CLASS,
-              new Object[] { CpeDescription.class.getName(), object.getClass().getName() });
+      throw new InvalidXMLException(InvalidXMLException.INVALID_CLASS, new Object[] {
+          CpeDescription.class.getName(), object.getClass().getName() });
     }
   }
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.util.XMLParser#parseTypePriorities(org.apache.uima.util.XMLInputSource)
+   */
   public TypePriorities parseTypePriorities(XMLInputSource aInput) throws InvalidXMLException {
     return parseTypePriorities(aInput, DEFAULT_PARSING_OPTIONS);
   }
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.util.XMLParser#parseTypePriorities(org.apache.uima.util.XMLInputSource)
+   */
   public TypePriorities parseTypePriorities(XMLInputSource aInput, ParsingOptions aOptions)
           throws InvalidXMLException {
     // attempt to locate resource specifier schema
     XMLizable object = parse(aInput, RESOURCE_SPECIFIER_NAMESPACE, SCHEMA_URL, aOptions);
 
-    if (object instanceof TypePriorities typePriorities) {
-      return typePriorities;
+    if (object instanceof TypePriorities) {
+      return (TypePriorities) object;
     } else {
-      throw new InvalidXMLException(InvalidXMLException.INVALID_CLASS,
-              new Object[] { TypePriorities.class.getName(), object.getClass().getName() });
+      throw new InvalidXMLException(InvalidXMLException.INVALID_CLASS, new Object[] {
+          TypePriorities.class.getName(), object.getClass().getName() });
     }
   }
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.util.XMLParser#parseTypeSystemDescription(org.apache.uima.util.XMLInputSource)
+   */
   public TypeSystemDescription parseTypeSystemDescription(XMLInputSource aInput)
           throws InvalidXMLException {
     return parseTypeSystemDescription(aInput, DEFAULT_PARSING_OPTIONS);
   }
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.util.XMLParser#parseTypeSystemDescription(org.apache.uima.util.XMLInputSource)
+   */
   public TypeSystemDescription parseTypeSystemDescription(XMLInputSource aInput,
           ParsingOptions aOptions) throws InvalidXMLException {
     // attempt to locate resource specifier schema
     XMLizable object = parse(aInput, RESOURCE_SPECIFIER_NAMESPACE, SCHEMA_URL, aOptions);
 
-    if (object instanceof TypeSystemDescription typeSystemDescription) {
-      return typeSystemDescription;
+    if (object instanceof TypeSystemDescription) {
+      return (TypeSystemDescription) object;
     } else {
-      throw new InvalidXMLException(InvalidXMLException.INVALID_CLASS,
-              new Object[] { TypeSystemDescription.class.getName(), object.getClass().getName() });
+      throw new InvalidXMLException(InvalidXMLException.INVALID_CLASS, new Object[] {
+          TypeSystemDescription.class.getName(), object.getClass().getName() });
     }
   }
 
-  @Override
-  public FsIndexCollection parseFsIndexCollection(XMLInputSource aInput)
-          throws InvalidXMLException {
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.util.XMLParser#parseFsIndexCollection(org.apache.uima.util.XMLInputSource)
+   */
+  public FsIndexCollection parseFsIndexCollection(XMLInputSource aInput) throws InvalidXMLException {
     return parseFsIndexCollection(aInput, DEFAULT_PARSING_OPTIONS);
   }
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.util.XMLParser#parseFsIndexCollection(org.apache.uima.util.XMLInputSource)
+   */
   public FsIndexCollection parseFsIndexCollection(XMLInputSource aInput, ParsingOptions aOptions)
           throws InvalidXMLException {
     // attempt to locate resource specifier schema
     XMLizable object = parse(aInput, RESOURCE_SPECIFIER_NAMESPACE, SCHEMA_URL, aOptions);
 
-    if (object instanceof FsIndexCollection fsIndexCollection) {
-      return fsIndexCollection;
+    if (object instanceof FsIndexCollection) {
+      return (FsIndexCollection) object;
     } else {
-      throw new InvalidXMLException(InvalidXMLException.INVALID_CLASS,
-              new Object[] { FsIndexCollection.class.getName(), object.getClass().getName() });
+      throw new InvalidXMLException(InvalidXMLException.INVALID_CLASS, new Object[] {
+          FsIndexCollection.class.getName(), object.getClass().getName() });
     }
   }
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.util.XMLParser#parseResourceManagerConfiguration(org.apache.uima.util.XMLInputSource)
+   */
   public ResourceManagerConfiguration parseResourceManagerConfiguration(XMLInputSource aInput)
           throws InvalidXMLException {
     return parseResourceManagerConfiguration(aInput, DEFAULT_PARSING_OPTIONS);
   }
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.util.XMLParser#parseResourceManagerConfiguration(org.apache.uima.util.XMLInputSource)
+   */
   public ResourceManagerConfiguration parseResourceManagerConfiguration(XMLInputSource aInput,
           ParsingOptions aOptions) throws InvalidXMLException {
     // attempt to locate resource specifier schema
     XMLizable object = parse(aInput, RESOURCE_SPECIFIER_NAMESPACE, SCHEMA_URL, aOptions);
 
-    if (object instanceof ResourceManagerConfiguration resourceManagerConfiguration) {
-      return resourceManagerConfiguration;
+    if (object instanceof ResourceManagerConfiguration) {
+      return (ResourceManagerConfiguration) object;
     } else {
       throw new InvalidXMLException(InvalidXMLException.INVALID_CLASS, new Object[] {
           ResourceManagerConfiguration.class.getName(), object.getClass().getName() });
     }
   }
 
-  @Override
-  public FlowControllerDescription parseFlowControllerDescription(XMLInputSource aInput)
-          throws InvalidXMLException {
+  /* (non-Javadoc)
+   * @see org.apache.uima.util.XMLParser#parseFlowControllerDescription(org.apache.uima.util.XMLInputSource)
+   */
+  public FlowControllerDescription parseFlowControllerDescription(XMLInputSource aInput) throws InvalidXMLException {
     return parseFlowControllerDescription(aInput, DEFAULT_PARSING_OPTIONS);
   }
 
-  @Override
-  public FlowControllerDescription parseFlowControllerDescription(XMLInputSource aInput,
-          ParsingOptions aOptions) throws InvalidXMLException {
+  /* (non-Javadoc)
+   * @see org.apache.uima.util.XMLParser#parseFlowControllerDescription(org.apache.uima.util.XMLInputSource, org.apache.uima.util.XMLParser.ParsingOptions)
+   */
+  public FlowControllerDescription parseFlowControllerDescription(XMLInputSource aInput, ParsingOptions aOptions) throws InvalidXMLException {
     // attempt to locate resource specifier schema
     XMLizable object = parse(aInput, RESOURCE_SPECIFIER_NAMESPACE, SCHEMA_URL, aOptions);
 
-    if (object instanceof FlowControllerDescription flowControllerDescription) {
-      return flowControllerDescription;
+    if (object instanceof FlowControllerDescription) {
+      return (FlowControllerDescription) object;
     } else {
       throw new InvalidXMLException(InvalidXMLException.INVALID_CLASS, new Object[] {
-          FlowControllerDescription.class.getName(), object.getClass().getName() });
+              FlowControllerDescription.class.getName(), object.getClass().getName() });
     }
   }
 
-  @Override
-  public CustomResourceSpecifier parseCustomResourceSpecifier(XMLInputSource aInput)
-          throws InvalidXMLException {
+  /* (non-Javadoc)
+   * @see org.apache.uima.util.XMLParser#parseCustomResourceSpecifier(org.apache.uima.util.XMLInputSource)
+   */
+  public CustomResourceSpecifier parseCustomResourceSpecifier(XMLInputSource aInput) throws InvalidXMLException {
     return parseCustomResourceSpecifier(aInput, DEFAULT_PARSING_OPTIONS);
   }
 
-  @Override
-  public CustomResourceSpecifier parseCustomResourceSpecifier(XMLInputSource aInput,
-          ParsingOptions aOptions) throws InvalidXMLException {
+  /* (non-Javadoc)
+   * @see org.apache.uima.util.XMLParser#parseCustomResourceSpecifier(org.apache.uima.util.XMLInputSource, org.apache.uima.util.XMLParser.ParsingOptions)
+   */
+  public CustomResourceSpecifier parseCustomResourceSpecifier(XMLInputSource aInput, ParsingOptions aOptions) throws InvalidXMLException {
     // attempt to locate resource specifier schema
     XMLizable object = parse(aInput, RESOURCE_SPECIFIER_NAMESPACE, SCHEMA_URL, aOptions);
 
-    if (object instanceof CustomResourceSpecifier customResourceSpecifier) {
-      return customResourceSpecifier;
+    if (object instanceof CustomResourceSpecifier) {
+      return (CustomResourceSpecifier) object;
     } else {
       throw new InvalidXMLException(InvalidXMLException.INVALID_CLASS, new Object[] {
-          CustomResourceSpecifier.class.getName(), object.getClass().getName() });
+              CustomResourceSpecifier.class.getName(), object.getClass().getName() });
     }
   }
-
-  @Override
+  
+  /* (non-Javadoc)
+   * @see org.apache.uima.util.XMLParser#parsePearSpecifier(org.apache.uima.util.XMLInputSource)
+   */
   public PearSpecifier parsePearSpecifier(XMLInputSource aInput) throws InvalidXMLException {
     return parsePearSpecifier(aInput, DEFAULT_PARSING_OPTIONS);
   }
 
-  @Override
-  public PearSpecifier parsePearSpecifier(XMLInputSource aInput, ParsingOptions aOptions)
-          throws InvalidXMLException {
+  /* (non-Javadoc)
+   * @see org.apache.uima.util.XMLParser#parsePearSpecifier(org.apache.uima.util.XMLInputSource, org.apache.uima.util.XMLParser.ParsingOptions)
+   */
+  public PearSpecifier parsePearSpecifier(XMLInputSource aInput, ParsingOptions aOptions) throws InvalidXMLException {
     // attempt to locate resource specifier schema
     XMLizable object = parse(aInput, RESOURCE_SPECIFIER_NAMESPACE, SCHEMA_URL, aOptions);
 
-    if (object instanceof PearSpecifier pearSpecifier) {
-      return pearSpecifier;
+    if (object instanceof PearSpecifier) {
+      return (PearSpecifier) object;
     } else {
-      throw new InvalidXMLException(InvalidXMLException.INVALID_CLASS,
-              new Object[] { PearSpecifier.class.getName(), object.getClass().getName() });
+      throw new InvalidXMLException(InvalidXMLException.INVALID_CLASS, new Object[] {
+              PearSpecifier.class.getName(), object.getClass().getName() });
     }
   }
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.util.XMLParser#parseIndexBuildSpecification(org.apache.uima.util.XMLInputSource)
+   */
   public IndexBuildSpecification parseIndexBuildSpecification(XMLInputSource aInput)
           throws InvalidXMLException {
     return parseIndexBuildSpecification(aInput, DEFAULT_PARSING_OPTIONS);
   }
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.util.XMLParser#parseIndexBuildSpecification(org.apache.uima.util.XMLInputSource,
+   *      org.apache.uima.util.XMLParser.ParsingOptions)
+   */
   public IndexBuildSpecification parseIndexBuildSpecification(XMLInputSource aInput,
           ParsingOptions aOptions) throws InvalidXMLException {
     XMLizable object = parse(aInput, aOptions);
 
-    if (object instanceof IndexBuildSpecification indexBuildSpecification) {
-      return indexBuildSpecification;
+    if (object instanceof IndexBuildSpecification) {
+      return (IndexBuildSpecification) object;
     } else {
       throw new InvalidXMLException(InvalidXMLException.INVALID_CLASS, new Object[] {
           IndexBuildSpecification.class.getName(), object.getClass().getName() });
@@ -861,8 +887,7 @@ public class XMLParser_impl implements XMLParser {
 
   /**
    * Configures this XMLParser by registering a mapping between the name of an XML element and the
-   * Class of object to be built from elements with that name. Ignores entries with no name, i.e.
-   * are not configured via XML
+   * Class of object to be built from elements with that name.
    * 
    * @param aElementName
    *          the name of an XML element
@@ -874,14 +899,10 @@ public class XMLParser_impl implements XMLParser {
    *           if the class named by <code>aClassName</code> could not be found
    * @throws UIMA_IllegalArgumentException
    *           if the class named by <code>aClassName</code> does not implement
-   *           <code>XMLIzable</code>. @
+   * <code>XMLIzable</code>. @
    */
-  @Override
   @SuppressWarnings("unchecked")
   public void addMapping(String aElementName, String aClassName) throws ClassNotFoundException {
-    if (aElementName == null) {
-      return;
-    }
     // resolve the class name and ensure that it implements XMLizable
     Class<? extends XMLizable> cls = (Class<? extends XMLizable>) Class.forName(aClassName);
     if (XMLizable.class.isAssignableFrom(cls)) {
@@ -893,12 +914,16 @@ public class XMLParser_impl implements XMLParser {
     }
   }
 
-  @Override
+  /**
+   * @see XMLParser#newSaxDeserializer()
+   */
   public SaxDeserializer newSaxDeserializer() {
     return new SaxDeserializer_impl(this, new ParsingOptions(true));
   }
 
-  @Override
+  /**
+   * @see XMLParser#newSaxDeserializer(ParsingOptions)
+   */
   public SaxDeserializer newSaxDeserializer(ParsingOptions aOptions) {
     return new SaxDeserializer_impl(this, aOptions);
   }
@@ -910,19 +935,16 @@ public class XMLParser_impl implements XMLParser {
   static class ParseErrorHandler extends DefaultHandler {
     private SAXParseException mException = null;
 
-    @Override
     public void error(SAXParseException aError) {
       if (mException == null)
         mException = aError;
     }
 
-    @Override
     public void fatalError(SAXParseException aError) {
       if (mException == null)
         mException = aError;
     }
 
-    @Override
     public void warning(SAXParseException aWarning) {
       System.err.println("XML Warning: " + aWarning.getMessage());
     }

@@ -41,5 +41,5 @@ public interface SaxDeserializer extends ContentHandler {
    * @throws InvalidXMLException
    *           if an object could not be constructed
    */
-  XMLizable getObject() throws InvalidXMLException;
+  public XMLizable getObject() throws InvalidXMLException;
 }

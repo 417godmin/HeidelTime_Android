@@ -19,20 +19,33 @@
 
 package org.apache.uima.resource.metadata.impl;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeSet;
 
+import org.apache.uima.UIMAFramework;
 import org.apache.uima.UIMA_IllegalArgumentException;
 import org.apache.uima.resource.ResourceManager;
 import org.apache.uima.resource.metadata.FsIndexCollection;
 import org.apache.uima.resource.metadata.FsIndexDescription;
 import org.apache.uima.resource.metadata.Import;
+import org.apache.uima.resource.metadata.ResourceMetaData;
 import org.apache.uima.util.InvalidXMLException;
+import org.apache.uima.util.XMLInputSource;
+import org.apache.uima.util.XMLizable;
 
+/**
+ * 
+ * 
+ */
 public class FsIndexCollection_impl extends MetaDataObject_impl implements FsIndexCollection {
 
   private static final long serialVersionUID = -7687383527183197102L;
-
-  private static final FsIndexDescription[] EMPTY_FS_INDEX_DESCRIPTION_ARRAY = new FsIndexDescription[0];
 
   private String mName;
 
@@ -44,56 +57,80 @@ public class FsIndexCollection_impl extends MetaDataObject_impl implements FsInd
 
   private Import[] mImports = Import.EMPTY_IMPORTS;
 
-  private FsIndexDescription[] mFsIndexes = EMPTY_FS_INDEX_DESCRIPTION_ARRAY;
+  private FsIndexDescription[] mFsIndexes = new FsIndexDescription[0];
 
-  @Override
+  /**
+   * @see ResourceMetaData#getName()
+   */
   public String getName() {
     return mName;
   }
 
-  @Override
+  /**
+   * @see ResourceMetaData#setName(String)
+   */
   public void setName(String aName) {
     mName = aName;
   }
 
-  @Override
+  /**
+   * @see ResourceMetaData#getVersion()
+   */
   public String getVersion() {
     return mVersion;
   }
 
-  @Override
+  /**
+   * @see ResourceMetaData#setVersion(String)
+   */
   public void setVersion(String aVersion) {
     mVersion = aVersion;
   }
 
-  @Override
+  /**
+   * @see ResourceMetaData#getDescription()
+   */
   public String getDescription() {
     return mDescription;
   }
 
-  @Override
+  /**
+   * @see ResourceMetaData#setDescription(String)
+   */
   public void setDescription(String aDescription) {
     mDescription = aDescription;
   }
 
-  @Override
+  /**
+   * @see ResourceMetaData#getVendor()
+   */
   public String getVendor() {
     return mVendor;
   }
 
-  @Override
+  /**
+   * @see ResourceMetaData#setVendor(String)
+   */
   public void setVendor(String aVendor) {
     mVendor = aVendor;
   }
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.resource.metadata.TypeSystemDescription#getImports()
+   */
   public Import[] getImports() {
     // don't allow this to return null
     return (mImports == null) ? Import.EMPTY_IMPORTS : mImports;
   }
 
-  @Override
-  public void setImports(Import... aImports) {
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.resource.metadata.TypeSystemDescription#setImports(org.apache.uima.resource.metadata.Import[])
+   */
+  public void setImports(Import[] aImports) {
     if (aImports == null) {
       throw new UIMA_IllegalArgumentException(UIMA_IllegalArgumentException.ILLEGAL_ARGUMENT,
               new Object[] { "null", "aImports", "setImports" });
@@ -101,17 +138,24 @@ public class FsIndexCollection_impl extends MetaDataObject_impl implements FsInd
     mImports = aImports;
   }
 
-  @Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.resource.metadata.FsIndexCollection#getFsIndexes()
+   */
   public FsIndexDescription[] getFsIndexes() {
     // don't allow this to return null
-    if (mFsIndexes == null) {
-      mFsIndexes = EMPTY_FS_INDEX_DESCRIPTION_ARRAY;
-    }
+    if (mFsIndexes == null)
+      mFsIndexes = new FsIndexDescription[0];
     return mFsIndexes;
   }
 
-  @Override
-  public void setFsIndexes(FsIndexDescription... aFSIndexes) {
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.resource.metadata.FsIndexCollection#setFsIndexes(org.apache.uima.resource.metadata.FsIndexDescription[])
+   */
+  public void setFsIndexes(FsIndexDescription[] aFSIndexes) {
     if (aFSIndexes == null) {
       throw new UIMA_IllegalArgumentException(UIMA_IllegalArgumentException.ILLEGAL_ARGUMENT,
               new Object[] { "null", "aFSIndexes", "setImports" });
@@ -119,7 +163,6 @@ public class FsIndexCollection_impl extends MetaDataObject_impl implements FsInd
     mFsIndexes = aFSIndexes;
   }
 
-  @Override
   public void addFsIndex(FsIndexDescription aFsIndexDescription) {
     FsIndexDescription[] current = getFsIndexes();
     FsIndexDescription[] newArr = new FsIndexDescription[current.length + 1];
@@ -128,7 +171,6 @@ public class FsIndexCollection_impl extends MetaDataObject_impl implements FsInd
     setFsIndexes(newArr);
   }
 
-  @Override
   public void removeFsIndex(FsIndexDescription aFsIndexDescription) {
     FsIndexDescription[] current = getFsIndexes();
     for (int i = 0; i < current.length; i++) {
@@ -142,35 +184,102 @@ public class FsIndexCollection_impl extends MetaDataObject_impl implements FsInd
     }
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.uima.resource.metadata.TypeSystemDescription#resolveImports()
+   */
   // support multi-threading, avoid object creation if no imports
-  @Override
   public synchronized void resolveImports() throws InvalidXMLException {
-    resolveImports(null, null);
+    if (getImports().length == 0) {
+      resolveImports(null, null);
+    } else {
+      resolveImports(new TreeSet<String>(), UIMAFramework.newDefaultResourceManager());
+    }
   }
 
-  @Override
-  public synchronized void resolveImports(ResourceManager aResourceManager)
-          throws InvalidXMLException {
-    resolveImports(null, aResourceManager);
+  public synchronized void resolveImports(ResourceManager aResourceManager) throws InvalidXMLException {
+    resolveImports((getImports().length == 0) ? null : new TreeSet<String>(), aResourceManager);
   }
 
-  @Deprecated
-  @Override
   public synchronized void resolveImports(Collection<String> aAlreadyImportedFsIndexURLs,
           ResourceManager aResourceManager) throws InvalidXMLException {
-    ImportResolver<FsIndexCollection, FsIndexDescription> resolver = new ImportResolver<>(
-            FsIndexCollectionImportResolverAdapter::new);
-    resolver.resolveImports(this, aAlreadyImportedFsIndexURLs, aResourceManager);
+    List<FsIndexDescription> importedIndexes = null;
+    if (getImports().length != 0) {
+      // add our own URL, if known, to the collection of already imported URLs
+      if (getSourceUrl() != null) {
+        aAlreadyImportedFsIndexURLs.add(getSourceUrl().toString());
+      }
+      
+      importedIndexes = new ArrayList<FsIndexDescription>();
+      Import[] imports = getImports();
+      for (int i = 0; i < imports.length; i++) {
+        // make sure Import's relative path base is set, to allow for users who create
+        // new import objects
+        if (imports[i] instanceof Import_impl) {
+          ((Import_impl) imports[i]).setSourceUrlIfNull(this.getSourceUrl());
+        }
+  
+        URL url = imports[i].findAbsoluteUrl(aResourceManager);
+        if (!aAlreadyImportedFsIndexURLs.contains(url.toString())) {
+          aAlreadyImportedFsIndexURLs.add(url.toString());
+          try {
+            resolveImport(url, aAlreadyImportedFsIndexURLs, importedIndexes, aResourceManager);
+          } catch (IOException e) {
+            throw new InvalidXMLException(InvalidXMLException.IMPORT_FAILED_COULD_NOT_READ_FROM_URL,
+                    new Object[] { url, imports[i].getSourceUrlString() }, e);
+          }
+        }
+      }
+    }
+    // update this object
+    FsIndexDescription[] existingIndexes = this.getFsIndexes();
+    if (existingIndexes == null) {
+      this.setFsIndexes(existingIndexes = FsIndexDescription.EMPTY_FS_INDEX_DESCRIPTIONS);
+    }
+    if (null != importedIndexes) {
+      FsIndexDescription[] newIndexes = new FsIndexDescription[existingIndexes.length
+              + importedIndexes.size()];
+      System.arraycopy(existingIndexes, 0, newIndexes, 0, existingIndexes.length);
+      for (int i = 0; i < importedIndexes.size(); i++) {
+        newIndexes[existingIndexes.length + i] = importedIndexes.get(i);
+      }
+      this.setFsIndexes(newIndexes);
+    }
+    // clear imports
+    this.setImports(Import.EMPTY_IMPORTS);
   }
 
-  @Override
+  private void resolveImport(URL aURL, Collection<String> aAlreadyImportedFsIndexCollectionURLs,
+          Collection<FsIndexDescription> aResults, ResourceManager aResourceManager) throws InvalidXMLException,
+          IOException {
+    //check the import cache
+    FsIndexCollection desc;    
+    String urlString = aURL.toString();
+    Map<String, XMLizable> importCache = aResourceManager.getImportCache();
+    synchronized(importCache) {
+      XMLizable cachedObject = importCache.get(urlString);
+      if (cachedObject instanceof FsIndexCollection) {
+        desc = (FsIndexCollection)cachedObject;
+      } else {   
+        XMLInputSource input;
+        input = new XMLInputSource(aURL);
+        desc = UIMAFramework.getXMLParser().parseFsIndexCollection(input);
+        desc.resolveImports(aAlreadyImportedFsIndexCollectionURLs, aResourceManager);
+        importCache.put(urlString, desc);
+      }
+    }
+    aResults.addAll(Arrays.asList(desc.getFsIndexes()));
+  }
+
   protected XmlizationInfo getXmlizationInfo() {
     return XMLIZATION_INFO;
   }
 
-  private static final XmlizationInfo XMLIZATION_INFO = new XmlizationInfo("fsIndexCollection",
+  static final private XmlizationInfo XMLIZATION_INFO = new XmlizationInfo("fsIndexCollection",
           new PropertyXmlInfo[] { new PropertyXmlInfo("name", true),
               new PropertyXmlInfo("description", true), new PropertyXmlInfo("version", true),
               new PropertyXmlInfo("vendor", true), new PropertyXmlInfo("imports", true),
               new PropertyXmlInfo("fsIndexes", "fsIndexes") });
+
 }

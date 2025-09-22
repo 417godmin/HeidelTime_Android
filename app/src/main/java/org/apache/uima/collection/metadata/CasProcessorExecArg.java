@@ -24,23 +24,26 @@ import org.apache.uima.resource.metadata.MetaDataObject;
 /**
  * An object containing an arbitrary value that will passed to a program launched by the CPE. Used
  * for CasProcessors launched locally.
+ * 
+ * 
  */
 public interface CasProcessorExecArg extends MetaDataObject {
   /**
    * Sets argument value.
    * 
-   * @param aArgValue
+   * @param aArgValue -
    *          value as string
    * 
-   * @throws CpeDescriptorException
-   *           tbd
+   * @throws CpeDescriptorException tbd
    */
-  void setArgValue(String aArgValue) throws CpeDescriptorException;
+  public void setArgValue(String aArgValue) throws CpeDescriptorException;
 
   /**
-   * @return argument value
-   * @throws CpeDescriptorException
-   *           tbd
+   * Returns argument value
+   * 
+   * @return - String
+   * 
+   * @throws CpeDescriptorException tbd
    */
-  String getArgValue() throws CpeDescriptorException;
+  public String getArgValue() throws CpeDescriptorException;
 }

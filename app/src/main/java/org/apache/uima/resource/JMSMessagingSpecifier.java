@@ -19,37 +19,38 @@
 
 package org.apache.uima.resource;
 
+
 public interface JMSMessagingSpecifier extends MessagingSpecifier {
 
-  String defaultInitialContextFactory = "com.sun.jndi.ldap.LdapCtxFactory";
+  public static final String defaultInitialContextFactory = "com.sun.jndi.ldap.LdapCtxFactory";
 
   /**
    * Returns the hostInitialContextFactory.
    * 
    * @return String
    */
-  String getHostInitialContextFactory();
+  public String getHostInitialContextFactory();
 
   /**
    * Returns the hostProviderURL.
    * 
    * @return String
    */
-  String getHostProviderURL();
+  public String getHostProviderURL();
 
   /**
    * Returns the targetInitialContextFactory.
    * 
    * @return String
    */
-  String getTargetInitialContextFactory();
+  public String getTargetInitialContextFactory();
 
   /**
    * Returns the targetProviderURL.
    * 
    * @return String
    */
-  String getTargetProviderURL();
+  public String getTargetProviderURL();
 
   /**
    * Sets the hostInitialContextFactory.
@@ -57,7 +58,7 @@ public interface JMSMessagingSpecifier extends MessagingSpecifier {
    * @param hostInitialContextFactory
    *          The hostInitialContextFactory to set
    */
-  void setHostInitialContextFactory(String hostInitialContextFactory);
+  public void setHostInitialContextFactory(String hostInitialContextFactory);
 
   /**
    * Sets the hostProviderURL.
@@ -65,7 +66,7 @@ public interface JMSMessagingSpecifier extends MessagingSpecifier {
    * @param hostProviderURL
    *          The hostProviderURL to set
    */
-  void setHostProviderURL(String hostProviderURL);
+  public void setHostProviderURL(String hostProviderURL);
 
   /**
    * Sets the targetInitialContextFactory.
@@ -73,7 +74,7 @@ public interface JMSMessagingSpecifier extends MessagingSpecifier {
    * @param targetInitialContextFactory
    *          The targetInitialContextFactory to set
    */
-  void setTargetInitialContextFactory(String targetInitialContextFactory);
+  public void setTargetInitialContextFactory(String targetInitialContextFactory);
 
   /**
    * Sets the targetProviderURL.
@@ -81,5 +82,5 @@ public interface JMSMessagingSpecifier extends MessagingSpecifier {
    * @param targetProviderURL
    *          The targetProviderURL to set
    */
-  void setTargetProviderURL(String targetProviderURL);
+  public void setTargetProviderURL(String targetProviderURL);
 }

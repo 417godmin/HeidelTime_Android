@@ -26,64 +26,65 @@ import org.apache.uima.resource.metadata.MetaDataObject;
 /**
  * An object containing configuration for a program that the CPE will use to launch CasProcessor. It
  * provides the means to define an executable program and its arguments
+ * 
+ * 
  */
 public interface CasProcessorExecutable extends MetaDataObject {
   /**
    * Sets an executable program that the CPE will use for launching CasProcessor.
    * 
-   * @param aExecutable
-   *          - program name (like java.exe)
+   * @param aExecutable -
+   *          program name (like java.exe)
    */
-  void setExecutable(String aExecutable);
+  public void setExecutable(String aExecutable);
 
   /**
    * Returns an executable program that the CPE will use for launching CasProcessor.
    * 
    * @return - exec program as String
    */
-  String getExecutable();
+  public String getExecutable();
 
   /**
    * Adds a {@link CasProcessorExecArg} argument to be supplied
    * when launching a program.
    * 
-   * @param aArgs
-   *          - argument for the executable program
+   * @param aArgs -
+   *          argument for the executable program
    */
-  void addCasProcessorExecArg(CasProcessorExecArg aArgs);
+  public void addCasProcessorExecArg(CasProcessorExecArg aArgs);
 
   /**
-   * Returns a {@link CasProcessorExecArg} argument identified
-   * by a given position in the list.
+   * Returns a {@link CasProcessorExecArg} argument identified by
+   * a given position in the list.
    * 
-   * @param aIndex
-   *          - position of argument to return
+   * @param aIndex -
+   *          position of argument to return
    * @return {@link CasProcessorExecArg} argument
    */
-  CasProcessorExecArg getCasProcessorExecArg(int aIndex);
+  public CasProcessorExecArg getCasProcessorExecArg(int aIndex);
 
   /**
    * Returns ALL {@link CasProcessorExecArg} arguments
    * 
    * @return array of {@link CasProcessorExecArg}
    */
-  CasProcessorExecArg[] getAllCasProcessorExecArgs();
+  public CasProcessorExecArg[] getAllCasProcessorExecArgs();
 
   /**
    * Removes program argument from the list. The argument for deletion is identified by provided
    * position in the list.
    * 
-   * @param aIndex
-   *          - position of argument to delete
+   * @param aIndex -
+   *          position of argument to delete
    */
-  void removeCasProcessorExecArg(int aIndex);
+  public void removeCasProcessorExecArg(int aIndex);
 
-  ArrayList<CasProcessorRuntimeEnvParam> getEnvs();
+  public ArrayList<CasProcessorRuntimeEnvParam> getEnvs();
 
   /**
-   * @param params
-   *          the CAS Processor Runtime Environment parameters
+   * @param params the CAS Processor Runtime Environment parameters
    */
-  void setEnvs(ArrayList<CasProcessorRuntimeEnvParam> params);
+  public void setEnvs(ArrayList<CasProcessorRuntimeEnvParam> params);
 
 }

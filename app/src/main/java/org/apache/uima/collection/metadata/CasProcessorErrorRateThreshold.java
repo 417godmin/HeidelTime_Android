@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.uima.collection.metadata;
 
 import org.apache.uima.resource.metadata.MetaDataObject;
@@ -24,6 +25,8 @@ import org.apache.uima.resource.metadata.MetaDataObject;
  * An object to contains configuration specific to error handling applicable to every CasProcessor.
  * It provides the means of configuring error thresholds and a strategy to deal with them when
  * thresholds are exceeded.
+ * 
+ * 
  */
 public interface CasProcessorErrorRateThreshold extends MetaDataObject {
   /**
@@ -32,10 +35,10 @@ public interface CasProcessorErrorRateThreshold extends MetaDataObject {
    * like 3/1000. Where 3 is the actual max error tolerance and 1000 is a sample size. So the above
    * is interpreted as 3 errors per thousand entities processed.
    * 
-   * @param aErrorCount
-   *          - max tolerated errors for CasProcessor
+   * @param aErrorCount -
+   *          max tolerated errors for CasProcessor
    */
-  void setMaxErrorCount(int aErrorCount);
+  public void setMaxErrorCount(int aErrorCount);
 
   /**
    * Returns max number of errors tolerated by the CPE. If the the threshold is exceeded the CPE
@@ -45,17 +48,16 @@ public interface CasProcessorErrorRateThreshold extends MetaDataObject {
    * 
    * @return - max error count
    */
-  int getMaxErrorCount();
+  public int getMaxErrorCount();
 
   /**
    * Sets the sample size. Max Error is defined in terms of a quotient, like 3/1000. Where 3 is the
    * actual max error tolerance and 1000 is a sample size. So the above is interpreted as 3 errors
    * per thousand entities processed.
    * 
-   * @param aSampleSize
-   *          the sample size
+   * @param aSampleSize the sample size
    */
-  void setMaxErrorSampleSize(int aSampleSize);
+  public void setMaxErrorSampleSize(int aSampleSize);
 
   /**
    * Returns sample size. Max Error is defined in terms of a quotient, like 3/1000. Where 3 is the
@@ -64,32 +66,32 @@ public interface CasProcessorErrorRateThreshold extends MetaDataObject {
    * 
    * @return - sample size
    */
-  int getMaxErrorSampleSize();
+  public int getMaxErrorSampleSize();
 
   /**
    * Sets a strategy for dealing with exceeding error thresholds. The three supported strategies
    * are:
    * <ul>
-   * <li>terminate - termines the CPE
-   * <li>continue - continue despite the error
-   * <li>disable - disable CasProcessor
+   * <li> terminate - termines the CPE
+   * <li> continue - continue despite the error
+   * <li> disable - disable CasProcessor
    * </ul>
    * 
-   * @param aAction
-   *          - action to take
+   * @param aAction -
+   *          action to take
    */
-  void setAction(String aAction);
+  public void setAction(String aAction);
 
   /**
    * Returns strategy for dealing with exceeding error thresholds. The three supported strategies
    * are:
    * <ul>
-   * <li>terminate - termines the CPE
-   * <li>continue - continue despite the error
-   * <li>disable - disable CasProcessor
+   * <li> terminate - termines the CPE
+   * <li> continue - continue despite the error
+   * <li> disable - disable CasProcessor
    * </ul>
    * 
    * @return String - action to take
    */
-  String getAction();
+  public String getAction();
 }

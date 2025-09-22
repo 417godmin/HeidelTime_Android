@@ -19,181 +19,69 @@
 
 package org.apache.uima.jcas.cas;
 
-import java.lang.invoke.CallSite;
-import java.lang.invoke.MethodHandle;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-
-import org.apache.uima.cas.CAS;
-import org.apache.uima.cas.CASRuntimeException;
-import org.apache.uima.cas.impl.CASImpl;
-import org.apache.uima.cas.impl.TypeImpl;
-import org.apache.uima.cas.impl.TypeSystemImpl;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
 
-public class NonEmptyStringList extends StringList implements Iterable<String>, NonEmptyList {
+public class NonEmptyStringList extends StringList {
 
-  /* public static string for use where constants are needed, e.g. in some Java Annotations */
-  public static final String _TypeName = CAS.TYPE_NAME_NON_EMPTY_STRING_LIST;
+  public final static int typeIndexID = JCasRegistry.register(NonEmptyStringList.class);
 
-  public static final int typeIndexID = JCasRegistry.register(NonEmptyStringList.class);
+  public final static int type = typeIndexID;
 
-  public static final int type = typeIndexID;
-
-  @Override
   public int getTypeIndexID() {
     return typeIndexID;
   }
 
-  public static final String _FeatName_head = "head";
-  public static final String _FeatName_tail = "tail";
-
-  // public static final int _FI_head = TypeSystemImpl.getAdjustedFeatureOffset("head");
-  // public static final int _FI_tail = TypeSystemImpl.getAdjustedFeatureOffset("tail");
-  private static final CallSite _FC_head = TypeSystemImpl
-          .createCallSiteForBuiltIn(NonEmptyStringList.class, "head");
-  private static final MethodHandle _FH_head = _FC_head.dynamicInvoker();
-  private static final CallSite _FC_tail = TypeSystemImpl
-          .createCallSiteForBuiltIn(NonEmptyStringList.class, "tail");
-  private static final MethodHandle _FH_tail = _FC_tail.dynamicInvoker();
-
-  // /* local data */
-  // private String _F_head;
-  // private StringList _F_tail;
-
   // Never called. Disable default constructor
   protected NonEmptyStringList() {
+  }
+
+ /* Internal - Constructor used by generator */
+  public NonEmptyStringList(int addr, TOP_Type type) {
+    super(addr, type);
   }
 
   public NonEmptyStringList(JCas jcas) {
     super(jcas);
   }
 
-  /**
-   * used by generator Make a new AnnotationBase
-   * 
-   * @param c
-   *          -
-   * @param t
-   *          -
-   */
-
-  public NonEmptyStringList(TypeImpl t, CASImpl c) {
-    super(t, c);
-  }
-
-  /**
-   * Generate a NonEmpty node with the specified head and tail
-   * 
-   * @param jcas
-   *          -
-   * @param head
-   *          -
-   * @param tail
-   *          -
-   */
-  public NonEmptyStringList(JCas jcas, String head, StringList tail) {
-    this(jcas);
-    setHead(head);
-    setTail(tail);
-  }
-
-  /**
-   * Generate a NonEmpty node with the specified head with the empty node as the tail
-   * 
-   * @param jcas
-   *          -
-   * @param head
-   *          -
-   */
-  public NonEmptyStringList(JCas jcas, String head) {
-    this(jcas, head, jcas.getCasImpl().emptyStringList());
-  }
-
   // *------------------*
   // * Feature: head
   /* getter for head * */
   public String getHead() {
-    return _getStringValueNc(wrapGetIntCatchException(_FH_head));
+    if (NonEmptyStringList_Type.featOkTst
+            && ((NonEmptyStringList_Type) jcasType).casFeat_head == null)
+      this.jcasType.jcas.throwFeatMissing("head", "uima.cas.NonEmptyStringList");
+    return jcasType.ll_cas.ll_getStringValue(addr,
+            ((NonEmptyStringList_Type) jcasType).casFeatCode_head);
   }
 
   /* setter for head * */
   public void setHead(String v) {
-    _setStringValueNfc(wrapGetIntCatchException(_FH_head), v);
+    if (NonEmptyStringList_Type.featOkTst
+            && ((NonEmptyStringList_Type) jcasType).casFeat_head == null)
+      this.jcasType.jcas.throwFeatMissing("head", "uima.cas.NonEmptyStringList");
+    jcasType.ll_cas.ll_setStringValue(addr, ((NonEmptyStringList_Type) jcasType).casFeatCode_head,
+            v);
   }
-
-  // public void _setHeadNcNj(String v) {wrapGetIntCatchException(_FH_head) = v;};
 
   // *------------------*
   // * Feature: tail
   /* getter for tail * */
   public StringList getTail() {
-    return (StringList) _getFeatureValueNc(wrapGetIntCatchException(_FH_tail));
+    if (NonEmptyStringList_Type.featOkTst
+            && ((NonEmptyStringList_Type) jcasType).casFeat_tail == null)
+      this.jcasType.jcas.throwFeatMissing("tail", "uima.cas.NonEmptyStringList");
+    return (StringList) (jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefValue(addr,
+            ((NonEmptyStringList_Type) jcasType).casFeatCode_tail)));
   }
 
   /* setter for tail * */
   public void setTail(StringList v) {
-    if (v != null && _casView.getBaseCAS() != v._casView.getBaseCAS()) {
-      /**
-       * Feature Structure {0} belongs to CAS {1}, may not be set as the value of an array or list
-       * element in a different CAS {2}.
-       */
-      throw new CASRuntimeException(CASRuntimeException.FS_NOT_MEMBER_OF_CAS, v, v._casView,
-              _casView);
-    }
-    _setFeatureValueNcWj(wrapGetIntCatchException(_FH_tail), v);
-  }
-
-  @Override
-  public void setTail(CommonList v) {
-    setTail((StringList) v);
-  }
-
-  // public void _setTailNcNj(StringList v) { wrapGetIntCatchException(_FH_tail) = v; }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.apache.uima.jcas.cas.CommonList#get_headAsString()
-   */
-  @Override
-  public String get_headAsString() {
-    return ((NonEmptyStringList) this).getHead();
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.apache.uima.jcas.cas.CommonList#set_headFromString(java.lang.String)
-   */
-  @Override
-  public void set_headFromString(String v) {
-    setHead(v);
-  }
-
-  @Override
-  public Iterator<String> iterator() {
-    return new Iterator<String>() {
-
-      StringList node = NonEmptyStringList.this;
-
-      @Override
-      public boolean hasNext() {
-        return node instanceof NonEmptyStringList;
-      }
-
-      @Override
-      public String next() {
-        if (!hasNext()) {
-          throw new NoSuchElementException();
-        }
-        NonEmptyStringList nn = (NonEmptyStringList) node;
-        String element = nn.getHead();
-        node = nn.getTail();
-        return element;
-      }
-
-    };
+    if (NonEmptyStringList_Type.featOkTst
+            && ((NonEmptyStringList_Type) jcasType).casFeat_tail == null)
+      this.jcasType.jcas.throwFeatMissing("tail", "uima.cas.NonEmptyStringList");
+    jcasType.ll_cas.ll_setRefValue(addr, ((NonEmptyStringList_Type) jcasType).casFeatCode_tail,
+            jcasType.ll_cas.ll_getFSRef(v));
   }
 }

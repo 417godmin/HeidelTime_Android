@@ -79,7 +79,7 @@ public class UIMAUtil {
   public static final String REUSABLE_RESOURCE_CTG = "RR";
 
   // static attributes
-  private static Hashtable<String, Exception> __errTableByUri = new Hashtable<>();
+  private static Hashtable<String, Exception> __errTableByUri = new Hashtable<String, Exception>();
 
   /**
    * Returns the last logged <code>Exception</code> object associated with a given XML descriptor
@@ -87,8 +87,8 @@ public class UIMAUtil {
    * 
    * @param xmlDescFile
    *          The given XML descriptor file.
-   * @return The last logged <code>Exception</code> object associated with the given XML descriptor
-   *         file.
+   * @return The last logged <code>Exception</code> object associated with the given XML
+   *         descriptor file.
    */
   public static Exception getLastErrorForXmlDesc(File xmlDescFile) {
     return __errTableByUri.get(xmlDescFile.getAbsolutePath());
@@ -100,8 +100,8 @@ public class UIMAUtil {
    * 
    * @param xmlDescUrl
    *          The given XML descriptor URL.
-   * @return The last logged <code>Exception</code> object associated with the given XML descriptor
-   *         URL.
+   * @return The last logged <code>Exception</code> object associated with the given XML
+   *         descriptor URL.
    */
   public static Exception getLastErrorForXmlDesc(URL xmlDescUrl) {
     return __errTableByUri.get(xmlDescUrl.toString());
@@ -165,24 +165,23 @@ public class UIMAUtil {
           throws IOException {
     String uimaCompCtg = null;
     XMLInputSource xmlSource = null;
-    String xmlDescUri = (xmlDescFile != null) ? xmlDescFile.getAbsolutePath()
-            : xmlDescUrl.toString();
+    String xmlDescUri = (xmlDescFile != null) ? xmlDescFile.getAbsolutePath() : xmlDescUrl.toString();
     try {
       // clean error message
       __errTableByUri.remove(xmlDescUri);
       // get XMLParser
       XMLParser xmlParser = UIMAFramework.getXMLParser();
       // create XML source
-      xmlSource = (xmlDescFile != null) ? new XMLInputSource(xmlDescFile)
-              : new XMLInputSource(xmlDescUrl);
+      xmlSource = (xmlDescFile != null) ? new XMLInputSource(xmlDescFile) : new XMLInputSource(
+              xmlDescUrl);
       // parse XML source and create resource specifier
       ResourceSpecifier resourceSpec = null;
       try {
         resourceSpec = xmlParser.parseResourceSpecifier(xmlSource);
       } catch (UIMAException err) {
-        __errTableByUri.put(xmlDescUri, err);
+				__errTableByUri.put( xmlDescUri, err );
       } catch (UIMARuntimeException exc) {
-        __errTableByUri.put(xmlDescUri, exc);
+				__errTableByUri.put( xmlDescUri, exc );
       }
       if (resourceSpec != null) { // AE | CR | CI | CC | CustomResourceSpecifier ?
         // identify UIMA resource category
@@ -195,8 +194,8 @@ public class UIMAUtil {
         } else if (resourceSpec instanceof CasConsumerDescription) {
           uimaCompCtg = CAS_CONSUMER_CTG;
         } else if (resourceSpec instanceof CustomResourceSpecifier) {
-          // try to treat custom resource specifiers as AE
-          uimaCompCtg = ANALYSIS_ENGINE_CTG;
+           // try to treat custom resource specifiers as AE
+           uimaCompCtg = ANALYSIS_ENGINE_CTG;
         }
       }
       if (uimaCompCtg == null) { // CPE ?
@@ -205,17 +204,16 @@ public class UIMAUtil {
           xmlSource.getInputStream().close();
         } catch (Exception e) {
         }
-        xmlSource = (xmlDescFile != null) ? new XMLInputSource(xmlDescFile)
-                : new XMLInputSource(xmlDescUrl);
+        xmlSource = (xmlDescFile != null) ? new XMLInputSource(xmlDescFile) : new XMLInputSource(xmlDescUrl);
         try {
           // try parsing CPE configuration
           xmlParser.parseCpeDescription(xmlSource);
           uimaCompCtg = CPE_CONFIGURATION_CTG;
-          __errTableByUri.remove(xmlDescUri);
+          __errTableByUri.remove( xmlDescUri );
         } catch (UIMAException err) {
-          __errTableByUri.put(xmlDescUri, err);
+          __errTableByUri.put( xmlDescUri, err );
         } catch (UIMARuntimeException exc) {
-          __errTableByUri.put(xmlDescUri, exc);
+          __errTableByUri.put( xmlDescUri, exc );
         }
       }
       if (uimaCompCtg == null) { // TS ?
@@ -224,17 +222,16 @@ public class UIMAUtil {
           xmlSource.getInputStream().close();
         } catch (Exception e) {
         }
-        xmlSource = (xmlDescFile != null) ? new XMLInputSource(xmlDescFile)
-                : new XMLInputSource(xmlDescUrl);
+        xmlSource = (xmlDescFile != null) ? new XMLInputSource(xmlDescFile) : new XMLInputSource(xmlDescUrl);
         try {
           // try parsing TS description
           xmlParser.parseTypeSystemDescription(xmlSource);
           uimaCompCtg = TYPE_SYSTEM_CTG;
-          __errTableByUri.remove(xmlDescUri);
+          __errTableByUri.remove( xmlDescUri );
         } catch (UIMAException err) {
-          __errTableByUri.put(xmlDescUri, err);
+          __errTableByUri.put( xmlDescUri, err );
         } catch (UIMARuntimeException exc) {
-          __errTableByUri.put(xmlDescUri, exc);
+          __errTableByUri.put( xmlDescUri, exc );
         }
       }
       if (uimaCompCtg == null) { // RR ?
@@ -243,23 +240,22 @@ public class UIMAUtil {
           xmlSource.getInputStream().close();
         } catch (Exception e) {
         }
-        xmlSource = (xmlDescFile != null) ? new XMLInputSource(xmlDescFile)
-                : new XMLInputSource(xmlDescUrl);
+        xmlSource = (xmlDescFile != null) ? new XMLInputSource(xmlDescFile) : new XMLInputSource(xmlDescUrl);
         try {
           // try parsing RES manager configuration
           xmlParser.parseResourceManagerConfiguration(xmlSource);
           uimaCompCtg = REUSABLE_RESOURCE_CTG;
-          __errTableByUri.remove(xmlDescUri);
+          __errTableByUri.remove( xmlDescUri );
         } catch (UIMAException err) {
-          __errTableByUri.put(xmlDescUri, err);
+          __errTableByUri.put( xmlDescUri, err );
         } catch (UIMARuntimeException exc) {
-          __errTableByUri.put(xmlDescUri, exc);
+          __errTableByUri.put( xmlDescUri, exc );
         }
       }
     } catch (IOException exc) {
       throw exc;
     } catch (Exception err) {
-      __errTableByUri.put(xmlDescUri, err);
+      __errTableByUri.put( xmlDescUri, err );
     } finally {
       if (xmlSource != null && xmlSource.getInputStream() != null)
         try {

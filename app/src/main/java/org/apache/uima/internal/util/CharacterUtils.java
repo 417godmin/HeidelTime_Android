@@ -40,6 +40,7 @@ public class CharacterUtils {
    * Constructor for CharacterUtils.
    */
   public CharacterUtils() {
+    super();
   }
 
   private static final boolean isType(char c, int[] types) {
@@ -54,7 +55,7 @@ public class CharacterUtils {
   }
 
   private static ArrayList<CharRange> getCharacterRanges(int[] charSpecs) {
-    final ArrayList<CharRange> ranges = new ArrayList<>();
+    final ArrayList<CharRange> ranges = new ArrayList<CharRange>();
     CharRange range;
     // Max value needs special case since characters wrap.
     for (char c = Character.MIN_VALUE; c <= Character.MAX_VALUE; c++) {
@@ -169,7 +170,7 @@ public class CharacterUtils {
   public static void printAntlrLexRule(String name, ArrayList<CharRange> charRanges) {
     CharRange range;
     System.out.print(name + " : ");
-    StringBuilder spaceBuffer = new StringBuilder();
+    StringBuffer spaceBuffer = new StringBuffer();
     StringUtils.printSpaces(name.length(), spaceBuffer);
     String spaces = spaceBuffer.toString();
     for (int i = 0; i < charRanges.size(); i++) {
@@ -180,8 +181,8 @@ public class CharacterUtils {
       if (range.start == range.end) {
         System.out.print(" '" + toUnicodeChar(range.start) + "'");
       } else {
-        System.out.print(
-                " '" + toUnicodeChar(range.start) + "' .. '" + toUnicodeChar(range.end) + "' ");
+        System.out.print(" '" + toUnicodeChar(range.start) + "' .. '" + toUnicodeChar(range.end)
+                + "' ");
       }
     }
     System.out.println("\n" + spaces + " ;");
@@ -190,7 +191,7 @@ public class CharacterUtils {
   public static void printJavaCCLexRule(String name, ArrayList<CharRange> charRanges) {
     CharRange range;
     System.out.print(name + " = ");
-    StringBuilder spaceBuffer = new StringBuilder();
+    StringBuffer spaceBuffer = new StringBuffer();
     StringUtils.printSpaces(name.length(), spaceBuffer);
     String spaces = spaceBuffer.toString();
     for (int i = 0; i < charRanges.size(); i++) {

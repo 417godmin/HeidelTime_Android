@@ -32,8 +32,8 @@ import org.apache.uima.resource.metadata.ProcessingResourceMetaData;
  * Base class from which to extend when writing CAS Consumers that use the {@link CasData} interface
  * to access the CAS.
  */
-public abstract class CasDataConsumer_ImplBase extends ConfigurableResource_ImplBase
-        implements CasDataConsumer {
+public abstract class CasDataConsumer_ImplBase extends ConfigurableResource_ImplBase implements
+        CasDataConsumer {
   /**
    * Called by the framework to initialize this CAS Consumer. Subclasses should NOT override this
    * method; instead they should override the zero-argument {@link #initialize()} method and access
@@ -43,7 +43,6 @@ public abstract class CasDataConsumer_ImplBase extends ConfigurableResource_Impl
    * @see org.apache.uima.resource.Resource#initialize(ResourceSpecifier,
    *      Map)
    */
-  @Override
   public boolean initialize(ResourceSpecifier aSpecifier, Map<String, Object> aAdditionalParams)
           throws ResourceInitializationException {
     // aSpecifier must be a CasConsumerDescription
@@ -71,7 +70,6 @@ public abstract class CasDataConsumer_ImplBase extends ConfigurableResource_Impl
   /**
    * @see org.apache.uima.resource.Resource#destroy()
    */
-  @Override
   public void destroy() {
     // no default behavior
   }
@@ -79,7 +77,6 @@ public abstract class CasDataConsumer_ImplBase extends ConfigurableResource_Impl
   /**
    * @see CasProcessor#isStateless()
    */
-  @Override
   public boolean isStateless() {
     return false;
   }
@@ -87,7 +84,6 @@ public abstract class CasDataConsumer_ImplBase extends ConfigurableResource_Impl
   /**
    * @see CasProcessor#isReadOnly()
    */
-  @Override
   public boolean isReadOnly() {
     return true;
   }
@@ -95,7 +91,6 @@ public abstract class CasDataConsumer_ImplBase extends ConfigurableResource_Impl
   /**
    * @see CasProcessor#getProcessingResourceMetaData()
    */
-  @Override
   public ProcessingResourceMetaData getProcessingResourceMetaData() {
     return (ProcessingResourceMetaData) getMetaData();
   }

@@ -33,14 +33,14 @@ import org.apache.uima.resource.metadata.ProcessingResourceMetaData;
  * Base class for CAS Initializers, which developers should extend with their own CAS Initializer
  * implementation classes.
  * 
+ * 
  * @deprecated As of v2.0, CAS Initializers are deprecated. A component that performs an operation
  *             like HTML detagging should instead be implemented as a "multi-Sofa" annotator. See
  *             org.apache.uima.examples.XmlDetagger for an example.
- * @forRemoval 4.0.0
  */
-@Deprecated(since = "2.0.0")
-public abstract class CasInitializer_ImplBase extends ConfigurableResource_ImplBase
-        implements CasInitializer {
+@Deprecated
+public abstract class CasInitializer_ImplBase extends ConfigurableResource_ImplBase implements
+        CasInitializer {
   /**
    * Called by the framework to initialize this CAS Initializer. Subclasses should NOT override this
    * method; instead they should override the zero-argument {@link #initialize()} method and access
@@ -50,7 +50,6 @@ public abstract class CasInitializer_ImplBase extends ConfigurableResource_ImplB
    * @see org.apache.uima.resource.Resource#initialize(ResourceSpecifier,
    *      Map)
    */
-  @Override
   public boolean initialize(ResourceSpecifier aSpecifier, Map<String, Object> aAdditionalParams)
           throws ResourceInitializationException {
     // aSpecifier must be a CasInitializerDescription
@@ -76,17 +75,23 @@ public abstract class CasInitializer_ImplBase extends ConfigurableResource_ImplB
     // no default behavior
   }
 
-  @Override
+  /**
+   * @see org.apache.uima.resource.Resource#destroy()
+   */
   public void destroy() {
     // no default behavior
   }
 
-  @Override
+  /**
+   * @see CasConsumer#typeSystemInit(TypeSystem)
+   */
   public void typeSystemInit(TypeSystem arg0) throws ResourceInitializationException {
     // no default behavior
   }
 
-  @Override
+  /**
+   * @see org.apache.uima.collection.base_cpm.CasProcessor#getProcessingResourceMetaData()
+   */
   public ProcessingResourceMetaData getProcessingResourceMetaData() {
     return (ProcessingResourceMetaData) getMetaData();
   }
@@ -100,7 +105,6 @@ public abstract class CasInitializer_ImplBase extends ConfigurableResource_ImplB
    * 
    * @see ConfigurableResource_ImplBase#reconfigure()
    */
-  @Override
   public void reconfigure() throws ResourceConfigurationException {
     super.reconfigure();
     destroy();

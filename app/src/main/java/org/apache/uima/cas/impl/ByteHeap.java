@@ -22,7 +22,7 @@ package org.apache.uima.cas.impl;
 import java.util.Arrays;
 
 /**
- * the v2 CAS byte aux heap - used in modeling some binary (de)serialization
+ * Encapsulate 8 bit storage for the CAS.
  */
 final class ByteHeap extends CommonAuxHeap {
 
@@ -36,22 +36,18 @@ final class ByteHeap extends CommonAuxHeap {
     super(heapBaseSize, heapMultLimit);
   }
 
-  @Override
-  void initMemory() {
-    heap = new byte[heapBaseSize];
+  final void initMemory() {
+    this.heap = new byte[this.heapBaseSize];
+  }
+  
+  final void initMemory(int size) {
+    this.heap = new byte[size];
   }
 
-  @Override
-  void initMemory(int size) {
-    heap = new byte[size];
+  final int getCapacity() {
+    return this.heap.length;
   }
 
-  @Override
-  int getCapacity() {
-    return heap.length;
-  }
-
-  @Override
   void growHeapIfNeeded() {
     if (heap.length >= heapPos)
       return;
@@ -62,14 +58,13 @@ final class ByteHeap extends CommonAuxHeap {
     heap = new_array;
   }
 
-  @Override
   void resetToZeros() {
-    Arrays.fill(heap, 0, heapPos, (byte) NULL);
+    Arrays.fill(this.heap, 0, this.heapPos, (byte) NULL);
   }
 
   // Getters
   byte getHeapValue(int offset) {
-    return heap[offset];
+    return this.heap[offset];
   }
 
   // setters
@@ -83,38 +78,12 @@ final class ByteHeap extends CommonAuxHeap {
     return pos;
   }
 
-  int addByteArray(byte[] val) {
-    int pos = reserve(val.length);
-    System.arraycopy(val, 0, heap, pos, val.length);
-    return pos;
-  }
-
-  int addBooleanArray(boolean[] val) {
-    int pos = reserve(val.length);
-    int i = pos;
-    for (boolean v : val) {
-      heap[i++] = v ? (byte) 1 : (byte) 0;
-    }
-    return pos;
-  }
-
-  int addBooleanArrayNoStore(boolean[] val) { // for compress4
-    return reserve(val.length);
-  }
-
   protected void reinit(byte[] byteHeap) {
     int argLength = byteHeap.length;
     if (argLength > heap.length)
       heap = new byte[argLength];
 
     System.arraycopy(byteHeap, 0, heap, 0, argLength);
-    heapPos = argLength;
+    this.heapPos = argLength;
   }
-
-  public byte[] toArray() {
-    byte[] r = new byte[heapPos];
-    System.arraycopy(heap, 0, r, 0, heapPos);
-    return r;
-  }
-
 }

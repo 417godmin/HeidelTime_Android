@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.uima.cas;
 
 /**
@@ -26,33 +27,30 @@ package org.apache.uima.cas;
  * 
  * @deprecated As of v2.0, this is no longer needed. CAS views can now be obtained directly using
  *             String identifiers, through the method {@link CAS#getView(String)}.
- * @forRemoval 4.0.0
  */
-@Deprecated(since = "2.0.0")
+@Deprecated
 public interface SofaID {
   /**
    * Set the Sofa ID of a Sofa FS in the CAS.
    * 
-   * @param aSofaID
-   *          -
+   * @param aSofaID -
    */
-  void setSofaID(String aSofaID);
+  public void setSofaID(String aSofaID);
 
   /**
    * Get the Sofa ID.
    * 
    * @return Sofa ID
    */
-  String getSofaID();
+  public String getSofaID();
 
   /**
    * Set the component Sofa name that was used to obtain this SofaID by calling
    * {@link org.apache.uima.UimaContext#mapToSofaID UimaContext.mapToSofaID()}.
    * 
-   * @param aSofaName
-   *          -
+   * @param aSofaName -
    */
-  void setComponentSofaName(String aSofaName);
+  public void setComponentSofaName(String aSofaName);
 
   /**
    * Get the component Sofa name that was used to obtain this SofaID by calling {
@@ -60,5 +58,6 @@ public interface SofaID {
    * @see org.apache.uima.UimaContext#mapToSofaID UimaContext.mapToSofaID()}.
    * @return Component Sofa Name
    */
-  String getComponentSofaName();
+  public String getComponentSofaName();
+
 }

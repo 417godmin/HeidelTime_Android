@@ -25,7 +25,12 @@ import org.apache.uima.cas.CASRuntimeException;
 import org.apache.uima.cas.text.AnnotationFS;
 import org.apache.uima.cas.text.AnnotationTreeNode;
 
-public class AnnotationTreeNodeImpl<T extends AnnotationFS> implements AnnotationTreeNode<T> {
+/**
+ * TODO: Create type comment for AnnotationTreeNodeImpl.
+ * 
+ * 
+ */
+public class AnnotationTreeNodeImpl<T extends AnnotationFS>  implements AnnotationTreeNode<T> {
 
   private T annot;
 
@@ -36,47 +41,43 @@ public class AnnotationTreeNodeImpl<T extends AnnotationFS> implements Annotatio
   private int pos;
 
   AnnotationTreeNodeImpl() {
-    dtrs = new ArrayList<>();
+    super();
+    this.dtrs = new ArrayList<AnnotationTreeNode<T>>();
   }
 
-  @Override
   public AnnotationTreeNode<T> getParent() {
-    return parent;
+    return this.parent;
   }
 
-  @Override
   public int getChildCount() {
-    return dtrs.size();
+    return this.dtrs.size();
   }
 
-  @Override
   public AnnotationTreeNode<T> getChild(int i) throws CASRuntimeException {
     try {
-      return dtrs.get(i);
+      return this.dtrs.get(i);
     } catch (IndexOutOfBoundsException e) {
-      throw new CASRuntimeException(CASRuntimeException.CHILD_INDEX_OOB);
+      throw new CASRuntimeException(CASRuntimeException.CHILD_INDEX_OOB, null);
     }
   }
 
-  @Override
   public AnnotationTreeNode<T> getNextSibling() {
-    if (parent == null) {
+    if (this.parent == null) {
       return null;
     }
     try {
-      return parent.getChild(pos + 1);
+      return this.parent.getChild(this.pos + 1);
     } catch (CASRuntimeException e) {
       return null;
     }
   }
 
-  @Override
   public AnnotationTreeNode<T> getPreviousSibling() {
-    if (parent == null) {
+    if (this.parent == null) {
       return null;
     }
     try {
-      return parent.getChild(pos - 1);
+      return this.parent.getChild(this.pos - 1);
     } catch (CASRuntimeException e) {
       return null;
     }
@@ -87,9 +88,8 @@ public class AnnotationTreeNodeImpl<T extends AnnotationFS> implements Annotatio
    * 
    * @see org.apache.uima.cas.text.AnnotationTreeNode#getChildren()
    */
-  @Override
   public ArrayList<AnnotationTreeNode<T>> getChildren() {
-    return dtrs;
+    return this.dtrs;
   }
 
   /*
@@ -97,9 +97,8 @@ public class AnnotationTreeNodeImpl<T extends AnnotationFS> implements Annotatio
    * 
    * @see org.apache.uima.cas.text.AnnotationTreeNode#get()
    */
-  @Override
   public T get() {
-    return annot;
+    return this.annot;
   }
 
   // ////////////////////////////////////////////////////////////////////////////
@@ -110,9 +109,9 @@ public class AnnotationTreeNodeImpl<T extends AnnotationFS> implements Annotatio
   }
 
   void addChild(AnnotationTreeNodeImpl<T> child) {
-    child.pos = dtrs.size();
+    child.pos = this.dtrs.size();
     child.parent = this;
-    dtrs.add(child);
+    this.dtrs.add(child);
   }
-
+  
 }

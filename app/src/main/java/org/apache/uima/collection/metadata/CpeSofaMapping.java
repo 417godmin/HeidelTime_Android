@@ -22,22 +22,21 @@ package org.apache.uima.collection.metadata;
 import org.apache.uima.resource.metadata.MetaDataObject;
 
 public interface CpeSofaMapping extends MetaDataObject {
-  String getComponentSofaName();
+  public String getComponentSofaName();
 
   /**
    * @return Sofa Name
    */
-  String getCpeSofaName();
+  public String getCpeSofaName();
 
   /**
-   * @param string
-   *          -
+   * @param string -
    */
-  void setComponentSofaName(String string);
+  public void setComponentSofaName(String string);
 
   /**
-   * @param string
-   *          -
+   * @param string -
    */
-  void setCpeSofaName(String string);
+  public void setCpeSofaName(String string);
+
 }

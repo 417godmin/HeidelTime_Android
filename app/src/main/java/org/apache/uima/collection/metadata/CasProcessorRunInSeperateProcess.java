@@ -24,16 +24,18 @@ import org.apache.uima.resource.metadata.MetaDataObject;
 /**
  * An object that holds configuration that is part of the CPE descriptor. It provides the means of
  * configuring executable program used by the CPE when launching local CasProcessor.
+ * 
+ * 
  */
 public interface CasProcessorRunInSeperateProcess extends MetaDataObject {
   /**
    * Sets {@link CasProcessorExecutable} executable program used
    * by the CPE to launch CasProcessor.
    * 
-   * @param aExec
-   *          - {@link CasProcessorExecutable}
+   * @param aExec -
+   *          {@link CasProcessorExecutable}
    */
-  void setExecutable(CasProcessorExecutable aExec);
+  public void setExecutable(CasProcessorExecutable aExec);
 
   /**
    * Returns {@link CasProcessorExecutable} program used by the
@@ -41,5 +43,5 @@ public interface CasProcessorRunInSeperateProcess extends MetaDataObject {
    * 
    * @return {@link CasProcessorExecutable}
    */
-  CasProcessorExecutable getExecutable();
+  public CasProcessorExecutable getExecutable();
 }

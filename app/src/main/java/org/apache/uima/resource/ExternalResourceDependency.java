@@ -28,8 +28,7 @@ import org.apache.uima.resource.metadata.MetaDataObject;
  * <li>A key, by which the annotator will identify the resource.</li>
  * <li>A textual description of the resource dependency.</li>
  * <li>The name of a Java interface through which the data will be accessed. This is optional; if
- * not specified, the default {@link DataResource} interface will be
- * used.</li>
+ * not specified, the default {@link DataResource} interface will be used.</li>
  * <li>Whether the resource is required or optional.</li>
  * </ul>
  * 
@@ -42,7 +41,7 @@ public interface ExternalResourceDependency extends MetaDataObject {
    * 
    * @return the key for this resource.
    */
-  String getKey();
+  public String getKey();
 
   /**
    * Sets the key by which the resource is identified.
@@ -50,14 +49,14 @@ public interface ExternalResourceDependency extends MetaDataObject {
    * @param aKey
    *          the key for this resource.
    */
-  void setKey(String aKey);
+  public void setKey(String aKey);
 
   /**
    * Retrieves the textual description of the resource.
    * 
    * @return the textual description of the resource.
    */
-  String getDescription();
+  public String getDescription();
 
   /**
    * Retrieves the textual description of the resource.
@@ -65,25 +64,26 @@ public interface ExternalResourceDependency extends MetaDataObject {
    * @param aDescription
    *          the textual description of the resource.
    */
-  void setDescription(String aDescription);
+  public void setDescription(String aDescription);
 
   /**
    * Retrieves the name of the Java interface through which this resource will be accessed.
    * 
    * @return the name of the Java interface for this external resource, <code>null</code> if none.
    */
-  String getInterfaceName();
+  public String getInterfaceName();
 
   /**
    * Sets the name of the Java interface through which this resource will be accessed.
    * 
    * @param aName
-   *          the name of the Java interface for this external resource, <code>null</code> if none.
+   *          the name of the Java interface for this external resource, <code>null</code> if
+   *          none.
    * 
    * @throws org.apache.uima.UIMA_UnsupportedOperationException
    *           if this object is not modifiable
    */
-  void setInterfaceName(String aName);
+  public void setInterfaceName(String aName);
 
   /**
    * Gets whether this resource dependency is optional. Dependencies that are not optional must be
@@ -92,7 +92,7 @@ public interface ExternalResourceDependency extends MetaDataObject {
    * 
    * @return true if this resource dependency is optional, false if not
    */
-  boolean isOptional();
+  public boolean isOptional();
 
   /**
    * Sets whether this resource dependency is optional. Dependencies that are not optional must be
@@ -102,5 +102,5 @@ public interface ExternalResourceDependency extends MetaDataObject {
    * @param aOptional
    *          true if this resource dependency is optional, false if not
    */
-  void setOptional(boolean aOptional);
+  public void setOptional(boolean aOptional);
 }

@@ -19,108 +19,15 @@
 package org.apache.uima.cas;
 
 /**
- * The various forms of serialization (typically of the CAS)
+ * The various forms of serialization (typically of the CAS)  
+ *
  */
 public enum SerialFormat {
-
-  /**
-   * Unknown format
-   */
-  UNKNOWN(""),
-
-  /**
-   * XML-serialized CAS
-   */
-  XCAS("xcas"),
-
-  /**
-   * XML-serialized CAS
-   */
-  XMI("xmi"),
-
-  /**
-   * Plain custom binary serialized CAS without type system, no filtering
-   */
-  BINARY("bcas"),
-
-  /**
-   * Binary compressed CAS without type system, no filtering (form 4)
-   */
-  COMPRESSED("bcas"),
-
-  /**
-   * Binary compressed CAS with reachability and type and feature filtering (form 6)
-   */
-  COMPRESSED_FILTERED("bcas"),
-
-  /**
-   * with subset of views (not in use)
-   */
-  COMPRESSED_PROJECTION("bcas"),
-
-  /**
-   * Java-serialized CAS without type system
-   */
-  SERIALIZED("scas"),
-
-  /**
-   * Java-serialized CAS with type system and index definitions The Typs System and Index Definition
-   * replaces the CAS's when deserializing.
-   */
-  SERIALIZED_TSI("scas"),
-
-  /**
-   * Binary compressed form 6 CAS with embedded type system representing the type system encoding
-   * the serialization
-   *
-   * specifies the type system used for the serialized form
-   */
-  COMPRESSED_FILTERED_TS("bcas"),
-
-  /**
-   * Type system and index specification included used to reinitialize the CAS and specifies the
-   * type system used for the serialized form
-   */
-  COMPRESSED_FILTERED_TSI("bcas"),
-
-  /**
-   * Plain custom binary serialized CAS, no filtering, plus serialized TSI used to reinitialize the
-   * CAS
-   */
-  BINARY_TSI("bcas"),
-
-  /**
-   * Binary Compressed Form 4, plus serialized TSI used to reinitialize the CAS
-   */
-  COMPRESSED_TSI("bcas"),
-
-  /**
-   * XML-serialized CAS, using xml version 1.1
-   */
-  XCAS_1_1("xcas"),
-
-  /**
-   * XML-serialized CAS, using xml version 1.1
-   */
-  XMI_1_1("xmi"),
-
-  /**
-   * XML-serialized CAS, using xml version 1.1 - pretty-printed
-   */
-  XMI_PRETTY("xmi"),
-
-  /**
-   * XML-serialized CAS, using xml version 1.1 - pretty-printed
-   */
-  XMI_1_1_PRETTY("xmi"),;
-
-  private String defaultFileExtension;
-
-  SerialFormat(String defaultFileExtension) {
-    this.defaultFileExtension = defaultFileExtension;
-  }
-
-  public String getDefaultFileExtension() {
-    return defaultFileExtension;
-  }
+  UNKNOWN,
+  XCAS,         // with reachability filtering
+  XMI,          // with reachability filtering
+  BINARY,       // no filtering
+  COMPRESSED,   // no filtering  (form 4)
+  COMPRESSED_FILTERED,   // with reachability and type and feature filtering (form 6)
+  COMPRESSED_PROJECTION, // with subset of views
 }

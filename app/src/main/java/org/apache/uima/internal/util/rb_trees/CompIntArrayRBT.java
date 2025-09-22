@@ -24,10 +24,8 @@ import org.apache.uima.internal.util.IntComparator;
 /**
  * Used for UIMA Set indexes
  * 
- * @deprecated Not used anymore. Will be removed in UIMA 4.
- * @forRemoval 4.0.0
+ * 
  */
-@Deprecated(since = "3.3.0")
 public class CompIntArrayRBT extends IntArrayRBT {
 
   private IntComparator comp;
@@ -39,19 +37,16 @@ public class CompIntArrayRBT extends IntArrayRBT {
   /**
    * Constructor for CompIntArrayRBT.
    * 
-   * @param comp
-   *          -
-   * @param initialSize
-   *          -
+   * @param comp -
+   * @param initialSize -
    */
   public CompIntArrayRBT(IntComparator comp, int initialSize) {
     super(initialSize);
     this.comp = comp;
   }
-
-  @Override
+  
   protected int compare(int v1, int v2) {
-    return comp.compare(v1, v2);
+    return this.comp.compare(v1, v2);
   }
-
+  
 }

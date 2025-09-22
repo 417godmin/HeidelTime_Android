@@ -32,9 +32,9 @@ import org.w3c.dom.Text;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-class MetaDataObjectSerializer_indent extends MetaDataObjectSerializer_plain {
 
- // @formatter:off
+class MetaDataObjectSerializer_indent extends MetaDataObjectSerializer_plain {
+  
   /**
    * Heuristics for comment and whitespace processing
    * 
@@ -69,7 +69,7 @@ class MetaDataObjectSerializer_indent extends MetaDataObjectSerializer_plain {
    *       if no nl assume comments go with previous element, and skip here
    *       (stop looking if get null for getPreviousSibling())
    *       (stop looking if get other than comment or ignorable whitespace)
-   * (ignorable whitespace not always distinguishable from text that is whitespace?)
+   *         (ignorable whitespace not always distinguishable from text that is whitespace?)
    * 
    *   --> output after element:
    *     if children:    eg:  <start> <!-- cmt --> 
@@ -105,14 +105,11 @@ class MetaDataObjectSerializer_indent extends MetaDataObjectSerializer_plain {
    *   Scan from last-outputted, to find element match, and then use that element as the "root".       
    * 
    */
- // @formatter:on
 
-  private static String lineEnd = System.getProperty("line.separator");
+  static private String lineEnd = System.getProperty("line.separator");
 
   private static final char[] blanks = new char[80];
-  static {
-    Arrays.fill(blanks, ' ');
-  }
+  static {Arrays.fill(blanks, ' ');}
 
   private static boolean hasElementChildNode(Node n) {
     for (Node c = n.getFirstChild(); (c != null); c = c.getNextSibling()) {
@@ -122,7 +119,7 @@ class MetaDataObjectSerializer_indent extends MetaDataObjectSerializer_plain {
     }
     return false;
   }
-
+  
   private static boolean isWhitespaceText(Node n) {
     if (!(n instanceof Text)) {
       return false;
@@ -136,13 +133,13 @@ class MetaDataObjectSerializer_indent extends MetaDataObjectSerializer_plain {
     }
     return true;
   }
-
+  
   /**
-   * DOM parsers if not operating in validating mode can't distinguish between ignorable white space
-   * and non-ignorable white space.
+   * Dom parsers if not operating in validating mode can't distinguish between
+   * ignorable white space and non-ignorable white space.
    * 
-   * So we use a heuristic instead - we see if the text is whitespace only, and if so, we consider
-   * it to be ignorable white space.
+   * So we use a heuristic instead - we see if the text is whitespace only, and if so,
+   * we consider it to be ignorable white space.
    * 
    * @param n
    * @return true if node is a comment or is ignorable whitespace (approximately)
@@ -150,16 +147,16 @@ class MetaDataObjectSerializer_indent extends MetaDataObjectSerializer_plain {
   private static boolean isCoIw(Node n) {
     return (n != null) && ((n instanceof Comment) || isWhitespaceText(n));
   }
-
+  
   private static final char[] nlca = new char[] { '\n' };
 
-  private final CharacterValidatingContentHandler cc;
-
+  final private CharacterValidatingContentHandler cc;
+  
   public MetaDataObjectSerializer_indent(CharacterValidatingContentHandler cc) {
-    super(cc); // required for plain version to handle some things
+    super(cc);  // required for plain version to handle some things
     this.cc = cc;
   }
-
+  
   @Override
   public void saveAndAddNodeStore(Node infoset) {
     cc.setLastOutputNode(infoset);
@@ -170,20 +167,19 @@ class MetaDataObjectSerializer_indent extends MetaDataObjectSerializer_plain {
   public void deleteNodeStore() {
     cc.lastOutputNodeClearLevel();
   }
-
+  
   @Override
   public void addNodeStore() {
     cc.lastOutputNodeAddLevel();
   }
-
-  @Override
-  public void outputStartElement(Node node, String aNamespace, String localname, String qname,
-          Attributes attributes) throws SAXException {
+  
+  public void outputStartElement(Node node, String aNamespace,
+      String localname, String qname, Attributes attributes) throws SAXException {
     if (null == localname) { // happens for <flowConstraints>
       // <fixedFlow> <== after outputting this,
       // called writePropertyAsElement
       // But there is no <array>...
-      // s <node>A</node>
+      //s <node>A</node>
       // <node>B</node>
       return;
     }
@@ -191,10 +187,10 @@ class MetaDataObjectSerializer_indent extends MetaDataObjectSerializer_plain {
     cc.startElement(aNamespace, localname, qname, attributes);
     maybeOutputCoIwAfterStart(node);
   }
-
+  
   @Override
-  public void outputEndElement(Node node, String aNamespace, String localname, String qname)
-          throws SAXException {
+  public void outputEndElement(Node node, String aNamespace,
+      String localname, String qname) throws SAXException {
     if (null == localname) {
       return;
     }
@@ -202,10 +198,10 @@ class MetaDataObjectSerializer_indent extends MetaDataObjectSerializer_plain {
     cc.endElement(aNamespace, localname, qname);
     maybeOutputCoIwAfterEnd(node);
   }
-
+  
   @Override
-  public void outputStartElementForArrayElement(Node node, String nameSpace, String localName,
-          String qName, Attributes attributes) throws SAXException {
+  public void outputStartElementForArrayElement(Node node,
+      String nameSpace, String localName, String qName, Attributes attributes) throws SAXException {
     outputStartElement(node, nameSpace, localName, qName, attributes);
   }
 
@@ -258,7 +254,7 @@ class MetaDataObjectSerializer_indent extends MetaDataObjectSerializer_plain {
 
     outputCoIwAfterElement(node.getFirstChild());
   }
-
+  
   private void maybeOutputCoIwBeforeEnd(Node node) throws SAXException {
     int indent = cc.prevIndent();
 
@@ -275,8 +271,7 @@ class MetaDataObjectSerializer_indent extends MetaDataObjectSerializer_plain {
     Node n = node.getLastChild();
     Node np = null;
     boolean newlineFound = false;
-    for (Node p = n; p != null && !(p instanceof Element)
-            && (p.getNodeType() != Node.ATTRIBUTE_NODE); p = p.getPreviousSibling()) {
+    for (Node p = n; p != null && !(p instanceof Element) && (p.getNodeType() != Node.ATTRIBUTE_NODE); p = p.getPreviousSibling()) {
       if (hasNewline(p)) {
         newlineFound = true;
       }
@@ -297,7 +292,6 @@ class MetaDataObjectSerializer_indent extends MetaDataObjectSerializer_plain {
     outputCoIwAfterElement(node.getNextSibling());
   }
 
-//@formatter:off
   /**
    * Output comments and ignorable whitespace after an element.
    * Comments following an element can either be grouped with the preceeding element or with the following one.
@@ -316,24 +310,21 @@ class MetaDataObjectSerializer_indent extends MetaDataObjectSerializer_plain {
    *   Use case: 
    * <someElement> some text
    * 
-   * @param startNode
-   *          - the node corresponding to the start or end element just outputted
-   * @throws DOMException
-   *           passthru
-   * @throws SAXException
-   *           passthru
+   * @param startNode - the node corresponding to the start or end element just outputted
+   * @throws DOMException passthru
+   * @throws SAXException passthru
    */
-//@formatter:on
   private void outputCoIwAfterElement(Node startNode) throws DOMException, SAXException {
     if (null != startNode) {
       // scan for last node to output
       // we do this first so we output nothing if have non-blank text somewhere
       Node lastNode = null;
-      // keep going as long as have non-Element nodes
-      for (Node n = startNode; (n != null)
-              && ((n instanceof Comment) || (n instanceof Text)); n = n.getNextSibling()) {
+      for (Node n = startNode;
+                (n != null) && 
+                ((n instanceof Comment) || (n instanceof Text));  // keep going as long as have non-Element nodes
+      n = n.getNextSibling()) {
         if ((n instanceof Text) && !isWhitespaceText(n)) {
-          return; // catch case <someElement> some text
+          return;  // catch case <someElement> some text
         }
         lastNode = n;
       }
@@ -344,7 +335,7 @@ class MetaDataObjectSerializer_indent extends MetaDataObjectSerializer_plain {
         outputCoIw(n);
         if (hasNewline(n)) {
           cc.prevNL = true;
-          return; // return after outputting up to and including 1st new line
+          return;  // return after outputting up to and including 1st new line
         }
         if (n == lastNode) {
           return;
@@ -353,15 +344,15 @@ class MetaDataObjectSerializer_indent extends MetaDataObjectSerializer_plain {
     }
     cc.prevNL = false;
   }
-
+  
   /**
-   * Scan backwards from argument node, continuing until get something other than comment or
-   * ignorable whitespace. Return the first node after a nl If no nl found, return original node
+   * Scan backwards from argument node, continuing until get something other than
+   * comment or ignorable whitespace.
+   * Return the first node after a nl 
+   *   If no nl found, return original node
    * 
    * NOTE: never called with original == the top node
-   * 
-   * @param r
-   *          - guaranteed non-null
+   * @param r - guaranteed non-null
    * @return first node after a new line
    */
   private Node getFirstPrevCoIw(Node original) {
@@ -381,9 +372,7 @@ class MetaDataObjectSerializer_indent extends MetaDataObjectSerializer_plain {
 
   /**
    * Skip nodes going forwards until find one with a nl, then return the one following
-   * 
-   * @param n
-   *          must not be null, and there must be a NL in the siblings
+   * @param n must not be null, and there must be a NL in the siblings
    * @return node following the one with a new line
    */
   private Node skipUpToFirstAfterNL(Node n) {
@@ -400,11 +389,10 @@ class MetaDataObjectSerializer_indent extends MetaDataObjectSerializer_plain {
     CharacterData c = (CharacterData) n;
     return (-1) != c.getData().indexOf('\n');
   }
-
+  
   /**
-   * Scan from last output node the child nodes, looking for a matching element. Side effect if
-   * found - set lastoutput node to the found one.
-   * 
+   * Scan from last output node the child nodes, looking for a matching element.
+   * Side effect if found - set lastoutput node to the found one.
    * @param elementName
    * @return null (if no match) or matching node
    */
@@ -426,14 +414,15 @@ class MetaDataObjectSerializer_indent extends MetaDataObjectSerializer_plain {
       n = lastOutput.getNextSibling();
     }
     for (; n != null; n = n.getNextSibling()) {
-      if ((n instanceof Element) && elementName.equals(((Element) n).getTagName())) {
+      if ((n instanceof Element) && 
+          elementName.equals(((Element)n).getTagName())) {
         cc.setLastOutputNode(n);
         return n;
       }
     }
     return null;
   }
-
+  
   /*
    * If necessary replace any internal new-lines with the platform's line separator
    */

@@ -37,9 +37,10 @@ public final class Timer {
    * {@link #start() start()} explicitly.
    */
   public Timer() {
-    time = 0;
-    start = 0;
-    isRunning = false;
+    super();
+    this.time = 0;
+    this.start = 0;
+    this.isRunning = false;
   }
 
   /**
@@ -48,11 +49,11 @@ public final class Timer {
    * @return <code>false</code> iff the timer is already running.
    */
   public boolean start() {
-    if (isRunning) {
+    if (this.isRunning) {
       return false;
     }
-    isRunning = true;
-    start = System.currentTimeMillis();
+    this.isRunning = true;
+    this.start = System.currentTimeMillis();
     return true;
   }
 
@@ -63,11 +64,11 @@ public final class Timer {
    */
   public boolean stop() {
     final long end = System.currentTimeMillis();
-    if (!isRunning) {
+    if (!this.isRunning) {
       return false;
     }
-    isRunning = false;
-    time += end - start;
+    this.isRunning = false;
+    this.time += end - this.start;
     return true;
   }
 
@@ -77,10 +78,10 @@ public final class Timer {
    * @return <code>false</code> iff the timer is currently running.
    */
   public boolean reset() {
-    if (isRunning) {
+    if (this.isRunning) {
       return false;
     }
-    time = 0;
+    this.time = 0;
     return true;
   }
 
@@ -91,13 +92,13 @@ public final class Timer {
    * @return The duration in milliseconds.
    */
   public long getTime() {
-    if (isRunning) {
+    if (this.isRunning) {
       stop();
-      final long rt = time;
+      final long rt = this.time;
       start();
       return rt;
     }
-    return time;
+    return this.time;
   }
 
   /**

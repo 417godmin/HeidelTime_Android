@@ -37,6 +37,7 @@ class DisjunctiveConstraint implements FSMatchConstraint {
   private FSMatchConstraint c2;
 
   private DisjunctiveConstraint() {
+    super();
   }
 
   /**
@@ -48,14 +49,12 @@ class DisjunctiveConstraint implements FSMatchConstraint {
     this.c2 = c2;
   }
 
-  @Override
   public boolean match(FeatureStructure fs) {
-    return (c1.match(fs) || c2.match(fs));
+    return (this.c1.match(fs) || this.c2.match(fs));
   }
 
-  @Override
   public String toString() {
-    return "(" + c1.toString() + " | " + c2.toString() + ")";
+    return "(" + this.c1.toString() + " | " + this.c2.toString() + ")";
   }
 
 }

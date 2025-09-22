@@ -48,7 +48,6 @@ public class Style_impl extends MetaDataObject_impl implements Style {
    * 
    * @see org.apache.uima.search.Style#getName()
    */
-  @Override
   public String getName() {
     return mName;
   }
@@ -58,7 +57,6 @@ public class Style_impl extends MetaDataObject_impl implements Style {
    * 
    * @see org.apache.uima.search.Style#setName(java.lang.String)
    */
-  @Override
   public void setName(String aName) {
     mName = aName.intern();
   }
@@ -68,7 +66,6 @@ public class Style_impl extends MetaDataObject_impl implements Style {
    * 
    * @see org.apache.uima.search.Style#getAttributes()
    */
-  @Override
   public Attribute[] getAttributes() {
     return mAttributes;
   }
@@ -78,7 +75,6 @@ public class Style_impl extends MetaDataObject_impl implements Style {
    * 
    * @see org.apache.uima.search.Style#setAttributes(org.apache.uima.search.Attribute[])
    */
-  @Override
   public void setAttributes(Attribute[] aAttributes) {
     mAttributes = (aAttributes == null) ? new Attribute[0] : aAttributes;
   }
@@ -88,7 +84,6 @@ public class Style_impl extends MetaDataObject_impl implements Style {
    * 
    * @see org.apache.uima.search.Style#getAttribute(java.lang.String)
    */
-  @Override
   public String getAttribute(String aName) {
     Attribute[] attrs = getAttributes();
     for (int i = 0; i < attrs.length; i++) {
@@ -99,12 +94,10 @@ public class Style_impl extends MetaDataObject_impl implements Style {
     return null;
   }
 
-  @Override
   public Mapping[] getAttributeMappings() {
     return mAttributeMappings;
   }
 
-  @Override
   public void setAttributeMappings(Mapping[] aMappings) {
     mAttributeMappings = aMappings;
   }
@@ -114,10 +107,9 @@ public class Style_impl extends MetaDataObject_impl implements Style {
    * 
    * @see MetaDataObject_impl#getXMLAttributes()
    */
-  @Override
   protected AttributesImpl getXMLAttributes() {
     AttributesImpl attrs = super.getXMLAttributes();
-    attrs.addAttribute("", "name", "name", "", getName());
+    attrs.addAttribute("", "name", "name", null, getName());
     return attrs;
   }
 
@@ -127,7 +119,6 @@ public class Style_impl extends MetaDataObject_impl implements Style {
    * @see org.apache.uima.util.XMLizable#buildFromXMLElement(Element,
    *      XMLParser)
    */
-  @Override
   public void buildFromXMLElement(Element aElement, XMLParser aParser,
           XMLParser.ParsingOptions aOptions) throws InvalidXMLException {
     setName(aElement.getAttribute("name"));
@@ -142,13 +133,12 @@ public class Style_impl extends MetaDataObject_impl implements Style {
    * 
    * @see org.apache.uima.resource.metadata.impl.MetaDataObject_impl#getXmlizationInfo()
    */
-  @Override
   protected XmlizationInfo getXmlizationInfo() {
     return XMLIZATION_INFO;
   }
 
-  private static final XmlizationInfo XMLIZATION_INFO = new XmlizationInfo("style",
+  static final private XmlizationInfo XMLIZATION_INFO = new XmlizationInfo("style",
           new PropertyXmlInfo[] {
-              // name is an attribute, not an element
+          // name is an attribute, not an element
               new PropertyXmlInfo("attributes", null), new PropertyXmlInfo("attributeMappings") });
 }

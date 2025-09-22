@@ -26,9 +26,10 @@ import java.util.NoSuchElementException;
 
 /**
  * Helper class to read array-based binary search trees with integers as keys and values. No write
- * access to the tree is provided. See {@link IntRedBlackTree
- * IntRedBlackTree} on how to generate such an array representation. The name is a bit of a
- * misnomer, since nothing in this class is specific to red-black trees.
+ * access to the tree is provided. See
+ * {@link IntRedBlackTree IntRedBlackTree} on how to generate
+ * such an array representation. The name is a bit of a misnomer, since nothing in this class is
+ * specific to red-black trees.
  * 
  * <p>
  * Suppose <code>i</code> is the position of the first cell encoding a tree node in array
@@ -39,13 +40,13 @@ import java.util.NoSuchElementException;
  * <li><code>a[i+2]</code> is one of:
  * <ul>
  * <li><code>IntRBTArray.TERMINAL</code>: this is a terminal node</li>
- * <li><code>IntRBTArray.LEFTDTR</code>: this node only has a left daughter, so <code>a[i+3]</code>
- * is the first cell of the left daughter node</li>
+ * <li><code>IntRBTArray.LEFTDTR</code>: this node only has a left daughter, so
+ * <code>a[i+3]</code> is the first cell of the left daughter node</li>
  * <li><code>IntRBTArray.RIGHTDTR</code>: this node only has a right daughter, so
  * <code>a[i+3]</code> is the first cell of the right daughter node</li>
- * <li><code>IntRBTArray.TWODTRS</code>: this node has two daughters. <code>a[i+3]</code> contains
- * the address of the right daughter, and <code>a[i+4]</code> is the start of the left daughter
- * node</li>
+ * <li><code>IntRBTArray.TWODTRS</code>: this node has two daughters. <code>a[i+3]</code>
+ * contains the address of the right daughter, and <code>a[i+4]</code> is the start of the left
+ * daughter node</li>
  * </ul>
  * </li>
  * </ul>
@@ -84,7 +85,7 @@ public class IntRBTArray {
    *          The array containing the search tree.
    */
   public IntRBTArray(int[] array, int start) {
-    offset = start;
+    this.offset = start;
     this.array = array;
   }
 
@@ -104,7 +105,7 @@ public class IntRBTArray {
    * @return The internal array.
    */
   public int[] toArray() {
-    return array;
+    return this.array;
   }
 
   /**
@@ -114,7 +115,7 @@ public class IntRBTArray {
    *          the address.
    */
   public void setRootAddress(int start) {
-    offset = start;
+    this.offset = start;
   }
 
   /**
@@ -129,7 +130,7 @@ public class IntRBTArray {
   public int get(int i) throws NoSuchElementException {
     int pos = getPosition(i);
     if (pos >= 0) {
-      return array[pos];
+      return this.array[pos];
     }
     throw new NoSuchElementException();
   }
@@ -139,24 +140,24 @@ public class IntRBTArray {
    * 
    * @param i
    *          The key.
-   * @return The address of the value for <code>i</code>, if it's found; <code>-1</code>, else. This
-   *         routine may also return <code>-1</code> when the tree is corrupted. Of course, with a
-   *         corrupted tree, results will in general be unpredictable. However, this routine will
-   *         not throw an {@link ArrayIndexOutOfBoundsException
-   *         ArrayIndexOutOfBoundsException}.
+   * @return The address of the value for <code>i</code>, if it's found; <code>-1</code>,
+   *         else. This routine may also return <code>-1</code> when the tree is corrupted. Of
+   *         course, with a corrupted tree, results will in general be unpredictable. However, this
+   *         routine will not throw an
+   *         {@link ArrayIndexOutOfBoundsException ArrayIndexOutOfBoundsException}.
    */
   public int getPosition(int i) throws NoSuchElementException {
     // See the comments about the memory layout of the array at the
     // top of the file.
-    int current = offset;
-    if (array == null || array.length < (current + 3)) {
+    int current = this.offset;
+    if (this.array == null || this.array.length < (current + 3)) {
       return -1;
     }
     int key;
     int dtrCode;
-    while (current >= 0 && array.length >= (current + 3)) {
-      key = array[current];
-      dtrCode = array[current + 2];
+    while (current >= 0 && this.array.length >= (current + 3)) {
+      key = this.array[current];
+      dtrCode = this.array[current + 2];
       if (key > i) {
         switch (dtrCode) {
           case TERMINAL:
@@ -180,10 +181,10 @@ public class IntRBTArray {
             current += 3;
             break;
           case TWODTRS:
-            if ((current + 3) > array.length) {
+            if ((current + 3) > this.array.length) {
               return -1;
             }
-            current = array[current + 3];
+            current = this.array[current + 3];
             break;
         }
       } else { // key == i

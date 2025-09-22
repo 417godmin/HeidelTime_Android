@@ -35,7 +35,7 @@ public class AnalysisEnginePerformanceReports {
 
   private ProcessTrace mProcessTrace;
 
-  private Map<String, Integer> mAnnotatorAnalysisTimes = new HashMap<>();
+  private Map<String, Integer> mAnnotatorAnalysisTimes = new HashMap<String, Integer>();
 
   private int mAnalysisTime = 0;
 
@@ -131,7 +131,6 @@ public class AnalysisEnginePerformanceReports {
     return mProcessTrace.toString();
   }
 
-  @Override
   public String toString() {
     int total = getTotalTime();
     int analysis = getAnalysisTime();
@@ -139,25 +138,24 @@ public class AnalysisEnginePerformanceReports {
     int serviceWrapperOver = getServiceWrapperOverhead();
     int serviceCallOver = getServiceCallOverhead();
 
-    var buf = new StringBuilder();
-    buf.append("Total Analysis Engine Time: ").append(total).append("ms\n");
+    StringBuffer buf = new StringBuffer();
+    buf.append("Total Analysis Engine Time: " + total + "ms\n");
     if (analysis > 0) {
-      buf.append("Annotator Time: ").append(getAnalysisTime()).append("ms (")
-              .append(toPct(analysis, total)).append(")\n");
+      buf.append("Annotator Time: " + getAnalysisTime() + "ms (" + toPct(analysis, total) + ")\n");
     } else {
       buf.append("Analysis: <10ms\n");
     }
     if (frameworkOver > 0) {
-      buf.append("Framework Overhead: ").append(frameworkOver).append("ms (")
-              .append(toPct(frameworkOver, total)).append(")\n");
+      buf.append("Framework Overhead: " + frameworkOver + "ms (" + toPct(frameworkOver, total)
+              + ")\n");
     } else {
       buf.append("Framework Overhead: <10ms\n");
     }
     if (serviceCallOver > 0) {
-      buf.append("Service Wrapper Overhead: ").append(serviceWrapperOver).append("ms (")
-              .append(toPct(serviceWrapperOver, total)).append(")\n");
-      buf.append("Service Call Overhead: ").append(serviceCallOver).append("ms (")
-              .append(toPct(serviceCallOver, total)).append(")\n");
+      buf.append("Service Wrapper Overhead: " + serviceWrapperOver + "ms ("
+              + toPct(serviceWrapperOver, total) + ")\n");
+      buf.append("Service Call Overhead: " + serviceCallOver + "ms ("
+              + toPct(serviceCallOver, total) + ")\n");
     }
 
     return buf.toString();
@@ -166,8 +164,8 @@ public class AnalysisEnginePerformanceReports {
   /**
    * Convert to percent string - to two decimal places
    */
-  private String toPct(long aNumerator, long aDenominator) {
-    return pctFormat.format(((double) aNumerator) / aDenominator);
+  private String toPct(long numerator, long denomenator) {
+    return pctFormat.format(((double) numerator) / denomenator);
   }
 
   /**

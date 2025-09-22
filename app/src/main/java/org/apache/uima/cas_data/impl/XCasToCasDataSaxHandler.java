@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.uima.cas_data.impl;
 
 import org.apache.uima.cas.CAS;
@@ -25,7 +26,6 @@ import org.apache.uima.cas_data.CasData;
 import org.apache.uima.cas_data.PrimitiveArrayFS;
 import org.apache.uima.cas_data.ReferenceArrayFS;
 import org.apache.uima.internal.util.StringUtils;
-import org.apache.uima.util.impl.Constants;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
@@ -34,6 +34,8 @@ import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * A SAX ContentHandler that reads XCAS and creates a CasData.
+ * 
+ * 
  */
 public class XCasToCasDataSaxHandler extends DefaultHandler {
   // ///////////////////////////////////////////////////////////////////////
@@ -106,13 +108,14 @@ public class XCasToCasDataSaxHandler extends DefaultHandler {
    *          the CasData to which FeatureStructures parsed from XCAS will be appended
    */
   public XCasToCasDataSaxHandler(CasData aCasData) {
-    buffer = new StringBuffer();
-    cas = aCasData;
+    super();
+    this.buffer = new StringBuffer();
+    this.cas = aCasData;
   }
 
   private final void resetBuffer() {
     // this.buffer.delete(0, this.buffer.length());
-    buffer = new StringBuffer();
+    this.buffer = new StringBuffer();
   }
 
   /*
@@ -120,10 +123,9 @@ public class XCasToCasDataSaxHandler extends DefaultHandler {
    * 
    * @see org.xml.sax.ContentHandler#startDocument()
    */
-  @Override
   public void startDocument() throws SAXException {
     // Do setup work in the constructor.
-    state = DOC_STATE;
+    this.state = DOC_STATE;
     // System.out.println("Starting to read document.");
     // time = System.currentTimeMillis();
   }
@@ -132,9 +134,8 @@ public class XCasToCasDataSaxHandler extends DefaultHandler {
    * (non-Javadoc)
    * 
    * @see org.xml.sax.ContentHandler#startElement(java.lang.String, java.lang.String,
-   * java.lang.String, org.xml.sax.Attributes)
+   *      java.lang.String, org.xml.sax.Attributes)
    */
-  @Override
   public void startElement(String nameSpaceURI, String localName, String qualifiedName,
           Attributes attrs) throws SAXException {
     resetBuffer();
@@ -143,11 +144,11 @@ public class XCasToCasDataSaxHandler extends DefaultHandler {
         if (!qualifiedName.equals(XCASSerializer.casTagName)) {
           throw createException(XCASParsingException.WRONG_ROOT_TAG, qualifiedName);
         }
-        state = FS_STATE;
+        this.state = FS_STATE;
         break;
       }
       case FS_STATE: {
-        currentContentFeat = DEFAULT_CONTENT_FEATURE;
+        this.currentContentFeat = DEFAULT_CONTENT_FEATURE;
         readFS(qualifiedName, attrs);
         break;
       }
@@ -170,7 +171,7 @@ public class XCasToCasDataSaxHandler extends DefaultHandler {
     if (attrs.getLength() > 0) {
       throw createException(XCASParsingException.ARRAY_ELE_ATTRS);
     }
-    state = ARRAY_ELE_CONTENT_STATE;
+    this.state = ARRAY_ELE_CONTENT_STATE;
     resetBuffer();
   }
 
@@ -179,11 +180,11 @@ public class XCasToCasDataSaxHandler extends DefaultHandler {
     if (isArrayType(qualifiedName)) {
       readArray(qualifiedName, attrs);
     } else {
-      currentFS = new FeatureStructureImpl();
-      currentFS.setType(getCasTypeName(qualifiedName));
-      readFS(currentFS, attrs);
+      this.currentFS = new FeatureStructureImpl();
+      this.currentFS.setType(getCasTypeName(qualifiedName));
+      readFS(this.currentFS, attrs);
     }
-    cas.addFeatureStructure(currentFS);
+    this.cas.addFeatureStructure(this.currentFS);
   }
 
   /**
@@ -208,7 +209,7 @@ public class XCasToCasDataSaxHandler extends DefaultHandler {
         if (attrName.equals(XCASSerializer.ID_ATTR_NAME)) {
           fsImpl.setId(attrValue);
         } else if (attrName.equals(XCASSerializer.CONTENT_ATTR_NAME)) {
-          currentContentFeat = attrValue;
+          this.currentContentFeat = attrValue;
         } else if (attrName.equals(XCASSerializer.INDEXED_ATTR_NAME)) {
           if (attrValue.equals(XCASSerializer.TRUE_VALUE)) {
             fsImpl.setIndexed(new int[] { 1 }); // Backwards compatible CAS, has one default text
@@ -229,7 +230,7 @@ public class XCasToCasDataSaxHandler extends DefaultHandler {
     // would
     // be assigned to the "value" feature, as per XCAS spec. FEAT_STATE did not really seem to be
     // working, anyway.
-    state = CONTENT_STATE;
+    this.state = CONTENT_STATE;
     // if (this.state != CONTENT_STATE)
     // {
     // this.state = FEAT_STATE;
@@ -243,7 +244,7 @@ public class XCasToCasDataSaxHandler extends DefaultHandler {
     String[] strVals;
     val = val.trim();
     if ("".equals(val)) {
-      strVals = Constants.EMPTY_STRING_ARRAY;
+      strVals = new String[0];
     } else {
       strVals = val.split("\\s+");
     }
@@ -257,7 +258,7 @@ public class XCasToCasDataSaxHandler extends DefaultHandler {
   // Create a new array FS.
   private void readArray(String type, Attributes attrs) throws SAXParseException {
     String attrName, attrVal;
-    int[] indexed = Constants.EMPTY_INT_ARRAY;
+    int[] indexed = new int[0];
     int size = 0;
     String id = null;
     for (int i = 0; i < attrs.getLength(); i++) {
@@ -285,25 +286,25 @@ public class XCasToCasDataSaxHandler extends DefaultHandler {
       }
     }
     // Hang on to those for setting array values.
-    arrayPos = 0;
+    this.arrayPos = 0;
     if (CAS.TYPE_NAME_INTEGER_ARRAY.equals(type)) {
-      currentFS = new PrimitiveArrayFSImpl(new int[size]);
-      arrayType = INT_TYPE;
+      this.currentFS = new PrimitiveArrayFSImpl(new int[size]);
+      this.arrayType = INT_TYPE;
     } else if (CAS.TYPE_NAME_FLOAT_ARRAY.equals(type)) {
-      currentFS = new PrimitiveArrayFSImpl(new float[size]);
-      arrayType = FLOAT_TYPE;
+      this.currentFS = new PrimitiveArrayFSImpl(new float[size]);
+      this.arrayType = FLOAT_TYPE;
     } else if (CAS.TYPE_NAME_STRING_ARRAY.equals(type)) {
-      currentFS = new PrimitiveArrayFSImpl(new String[size]);
-      arrayType = STRING_TYPE;
+      this.currentFS = new PrimitiveArrayFSImpl(new String[size]);
+      this.arrayType = STRING_TYPE;
     } else {
-      currentFS = new ReferenceArrayFSImpl(new String[size]);
-      arrayType = FS_TYPE;
+      this.currentFS = new ReferenceArrayFSImpl(new String[size]);
+      this.arrayType = FS_TYPE;
     }
-    currentFS.setId(id);
-    currentFS.setType(type);
-    currentFS.setIndexed(indexed);
-    currentFS.setFeatureValue(XCASSerializer.ARRAY_SIZE_ATTR, new PrimitiveValueImpl(size));
-    state = ARRAY_ELE_STATE;
+    this.currentFS.setId(id);
+    this.currentFS.setType(type);
+    this.currentFS.setIndexed(indexed);
+    this.currentFS.setFeatureValue(XCASSerializer.ARRAY_SIZE_ATTR, new PrimitiveValueImpl(size));
+    this.state = ARRAY_ELE_STATE;
   }
 
   // The definition of a null value. Any other value must be in the expected
@@ -328,10 +329,9 @@ public class XCasToCasDataSaxHandler extends DefaultHandler {
    * 
    * @see org.xml.sax.ContentHandler#characters(char[], int, int)
    */
-  @Override
   public void characters(char[] chars, int start, int length) throws SAXException {
-    if ((state == CONTENT_STATE) || (state == ARRAY_ELE_CONTENT_STATE)
-            || (state == FEAT_CONTENT_STATE)) {
+    if ((this.state == CONTENT_STATE)
+            || (this.state == ARRAY_ELE_CONTENT_STATE) || (this.state == FEAT_CONTENT_STATE)) {
       // When we're in a text expecting state, add the characters to the
       // text buffer. Else, do nothing.
       buffer.append(chars, start, length);
@@ -342,45 +342,44 @@ public class XCasToCasDataSaxHandler extends DefaultHandler {
    * (non-Javadoc)
    * 
    * @see org.xml.sax.ContentHandler#endElement(java.lang.String, java.lang.String,
-   * java.lang.String)
+   *      java.lang.String)
    */
-  @Override
   public void endElement(String nsURI, String localName, String qualifiedName) throws SAXException {
-    switch (state) {
+    switch (this.state) {
       case DOC_STATE: {
         // Do nothing.
         break;
       }
       case FS_STATE: {
-        state = DOC_STATE;
+        this.state = DOC_STATE;
         break;
       }
       case FEAT_STATE: {
-        state = FS_STATE;
+        this.state = FS_STATE;
         break;
       }
       case CONTENT_STATE: {
         if (!isAllWhitespace(buffer)) {
           // Set the value of the content feature.
-          handleFeature(currentFS, currentContentFeat, buffer.toString());
+          handleFeature(this.currentFS, currentContentFeat, buffer.toString());
         }
-        state = FS_STATE;
+        this.state = FS_STATE;
         break;
       }
       case FEAT_CONTENT_STATE: {
         // Create a feature value from an element.
-        handleFeature(currentFS, qualifiedName, buffer.toString());
-        state = FEAT_STATE;
+        handleFeature(this.currentFS, qualifiedName, buffer.toString());
+        this.state = FEAT_STATE;
         break;
       }
       case ARRAY_ELE_CONTENT_STATE: {
         // Create an array value.
         addArrayElement(buffer.toString());
-        state = ARRAY_ELE_STATE;
+        this.state = ARRAY_ELE_STATE;
         break;
       }
       case ARRAY_ELE_STATE: {
-        state = FS_STATE;
+        this.state = FS_STATE;
         break;
       }
     }
@@ -401,7 +400,7 @@ public class XCasToCasDataSaxHandler extends DefaultHandler {
       case INT_TYPE: {
         if (!emptyVal(content)) {
           try {
-            ((PrimitiveArrayFS) currentFS).toIntArray()[arrayPos] = Integer.parseInt(content);
+            ((PrimitiveArrayFS) this.currentFS).toIntArray()[arrayPos] = Integer.parseInt(content);
           } catch (NumberFormatException e) {
             throw createException(XCASParsingException.INTEGER_EXPECTED, content);
           }
@@ -411,7 +410,8 @@ public class XCasToCasDataSaxHandler extends DefaultHandler {
       case FLOAT_TYPE: {
         if (!emptyVal(content)) {
           try {
-            ((PrimitiveArrayFS) currentFS).toFloatArray()[arrayPos] = Float.parseFloat(content);
+            ((PrimitiveArrayFS) this.currentFS).toFloatArray()[arrayPos] = Float
+                    .parseFloat(content);
           } catch (NumberFormatException e) {
             throw createException(XCASParsingException.FLOAT_EXPECTED, content);
           }
@@ -419,12 +419,12 @@ public class XCasToCasDataSaxHandler extends DefaultHandler {
         break;
       }
       case STRING_TYPE: {
-        ((PrimitiveArrayFS) currentFS).toStringArray()[arrayPos] = content;
+        ((PrimitiveArrayFS) this.currentFS).toStringArray()[arrayPos] = content;
         break;
       }
       case FS_TYPE: {
         if (!emptyVal(content)) {
-          ((ReferenceArrayFS) currentFS).getIdRefArray()[arrayPos] = content;
+          ((ReferenceArrayFS) this.currentFS).getIdRefArray()[arrayPos] = content;
         }
         break;
       }
@@ -437,7 +437,6 @@ public class XCasToCasDataSaxHandler extends DefaultHandler {
    * 
    * @see org.xml.sax.ContentHandler#endDocument()
    */
-  @Override
   public void endDocument() throws SAXException {
     // nothing to do
   }
@@ -475,7 +474,6 @@ public class XCasToCasDataSaxHandler extends DefaultHandler {
    * 
    * @see org.xml.sax.ErrorHandler#error(org.xml.sax.SAXParseException)
    */
-  @Override
   public void error(SAXParseException e) throws SAXException {
     throw e;
   }
@@ -485,7 +483,6 @@ public class XCasToCasDataSaxHandler extends DefaultHandler {
    * 
    * @see org.xml.sax.ErrorHandler#fatalError(org.xml.sax.SAXParseException)
    */
-  @Override
   public void fatalError(SAXParseException e) throws SAXException {
     throw e;
   }
@@ -495,7 +492,6 @@ public class XCasToCasDataSaxHandler extends DefaultHandler {
    * 
    * @see org.xml.sax.ContentHandler#ignorableWhitespace(char[], int, int)
    */
-  @Override
   public void ignorableWhitespace(char[] arg0, int arg1, int arg2) throws SAXException {
     // Since we're not validating, we don't need to do anything; this won't
     // be called.
@@ -506,10 +502,9 @@ public class XCasToCasDataSaxHandler extends DefaultHandler {
    * 
    * @see org.xml.sax.ContentHandler#setDocumentLocator(org.xml.sax.Locator)
    */
-  @Override
   public void setDocumentLocator(Locator loc) {
     // System.out.println("Setting document locator.");
-    locator = loc;
+    this.locator = loc;
   }
 
   /*
@@ -517,7 +512,6 @@ public class XCasToCasDataSaxHandler extends DefaultHandler {
    * 
    * @see org.xml.sax.ErrorHandler#warning(org.xml.sax.SAXParseException)
    */
-  @Override
   public void warning(SAXParseException e) throws SAXException {
     throw e;
   }
@@ -536,4 +530,5 @@ public class XCasToCasDataSaxHandler extends DefaultHandler {
             || CAS.TYPE_NAME_STRING_ARRAY.equals(typeName)
             || CAS.TYPE_NAME_FS_ARRAY.equals(typeName);
   }
+
 }

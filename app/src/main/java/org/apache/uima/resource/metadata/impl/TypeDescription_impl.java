@@ -26,14 +26,12 @@ import org.apache.uima.resource.metadata.TypeDescription;
 
 /**
  * Reference implementation of {@link TypeDescription}. Under construction.
+ * 
+ * 
  */
 public class TypeDescription_impl extends MetaDataObject_impl implements TypeDescription {
 
   static final long serialVersionUID = 7505580429981863281L;
-
-  private static final FeatureDescription[] EMPTY_FEAT_DESC_ARRAY = new FeatureDescription[0];
-
-  private static final AllowedValue[] EMPTY_ALLOWED_VALUE_ARRAY = new AllowedValue[0];
 
   /** Name of this Type. */
   private String mName;
@@ -45,10 +43,10 @@ public class TypeDescription_impl extends MetaDataObject_impl implements TypeDes
   private String mSupertypeName;
 
   /** Descriptions of all Features defined on this Type. */
-  private FeatureDescription[] mFeatures = EMPTY_FEAT_DESC_ARRAY;
+  private FeatureDescription[] mFeatures = new FeatureDescription[0];
 
   /** Allowed Values for an Enumerated type. */
-  private AllowedValue[] mAllowedValues = EMPTY_ALLOWED_VALUE_ARRAY;
+  private AllowedValue[] mAllowedValues = new AllowedValue[0];
 
   /**
    * Creates a new TypeDescription_impl with null field values.
@@ -61,8 +59,7 @@ public class TypeDescription_impl extends MetaDataObject_impl implements TypeDes
    * 
    * @param aName
    *          name of the Type
-   * @param aDescription
-   *          -
+   * @param aDescription -
    * @param aSupertypeName
    *          name of the type's supertype
    */
@@ -72,43 +69,59 @@ public class TypeDescription_impl extends MetaDataObject_impl implements TypeDes
     setSupertypeName(aSupertypeName);
   }
 
-  @Override
+  /**
+   * @see TypeDescription#getName()
+   */
   public String getName() {
     return mName;
   }
 
-  @Override
+  /**
+   * @see TypeDescription#setName(String)
+   */
   public void setName(String aName) {
     mName = aName;
   }
 
-  @Override
+  /**
+   * @see TypeDescription#getDescription()
+   */
   public String getDescription() {
     return mDescription;
   }
 
-  @Override
+  /**
+   * @see TypeDescription#setDescription(String)
+   */
   public void setDescription(String aDescription) {
     mDescription = aDescription;
   }
 
-  @Override
+  /**
+   * @see TypeDescription#getSupertypeName()
+   */
   public String getSupertypeName() {
     return mSupertypeName;
   }
 
-  @Override
+  /**
+   * @see TypeDescription#setSupertypeName(String)
+   */
   public void setSupertypeName(String aTypeName) {
     mSupertypeName = aTypeName;
   }
 
-  @Override
+  /**
+   * @see TypeDescription#getFeatures()
+   */
   public FeatureDescription[] getFeatures() {
     return mFeatures;
   }
 
-  @Override
-  public void setFeatures(FeatureDescription... aFeatures) {
+  /**
+   * @see TypeDescription#setFeatures(FeatureDescription[])
+   */
+  public void setFeatures(FeatureDescription[] aFeatures) {
     if (aFeatures == null) {
       throw new UIMA_IllegalArgumentException(UIMA_IllegalArgumentException.ILLEGAL_ARGUMENT,
               new Object[] { "null", "aFeatures", "setFeatures" });
@@ -116,23 +129,31 @@ public class TypeDescription_impl extends MetaDataObject_impl implements TypeDes
     mFeatures = aFeatures;
   }
 
-  @Override
+  /**
+   * @see TypeDescription#getAllowedValues()
+   */
   public AllowedValue[] getAllowedValues() {
     return mAllowedValues;
   }
 
-  @Override
-  public void setAllowedValues(AllowedValue... aAllowedValues) {
+  /**
+   * @see TypeDescription#setAllowedValues(AllowedValue[])
+   */
+  public void setAllowedValues(AllowedValue[] aAllowedValues) {
     mAllowedValues = aAllowedValues;
   }
 
-  @Override
+  /**
+   * @see TypeDescription#addFeature(String, String, String)
+   */
   public FeatureDescription addFeature(String aFeatureName, String aDescription,
           String aRangeTypeName) {
     return addFeature(aFeatureName, aDescription, aRangeTypeName, null, null);
   }
 
-  @Override
+  /**
+   * @see TypeDescription#addFeature(String, String, String, String, Boolean)
+   */
   public FeatureDescription addFeature(String aFeatureName, String aDescription,
           String aRangeTypeName, String aElementTypeName, Boolean aMultipleReferencesAllowed) {
     // create new feature description
@@ -142,7 +163,7 @@ public class TypeDescription_impl extends MetaDataObject_impl implements TypeDes
     // add to array
     FeatureDescription[] features = getFeatures();
     if (features == null) {
-      setFeatures(newFeature);
+      setFeatures(new FeatureDescription[] { newFeature });
     } else {
       FeatureDescription[] newArray = new FeatureDescription[features.length + 1];
       System.arraycopy(features, 0, newArray, 0, features.length);
@@ -153,17 +174,12 @@ public class TypeDescription_impl extends MetaDataObject_impl implements TypeDes
     return newFeature;
   }
 
-  @Override
   protected XmlizationInfo getXmlizationInfo() {
     return XMLIZATION_INFO;
   }
 
-  private static final XmlizationInfo XMLIZATION_INFO = new XmlizationInfo("typeDescription",
-          new PropertyXmlInfo[] { //
-              new PropertyXmlInfo("name"), //
-              new PropertyXmlInfo("description", false), //
-              new PropertyXmlInfo("supertypeName"), //
-              new PropertyXmlInfo("features"), //
-              new PropertyXmlInfo("allowedValues") //
-          });
+  static final private XmlizationInfo XMLIZATION_INFO = new XmlizationInfo("typeDescription",
+          new PropertyXmlInfo[] { new PropertyXmlInfo("name"),
+              new PropertyXmlInfo("description", false), new PropertyXmlInfo("supertypeName"),
+              new PropertyXmlInfo("features"), new PropertyXmlInfo("allowedValues") });
 }

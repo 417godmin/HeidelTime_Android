@@ -36,18 +36,17 @@ import java.util.logging.LogRecord;
  */
 public class UIMALogFormatter extends Formatter {
 
-  SimpleDateFormat tsFormatter = new SimpleDateFormat("hh:mm:ss.SS");
+  SimpleDateFormat tsFormatter = new SimpleDateFormat( "hh:mm:ss.SS" ); 
 
   private static final String CRLF = System.getProperties().getProperty("line.separator");
 
-  @Override
   public synchronized String format(LogRecord record) {
     // if record is null, return an empty String
     if (record == null) {
       return "";
     }
 
-    var buffer = new StringBuilder(100);
+    StringBuffer buffer = new StringBuffer(100);
 
     // create timestamp
     Date timestamp = new Date(record.getMillis());

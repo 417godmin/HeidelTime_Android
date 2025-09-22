@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.uima.collection;
 
 import org.apache.uima.analysis_engine.AnalysisEngine;
@@ -54,6 +55,8 @@ import org.apache.uima.util.Progress;
  * <p>
  * A <code>CollectionProcessingManager</code> instance can be obtained by calling
  * {@link org.apache.uima.UIMAFramework#newCollectionProcessingManager()}.
+ * 
+ * 
  */
 public interface CollectionProcessingManager {
   /**
@@ -62,7 +65,7 @@ public interface CollectionProcessingManager {
    * @return the <code>AnalysisEngine</code> that this CPM will use to analyze each CAS in the
    *         collection.
    */
-  AnalysisEngine getAnalysisEngine();
+  public AnalysisEngine getAnalysisEngine();
 
   /**
    * Sets the <code>AnalysisEngine</code> that is assigned to this CPM.
@@ -74,14 +77,15 @@ public interface CollectionProcessingManager {
    * @throws ResourceConfigurationException
    *           if this CPM is currently processing
    */
-  void setAnalysisEngine(AnalysisEngine aAnalysisEngine) throws ResourceConfigurationException;
+  public void setAnalysisEngine(AnalysisEngine aAnalysisEngine)
+          throws ResourceConfigurationException;
 
   /**
    * Gets the <code>CasConsumers</code>s assigned to this CPM.
    * 
    * @return an array of <code>CasConsumer</code>s
    */
-  CasConsumer[] getCasConsumers();
+  public CasConsumer[] getCasConsumers();
 
   /**
    * Adds a <code>CasConsumer</code> to this CPM.
@@ -92,7 +96,7 @@ public interface CollectionProcessingManager {
    * @throws ResourceConfigurationException
    *           if this CPM is currently processing
    */
-  void addCasConsumer(CasConsumer aCasConsumer) throws ResourceConfigurationException;
+  public void addCasConsumer(CasConsumer aCasConsumer) throws ResourceConfigurationException;
 
   /**
    * Removes a <code>CasConsumer</code> from this CPM.
@@ -103,7 +107,7 @@ public interface CollectionProcessingManager {
    * @throws org.apache.uima.UIMA_IllegalStateException
    *           if this CPM is currently processing
    */
-  void removeCasConsumer(CasConsumer aCasConsumer);
+  public void removeCasConsumer(CasConsumer aCasConsumer);
 
   /**
    * Gets whether this CPM is required to process the collection's elements serially (as opposed to
@@ -112,7 +116,7 @@ public interface CollectionProcessingManager {
    * 
    * @return true if and only if serial processing is required
    */
-  boolean isSerialProcessingRequired();
+  public boolean isSerialProcessingRequired();
 
   /**
    * Sets whether this CPM is required to process the collection's elements serially* (as opposed to
@@ -126,7 +130,7 @@ public interface CollectionProcessingManager {
    * @throws org.apache.uima.UIMA_IllegalStateException
    *           if this CPM is currently processing
    */
-  void setSerialProcessingRequired(boolean aRequired);
+  public void setSerialProcessingRequired(boolean aRequired);
 
   /**
    * Gets whether this CPM will automatically pause processing if an exception occurs. If processing
@@ -134,7 +138,7 @@ public interface CollectionProcessingManager {
    * 
    * @return true if and only if this CPM will pause on exception
    */
-  boolean isPauseOnException();
+  public boolean isPauseOnException();
 
   /**
    * Sets whether this CPM will automatically pause processing if an exception occurs. If processing
@@ -146,7 +150,7 @@ public interface CollectionProcessingManager {
    * @throws org.apache.uima.UIMA_IllegalStateException
    *           if this CPM is currently processing
    */
-  void setPauseOnException(boolean aPause);
+  public void setPauseOnException(boolean aPause);
 
   /**
    * Registers a listsner to receive status callbacks.
@@ -154,7 +158,7 @@ public interface CollectionProcessingManager {
    * @param aListener
    *          the listener to add
    */
-  void addStatusCallbackListener(StatusCallbackListener aListener);
+  public void addStatusCallbackListener(StatusCallbackListener aListener);
 
   /**
    * Unregisters a status callback listener.
@@ -162,7 +166,7 @@ public interface CollectionProcessingManager {
    * @param aListener
    *          the listener to remove
    */
-  void removeStatusCallbackListener(StatusCallbackListener aListener);
+  public void removeStatusCallbackListener(StatusCallbackListener aListener);
 
   /**
    * Initiates processing of a collection. CollectionReader initializes the CAS with Documents from
@@ -183,13 +187,13 @@ public interface CollectionProcessingManager {
    * @throws org.apache.uima.UIMA_IllegalStateException
    *           if this CPM is currently processing
    */
-  void process(CollectionReader aCollectionReader) throws ResourceInitializationException;
+  public void process(CollectionReader aCollectionReader) throws ResourceInitializationException;
 
   /**
    * Initiates processing of a collection. This method works in the same way as
    * {@link #process(CollectionReader)}, but it breaks the processing up into batches of a size
-   * determined by the <code>aBatchSize</code> parameter. Each {@link CasConsumer} will be notified
-   * at the end of each batch.
+   * determined by the <code>aBatchSize</code> parameter. Each {@link CasConsumer} will be
+   * notified at the end of each batch.
    * 
    * @param aCollectionReader
    *          the <code>CollectionReader</code> from which to obtain the Entities to be processed
@@ -201,7 +205,7 @@ public interface CollectionProcessingManager {
    * @throws org.apache.uima.UIMA_IllegalStateException
    *           if this CPM is currently processing
    */
-  void process(CollectionReader aCollectionReader, int aBatchSize)
+  public void process(CollectionReader aCollectionReader, int aBatchSize)
           throws ResourceInitializationException;
 
   /**
@@ -211,7 +215,7 @@ public interface CollectionProcessingManager {
    * 
    * @return true if and only if this CPM is currently processing.
    */
-  boolean isProcessing();
+  public boolean isProcessing();
 
   /**
    * Pauses processing. Processing can later be resumed by calling the {@link #resume(boolean)}
@@ -220,29 +224,29 @@ public interface CollectionProcessingManager {
    * @throws org.apache.uima.UIMA_IllegalStateException
    *           if no processing is currently occurring
    */
-  void pause();
+  public void pause();
 
   /**
    * Determines whether this CPM's processing is currently paused.
    * 
    * @return true if and only if this CPM's processing is currently paused.
    */
-  boolean isPaused();
+  public boolean isPaused();
 
   /**
    * Resumes processing that has been paused.
    * 
    * @param aRetryFailed
    *          if processing was paused because an exception occurred (see
-   *          {@link #setPauseOnException(boolean)}), setting a value of <code>true</code> for this
-   *          parameter will cause the failed entity to be retried. A value of <code>false</code>
-   *          (the default) will cause processing to continue with the next entity after the
-   *          failure.
+   *          {@link #setPauseOnException(boolean)}), setting a value of <code>true</code> for
+   *          this parameter will cause the failed entity to be retried. A value of
+   *          <code>false</code> (the default) will cause processing to continue with the next
+   *          entity after the failure.
    * 
    * @throws org.apache.uima.UIMA_IllegalStateException
    *           if processing is not currently paused
    */
-  void resume(boolean aRetryFailed);
+  public void resume(boolean aRetryFailed);
 
   /**
    * Resumes processing that has been paused.
@@ -250,7 +254,7 @@ public interface CollectionProcessingManager {
    * @throws org.apache.uima.UIMA_IllegalStateException
    *           if processing is not currently paused
    */
-  void resume();
+  public void resume();
 
   /**
    * Stops processing.
@@ -258,14 +262,14 @@ public interface CollectionProcessingManager {
    * @throws org.apache.uima.UIMA_IllegalStateException
    *           if no processing is currently occuring
    */
-  void stop();
+  public void stop();
 
   /**
    * Gets a performance report for the processing that is currently occurring or has just completed.
    * 
    * @return an object containing performance statistics
    */
-  ProcessTrace getPerformanceReport();
+  public ProcessTrace getPerformanceReport();
 
   /**
    * Gets a progress report for the processing that is currently occurring or has just completed.
@@ -273,5 +277,5 @@ public interface CollectionProcessingManager {
    * @return an array of <code>Progress</code> objects, each of which represents the progress in a
    *         different set of units (for example number of entities or bytes)
    */
-  Progress[] getProgress();
+  public Progress[] getProgress();
 }

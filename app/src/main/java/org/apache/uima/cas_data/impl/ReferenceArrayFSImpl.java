@@ -16,12 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.uima.cas_data.impl;
 
 import org.apache.uima.cas_data.ReferenceArrayFS;
 
+/**
+ * 
+ * 
+ */
 public class ReferenceArrayFSImpl extends FeatureStructureImpl implements ReferenceArrayFS {
-
+  
   private static final long serialVersionUID = -1748415737830294866L;
 
   private String[] mIdRefs;
@@ -35,7 +40,6 @@ public class ReferenceArrayFSImpl extends FeatureStructureImpl implements Refere
    * 
    * @see org.apache.uima.cas_data.ReferenceArrayFS#size()
    */
-  @Override
   public int size() {
     return mIdRefs.length;
   }
@@ -45,12 +49,10 @@ public class ReferenceArrayFSImpl extends FeatureStructureImpl implements Refere
    * 
    * @see org.apache.uima.cas_data.ReferenceArrayFS#getIdRefArray()
    */
-  @Override
   public String[] getIdRefArray() {
     return mIdRefs;
   }
 
-  @Override
   public String toString() {
     StringBuffer buf = new StringBuffer();
     buf.append('\n').append(getType()).append('\n');
@@ -68,4 +70,5 @@ public class ReferenceArrayFSImpl extends FeatureStructureImpl implements Refere
     buf.append("]\n");
     return buf.toString();
   }
+
 }

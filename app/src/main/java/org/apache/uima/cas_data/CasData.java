@@ -49,7 +49,7 @@ public interface CasData extends Serializable {
    * 
    * @return an iterator over {@link FeatureStructure} objects.
    */
-  Iterator<FeatureStructure> getFeatureStructures();
+  public Iterator<FeatureStructure> getFeatureStructures();
 
   /**
    * Adds a FeatureStructure to the list of top-level FeatureStructures contained in this CasData.
@@ -57,7 +57,7 @@ public interface CasData extends Serializable {
    * @param aFS
    *          the FeatureStructure to be added
    */
-  void addFeatureStructure(FeatureStructure aFS);
+  public void addFeatureStructure(FeatureStructure aFS);
 
   /**
    * Removes a FeatureStructure to this CasData. Note that this only removes the FeatureStructure
@@ -67,5 +67,5 @@ public interface CasData extends Serializable {
    * @param aFS
    *          the FeatureStructure to be removed
    */
-  void removeFeatureStructure(FeatureStructure aFS);
+  public void removeFeatureStructure(FeatureStructure aFS);
 }

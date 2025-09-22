@@ -30,9 +30,9 @@ public class GraphNode {
 
   protected Object element;
 
-  protected ArrayList<GraphNode> successors = new ArrayList<>();
+  protected ArrayList<GraphNode> successors = new ArrayList<GraphNode>();
 
-  protected ArrayList<GraphNode> predecessors = new ArrayList<>();
+  protected ArrayList<GraphNode> predecessors = new ArrayList<GraphNode>();
 
   public GraphNode(Object element) {
     this.element = element;
@@ -44,7 +44,7 @@ public class GraphNode {
    * @return The object contained in the node.
    */
   public Object getElement() {
-    return element;
+    return this.element;
   }
 
   /**
@@ -63,7 +63,7 @@ public class GraphNode {
    * @return The number of successor nodes.
    */
   public int getNbrSucc() {
-    return successors.size();
+    return this.successors.size();
   }
 
   /**
@@ -74,8 +74,8 @@ public class GraphNode {
    * @return The successor node.
    */
   public GraphNode getSuccessor(int i) {
-    if (i >= 0 && i < successors.size()) {
-      return successors.get(i);
+    if (i >= 0 && i < this.successors.size()) {
+      return this.successors.get(i);
     }
     throw new UtilError(UtilError.ILLEGAL_SUCCESSOR_INDEX);
   }
@@ -87,7 +87,7 @@ public class GraphNode {
    *          The node to be added.
    */
   public void addSuccessor(GraphNode succ) {
-    successors.add(succ);
+    this.successors.add(succ);
   }
 
   /**
@@ -96,7 +96,7 @@ public class GraphNode {
    * @return The number of predecessor nodes.
    */
   public int getNbrPred() {
-    return predecessors.size();
+    return this.predecessors.size();
   }
 
   /**
@@ -107,8 +107,8 @@ public class GraphNode {
    * @return The predecessor node.
    */
   public GraphNode getPredecessor(int i) {
-    if (i >= 0 && i < predecessors.size()) {
-      return predecessors.get(i);
+    if (i >= 0 && i < this.predecessors.size()) {
+      return this.predecessors.get(i);
     }
     throw new UtilError(UtilError.ILLEGAL_PREDECESSOR_INDEX);
   }
@@ -120,7 +120,7 @@ public class GraphNode {
    *          The node to be added.
    */
   public void addPredecessor(GraphNode pred) {
-    predecessors.add(pred);
+    this.predecessors.add(pred);
   }
 
   /**
@@ -130,7 +130,7 @@ public class GraphNode {
    *          The node to be connected to.
    */
   public void connect(GraphNode node) {
-    addSuccessor(node);
+    this.addSuccessor(node);
     node.addPredecessor(this);
   }
 

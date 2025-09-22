@@ -29,6 +29,8 @@ import org.apache.uima.util.InvalidXMLException;
  * 
  * As with all {@link MetaDataObject}s, a <code>ResourceMetaData</code> may or may not be
  * modifiable. An application can find out by calling the {@link #isModifiable()} method.
+ * 
+ * 
  */
 public interface ResourceMetaData extends MetaDataObject {
 
@@ -37,7 +39,7 @@ public interface ResourceMetaData extends MetaDataObject {
    * 
    * @return the UUID for this Resource
    */
-  String getUUID();
+  public String getUUID();
 
   /**
    * Sets the UUID (Universally Unique Identifier) for this Resource.
@@ -48,14 +50,14 @@ public interface ResourceMetaData extends MetaDataObject {
    * @throws UIMA_UnsupportedOperationException
    *           if this object is not modifiable
    */
-  void setUUID(String aUUID);
+  public void setUUID(String aUUID);
 
   /**
    * Gets the name of this Resource.
    * 
    * @return the name of this Resource
    */
-  String getName();
+  public String getName();
 
   /**
    * Sets the name of this Resource.
@@ -66,14 +68,14 @@ public interface ResourceMetaData extends MetaDataObject {
    * @throws UIMA_UnsupportedOperationException
    *           if this object is not modifiable
    */
-  void setName(String aName);
+  public void setName(String aName);
 
   /**
    * Gets the version number of this Resource.
    * 
    * @return the version number of this Resource, as a String
    */
-  String getVersion();
+  public String getVersion();
 
   /**
    * Sets the version number of this Resource.
@@ -84,14 +86,14 @@ public interface ResourceMetaData extends MetaDataObject {
    * @throws UIMA_UnsupportedOperationException
    *           if this object is not modifiable
    */
-  void setVersion(String aVersion);
+  public void setVersion(String aVersion);
 
   /**
    * Gets the description of this Resource.
    * 
    * @return the description of this Resource
    */
-  String getDescription();
+  public String getDescription();
 
   /**
    * Sets the description of this Resource.
@@ -102,14 +104,14 @@ public interface ResourceMetaData extends MetaDataObject {
    * @throws UIMA_UnsupportedOperationException
    *           if this object is not modifiable
    */
-  void setDescription(String aDescription);
+  public void setDescription(String aDescription);
 
   /**
    * Gets the vendor of this Resource.
    * 
    * @return the vendor of this Resource, as a String
    */
-  String getVendor();
+  public String getVendor();
 
   /**
    * Sets the vendor of this Resource.
@@ -120,14 +122,14 @@ public interface ResourceMetaData extends MetaDataObject {
    * @throws UIMA_UnsupportedOperationException
    *           if this object is not modifiable
    */
-  void setVendor(String aVendor);
+  public void setVendor(String aVendor);
 
   /**
    * Gets the copyright notice for this Resource.
    * 
    * @return the copyright notice for this Resource
    */
-  String getCopyright();
+  public String getCopyright();
 
   /**
    * Sets the copyright notice for this Resource.
@@ -138,14 +140,14 @@ public interface ResourceMetaData extends MetaDataObject {
    * @throws UIMA_UnsupportedOperationException
    *           if this object is not modifiable
    */
-  void setCopyright(String aCopyright);
+  public void setCopyright(String aCopyright);
 
   /**
    * Gets the configuration parameter declarations for this Resource.
    * 
    * @return an object containing the configuration parameter declarations
    */
-  ConfigurationParameterDeclarations getConfigurationParameterDeclarations();
+  public ConfigurationParameterDeclarations getConfigurationParameterDeclarations();
 
   /**
    * Gets the configuration parameter declarations for this Resource.
@@ -153,14 +155,14 @@ public interface ResourceMetaData extends MetaDataObject {
    * @param aDeclarations
    *          an object containing the configuration parameter declarations
    */
-  void setConfigurationParameterDeclarations(ConfigurationParameterDeclarations aDeclarations);
+  public void setConfigurationParameterDeclarations(ConfigurationParameterDeclarations aDeclarations);
 
   /**
    * Gets the configuration parameter settings for this Resource.
    * 
    * @return an object containing the settings for this Resource's configuration parameters.
    */
-  ConfigurationParameterSettings getConfigurationParameterSettings();
+  public ConfigurationParameterSettings getConfigurationParameterSettings();
 
   /**
    * Sets the configuration parameter settings for this Resource.
@@ -171,7 +173,7 @@ public interface ResourceMetaData extends MetaDataObject {
    * @throws UIMA_UnsupportedOperationException
    *           if this object is not modifiable
    */
-  void setConfigurationParameterSettings(ConfigurationParameterSettings aSettings);
+  public void setConfigurationParameterSettings(ConfigurationParameterSettings aSettings);
 
   /**
    * Validates configuration parameter settings within this Resource MetaData, and throws an
@@ -185,7 +187,7 @@ public interface ResourceMetaData extends MetaDataObject {
    * @throws ResourceConfigurationException
    *           if the configuration parameter settings are invalid
    */
-  void validateConfigurationParameterSettings() throws ResourceConfigurationException;
+  public void validateConfigurationParameterSettings() throws ResourceConfigurationException;
 
   /**
    * Resolves any import declarations throughout this metadata. This base interface cannot contain
@@ -195,7 +197,7 @@ public interface ResourceMetaData extends MetaDataObject {
    * @throws InvalidXMLException
    *           if either the import target does not exist or is invalid
    */
-  void resolveImports() throws InvalidXMLException;
+  public void resolveImports() throws InvalidXMLException;
 
   /**
    * Resolves any import declarations throughout this metadata. This base interface cannot contain
@@ -205,11 +207,11 @@ public interface ResourceMetaData extends MetaDataObject {
    * @param aResourceManager
    *          the Resource Manager used to locate descriptors imported by name. For example, the
    *          path in which to locate these descriptors can be set via the
-   *          {@link ResourceManager#setDataPathElements} method.
+   *          {@link ResourceManager#setDataPath(String)} method.
    * 
    * @throws InvalidXMLException
    *           if either the import target does not exist or is invalid
    */
-  void resolveImports(ResourceManager aResourceManager) throws InvalidXMLException;
+  public void resolveImports(ResourceManager aResourceManager) throws InvalidXMLException;
 
 }

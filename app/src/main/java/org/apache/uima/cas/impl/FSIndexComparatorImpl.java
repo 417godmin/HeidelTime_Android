@@ -19,249 +19,204 @@
 
 package org.apache.uima.cas.impl;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Vector;
 
 import org.apache.uima.cas.Feature;
 import org.apache.uima.cas.Type;
+import org.apache.uima.cas.TypeSystem;
 import org.apache.uima.cas.admin.FSIndexComparator;
 import org.apache.uima.cas.admin.LinearTypeOrder;
 import org.apache.uima.internal.util.IntVector;
 
-// @formatter:off
-/**
- * Specifies the comparison to be used for an index, in terms of 
- * - the keys and the typeorder, in an order 
- * - the standard/reverse ordering
- */
-// @formatter:on
 public class FSIndexComparatorImpl implements FSIndexComparator {
 
   private Type type;
 
-  // the Feature or Linear Type Order, as an ordered collection, one per key
-  private final List<Object> keySpecs; // Feature or LinearTypeOrder
+  private Vector<Object> keyVector;
 
-  // Standard or Reverse
-  private final IntVector directions;
+  private IntVector compVector;
 
-  // // FEATURE_KEY or TYPE_ORDER_KEY
-  // private IntVector keyTypeVector;
+  private IntVector keyTypeVector;
 
-  // Public only for testing purposes.
-  public FSIndexComparatorImpl() {
-    type = null;
-    keySpecs = new ArrayList<>();
-    directions = new IntVector();
+  private TypeSystem ts;
+
+  private CASImpl cas;
+
+  @SuppressWarnings("unused")
+  private FSIndexComparatorImpl() {
+    super();
   }
 
-  private FSIndexComparatorImpl(Type type, List<Object> keySpecs, IntVector directions) {
-    this.type = type;
-    this.keySpecs = keySpecs;
-    this.directions = directions;
+  // Public only for testing purposes.
+  public FSIndexComparatorImpl(CASImpl cas) {
+    super();
+    this.keyVector = new Vector<Object>();
+    this.compVector = new IntVector();
+    this.keyTypeVector = new IntVector();
+    this.type = null;
+    this.ts = cas.getTypeSystem();
+    this.cas = cas;
   }
 
   private boolean checkType(Type t) {
     return t.isPrimitive();
   }
 
-  @Override
   public void setType(Type type) {
     this.type = type;
   }
 
-  @Override
   public Type getType() {
-    return type;
+    return this.type;
   }
-
+  
   int getTypeCode() {
-    return ((TypeImpl) type).getCode();
+    return ((TypeImpl)this.type).getCode();
   }
 
-  @Override
   public int addKey(Feature feat, int compareKey) {
     if (!checkType(feat.getRange())) {
       return -1;
     }
-    final int rc = keySpecs.size();
-    keySpecs.add(feat);
-    directions.add(compareKey);
+    final int rc = this.keyVector.size();
+    this.keyVector.add(feat);
+    this.compVector.add(compareKey);
+    this.keyTypeVector.add(FEATURE_KEY);
     return rc;
   }
 
-  @Override
   public int addKey(LinearTypeOrder typeOrder, int compareKey) {
-    final int rc = keySpecs.size();
-    keySpecs.add(typeOrder);
-    directions.add(compareKey);
+    final int rc = this.keyVector.size();
+    this.compVector.add(compareKey);
+    this.keyVector.add(typeOrder);
+    this.keyTypeVector.add(TYPE_ORDER_KEY);
     return rc;
   }
 
-  @Override
   public int getKeyType(int key) {
-    return (keySpecs.get(key) instanceof Feature) ? FEATURE_KEY : TYPE_ORDER_KEY;
+    return this.keyTypeVector.get(key);
   }
 
-  @Override
   public int getNumberOfKeys() {
-    return keySpecs.size();
+    return this.keyVector.size();
   }
 
-  @Override
-  public FeatureImpl getKeyFeature(int key) {
-    if (getKeyType(key) == FEATURE_KEY) {
-      return (FeatureImpl) keySpecs.get(key);
+  public Feature getKeyFeature(int key) {
+    if (this.keyTypeVector.get(key) == FEATURE_KEY) {
+      return (Feature) this.keyVector.get(key);
     }
     return null;
   }
 
   public LinearTypeOrder getKeyTypeOrder(int key) {
-    if (getKeyType(key) == TYPE_ORDER_KEY) {
-      return (LinearTypeOrder) keySpecs.get(key);
+    if (this.keyTypeVector.get(key) == TYPE_ORDER_KEY) {
+      return (LinearTypeOrder) this.keyVector.get(key);
     }
     return null;
   }
 
-  @Override
   public int getKeyComparator(int key) {
-    return directions.get(key);
+    return this.compVector.get(key);
   }
 
-  /**
-   * Equals including the type of the comparator
-   */
-  @Override
   public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
-    if (!(o instanceof FSIndexComparatorImpl)) {
+    if (!(o instanceof FSIndexComparator)) {
       return false;
     }
-    FSIndexComparatorImpl comp = (FSIndexComparatorImpl) o;
-    if (type != comp.type) {
-      return false;
-    }
-    return equalsWithoutType(comp);
-  }
-
-  /**
-   * Compare two comparators, ignoring the type
-   * 
-   * @param comp
-   *          the other comparator to compare to
-   * @return true if they're the same comparator
-   */
-  boolean equalsWithoutType(FSIndexComparatorImpl comp) {
-    final int max = getNumberOfKeys();
+    FSIndexComparator comp = (FSIndexComparator) o;
+    final int max = this.getNumberOfKeys();
     if (max != comp.getNumberOfKeys()) {
       return false;
     }
     for (int i = 0; i < max; i++) {
-      Object keySpec1 = keySpecs.get(i);
-      Object keySpec2 = comp.keySpecs.get(i);
-      if (keySpec1 instanceof LinearTypeOrder) {
-        // equals compares the type codes in the ordered arrays for ==
-        if (!(((LinearTypeOrder) keySpec1).equals(keySpec2))) {
-          return false;
-        }
-      } else {
-        FeatureImpl f1 = (FeatureImpl) keySpec1;
-        FeatureImpl f2 = (FeatureImpl) keySpec2;
-        boolean featimpl_match = f1.equals(f2) // this compares
-                                               // shortName,
-                                               // multiplerefs allowed
-                                               // highest defining type
-                                               // range type name
-                // also need to confirm offsets are the same
-                && f1.getOffset() == f2.getOffset()
-                && f1.getAdjustedOffset() == f2.getAdjustedOffset()
-                && directions.get(i) == comp.directions.get(i);
-
-        if (!featimpl_match) {
-          return false;
-        }
+      if ((this.getKeyFeature(i) != comp.getKeyFeature(i)) || 
+          (this.getKeyComparator(i) != comp.getKeyComparator(i))) {
+        return false;
       }
     }
     return true;
   }
-
+  
   @Override
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((type == null) ? 31 : type.hashCode());
-    final int max = getNumberOfKeys();
+    final int max = this.getNumberOfKeys();
     for (int i = 0; i < max; i++) {
-      Object o = keySpecs.get(i); // LinearTypeOrder or feature
-      if (o instanceof LinearTypeOrder) {
-        result = prime * result + ((LinearTypeOrderBuilderImpl.TotalTypeOrder) o).hashCode();
-      } else {
-        FeatureImpl f = (FeatureImpl) o;
-        result = prime * result + f.hashCode(); // only shortName,
-                                                // multiplerefs allowed
-                                                // highest defining type
-                                                // range type name
-        result = prime * result + f.getOffset();
-        result = prime * result + f.getAdjustedOffset();
-        result = prime * result + directions.get(i);
-      }
+      Feature f = this.getKeyFeature(i);
+      result = prime * result + ((f == null) ? 31 : f.hashCode());
+      result = prime * result + this.getKeyComparator(i);
     }
     return result;
   }
+  
+  CASImpl getLowLevelCAS() {
+    return this.cas;
+  }
 
-  @Override
   public boolean isValid() {
-    if (type == null) {
+    if (this.type == null) {
       return false;
     }
-    final int max = getNumberOfKeys();
+    final int max = this.getNumberOfKeys();
     Feature feat;
     for (int i = 0; i < max; i++) {
-      if (getKeyType(i) != FEATURE_KEY) {
+      if (this.keyTypeVector.get(i) != FEATURE_KEY) {
         continue;
       }
-      feat = (Feature) keySpecs.get(i);
+      feat = (Feature) this.keyVector.get(i);
       // if (feat.getTypeSystem() != ts) {
       // return false;
       // }
-      if (!((TypeImpl) feat.getDomain()).subsumes((TypeImpl) type)) {
+      if (!this.ts.subsumes(feat.getDomain(), this.type)) {
         return false;
       }
     }
     return true;
   }
 
-  public synchronized FSIndexComparatorImpl copy() {
-    return new FSIndexComparatorImpl(type, keySpecs, directions);
+
+  synchronized FSIndexComparatorImpl copy() {
+    FSIndexComparatorImpl copy = new FSIndexComparatorImpl(this.cas);
+    copy.type = this.type;
+    final int max = this.getNumberOfKeys();
+    copy.compVector.add(this.compVector.getArray(), 0, this.compVector.size());
+    copy.keyTypeVector.add(this.keyTypeVector.getArray(), 0, this.keyTypeVector.size());
+    for (int i = 0; i < max; i++) {
+      copy.keyVector.add(this.keyVector.get(i));
+//      copy.compVector.add(this.compVector.get(i));
+//      copy.keyTypeVector.add(this.keyTypeVector.get(i));
+    }
+    return copy;
   }
 
   /**
    * Compares two FSIndexComparator instances.
    * 
-   * The code to compare two FSs is in the compare method of FsIndex_singletype.
+   * The code to compare two FSs is in the compare method of FSLeafIndexImpl.
    * 
    * @see Comparable#compareTo(Object)
    */
-  @Override
   public int compareTo(FSIndexComparator o) {
     FSIndexComparator comp = o;
-    final int thisSize = getNumberOfKeys();
+    final int thisSize = this.getNumberOfKeys();
     final int compSize = comp.getNumberOfKeys();
     int i = 0;
     int feat1, feat2;
     while ((i < thisSize) && (i < compSize)) {
-      feat1 = getKeyFeature(i).getCode();
+      feat1 = ((FeatureImpl) this.getKeyFeature(i)).getCode();
       feat2 = ((FeatureImpl) comp.getKeyFeature(i)).getCode();
       if (feat1 < feat2) {
         return -1;
       } else if (feat1 > feat2) {
         return 1;
       } else {
-        if (getKeyComparator(i) < comp.getKeyComparator(i)) {
+        if (this.getKeyComparator(i) < comp.getKeyComparator(i)) {
           return -1;
-        } else if (getKeyComparator(i) > comp.getKeyComparator(i)) {
+        } else if (this.getKeyComparator(i) > comp.getKeyComparator(i)) {
           return 1;
         }
       }

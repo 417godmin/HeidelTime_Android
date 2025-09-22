@@ -47,10 +47,8 @@ public class AnalysisEngineFactory_impl implements ResourceFactory {
    * @see ResourceFactory#produceResource(Class,
    *      ResourceSpecifier, Map)
    */
-  @Override
-  public Resource produceResource(Class<? extends Resource> aResourceClass,
-          ResourceSpecifier aSpecifier, Map<String, Object> aAdditionalParams)
-          throws ResourceInitializationException {
+  public Resource produceResource(Class<? extends Resource> aResourceClass, ResourceSpecifier aSpecifier,
+          Map<String, Object> aAdditionalParams) throws ResourceInitializationException {
     // It is important to know whether we need a Multiprocessing-capable
     // Analysis Engine implementation - this is determined by whether there
     // is a value for the PARAM_NUM_SIMULTANEOUS_REQUESTS parameter.
@@ -58,18 +56,19 @@ public class AnalysisEngineFactory_impl implements ResourceFactory {
             && aAdditionalParams.containsKey(AnalysisEngine.PARAM_NUM_SIMULTANEOUS_REQUESTS);
 
     Resource resource = null;
-    if (aSpecifier instanceof ResourceCreationSpecifier spec
+    if (aSpecifier instanceof ResourceCreationSpecifier
             && aResourceClass.isAssignableFrom(TextAnalysisEngine.class))
     // NOTE: for backwards-compatibility, we have to check TextAnalysisEngine,
     // not AnalysisEngine. Otherwise produceTAE would fail becasue
     // TextAnalysisEngien.class.isAssignableFrom(AnalysisEngine.class) is false.
     {
+      ResourceCreationSpecifier spec = (ResourceCreationSpecifier) aSpecifier;
       if (multiprocessing) {
         resource = new MultiprocessingAnalysisEngine_impl();
       } else {
 
         String frameworkImpl = spec.getFrameworkImplementation();
-        if (frameworkImpl == null || frameworkImpl.isEmpty()) {
+        if (frameworkImpl == null || frameworkImpl.length() == 0) {
           throw new ResourceInitializationException(
                   ResourceInitializationException.MISSING_FRAMEWORK_IMPLEMENTATION,
                   new Object[] { aSpecifier.getSourceUrlString() });
@@ -78,7 +77,8 @@ public class AnalysisEngineFactory_impl implements ResourceFactory {
         if (frameworkImpl.startsWith(Constants.CPP_FRAMEWORK_NAME)) {
           resource = new UimacppAnalysisEngineImpl();
         } else if (frameworkImpl.startsWith(Constants.JAVA_FRAMEWORK_NAME)) {
-          if (spec instanceof AnalysisEngineDescription aeSpec && !aeSpec.isPrimitive()) {
+          if (spec instanceof AnalysisEngineDescription
+                  && !((AnalysisEngineDescription) spec).isPrimitive()) {
             resource = new AggregateAnalysisEngine_impl();
           } else {
             resource = new PrimitiveAnalysisEngine_impl();
@@ -86,8 +86,7 @@ public class AnalysisEngineFactory_impl implements ResourceFactory {
         } else {
           throw new ResourceInitializationException(
                   ResourceInitializationException.UNSUPPORTED_FRAMEWORK_IMPLEMENTATION,
-                  new Object[] { spec.getFrameworkImplementation(),
-                      aSpecifier.getSourceUrlString() });
+                  new Object[] { spec.getFrameworkImplementation(), aSpecifier.getSourceUrlString() });
         }
       }
     }

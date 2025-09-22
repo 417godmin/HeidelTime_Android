@@ -16,12 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.uima.cas_data.impl;
 
 import org.apache.uima.cas_data.PrimitiveValue;
 
-public class PrimitiveValueImpl implements PrimitiveValue {
 
+public class PrimitiveValueImpl implements PrimitiveValue {
+  
   private static final long serialVersionUID = -5889249846359051538L;
 
   private Object aValueObject = null;
@@ -31,27 +33,24 @@ public class PrimitiveValueImpl implements PrimitiveValue {
   }
 
   public PrimitiveValueImpl(int aValue) {
-    aValueObject = aValue;
+    aValueObject = Integer.valueOf(aValue);
   }
 
   public PrimitiveValueImpl(float aValue) {
-    aValueObject = aValue;
+    aValueObject = Float.valueOf(aValue);
   }
 
-  @Override
   public String toString() {
-    if (aValueObject == null) {
+    if (aValueObject == null)
       return "";
-    } else {
+    else
       return aValueObject.toString();
-    }
   }
 
-  @Override
   public int toInt() {
-    if (aValueObject instanceof Integer) {
-      return (Integer) aValueObject;
-    } else if (aValueObject instanceof String) {
+    if (aValueObject instanceof Integer)
+      return ((Integer) aValueObject).intValue();
+    else if (aValueObject instanceof String) {
       try {
         return Integer.parseInt((String) aValueObject);
       } catch (NumberFormatException e) {
@@ -59,16 +58,14 @@ public class PrimitiveValueImpl implements PrimitiveValue {
         // stated by the PrimitiveValue interface.
         return 0;
       }
-    } else {
+    } else
       return 0;
-    }
   }
 
-  @Override
   public float toFloat() {
-    if (aValueObject instanceof Float) {
-      return (Float) aValueObject;
-    } else if (aValueObject instanceof String) {
+    if (aValueObject instanceof Float)
+      return ((Float) aValueObject).floatValue();
+    else if (aValueObject instanceof String) {
       try {
         return Float.parseFloat((String) aValueObject);
       } catch (NumberFormatException e) {
@@ -76,13 +73,12 @@ public class PrimitiveValueImpl implements PrimitiveValue {
         // stated by the PrimitiveValue interface.
         return 0;
       }
-    } else {
+    } else
       return 0;
-    }
   }
 
-  @Override
   public Object get() {
     return aValueObject;
   }
+
 }

@@ -16,17 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.uima.cas;
 
 import org.apache.uima.UIMAException;
 
 /**
- * Exception class for package org.apache.uima.cas. Message catalog:
- * org.apache.uima.UIMAException_Messages
+ * Exception class for package org.apache.uima.cas. Automatically generated from message catalog.
  */
 public class CASException extends UIMAException {
 
-  private static final long serialVersionUID = 1L; // not intended for serialization
+  private static final long serialVersionUID = 2990279532203726966L;
 
   /** The value of the feature {0} cannot be accessed as type {1}, because it is {2}. */
   public static final String INAPPROP_TYPE_EXCEPTION = "INAPPROP_TYPE_EXCEPTION";
@@ -64,9 +64,6 @@ public class CASException extends UIMAException {
    */
   public static final String JCAS_FEATURENOTFOUND_ERROR = "JCAS_FEATURENOTFOUND_ERROR";
 
-  /* Unable to find required {0} method for JCAS type {1} with {2} type of {3}. */
-  public static final String JCAS_GETTER_SETTER_MISSING = "JCAS_GETTER_SETTER_MISSING";
-
   /**
    * The JCAS range type {2} for feature {1} of type {0} does not match the CAS range type {3} for
    * the feature.
@@ -80,18 +77,18 @@ public class CASException extends UIMAException {
   public static final String MUST_COMMIT_TYPE_SYSTEM = "MUST_COMMIT_TYPE_SYSTEM";
 
   public CASException() {
+    super();
   }
 
   public CASException(String aMessageKey, Object[] aArguments, Throwable aCause) {
     super(aMessageKey, aArguments, aCause);
   }
 
-  public CASException(String aMessageKey, Object... aArguments) {
+  public CASException(String aMessageKey, Object[] aArguments) {
     super(aMessageKey, aArguments);
   }
 
-  public CASException(String aResourceBundleName, String aMessageKey, Object[] aArguments,
-          Throwable aCause) {
+  public CASException(String aResourceBundleName, String aMessageKey, Object[] aArguments, Throwable aCause) {
     super(aResourceBundleName, aMessageKey, aArguments, aCause);
   }
 
@@ -102,4 +99,7 @@ public class CASException extends UIMAException {
   public CASException(Throwable aCause) {
     super(aCause);
   }
+
+  
+
 }

@@ -40,13 +40,12 @@ class IntConstraint extends PathConstraint implements FSMatchConstraint {
 
   IntConstraint(ArrayList<String> path, FSIntConstraint cons) {
     super(path);
-    intConstraint = cons;
+    this.intConstraint = cons;
   }
 
-  @Override
   public boolean match(FeatureStructure fs) {
     // compile(((FeatureStructureImpl) fs).getCAS().getTypeSystem());
-    final int max = featNames.size() - 1; // The last position in the
+    final int max = this.featNames.size() - 1; // The last position in the
     // path!
     if (max < 0) {
       // If the path is empty, we can't get an int, and therefore the
@@ -55,22 +54,21 @@ class IntConstraint extends PathConstraint implements FSMatchConstraint {
     }
     Feature feat;
     for (int i = 0; i < max; i++) {
-      feat = fs.getType().getFeatureByBaseName(featNames.get(i));
+      feat = fs.getType().getFeatureByBaseName(this.featNames.get(i));
       if (feat == null) {
         return false;
       }
       fs = fs.getFeatureValue(feat);
     }
-    feat = fs.getType().getFeatureByBaseName(featNames.get(max));
+    feat = fs.getType().getFeatureByBaseName(this.featNames.get(max));
     if (feat == null) {
       return false;
     }
-    return intConstraint.match(fs.getIntValue(feat));
+    return this.intConstraint.match(fs.getIntValue(feat));
   }
 
-  @Override
   public String toString() {
-    return super.toString() + " " + intConstraint.toString();
+    return super.toString() + " " + this.intConstraint.toString();
   }
 
 }

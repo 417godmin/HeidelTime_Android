@@ -34,7 +34,6 @@ public abstract class Annotator_ImplBase extends AnalysisComponent_ImplBase {
    * Returns 0, since annotators are not allowed to create new CAS instances. Only CasMultipliers
    * are allowed to do this.
    */
-  @Override
   public final int getCasInstancesRequired() {
     return 0;
   }
@@ -43,7 +42,6 @@ public abstract class Annotator_ImplBase extends AnalysisComponent_ImplBase {
    * Returns false, since annotators are not allowed to create new CAS instances. Only
    * CasMultipliers are allowed to do this.
    */
-  @Override
   public final boolean hasNext() throws AnalysisEngineProcessException {
     return false;
   }
@@ -52,7 +50,6 @@ public abstract class Annotator_ImplBase extends AnalysisComponent_ImplBase {
    * Throws a UIMA_IllegalStateException, since annotators are not allowed to create new CAS
    * instances. Only CasMultipliers are allowed to do this.
    */
-  @Override
   public final AbstractCas next() throws AnalysisEngineProcessException {
     throw new UIMA_IllegalStateException(UIMA_IllegalStateException.NO_NEXT_CAS, null);
   }
