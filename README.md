@@ -9,8 +9,8 @@ Android 端 HeidelTime 时间标签抽取工具
 本项目旨在在 **Android 端侧** 部署并运行 **HeidelTime**（版本 2.2.1），实现对文本中的时间表达式进行自动抽取与标注。  
 在实现过程中，针对 HeidelTime 依赖的 **UIMA 框架（uimaj-core 2.2.1）** 进行了大量 **Android 平台适配与裁剪优化**，成功将该桌面端 NLP 工具迁移至 Android 环境运行。  
 
-适配后的版本已验证可支持 **7 种语言**的时间标签抽取：  
-`Dutch（荷兰语）、French（法语）、German（德语）、Italian（意大利语）、Portuguese（葡萄牙语）、Russian（俄语）、Spanish（西班牙语）`  
+适配后的版本已验证可支持 **8 种语言**的时间标签抽取：  
+`Dutch（荷兰语）、French（法语）、German（德语）、Italian（意大利语）、Portuguese（葡萄牙语）、Russian（俄语）、Spanish（西班牙语）、Russian（俄语）`  
 （默认内置英文规则，其他语言需手动配置规则文件）
 
 ---
